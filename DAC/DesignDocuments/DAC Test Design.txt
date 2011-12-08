@@ -8,7 +8,8 @@ Level 0:
 Hardware Setup
 ==============
 1. Mote under test.
-2. Another mote connected to the dac output of the mote under test though the adc or test harness.
+2. Another mote connected to the dac output of the mote under test though the adc. The test harness can also be used as 
+a substitute for the reference mote.
 
 Software Setup
 ==============
@@ -18,7 +19,8 @@ intervals of may be 1000ms.
   The output of the dac is connected to the adc of the reference mote or test harness. The reference mote also uses the 
 same PRNG and is aware of the order in which the voltage should be generated. The output of the adc is tested against the
 PRNG and if outputs are similar a gpio pin is set high else low. The success of the test is determined by whether the pin 
-is set high throughout the course of the test. 
+is set high throughout the course of the test which is measured through a logic analyzer of test harness connected to
+the host.
 
 Note : The test can be carried out with same mote if the adc and dac pins are exposed and if there is confidence in the 
 working of the adc driver. 
