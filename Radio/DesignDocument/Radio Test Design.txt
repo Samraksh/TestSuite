@@ -1,0 +1,22 @@
+This document describes two levels of radio testing.
+
+Level 0: 
+========
+This test is designed to exercise the basic send and recieve functionality supported by the radio stack. 
+
+Hardware Setup:
+
+  The hardware setup constitues a Basestation mote and a test mote. 
+
+
+Software Setup:
+
+The Basestation mote is programmed to listen on the same channel as the test mote transmission. The test mote is 
+programmed to transmit psuedo random packets in psuedo random packet sizes. The basestation will then transmit the
+recieved packets to the verification program running on the host, that verifies these packets using the same PRNG 
+running on the test mote. The PRNG used for this test will be Pareto's PRNG.
+
+
+Level 1:
+========
+This test is designed to measure signal to noise ratio. 
