@@ -1,0 +1,22 @@
+This document describes the different levels of testing the adc driver.
+
+Level 0
+=======
+
+Hardware Setup
+==============
+1. Mote under test (MUT)
+2. A reference mote or test harness
+
+Software Setup
+==============
+The software setup is basically the DAC test in reverse. The test makes the assumption that the dac driver is 
+working consistently. The program running on the reference mote will be a PRNG generating numbers between 0 and 4095.
+These are fed as input to the DAC driver on the reference mote. The output of the dac driver is wired to the input of
+the adc on the test mote. The test adc driver compares the value generated as output to the same PRNG value. 
+
+If the output of the adc is same as the value generated from the PRNG then the a gpio pin on the MUT is raised high else
+low. The test is successful if the pin remains high through the course of the test. 
+
+Note: This test can also be carried out on the same mote by wiriing the adc input to the output of the dac. The driver 
+of the dac input will run as a separate thread from the adc value verification program.
