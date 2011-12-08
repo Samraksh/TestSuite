@@ -1,0 +1,24 @@
+This document describes a test for the DAC driver. There are different levels as desribed below:
+
+Level 0:
+========
+
+1. The Level 0 test is used to check the basic functionality of the dac driver. 
+
+Hardware Setup
+==============
+1. Mote under test.
+2. Another mote connected to the dac output of the mote under test though the adc or test harness.
+
+Software Setup
+==============
+  The setup consists of a psuedo random number generator (PNRG) that generates numbers between 0 - 4095 in psuedo 
+random order. The output of the PNRG is set as input to the DAC driver. A timer is used to change this value at constant
+intervals of may be 1000ms. 
+  The output of the dac is connected to the adc of the reference mote or test harness. The reference mote also uses the 
+same PRNG and is aware of the order in which the voltage should be generated. The output of the adc is tested against the
+PRNG and if outputs are similar a gpio pin is set high else low. The success of the test is determined by whether the pin 
+is set high throughout the course of the test. 
+
+Note : The test can be carried out with same mote if the adc and dac pins are exposed and if there is confidence in the 
+working of the adc driver. 
