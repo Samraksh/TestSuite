@@ -1,0 +1,37 @@
+Things to do:
+1.	Level 0.A test
+a.	Implement the Pseudo Random Number generator from Visual Basic.  The magic numbers are (2^24, 1140671485, 12820163).
+i.	This is a 24-bit random number generator.  So it loses it randomness if you run a sequence that is longer than 2^22.
+ii.	Make a test for the random number generator.
+iii.	Added to the test infrastructure library.
+b.	Create an integer square root function and add it to the test infrastructure library.
+i.	Newton’s method.
+ii.	Use an initial guess that is half the number of bits.
+c.	Fix the example so that each delay is random.
+i.	Random distribution that is Pareto.
+ii.	Power = 2,min= 100
+iii.	Compute the uniform random number and apply the inverse CDF.
+iv.	This will require the square root function.
+d.	Have the PC send the initial seed over the serial line.
+e.	Make this run n times on each timer, in order.
+i.	Typically we’ll only run it 100 times now instead of 1000 times.
+ii.	Load the number of timer events from the PC.
+2.	Create a new test.  Level 0.B
+a.	Implement a log function.
+b.	Use a Weilbull distribution in the region where the time interval is too short.
+c.	Do this about 5,000 times.
+d.	On the PC side see if the function is as expected.
+3.	Create a new test.  Level 1.A
+a.	Switch timers randomly.
+b.	So for each timer event we will pick a random delay and random timer to do the job.
+c.	Use a uniform random number generator for which timer to pick.
+4.	Create a new test.  Level 1.B
+a.	This is the level 0.A test, but with sleep.
+b.	Go in and out of sleep mode.
+5.	Create a new test.  Level 2
+a.	Interleave all 8 timers.
+b.	Start all timers at the same instance and when fire, set the next random number in the sequence.
+c.	Use the Pareto distribution.
+d.	What happens when two timers fire too close together?
+e.	On the PC side the test passed unless the two timers fired too close together at least once.
+f.	Go in and out of sleep mode.

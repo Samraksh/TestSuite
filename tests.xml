@@ -4,41 +4,77 @@
 			C# test for timers
 		</Description>
 		<TestPath>
-			D:\Main\Work\Tests\TestSys\Timer\Src\C#
+			Timer\Src\C#
 		</TestPath>
 		<TestProjName>
 		</TestProjName>
+		<TesterName>
+			Chris
+		</TesterName>
+		<TestLocation>
+			Chris PC
+		</TestLocation>		
+		<testMFVersionNum>
+			4.0
+		</testMFVersionNum>
 </Test>
 <Test Name='Timer' Type='Native'>
 		<Description>
 			C++ test for timers
 		</Description>
 		<TestPath>
-			D:\Main\Work\Tests\TestSys\Timer\Src\Native
+			Timer\Src\Native
 		</TestPath>
 		<TestProjName>
 			timer.proj
 		</TestProjName>
+		<TesterName>
+			Chris
+		</TesterName>
+		<TestLocation>
+			Chris PC
+		</TestLocation>
+		<testMFVersionNum>
+			4.0
+		</testMFVersionNum>
 </Test>
 <Test Name='GPIO' Type='C#'>
 		<Description>
 			C# test for gpio
 		</Description>
 		<TestPath>
-			D:\Main\Work\Tests\TestSys\GPIO\Src\C#
+			GPIO\Src\C#
 		</TestPath>
 		<TestProjName>
 		</TestProjName>
+		<TesterName>
+			Chris
+		</TesterName>
+		<TestLocation>
+			Chris PC
+		</TestLocation>
+		<testMFVersionNum>
+			4.0
+		</testMFVersionNum>
 </Test>
 <Test Name='GPIO' Type='Native'>
 		<Description>
 			C++ test for gpio
 		</Description>
 		<TestPath>
-			D:\Main\Work\Tests\TestSys\Timer\Src\Native
+			Timer\Src\Native
 		</TestPath>
 		<TestProjName>
 			gpio.proj
 		</TestProjName>
+		<TesterName>
+			Chris
+		</TesterName>
+		<TestLocation>
+			Chris PC
+		</TestLocation>
+		<testMFVersionNum>
+			4.0
+		</testMFVersionNum>
 </Test>
 </TestSuite>
