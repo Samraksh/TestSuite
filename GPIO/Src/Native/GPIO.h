@@ -4,20 +4,20 @@
 
 #include <tinyhal.h>
 
+#define SUCCESS 1
+#define FAIL 0
+
+#define LEVEL_0_A 0
+#define LEVEL_0_B 1
+#define LEVEL_1_A 2
+#define LEVEL_1_B 3
+#define LEVEL_2	4
+
 class GPIO
 {
-
-public:
-
-//--//
-    GPIO ( int seedValue, int numberOfEvents );
-
-    BOOL     Execute( int testLevel );
-
-	BOOL 	 Level_0A();
-
-	BOOL 	 Level_0B();
-
+	public:
+		GPIO (  );
+		BOOL     Execute( int testLevel );
+    		BOOL 	 Level_0A();
+		BOOL 	 Level_0B();
 };
-
-

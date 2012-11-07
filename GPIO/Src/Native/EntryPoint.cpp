@@ -7,7 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-
+#include "GPIO.h"
 
 
 void Keep_Linker_Happy() {
@@ -25,12 +25,9 @@ void PostManagedEvent( UINT8 category, UINT8 subCategory, UINT16 data1, UINT32 d
 void ApplicationEntryPoint()
 {
     BOOL result;
-    
+    GPIO gpioTest;
 
-    do
-    {
-    
-    } while(FALSE); // run only once!
+    result = gpioTest.Execute(LEVEL_0_A);
 
     while(TRUE);
 }
