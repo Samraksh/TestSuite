@@ -1,0 +1,9 @@
+level_0;
+
+include template.hkp;
+
+group TEMPLATETEST = (Gpio1);
+event(TEMPLATETEST) 
+	EventStartTest = (R);
+	EventEndTest = (F); 
+end;
