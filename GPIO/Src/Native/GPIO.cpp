@@ -40,9 +40,12 @@ GPIO::GPIO(  )
 
 BOOL GPIO::Level_0A()
 {
+	int msThreadSleep = (int)( (1/frequency)/2 * 1000);
 	while (true){
-		CPU_GPIO_SetPinState(10,FALSE);
-		CPU_GPIO_SetPinState(10,TRUE);
+		CPU_GPIO_SetPinState(9,FALSE);
+		HAL_Time_Sleep_MicroSeconds(msThreadSleep);
+		CPU_GPIO_SetPinState(9,TRUE);
+		HAL_Time_Sleep_MicroSeconds(msThreadSleep);
 	}
 	return TRUE;
 
@@ -64,6 +67,7 @@ BOOL GPIO::Execute( int testLevel )
 
 		// Configure Pin 2 as the pin of interest
 		CPU_GPIO_EnableOutputPin(10,TRUE);
+		CPU_GPIO_SetPinState(10, TRUE);
 
 		Level_0A();
 	}
