@@ -1,0 +1,24 @@
+<TestSuite>
+	<Test Name='GPIO' Type='Native'>
+		<Description>
+			C++ test for gpio
+		</Description>
+		<TestPath>
+			GPIO\Src\Native
+		</TestPath>
+		<TestProjName>
+			gpio.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+			4.0
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+</Test>
+</TestSuite>

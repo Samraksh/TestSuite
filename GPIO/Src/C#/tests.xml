@@ -1,0 +1,27 @@
+<TestSuite>
+	<Test Name='GPIO' Type='C#'>
+		<Description>
+			C# test for gpio
+		</Description>
+		<TestPath>
+			GPIO\Src\C#
+		</TestPath>
+		<TestProjName>
+			GPIO.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+			4.0
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+			tinyclr.axf
+		</TestUsePrecompiledBinary>
+	</Test>
+</TestSuite>

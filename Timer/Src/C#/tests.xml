@@ -1,0 +1,24 @@
+<TestSuite>
+	<Test Name='Timer' Type ='C#'> 
+		<Description>
+			C# test for timers
+		</Description>
+		<TestPath>
+			Timer\Src\C#
+		</TestPath>
+		<TestProjName>
+			Timer.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>		
+		<TestMFVersionNum>
+			4.0
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+</Test>
+</TestSuite>
