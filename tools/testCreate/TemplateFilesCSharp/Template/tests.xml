@@ -1,0 +1,26 @@
+<TestSuite>
+	<Test Name='Template' Type='C#'>
+		<Description>
+			C# template 
+		</Description>
+		<TestPath>
+			Template\Src\C#
+		</TestPath>
+		<TestProjName>
+			template.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+			4.0
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+	</Test>
+</TestSuite>
