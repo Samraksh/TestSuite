@@ -14,7 +14,6 @@
 		<TestLocation>
 		</TestLocation>
 		<TestMFVersionNum>
-			4.0
 		</TestMFVersionNum>
 		<TestGitOption>			
 		</TestGitOption>
@@ -23,5 +22,15 @@
 		<TestUsePrecompiledBinary>
 			tinyclr.axf
 		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
 	</Test>
 </TestSuite>
