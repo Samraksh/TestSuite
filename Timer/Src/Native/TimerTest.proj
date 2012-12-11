@@ -1,36 +1,46 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <AssemblyName>GPIO</AssemblyName>
+	 <AssemblyName>TimerTest</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
     <Description>
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSys\GPIO\Src\Native</Directory>
+    <Directory>TestSys\Timer\Src\Native</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSys\GPIO\Src\Native\GPIO.proj</ProjectPath>
-    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
+    <ProjectPath>$(TESTSOURCE)\TestSys\Timer\Src\Native\TimerTest.proj</ProjectPath>
+    <MFSettingsFile>$(SPOCLIENT)\Solutions\STM32F10x\STM32F10x.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
-  <Import Project="$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.Settings" />
+  <Import Project="$(TESTSOURCE)\TestSys\tools\targets\Microsoft.SPOT.System.Settings" />
   <PropertyGroup>
     <OutputType>Executable</OutputType>
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-	<EXEScatterFileDefinition>$(TESTSOURCE)\TestSys\GPIO\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSys\Timer\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
-<Compile Include="EntryPoint.cpp" />
-    <Compile Include="GPIO.cpp" />
+ 	<Compile Include="EntryPoint.cpp" />
+    <Compile Include="timers.cpp" />
+    <Compile Include="test.c" />
+	<Compile Include="signalr.c" />
+	<Compile Include="syscalls.c" />
+	<Compile Include="GNU_S\tinyclr_vector.cpp" />
     <ScatterFileReferences Include="$(SRC_DIR)\scatterfile_tools_$(COMPILER_TOOL).xml" />
   </ItemGroup>
   <Import Condition="" Project="$(SPOCLIENT)\Framework\Features\USB_Port.featureproj" />
+  <!--
+   <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\RegressionTest\TestSuite\dotnetmf.proj" />
+    <DriverLibs Include="RegTestSuite.$(LIB_EXT)" />
+  </ItemGroup>
+ -->
   
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\COM\USB\dotNetMF.proj" />
@@ -41,10 +51,6 @@
     <DriverLibs Include="usart_pal.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <DriverLibs Include="tinycrt_pal.$(LIB_EXT)" />
-    <RequiredProjects Include="$(SPOCLIENT)\devicecode\pal\TinyCRT\dotNetMF.proj" />
-  </ItemGroup>
-  <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\Support\CRC\dotNetMF.proj" />
     <PlatformIndependentLibs Include="CRC.$(LIB_EXT)" />
   </ItemGroup>
@@ -53,11 +59,11 @@
     <DriverLibs Include="diagnostics_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\cores\arm\dotNetMF.proj" />
     <DriverLibs Include="TinyHal.$(LIB_EXT)" />
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\cores\arm\dotNetMF.proj" />
   </ItemGroup>
 <!--  <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\Solutions\EmoteDotNow\DeviceCode\startup\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\startup\dotNetMF.proj" />
     <DriverLibs Include="startup.$(LIB_EXT)" />
   </ItemGroup> -->
   <ItemGroup>
@@ -69,60 +75,128 @@
     <DriverLibs Include="asyncproccall_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\bootstrap\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\bootstrap\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_bootstrap.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\cmsis\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\rs232\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_rs232.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\cmsis\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_cmsis.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\dac\dotNetMF.proj" />
-    <DriverLibs Include="STM32F10x_dac.$(LIB_EXT)" />
-  </ItemGroup>  
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\board\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_board.$(LIB_EXT)" />
+  </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\exti\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\adc\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_adc.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\bkp\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_bkp.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\cache\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_cache.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\can\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_can.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\cec\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_cec.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\crc\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_crc.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\dac\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_dac.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\dbgmcu\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_dbgmcu.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\dma\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_dma.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\exti\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_exti.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\flash\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\flash\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_flash.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\gpio\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\fsmc\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_fsmc.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\gpio\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_gpio.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\misc\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\i2c\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_i2c.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\iwdg\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_iwdg.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\lcd_basic\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_lcd_basic.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\led\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_led.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\misc\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_misc.$(LIB_EXT)" />
   </ItemGroup>
   <!-- <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\pwr\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\pwr\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_pwr.$(LIB_EXT)" />
   </ItemGroup>
    -->
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\rcc\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\rcc\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_rcc.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\spi\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\rtc\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_rtc.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\sdio\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_sdio.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\spi\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_spi.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\tim\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\tim\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_tim.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\time\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\time\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_time.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\usart\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\usart\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_usart.$(LIB_EXT)" />
   </ItemGroup>
  <!--  <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\wwdg\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\wwdg\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_wwdg.$(LIB_EXT)" />
   </ItemGroup>
    -->
@@ -143,7 +217,7 @@
     <DriverLibs Include="cpu_gpio_stubs.$(LIB_EXT)" />
   </ItemGroup> -->
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\intc\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\intc\dotNetMF.proj" />
     <DriverLibs Include="stm32f10x_intc.$(LIB_EXT)" />
   </ItemGroup> 
   <ItemGroup>
@@ -200,7 +274,7 @@
     <DriverLibs Include="blockstorage_pal.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\bl\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\bl\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_bl.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
@@ -266,10 +340,6 @@
     <DriverLibs Include="cpu_i2c_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\i2c\dotNetMF.proj" />
-    <DriverLibs Include="STM32F10x_i2c.$(LIB_EXT)" />
-  </ItemGroup>
-  <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Buttons\stubs\dotNetMF.proj" />
     <DriverLibs Include="Buttons_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
@@ -278,8 +348,8 @@
     <DriverLibs Include="cpu_ebiu_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <DriverLibs Include="GlobalLock_hal.$(LIB_EXT)" />
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\cores\arm\Common\GlobalLock\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\stubs\GlobalLock\dotNetMF.proj" />
+    <DriverLibs Include="GlobalLock_hal_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Pal\palevent\stubs\dotNetMF.proj" />
@@ -289,22 +359,22 @@
     <RequiredProjects Include="$(SPOCLIENT)\devicecode\pal\TinyCRT\stubs\dotNetMF.proj" />
     <DriverLibs Include="tinycrt_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\Stubs\USB_Config\dotNetMF.proj" />
     <DriverLibs Include="usb_pal_config_stub.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\Stubs\Processor\stubs_usb\dotNetMF.proj" />
     <DriverLibs Include="cpu_usb_stubs.$(LIB_EXT)" />
-  </ItemGroup>
-  <!--<ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\usb_config\dotNetMF.proj" />
+  </ItemGroup>-->
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\usb_config\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_usb_config.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\usb\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\DeviceCode\drivers\usb\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_usb.$(LIB_EXT)" />
-  </ItemGroup>-->
+  </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\stubs\Processor\stubs_watchdog\dotNetMF.proj" />
     <DriverLibs Include="cpu_watchdog_stubs.$(LIB_EXT)" />
@@ -317,5 +387,5 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Piezo\stubs\dotNetMF.proj" />
     <DriverLibs Include="piezo_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
-  <Import Project="$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.Targets" />
+  <Import Project="$(TESTSOURCE)\TestSys\tools\targets\Microsoft.SPOT.System.Targets" />
 </Project>

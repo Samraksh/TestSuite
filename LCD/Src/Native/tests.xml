@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='Timer' Type='Native'>
+	<Test Name='LCD' Type='Native'>
 		<Description>
-			C++ test for timers
+			C++ test for LCD
 		</Description>
 		<TestPath>
-			Timer\Src\Native
+			LCD\Src\Native
 		</TestPath>
 		<TestProjName>
-			TimerTest.proj
+			LCD.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

@@ -7,16 +7,12 @@
 #define __regtest
 
 #include <tinyhal.h>
-#include "GPIO.h"
-#include <i2c/stm32f10x_i2c.h>
-#include <rcc/stm32f10x_rcc.h>
-#include <gpio/stm32f10x_gpio.h>
+#include "LCD.h"
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
 	BootEntry();
 }
-
 
 HAL_DECLARE_NULL_HEAP();
 
@@ -26,11 +22,10 @@ void PostManagedEvent( UINT8 category, UINT8 subCategory, UINT16 data1, UINT32 d
 
 void ApplicationEntryPoint()
 {
-    BOOL result;
-    GPIO gpioTest;
+BOOL result;
+    LCD lcdTest;
 
-    result = gpioTest.Execute(LEVEL_0_A);
+    result = lcdTest.Execute(LEVEL_0_A);
 
-    while (TRUE){}
+    while(TRUE);
 }
-
