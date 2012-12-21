@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='GPIO' Type='C#'>
+	<Test Name='LCD' Type='C#'>
 		<Description>
-			C# GPIO
+			C# LCD
 		</Description>
 		<TestPath>
-			GPIO\Src\C#
+			LCD\Src\C#
 		</TestPath>
 		<TestProjName>
-			GPIO.csproj
+			LCD.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
