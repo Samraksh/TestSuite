@@ -1,0 +1,6 @@
+D:\Main\Work\Tests\TestSys\SPI\Src\C#\obj\Debug\ResolveAssemblyReference.cache
+D:\Main\Work\Tests\TestSys\SPI\Src\C#\obj\Debug\TinyCLR_DebugReferences.cache
+D:\Main\Work\Tests\TestSys\SPI\Src\C#\obj\Debug\SPI.Resources.resources
+D:\Main\Work\Tests\TestSys\SPI\Src\C#\obj\Debug\SPI.csproj.GenerateResource.Cache
+D:\Main\Work\Tests\TestSys\SPI\Src\C#\obj\Debug\SPI.Resources.tinyresources
+D:\Main\Work\Tests\TestSys\SPI\Src\C#\obj\Debug\TinyResGen.cache
