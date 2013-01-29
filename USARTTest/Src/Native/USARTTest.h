@@ -17,6 +17,8 @@ public:
 	BOOL 	 Level_0A();
 
 	BOOL 	 Level_0B();
+	
+	BOOL 	 Level_0C();
 
 };
 

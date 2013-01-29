@@ -170,9 +170,15 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\stubs\processor\stubs_MMU\dotNetMF.proj" />
     <DriverLibs Include="cpu_mmu_stubs.$(LIB_EXT)" />
   </ItemGroup>
+  <!--
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\stubs\processor\stubs_power\dotNetMF.proj" />
     <DriverLibs Include="cpu_power_stubs.$(LIB_EXT)" />
+  </ItemGroup>
+  -->
+  <ItemGroup>
+    <DriverLibs Include="STM32F10x_pwr.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\pwr\dotNetMF.proj" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\SimpleHeap_config\Stubs\dotNetMF.proj" />
@@ -292,14 +298,19 @@
     <RequiredProjects Include="$(SPOCLIENT)\devicecode\pal\TinyCRT\stubs\dotNetMF.proj" />
     <DriverLibs Include="tinycrt_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
-  <!--<ItemGroup>
+  <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\Stubs\USB_Config\dotNetMF.proj" />
     <DriverLibs Include="usb_pal_config_stub.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\Stubs\Processor\stubs_usb\dotNetMF.proj" />
     <DriverLibs Include="cpu_usb_stubs.$(LIB_EXT)" />
-  </ItemGroup>-->
+  </ItemGroup>
+   <ItemGroup>
+    <DriverLibs Include="STM32F10x_fsmc.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\fsmc\dotNetMF.proj" />
+  </ItemGroup>
+  <!--
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\usb_config\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_usb_config.$(LIB_EXT)" />
@@ -308,6 +319,7 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\usb\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_usb.$(LIB_EXT)" />
   </ItemGroup>
+  -->
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\stubs\Processor\stubs_watchdog\dotNetMF.proj" />
     <DriverLibs Include="cpu_watchdog_stubs.$(LIB_EXT)" />

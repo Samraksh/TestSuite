@@ -15,8 +15,8 @@ D:\Main\Emote-dev\Dev\MicroFrameworkPK_v4_0\Framework\Tools\SerialReadWrite\bin\
 D:\Main\Work\SRC\WORKING\DotNet-MF\MicroFrameworkPK_v4_0\Framework\Tools\SerialReadWrite\SerialReadWrite\bin\Debug\SerialDump.exe.config
 D:\Main\Work\SRC\WORKING\DotNet-MF\MicroFrameworkPK_v4_0\Framework\Tools\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.exe
 D:\Main\Work\SRC\WORKING\DotNet-MF\MicroFrameworkPK_v4_0\Framework\Tools\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.pdb
-D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\SerialDump.exe.config
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.csprojResolveAssemblyReference.cache
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\SerialDump.exe.config
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\SerialDump.exe
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\SerialDump.pdb
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\Microsoft.SPOT.Debugger.dll

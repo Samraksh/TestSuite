@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Template
+namespace ADC
 {
 
     internal class Resources
@@ -20,7 +20,7 @@ namespace Template
             {
                 if ((Resources.manager == null))
                 {
-                    Resources.manager = new System.Resources.ResourceManager("Template.Resources", typeof(Resources).Assembly);
+                    Resources.manager = new System.Resources.ResourceManager("ADC.Resources", typeof(Resources).Assembly);
                 }
                 return Resources.manager;
             }
