@@ -6,7 +6,7 @@
 
 
 //---//
-
+#define COM1 0
 
 BlockStorageTest::BlockStorageTest( int seedValue, int numberOfEvents )
 {
@@ -53,6 +53,11 @@ BOOL BlockStorageTest::Level_0A()
 			}
 			else
 			{
+				if(!stream.IsErased(counter))
+				{
+					if(!stream.Erase(counter))
+						hal_printf("ERROR : Erase of Block Storage failed \r\n");
+				}
 				if(stream.Write((UINT8 *) readData, counter))
 				{
 					for(UINT32 i = 0; i < counter ; i++)
@@ -61,6 +66,9 @@ BOOL BlockStorageTest::Level_0A()
 							break;
 							readData[i] = 0;
 					}
+					//stream.Seek(0, SeekOrigin::SeekBegin);
+					stream.Seek(0, (BlockStorageStream::SeekOrigin) 0);
+					
 					if(!stream.Read((UINT8 **) &readData, counter))
 					{
 						hal_printf(" ERROR : Read from Block Storage failed \r\n");

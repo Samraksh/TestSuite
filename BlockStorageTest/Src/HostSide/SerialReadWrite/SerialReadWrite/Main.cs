@@ -275,7 +275,7 @@ namespace Microsoft.SPOT.Tools
                 {
                     String msg="";
                     int k;
-                    for (k = 0; k < (Delay); k++)
+                    for (k = 0; k < 40; k++)
                     //for (k = 0; k < 300; k++)
                     {
                         byte data;
