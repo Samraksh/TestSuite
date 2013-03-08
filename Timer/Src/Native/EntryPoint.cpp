@@ -7,10 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-//#include <Tests.h>
-#include "timers.h"
-#include <led/stm32f10x_led.h>
-
+#include "Timer.h"
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
@@ -33,7 +30,7 @@ void ApplicationEntryPoint()
    // GPIO        gpioTest   ( GPIOTestPin );
     //SPI         spiTest    ( SPIChipSelect, SPIModule, g_EEPROM_STM95x );
     //TimerTest      timersTest ( DisplayInterval, TimerDuration );
-    Timers		   timerTest(30,5);
+    TimerTest		   timerTest(30,200);
 
     do
     {
@@ -43,18 +40,12 @@ void ApplicationEntryPoint()
        // result = gpioTest.Execute2  ( );
         //result = spiTest.Execute   ( STREAM__OUT );
         //result = timersTest.Execute( STREAM__OUT );
-    	
-CPU_GPIO_SetPinState(23,TRUE);
-	result = timerTest.Execute(LEVEL_0_A);
-CPU_GPIO_SetPinState(23,FALSE);
-//HAL_Time_Sleep_MicroSeconds(1000);
-//HAL_Time_Sleep_MicroSeconds(1000);
-//HAL_Time_Sleep_MicroSeconds(1000);
-    } while(TRUE); // run only once!
+    	result = timerTest.Execute();
+
+    } while(FALSE); // run only once!
 
 
-   
-	//LED_WARNING();
-	//LED_BLUE();
+    
     while(TRUE);
 }
+
