@@ -157,6 +157,7 @@ namespace Samraksh.SPOT.Test
                 }
                 Debug.Print("Failed List = " + fail);
                 failList.Clear();
+                successList.Clear();
             }
             else if (successList.Count > 1)
             {
@@ -166,6 +167,7 @@ namespace Samraksh.SPOT.Test
                 }
                 Debug.Print("Success List = " + success);
                 successList.Clear();
+                failList.Clear();
             }
             string testState = "";
             lock (_trackerlock)

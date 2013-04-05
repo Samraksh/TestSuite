@@ -7,7 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-
+#include "Radio.h"
 
 
 void Keep_Linker_Happy() {
@@ -29,7 +29,10 @@ void ApplicationEntryPoint()
 
     do
     {
-    
+    	RadioTest radioObject(0,100);
+
+    	radioObject.Execute(SLEEPTEST);
+
     } while(FALSE); // run only once!
 
     while(TRUE);
