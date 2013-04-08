@@ -4,67 +4,18 @@
 
 #include "Radio.h"
 
-#include <Samraksh/HALTimer.h>
-
 //---//
 
-extern HALTimerManager gHalTimerManagerObject;
-BOOL state = FALSE;
 
-extern "C"
-{
 
-void* myReceiveHandler (void *msg, UINT16 Size){
-
-	UINT8 *data = (UINT8 *) msg;
-
-	CPU_GPIO_SetPinState((GPIO_PIN) 4 , TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 4 , FALSE);
-
-	Message_15_4_t** temp = &recv_mesg_carrier_ptr;
-	recv_mesg_carrier_ptr = (Message_15_4_t *) msg;
-	return (void *) *temp;
-}
-
-void Timer_1_Handler(void * arg){
-
-	UINT8 regValue;
-
-	if(state == FALSE)
-	{
-		state = TRUE;
-		CPU_GPIO_SetPinState((GPIO_PIN) 8, TRUE);
-		if(DS_Success != CPU_Radio_Sleep(1, 0))
-		{
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, TRUE);
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, FALSE);
-		}
-	}
-	else
-	{
-		regValue = grf231Radio.ReadRegister(RF230_TRX_STATUS) & RF230_TRX_STATUS_MASK;
-
-		if(regValue != 0)
-		{
-			hal_printf("Sleep change failed, radio is still active");
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, TRUE);
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, FALSE);
-		}
-
-		CPU_GPIO_SetPinState((GPIO_PIN) 8, FALSE);
-		state = FALSE;
-		if(DS_Success != CPU_Radio_TurnOn(1))
-		{
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, TRUE);
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, FALSE);
-		}
-	}
-}
+void* RadioTest::ReceiveHandler (void *msg, UINT16 Size){
 
 }
 
 void RadioTest::SendAckHandler(void *msg, UINT16 Size, NetOpStatus state){
 	RadioAckPending = FALSE;
+
+	hal_printf("%d", state);
 
 }
 
@@ -79,7 +30,7 @@ RadioTest::RadioTest( int seedValue, int numberOfEvents )
 	mac_id = 1;
 	DeviceStatus result;
 
-	radioEventHandler.SetRecieveHandler(&myReceiveHandler);
+	radioEventHandler.SetRecieveHandler((void* (*)(void*, UINT16))  &RadioTest::ReceiveHandler);
 	radioEventHandler.SetSendAckHandler((void (*)(void*, UINT16, NetOpStatus)) &RadioTest::SendAckHandler);
 
 	result = CPU_Radio_Initialize(&radioEventHandler , &radioID, numberOfRadios, mac_id );
@@ -88,13 +39,7 @@ RadioTest::RadioTest( int seedValue, int numberOfEvents )
 
 	msg_carrier_ptr = & msg_carrier;
 
-	recv_mesg_carrier_ptr = &recv_mesg_carrier;
 
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 4, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 8, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 22, FALSE);
-
-	gHalTimerManagerObject.Initialize();
 
 };
 
@@ -107,43 +52,6 @@ BOOL RadioTest::Level_0A()
 
 BOOL RadioTest::Level_0B()
 {
-}
-
-BOOL RadioTest::SleepTest_Reciever_Sleeping()
-{
-	UINT8 result;
-
-	result = CPU_Radio_TurnOn(radioID);
-
-
-	result = CPU_Radio_Sleep(radioID, 0);
-
-	if(result != DS_Success)
-	{
-		hal_printf("The Radio is not sleeping");
-		return FALSE;
-	}
-
-
-	while(TRUE)
-	{
-		for(UINT8 i = 0; i < 10000; i++);
-	}
-
-}
-
-BOOL RadioTest::SleepTest_Reciever()
-{
-	UINT8 result;
-
-	gHalTimerManagerObject.CreateTimer(1, 0, 1000000, FALSE, FALSE, Timer_1_Handler); //1 sec Timer in micro seconds
-
-	result = CPU_Radio_TurnOn(radioID);
-
-	while(TRUE)
-	{
-		for(UINT8 i = 0; i < 10000; i++);
-	}
 }
 
 BOOL RadioTest::SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size)
@@ -327,7 +235,8 @@ BOOL RadioTest::SleepTest_Level1C()
 
 	UINT32 i = 0;
 
-	while(i++ < this->numberOfEvents)
+	//while(i++ < this->numberOfEvents)
+	while(TRUE)
 	{
 			// Try sending a packet now
 		{
@@ -358,16 +267,6 @@ BOOL RadioTest::SleepTest_Level1C()
 
 	DisplayStats(TRUE,"Sleep Level 1C Success", "Radio successfully turns on, sends a packet and goes back to sleep when commanded", NULL);
 
-}
-
-BOOL RadioTest::SleepTest_Level2()
-{
-	DeviceStatus result;
-
-	while(i++ < this->numberOfEvents)
-	{
-		result = CPU_Radio_TurnOn(radioID);
-	}
 }
 
 // In level1 we will attempt to add send to the list of states the radio must go through and test if we
@@ -452,15 +351,10 @@ BOOL RadioTest::Execute( int testLevel )
 
 	if(testLevel == SLEEPTEST)
 	{
-#if 0
-		 result = SleepTest_Level0();
-		 result &= SleepTest_Level1A();
-		 result &= SleepTest_Level1B();
-		 result &= SleepTest_Level1C();
-#endif
-		 //result = SleepTest_Reciever();
-		 result = SleepTest_Level2();
-		// result = SleepTest_Reciever_Sleeping();
+		// result = SleepTest_Level0();
+		// result &= SleepTest_Level1A();
+		// result &= SleepTest_Level1B();
+		 result = SleepTest_Level1C();
 	}
 
 	return result;

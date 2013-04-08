@@ -16,9 +16,6 @@
 
 typedef Buffer_15_4<8> Buffer_15_4_t;
 
-Message_15_4_t recv_mesg_carrier;
-Message_15_4_t* recv_mesg_carrier_ptr;
-
 typedef struct  {
 	UINT16 MSGID;
 	UINT8 data[5];
@@ -36,13 +33,9 @@ class RadioTest
 
 	Message_15_4_t* msg_carrier_ptr;
 
-
 	BOOL SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size);
 
 public:
-
-	//Message_15_4_t recv_mesg_carrier;
-
 	UINT8 radioID;
 	UINT8 numberOfRadios;
 	UINT8 mac_id;
@@ -64,12 +57,6 @@ public:
 	BOOL 	 SleepTest_Level1B();
 
 	BOOL 	 SleepTest_Level1C();
-
-	BOOL     SleepTest_Reciever();
-
-	BOOL     SleepTest_Reciever_Sleeping();
-
-	BOOL     SleepTest_Level2();
 
 	void 	 SendAckHandler(void *msg, UINT16 Size, NetOpStatus state);
 
