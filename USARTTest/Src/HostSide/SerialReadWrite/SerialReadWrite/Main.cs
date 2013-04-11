@@ -308,8 +308,8 @@ namespace Microsoft.SPOT.Tools
 
             //Create Thread for Writing
             //AsyncCallback rcb = new AsyncCallback(ShowText);    //write callback
-            m_sendThread = new Thread(new ThreadStart(SendThread_Level0));
-            m_sendThread.Start();
+            //m_sendThread = new Thread(new ThreadStart(SendThread_Level0));
+            //m_sendThread.Start();
            
 
             //Start reading, never quit
@@ -360,15 +360,15 @@ namespace Microsoft.SPOT.Tools
 
                 lState.SetState(true);
 
-                /*
+                
                 for (int x = 0; x < data.Length; ++x)
                 {
 
                     Console.Write(data[x]);
-                    AddText(Convert.ToChar(data[x]).ToString());
+                    //AddText(Convert.ToChar(data[x]).ToString());
                     data[x] = 0;
                 }
-                 */
+                
 
                 bDone = true;
                 Console.Write("\n\r");

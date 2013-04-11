@@ -14,7 +14,9 @@ USARTTest::USARTTest( int seedValue, int numberOfEvents )
 	USART_Initialize(COM1, 115200, 0, 8, 1, 0);
 	//CPU_GPIO_EnableOutputPin((GPIO_PIN) 10, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 22, FALSE);
-	
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 23, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, FALSE);
 };
 
 BOOL USARTTest::Level_0A()
@@ -174,16 +176,58 @@ BOOL USARTTest::Level_0C()
 	
 }
 
+// This test is designed to check the ability of the driver to change
+// baud rates and uninitialize and then then initialize again
+BOOL USARTTest::Level_0D()
+{
 
+	BOOL result;
+	
+	while(true)
+	{
+		result = USART_Uninitialize(COM1);
+
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+
+		if(result == TRUE)
+		{
+			if(!USART_Initialize(COM1, 57600, 0, 8, 1, 0))
+			{
+				CPU_GPIO_SetPinState((GPIO_PIN) 23, TRUE);
+				CPU_GPIO_SetPinState((GPIO_PIN) 23, FALSE);
+
+			}
+
+			CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+			CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+
+		}
+		else
+		{
+			CPU_GPIO_SetPinState((GPIO_PIN) 22, TRUE);
+			CPU_GPIO_SetPinState((GPIO_PIN) 22, FALSE);
+		}
+
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+
+		for(int i = 0; i < 100000; i++);
+
+	}
+	
+}
 
 
 BOOL USARTTest::Execute( int testLevel )
 {
 	if(testLevel == 0)
-		Level_0A();
+		return Level_0A();
 	else if(testLevel == 1)
-		Level_0B();
+		return Level_0B();
 	else if(testLevel == 2)
-		Level_0C();
+		return Level_0C();
+	else if(testLevel == 3)
+		return Level_0D();
 } //Execute
 
