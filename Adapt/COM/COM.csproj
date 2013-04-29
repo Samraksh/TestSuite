@@ -44,18 +44,18 @@
     </Compile>
   </ItemGroup>
   
-  <ItemGroup>
-	  <Reference Include="Microsoft.SPOT.Graphics">
-		  <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Graphics.dll</HintPath>
-    </Reference>
+  <ItemGroup>	  
 	<Reference Include="Microsoft.SPOT.Native">
 		<HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Native.dll</HintPath>
     </Reference>
-	<Reference Include="Microsoft.SPOT.TinyCore"> 
+	<!--<Reference Include="Microsoft.SPOT.TinyCore"> 
 		<HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.TinyCore.dll</HintPath>
-    </Reference>
+	</Reference>-->
 	<Reference Include="Microsoft.SPOT.Hardware">
 		 <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.dll</HintPath>
+    </Reference>
+	<Reference Include="Microsoft.SPOT.Hardware.SerialPort">
+		  <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.SerialPort.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

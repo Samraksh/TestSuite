@@ -8,10 +8,27 @@ namespace Graphics1
 {
     public class Program
     {
+		//private Text countText;
+        //private double count = 0;
+
         public static void Main()
         {
 			Debug.Print("This is my main\r\n");
-			
+
+			/*Bitmap LCD = new Bitmap(150,150);
+
+			Background = new LinearGradientBrush(Colors.Black, Colors.Blue, 0, 0, 150, 150);
+*/
+		/*	countText = new Text();
+            countText.ForeColor = Microsoft.SPOT.Presentation.Media.Colors.Yellow;
+			countText.TextContent = "0";
+            countText.HorizontalAlignment = Microsoft.SPOT.Presentation.HorizontalAlignment.Center;
+            countText.VerticalAlignment = Microsoft.SPOT.Presentation.VerticalAlignment.Center;
+			while (true)
+			{
+				count++;
+            	countText.TextContent = count.ToString();
+			}*/
             //Bitmap LCD = new Bitmap(SystemMetrics.ScreenWidth, SystemMetrics.ScreenHeight);
 			/*Bitmap LCD = new Bitmap(150,150);
  

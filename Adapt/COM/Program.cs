@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using System.IO;
+using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 
@@ -10,8 +12,36 @@ namespace COM
         public static void Main()
         {
 			//Thread.Sleep(9000);
+		//	byte[] m_recvBuffer = new byte[100];
 				
 			Debug.Print("This is my main\r\n");
+
+			/*string[] ports = SerialPort.GetPortNames();
+			Debug.Print("Port names:\r\n");
+			foreach(string port in ports)
+            {
+                Debug.Print(port);
+            }*/
+
+			SerialPort serialPort = new SerialPort("COM1");
+			serialPort.BaudRate = 115200;
+            serialPort.Parity = Parity.None;
+            serialPort.StopBits = StopBits.One;
+            serialPort.DataBits = 8;
+            serialPort.Handshake = Handshake.None;
+
+			serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortHandler);
+
+			serialPort.Open();
+			byte[] testOut = new byte[10];
+			for (int i=0; i<10; i++)
+				testOut[i] = (byte)('a' + i);
+			serialPort.Write(testOut, 0, 5);
+			Debug.Print("\r\n");
+			serialPort.Write(testOut, 0, 5);
+			Debug.Print("\r\n");
+			serialPort.Write(testOut, 0, 5);
+			Debug.Print("\r\n");
 
 			Debug.Print("result = PASS\r\n");
 			Debug.Print("accuracy = 1.2\r\n");
@@ -19,49 +49,47 @@ namespace COM
 			Debug.Print("resultParameter2 = p2 return\r\n");
 			Debug.Print("resultParameter3 = p3 return\r\n");
 			Debug.Print("resultParameter4 = p4 return\r\n");
-			Debug.Print("resultParameter5 = p5 return\r\n");
-            //Bitmap LCD = new Bitmap(SystemMetrics.ScreenWidth, SystemMetrics.ScreenHeight);
-			/*Bitmap LCD = new Bitmap(150,150);
- 
-            //clears the memory and not the display
-            //LCD.Clear();
-            //draw on memory
-            LCD.DrawLine(Colors.Red, 10, 0, 0, 149, 149);
-			//LCD.SetPixel(10, 10, Colors.White);
-            //transfer the bitmap memory to the actual display
-            LCD.Flush();*/
+			Debug.Print("resultParameter5 = p5 return\r\n"); 
+			//int numBytes;
 
-			
-			/*int x0, x1, y0, y1;
-			int cc = 0;
-			Bitmap LCD = new Bitmap(200, 200);
-			
-			x0 = 10;
-			y0 = 10;
-			x1 = 190;
-			y1 = 190;
-			while (true){
-				LCD.Clear();
-				LCD.DrawLine(Colors.Red, 3, x0, y0, x1, y1);
-				if (cc == 0){
-					x0 += 5;
-					x1 -= 5;
-				} else {
-					x0 -= 5;
-					x1 += 5;
-				}
-				if (x0 >= 190)
-					cc = 1;
-				else if (x0 <= 10)
-					cc = 0;
-
-				LCD.Flush();
-			}
-*/
-			/*Bitmap LCD = new Bitmap(143,157);            
-			Bitmap image = new Bitmap("face.bmp");
-            LCD.DrawImage(0,0,image,0,0,143,157,0);		
-            LCD.Flush();    */   
+			while (true) {}
+			/*while (true){
+				numBytes = serialPort.BytesToRead;
+				if (numBytes != 0)
+					Debug.Print("bytes to read: " + numBytes.ToString());
+				serialPort.Read(m_recvBuffer, 0, numBytes);
+				for (int i=0; i<numBytes; i++)
+					Debug.Print(((char)m_recvBuffer[i]).ToString());
+			}*/			
 		}
-    }
+		
+		static void SerialPortHandler(object sender, SerialDataReceivedEventArgs e)
+        {            
+			byte[] m_recvBuffer = new byte[100];
+			//char[] charBuffer = new char[100];
+			//Debug.Print("serial port handler\r\n");
+            SerialPort serialPort = (SerialPort)sender;
+            //string inData = serialPort.ReadExisting();
+			//Debug.Print(inData);
+			
+			int numBytes = serialPort.BytesToRead;
+            serialPort.Read(m_recvBuffer, 0, numBytes);
+			serialPort.Write(m_recvBuffer, 0, numBytes);
+			serialPort.Flush();
+			//Debug.Print("bytes read: " + numBytes.ToString());
+			/*for (int i=0; i<numBytes; i++)
+				charBuffer[i] = (char)m_recvBuffer[i];
+			string s = new string(charBuffer);
+			Debug.Print(s);*/
+            /*accumReceiveString = String.Concat(accumReceiveString, inData);
+
+            string strippedReceive = String.Empty;
+            while ((accumReceiveString.Contains("\n")) || (accumReceiveString.Contains("\r")))
+            {
+                strippedReceive = accumReceiveString.Substring(0, accumReceiveString.IndexOf('\n'));
+                accumReceiveString = accumReceiveString.Remove(0, accumReceiveString.IndexOf('\n') + 1);
+                processResponse(strippedReceive);
+            }*/
+        }
+   }
 }
