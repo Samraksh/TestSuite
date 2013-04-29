@@ -1,0 +1,12 @@
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.exe.config
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.exe
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.pdb
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Debugger.dll
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\WinUsbInvoke.dll
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Tasks.dll
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Debugger.pdb
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\WinUsbInvoke.pdb
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Tasks.pdb
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.csprojResolveAssemblyReference.cache
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.exe
+D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.pdb

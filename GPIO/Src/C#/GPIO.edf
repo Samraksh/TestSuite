@@ -1,9 +1,0 @@
-level_0;
-
-include gpio.hkp;
-
-group GPIOTEST = (Gpio1);
-event(GPIOTEST) 
-	EventStartTest = (R);
-	EventEndTest = (F); 
-end;
