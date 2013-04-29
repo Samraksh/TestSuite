@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlaveBasicPing", "SlaveBasicPing\SlaveBasicPing.csproj", "{24878088-2B3F-4EBE-B207-79BE104296CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{24878088-2B3F-4EBE-B207-79BE104296CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24878088-2B3F-4EBE-B207-79BE104296CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24878088-2B3F-4EBE-B207-79BE104296CA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{24878088-2B3F-4EBE-B207-79BE104296CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24878088-2B3F-4EBE-B207-79BE104296CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24878088-2B3F-4EBE-B207-79BE104296CA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
