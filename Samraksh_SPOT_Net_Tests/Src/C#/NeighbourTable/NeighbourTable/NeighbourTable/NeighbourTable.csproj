@@ -42,7 +42,8 @@
     <Reference Include="Microsoft.SPOT.Hardware" />
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
-    <Reference Include="Samraksh_SPOT_Net">
+    <Reference Include="Samraksh_SPOT_Net, Version=4.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\SOURCE\STABLE\DotNet-MF\MicroFrameworkPK_v4_3\Samraksh\Interops\Samraksh_SPOT_Net\Samraksh_SPOT_Net\bin\Debug\Samraksh_SPOT_Net.dll</HintPath>
     </Reference>
   </ItemGroup>

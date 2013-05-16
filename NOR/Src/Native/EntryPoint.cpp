@@ -31,7 +31,7 @@ void ApplicationEntryPoint()
     {
     	NORTest norTestObject(0,100);
 
-    	norTestObject.Execute(LEVEL_0);
+    	norTestObject.Execute(LEVEL_1);
 
     } while(FALSE); // run only once!
 
