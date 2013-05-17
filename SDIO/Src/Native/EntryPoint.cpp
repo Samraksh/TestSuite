@@ -29,7 +29,7 @@ void ApplicationEntryPoint()
 
     do
     {
-    
+
     } while(FALSE); // run only once!
 
     while(TRUE);

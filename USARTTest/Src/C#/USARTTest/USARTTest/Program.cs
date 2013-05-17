@@ -206,6 +206,8 @@ namespace USARTTest
         public void SlaveMode()
         {
 
+            Debug.EnableGCMessages(false);
+
             while (true)
             {
 

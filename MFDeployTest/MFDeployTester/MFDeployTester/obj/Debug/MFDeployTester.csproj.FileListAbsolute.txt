@@ -1,0 +1,12 @@
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\MFDeployTester.exe.config
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\MFDeployTester.exe
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\MFDeployTester.pdb
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\Microsoft.SPOT.Debugger.dll
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\WinUsbInvoke.dll
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\Microsoft.SPOT.Tasks.dll
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\Microsoft.SPOT.Debugger.pdb
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\WinUsbInvoke.pdb
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\bin\Debug\Microsoft.SPOT.Tasks.pdb
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\obj\Debug\MFDeployTester.csprojResolveAssemblyReference.cache
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\obj\Debug\MFDeployTester.exe
+D:\Main\Work\Tests\TestSys\MFDeployTest\MFDeployTester\MFDeployTester\obj\Debug\MFDeployTester.pdb
