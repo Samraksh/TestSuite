@@ -135,16 +135,23 @@ namespace MFDeployTester
         {
             PingConnectionType ptype = PingConnectionType.NoConnection;
             MFDeploy mf = new MFDeploy();
+            UInt16 i = 0;
+            UInt16 successfulPings = 0;
 
-            while (true)
+            while (i++ < 100)
             {
                  ptype = mf.Ping();
 
+                 if (ptype == PingConnectionType.NoConnection)
+                     successfulPings++;
+
                  Console.WriteLine(ptype.ToString());
 
-                Thread.Sleep(500);
+                 Thread.Sleep(500);
                 
             }
+
+            Console.WriteLine("Ping Rate : " + successfulPings / i);
         }
     }
 }
