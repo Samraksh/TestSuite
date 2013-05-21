@@ -7,7 +7,7 @@
 #include <Samraksh\HAL_util.h>
 
 //---//
-
+extern SDIO_Driver g_SDIODriver;
 
 SDIOTest::SDIOTest( int seedValue, int numberOfEvents )
 {
@@ -18,6 +18,9 @@ SDIOTest::SDIOTest( int seedValue, int numberOfEvents )
 	this->numberOfEvents = numberOfEvents;
 
 	testMathInstance.prng_init(30);
+
+	g_SDIODriver.Initialize();
+
 
 };
 

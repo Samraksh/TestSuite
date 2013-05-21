@@ -5,6 +5,8 @@
 #include <tinyhal.h>
 #include "testMath.h"
 
+#include <sdio/netmf_sdio.h>
+
 #define LEVEL_0A 0
 #define LEVEL_0B 1
 #define LEVEL_0C 2

@@ -7,7 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-
+#include "SDIO.h"
 
 
 void Keep_Linker_Happy() {
@@ -27,8 +27,11 @@ void ApplicationEntryPoint()
     BOOL result;
     
 
+    SDIOTest sdtest(0, 100);
+
     do
     {
+    	sdtest.Execute(0);
 
     } while(FALSE); // run only once!
 

@@ -1,0 +1,5 @@
+# This script is designed to generate a dat file from an input pe file
+
+$inputFilename = $sys.args[0]
+
+ 

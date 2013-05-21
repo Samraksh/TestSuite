@@ -5,14 +5,27 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections;
 
 using _DBG = Microsoft.SPOT.Debugger;
+using _WP = Microsoft.SPOT.Debugger.WireProtocol;
 
 // Nived.Sivadas
 // Attempts to test each functionality of MFDeploy due  to the host of issues we are facing 
 
-namespace MFDeployTester
+namespace Samraksh.SPOT.Tests
 {
+
+    public enum EraseOptions
+    {
+        Deployment = 0x01,
+        UserStorage = 0x02,
+        FileSystem = 0x04,
+        Firmware = 0x08,
+        UpdateStorage = 0x10,
+        SimpleStorage = 0x20,
+    }
+
     public enum PingConnectionType
     {
         TinyCLR,
@@ -26,7 +39,13 @@ namespace MFDeployTester
 
         private _DBG.Engine m_eng;
 
+        private _DBG.PortDefinition m_port;
+        private _DBG.PortDefinition m_portTinyBooter;
+        
+
         public Stream stream;
+
+        public _DBG.PortDefinition pd;
 
         private readonly byte[] m_data =
                     {
@@ -56,11 +75,80 @@ namespace MFDeployTester
         {
         }
 
+        private bool IsClrDebuggerEnabled()
+        {
+            try
+            {
+                if (m_eng.IsConnectedToTinyCLR)
+                {
+                    return (m_eng.Capabilities.SourceLevelDebugging);
+                }
+            }
+            catch
+            {
+            }
+            return false;
+        }
+
+        public bool Disconnect()
+        {
+            if (m_eng != null)
+            {
+                m_eng.OnNoise -= new _DBG.NoiseEventHandler(OnNoiseHandler);
+                m_eng.OnMessage -= new _DBG.MessageEventHandler(OnMessage);
+
+                m_eng.Stop();
+                m_eng.Dispose();
+                m_eng = null;
+            }
+            return true;
+        }
+
+        public bool Connect(int timeout_ms, bool tryconnect)
+        {
+            string port = "COM1";
+            uint baudrate = 115200;
+
+            pd = _DBG.PortDefinition.CreateInstanceForSerial(port, port, baudrate);
+
+            try
+            {
+                if (m_eng == null)
+                {
+                    m_eng = new _DBG.Engine(pd);
+
+                    m_eng.OnNoise += new _DBG.NoiseEventHandler(OnNoiseHandler);
+                    m_eng.OnMessage += new _DBG.MessageEventHandler(OnMessage);
+
+                    m_eng.Start();
+                }
+
+                if (m_eng.TryToConnect(0, timeout_ms))
+                {
+                    m_eng.UnlockDevice(m_data);
+                }
+                else
+                {
+                    Console.WriteLine("Unable to connect to COM Port\n");
+                }
+
+
+            }
+            catch (Exception)
+            {
+            }
+
+            return true;
+        }
+
         public MFDeploy()
         {
-            _DBG.PortDefinition pd = null;
+            //_DBG.PortDefinition pd = null;
 
             m_eng = null;
+            pd = null;
+
+            /*
 
             string port = "COM1";
             uint baudrate = 115200;
@@ -95,10 +183,301 @@ namespace MFDeployTester
             catch (Exception)
             {
             }
-
+            */
 
             
         }
+
+        public bool Erase(params EraseOptions[] options)
+        {
+            bool ret = false;
+            bool fReset = false;
+
+            if (m_eng == null) throw new Exception("Eng instance not initialized\n");
+
+            EraseOptions optionFlags = 0;
+
+            if (options == null || options.Length == 0)
+            {
+                optionFlags = (EraseOptions.Deployment | EraseOptions.FileSystem | EraseOptions.UserStorage | EraseOptions.SimpleStorage | EraseOptions.UpdateStorage);
+            }
+            else
+            {
+                foreach (EraseOptions opt in options)
+                {
+                    optionFlags |= opt;
+                }
+            }
+
+            Console.WriteLine("Connecting to Device ... \n");
+
+            if (!Connect(500, true))
+            {
+                throw new Exception("Unable to connect to device\n");
+            }
+
+            Console.WriteLine("Obtaining Flash Sector Map ... \n");
+
+            _DBG.WireProtocol.Commands.Monitor_FlashSectorMap.Reply reply = m_eng.GetFlashSectorMap();
+
+            if (reply == null) throw new Exception("Unable to connect to device\n");
+
+            _DBG.WireProtocol.Commands.Monitor_Ping.Reply ping = m_eng.GetConnectionSource();
+
+            ret = true;
+
+
+            long total = 0;
+            long value = 0;
+
+            bool isConnectedToCLR = ((ping != null) && (ping.m_source == _DBG.WireProtocol.Commands.Monitor_Ping.c_Ping_Source_TinyCLR));
+
+            // Pause execution 
+            if (isConnectedToCLR)
+            {
+                Console.WriteLine("Connected to CLR and pausing execution ... \n");
+                m_eng.PauseExecution();
+            }
+
+            List<_DBG.WireProtocol.Commands.Monitor_FlashSectorMap.FlashSectorData> eraseSectors = new List<_DBG.WireProtocol.Commands.Monitor_FlashSectorMap.FlashSectorData>();
+
+            foreach (_DBG.WireProtocol.Commands.Monitor_FlashSectorMap.FlashSectorData fsd in reply.m_map)
+            {
+                
+                switch (fsd.m_flags & _DBG.WireProtocol.Commands.Monitor_FlashSectorMap.c_MEMORY_USAGE_MASK)
+                {
+                    case _DBG.WireProtocol.Commands.Monitor_FlashSectorMap.c_MEMORY_USAGE_DEPLOYMENT:
+                        if (EraseOptions.Deployment == (optionFlags & EraseOptions.Deployment))
+                        {
+                            eraseSectors.Add(fsd);
+                            total++;
+                        }
+                        break;
+
+                }
+            }
+
+            foreach (_DBG.WireProtocol.Commands.Monitor_FlashSectorMap.FlashSectorData fsd in eraseSectors)
+            {
+
+                Console.WriteLine("Erasing ... Address {0:X}  Size {1:X}", fsd.m_address.ToString(), fsd.m_size.ToString());
+
+                ret &= m_eng.EraseMemory(fsd.m_address, fsd.m_size);
+
+                value++;
+            }
+
+            // reset if we specifically entered tinybooter for the erase
+            if (fReset)
+            {
+                m_eng.ExecuteMemory(0);
+                
+            }
+            // reboot if we are talking to the clr
+            if (isConnectedToCLR)
+            {
+                Console.WriteLine("Rebooting ...");
+                m_eng.RebootDevice(_DBG.Engine.RebootOption.RebootClrOnly);
+            }
+
+            return ret;
+        }
+
+        public bool ConnectToTinyBooter()
+        {
+            bool ret = false;
+
+            if (!Connect(500, true)) return false;
+
+            if (m_eng != null)
+            {
+                if (m_eng.ConnectionSource == _DBG.ConnectionSource.TinyBooter) return true;
+
+                m_eng.RebootDevice(_DBG.Engine.RebootOption.EnterBootloader);
+
+                // tinyBooter is only com port so
+                if (m_port is _DBG.PortDefinition_Tcp)
+                {
+                    _DBG.PortDefinition pdTmp = m_port;
+
+                    Disconnect();
+
+                    try
+                    {
+                        m_port = m_portTinyBooter;
+
+                        // digi takes forever to reset
+                        if (!Connect(60000, true))
+                        {
+                            Console.WriteLine("Unable to connect to TinyBooter ...\n");
+                            return false;
+                        }
+                    }
+                    finally
+                    {
+                        m_port = pdTmp;
+                    }
+                }
+                bool fConnected = false;
+                for (int i = 0; i < 40; i++)
+                {
+
+                    if (fConnected = m_eng.TryToConnect(0, 500, true, _DBG.ConnectionSource.Unknown))
+                    {
+                        _WP.Commands.Monitor_Ping.Reply reply = m_eng.GetConnectionSource();
+                        ret = (reply.m_source == _WP.Commands.Monitor_Ping.c_Ping_Source_TinyBooter);
+
+                        break;
+                    }
+                }
+                if (!fConnected)
+                {
+                    Console.WriteLine("Unable to connect to TinyBooter ...\n");
+                }
+            }
+            return ret;
+        }
+
+        private void PrepareForDeploy(ArrayList blocks)
+        {
+            const uint c_DeploySector = _WP.Commands.Monitor_FlashSectorMap.c_MEMORY_USAGE_DEPLOYMENT;
+            const uint c_SectorUsageMask = _WP.Commands.Monitor_FlashSectorMap.c_MEMORY_USAGE_MASK;
+
+            bool fEraseDeployment = false;
+
+            // if vsdebug is not enabled then we cannot write/erase
+            if (!IsClrDebuggerEnabled())
+            {
+                // only check for signature file if we are uploading firmware
+                if (!ConnectToTinyBooter()) throw new Exception("No Response from device\n"); ;
+            }
+
+            _WP.Commands.Monitor_FlashSectorMap.Reply map = m_eng.GetFlashSectorMap();
+
+            if (map == null) throw new Exception("No Response from device\n");
+
+            foreach (_DBG.SRecordFile.Block bl in blocks)
+            {
+                foreach (_WP.Commands.Monitor_FlashSectorMap.FlashSectorData sector in map.m_map)
+                {
+                    if (sector.m_address == bl.address)
+                    {
+                        // only support writing with CLR to the deployment sector and RESERVED sector (for digi)
+                        if (c_DeploySector == (c_SectorUsageMask & sector.m_flags))
+                        {
+                            fEraseDeployment = true;
+                        }
+                        else
+                        {
+                            if (m_eng.ConnectionSource != _DBG.ConnectionSource.TinyBooter)
+                            {
+                                //if (OnProgress != null) OnProgress(0, 1, Properties.Resources.StatusConnectingToTinyBooter);
+
+                                // only check for signature file if we are uploading firmware
+                                if (!ConnectToTinyBooter()) throw new Exception("No Response from device\n"); 
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            if (fEraseDeployment)
+            {
+                this.Erase(EraseOptions.Deployment);
+            }
+            else if (m_eng.ConnectionSource != _DBG.ConnectionSource.TinyBooter)
+            {
+                //if we are not writing to the deployment sector then assure that we are talking with TinyBooter
+                ConnectToTinyBooter();
+            }
+            if (m_eng.ConnectionSource == _DBG.ConnectionSource.TinyCLR)
+            {
+                m_eng.PauseExecution();
+            }
+        }
+
+        public bool Deploy(string filePath, string signatureFile, ref uint entryPoint)
+        {
+            entryPoint = 0;
+
+            if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
+            if (m_eng == null) throw new Exception("Engine not initialized");
+
+
+            m_eng.TryToConnect(1, 100, true, _DBG.ConnectionSource.Unknown);
+
+            bool sigExists = File.Exists(signatureFile);
+            FileInfo fi = new FileInfo(filePath);
+
+            ArrayList blocks = new ArrayList();
+            entryPoint = _DBG.SRecordFile.Parse(filePath, blocks, sigExists ? signatureFile : null);
+
+            if (blocks.Count > 0)
+            {
+                long total = 0;
+                long value = 0;
+
+                for (int i = 0; i < blocks.Count; i++)
+                {
+                    total += (blocks[i] as _DBG.SRecordFile.Block).data.Length;
+                }
+
+                PrepareForDeploy(blocks);
+                
+                foreach (_DBG.SRecordFile.Block block in blocks)
+                {
+                    long len  = block.data.Length;
+                    uint addr = block.address;
+
+                    //if (EventCancel.WaitOne(0, false)) throw new MFUserExitException();
+
+                    block.data.Seek(0, SeekOrigin.Begin);
+
+                    //if (OnProgress != null)
+                    //{
+                    //    OnProgress(0, total, string.Format(Properties.Resources.StatusEraseSector, block.address));
+                    //}
+
+                    // the clr requires erase before writing
+                    if (!m_eng.EraseMemory(block.address, (uint)len)) return false;
+
+                    while(len > 0 )
+                    {
+            //            if (EventCancel.WaitOne(0, false)) throw new MFUserExitException();
+
+                        int buflen = len > 1024? 1024: (int)len;
+                        byte[] data = new byte[buflen];
+
+                        if (block.data.Read(data, 0, buflen) <= 0)  return false;
+
+                        if (!m_eng.WriteMemory(addr, data)) return false;
+
+                        value += buflen;
+                        addr += (uint)buflen;
+                        len  -= buflen;
+
+                    }
+                    if (_DBG.ConnectionSource.TinyCLR != m_eng.ConnectionSource)
+                    {
+                        byte[] emptySig = new byte[128];
+
+            
+
+                        if (!m_eng.CheckSignature(((block.signature == null || block.signature.Length == 0)? emptySig: block.signature), 0))  throw new Exception("Signature can not be verified") ;
+                    }
+                }
+            
+
+            
+
+
+            }
+
+            return true;
+
+        }
+
+
 
         public PingConnectionType Ping()
         {
@@ -129,29 +508,118 @@ namespace MFDeployTester
         }
     }
 
-    class Program
+    class MFDeployTester
     {
-        static void Main(string[] args)
+        MFDeploy mf;
+
+        public MFDeployTester()
         {
-            PingConnectionType ptype = PingConnectionType.NoConnection;
-            MFDeploy mf = new MFDeploy();
+            mf = new MFDeploy();
+
+            mf.Connect(500, true);
+        }
+
+        public void DeployTest()
+        {
             UInt16 i = 0;
-            UInt16 successfulPings = 0;
+
+            string deploymentFile = "HelloWorld.s19";
+
+            string signatureFile = "";
+
+            uint entrypoint = 0;
 
             while (i++ < 100)
             {
-                 ptype = mf.Ping();
+                try
+                {
+                    mf.Deploy(deploymentFile, signatureFile, ref entrypoint);
+                }
+                catch (Exception)
+                {
+                    mf.Disconnect();
+                }
 
-                 if (ptype == PingConnectionType.NoConnection)
-                     successfulPings++;
+                Thread.Sleep(500);
+                mf.Disconnect();
 
-                 Console.WriteLine(ptype.ToString());
-
-                 Thread.Sleep(500);
-                
             }
 
-            Console.WriteLine("Ping Rate : " + successfulPings / i);
+        }
+
+        public void EraseTest()
+        {
+            UInt16 i = 0;
+            EraseOptions[] options = new EraseOptions[1];
+            UInt16 successfulErases = 0;
+
+            options[0] = EraseOptions.Deployment;
+
+            mf.Connect(500, true);
+
+            while (i++ < 100)
+            {
+                try
+                {
+                    if (mf.Erase(options))
+                    {
+                        Console.WriteLine("Erase Successful");
+                        successfulErases++;
+                    }
+                }
+                catch (Exception)
+                {
+                    // Disconnect the link
+                    mf.Disconnect();
+                }
+
+                Thread.Sleep(500);
+
+            }
+
+            mf.Disconnect();
+
+            Console.WriteLine("Number of erases " + successfulErases.ToString() + "Total number of erases " + i.ToString()); 
+
+        }
+
+
+        public void PingTest()
+        {
+            PingConnectionType ptype = PingConnectionType.NoConnection;
+            UInt16 i = 0;
+            UInt16 successfulPings = 0;
+
+            mf.Connect(500, true);
+
+            while (i++ < 100)
+            {
+                ptype = mf.Ping();
+
+                if (ptype != PingConnectionType.NoConnection)
+                    successfulPings++;
+
+                Console.WriteLine(ptype.ToString());
+
+                Thread.Sleep(500);
+
+            }
+
+            Console.WriteLine("Successfull Pings " + successfulPings.ToString() + " Total Pings " + i.ToString());
+
+            mf.Disconnect();
+        }
+
+        static void Main(string[] args)
+        {
+            MFDeployTester mf = new MFDeployTester();
+
+            //mf.PingTest();
+
+            //mf.EraseTest();
+
+            
+
         }
     }
 }
