@@ -189,6 +189,10 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\sdio\dotNetMF.proj" />
   </ItemGroup>
   <ItemGroup>
+    <DriverLibs Include="STM32F10x_dma.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\dma\dotNetMF.proj" />
+  </ItemGroup>
+  <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\SimpleHeap_config\Stubs\dotNetMF.proj" />
     <DriverLibs Include="SimpleHeap_config_stubs.$(LIB_EXT)" />
   </ItemGroup>

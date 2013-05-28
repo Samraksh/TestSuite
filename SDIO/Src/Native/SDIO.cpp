@@ -4,6 +4,7 @@
 
 
 #include "SDIO.h"
+#include <tinyhal.h>
 #include <Samraksh\HAL_util.h>
 
 //---//
@@ -11,6 +12,7 @@ extern SDIO_Driver g_SDIODriver;
 
 SDIOTest::SDIOTest( int seedValue, int numberOfEvents )
 {
+
 	CPU_GPIO_Initialize();
 	CPU_SPI_Initialize();
 
@@ -18,8 +20,6 @@ SDIOTest::SDIOTest( int seedValue, int numberOfEvents )
 	this->numberOfEvents = numberOfEvents;
 
 	testMathInstance.prng_init(30);
-
-	g_SDIODriver.Initialize();
 
 
 };
@@ -31,6 +31,8 @@ BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 	hal_printf("resultParameter1 = %s\n", resultParameter1);
 	hal_printf("resultParameter2 = %s\n", resultParameter2);
 
+	USART_Flush(COM1);
+
 	return TRUE;
 }
 
@@ -38,14 +40,61 @@ BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 BOOL SDIOTest::Level_0A()
 {
 
+	UINT8 input[512];
+	UINT8 output[512];
+
+	for(UINT16 i = 0; i < 512; i++)
+	{
+		input[i] = i % 254;
+	}
+
+	for(UINT16 i = 0; i < 512; i++)
+	{
+		output[i] = 0;
+	}
+
 	UINT16 i = 0;
+
+	if(g_SDIODriver.Initialize() != DS_Success)
+	{
+		DisplayStats(FALSE, "SD Card Initialization Failed", NULL, NULL);
+		return FALSE;
+	}
 
 	while(i++ < this->numberOfEvents)
 	{
+		if(g_SDIODriver.WriteBlock(input,(2 << 15), 512) != DS_Success)
+		{
+			DisplayStats(FALSE, "Unable to write to SD Card", NULL, NULL);
+			return FALSE;
+		}
+
+
+
+
+
+		if(g_SDIODriver.ReadBlock(output, (2 << 15), 512) != DS_Success)
+		{
+			DisplayStats(FALSE, "Unable to read SD Card", NULL, NULL);
+			return FALSE;
+		}
+
+
+
+		for(UINT8 i = 0; i < 24; i++)
+		{
+			if(input[i] != output[i])
+			{
+				DisplayStats(FALSE, "Level 0A SDIO Test Failed", NULL,NULL);
+				return FALSE;
+			}
+		}
+
+		break;
 
 	}
-	DisplayStats(FALSE, "Reading Manufacture ID Failed", NULL, NULL);
 
+	DisplayStats(TRUE, "Level 0A SDIO Test Success",NULL, NULL);
 	return TRUE;
 
 }
