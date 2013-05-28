@@ -4,6 +4,7 @@ using Samraksh.SPOT.Net;
 using System.Threading;
 using Samraksh.SPOT.Net.Mac;
 using Microsoft.SPOT.Hardware;
+using Samraksh.SPOT.Hardware.EmoteDotNow;
 
 namespace Samraksh.SPOT.Tests
 {
@@ -48,8 +49,10 @@ namespace Samraksh.SPOT.Tests
 
     public class NeighbourTableTesting
     {
-        CSMA myCSMA;
-
+        OMAC myOMAC;
+        EmoteLCD lcd = new EmoteLCD();
+        int neighborCount;
+    
         static OutputPort SendPort = new OutputPort((Cpu.Pin)30, true);
         static OutputPort ReceivePort = new OutputPort((Cpu.Pin)31, true);
         static OutputPort NeighbourCheckPort = new OutputPort((Cpu.Pin)24, true);
@@ -58,13 +61,13 @@ namespace Samraksh.SPOT.Tests
 
         UInt16 myAddress;
 
-        MacConfiguration csmaConfig = null;
+        MacConfiguration omacConfig = null;
 
         PingMsg sendMsg = new PingMsg();
 
         ReceiveCallBack rcallback;
-
-        Timer sendTimer;
+        
+        //Timer sendTimer;
 
         NeighbourhoodChangeCallBack ncallback;
 
@@ -76,60 +79,71 @@ namespace Samraksh.SPOT.Tests
 
         void HandleNeighbourChange(UInt16 neighboursChanged)
         {
+            neighborCount = neighboursChanged;
+			Debug.Print("Neighbor change: " + neighboursChanged.ToString() + "\r\n");
             NeighbourCheckPort.Write(true);
             NeighbourCheckPort.Write(false);
 
-           
-            
-            UInt16[] neighbourlist = myCSMA.GetNeighbourList();
+            UInt16[] neighbourlist = myOMAC.GetNeighbourList();
 
             if (neighbourlist == null)
             {
                 Debug.Print("The Neighborlist is null \n");
-                return;
             }
-
-            Debug.Print("My Neighbours are : \n");
-
-            for (int i = 0; i < 5; i++)
+            else
             {
-                Debug.Print(neighbourlist[i].ToString() + " ");
+
+                Debug.Print("My Neighbours are : ");
+
+                for (int i = 0; i < 12; i++)
+                {
+                    if (neighbourlist[i] != 0)
+                    {
+                        Debug.Print(neighbourlist[i].ToString() + " ");
+                    }
+                }
+
+                Debug.Print("\n");
             }
 
-            Debug.Print("\n");
+            int onesDigit = neighborCount % 10;
+            int tensDigit = ((neighborCount - onesDigit) % 100) / 10;           
+            lcd.Write(LCD.CHAR_0, LCD.CHAR_0, LCD.CHAR_0 + tensDigit, LCD.CHAR_0 + onesDigit);
              
         }
 
         public NeighbourTableTesting()
         {
-
-            csmaConfig = new MacConfiguration();
+            omacConfig = new MacConfiguration();
+            omacConfig.NeighbourLivelinesDelay = 60;
+            lcd.Initialize();
+            lcd.Write(LCD.CHAR_0, LCD.CHAR_0, LCD.CHAR_0, LCD.CHAR_0);
 
             rcallback = HandleMessage;
 
             ncallback = HandleNeighbourChange;
 
-            if (CSMA.Configure(csmaConfig, rcallback, ncallback) != DeviceStatus.Success)
+            if (OMAC.Configure(omacConfig, rcallback, ncallback) != DeviceStatus.Success)
             {
-                Debug.Print("The CSMA Configure call failed \n");
+                Debug.Print("The OMAC Configure call failed \n");
             }
 
             try
             {
-                myCSMA = CSMA.Instance;
+                myOMAC = OMAC.Instance;
             }
             catch (MacNotConfiguredException m)
             {
-                Debug.Print("Exception in NeighbourTable Test : Mac not configured \n");
+                Debug.Print("Exception in NeighbourTable Test : Mac not configured "+m.ToString()+"\n");
             }
             catch (Exception e)
             {
-                Debug.Print("Unknown exception from mac grab instance\n");
+                Debug.Print("Unknown exception from mac grab instance "+e.ToString()+"\n");
             }
 
-            myAddress = myCSMA.GetAddress();
+            myAddress = myOMAC.GetAddress();
 
-            Debug.Print("CSMA Init done. \n");
+            Debug.Print("OMAC Init done. \n");
 
         }
 
@@ -147,10 +161,17 @@ namespace Samraksh.SPOT.Tests
             SendPort.Write(false);
 
             byte[] msg = ping.ToBytes();
-            myCSMA.Send((UInt16)Addresses.BROADCAST, msg, 0, (ushort)msg.Length);
+            myOMAC.Send((UInt16)Addresses.BROADCAST, msg, 0, (ushort)msg.Length);
 
 
 
+        }
+
+        void updateDisplay()
+        {
+            int onesDigit = neighborCount % 10;
+            int tensDigit = ((neighborCount - onesDigit) % 100) / 10;
+            lcd.Write(LCD.CHAR_0, LCD.CHAR_0, LCD.CHAR_0 + tensDigit, LCD.CHAR_0 + onesDigit);
         }
 
         void Sender(Object state)
@@ -161,7 +182,7 @@ namespace Samraksh.SPOT.Tests
         public void Run()
         {
             Debug.Print("Starting Timer ...\n");
-            Timer sendTimer = new Timer(Sender, null, 0, 1000);
+            //sendTimer = new Timer(Sender, null, 0, 1000);
         }
 
         public static void Main()
@@ -172,7 +193,9 @@ namespace Samraksh.SPOT.Tests
 
             while (true)
             {
-                Thread.Sleep(500);
+                ntest.updateDisplay();
+                Thread.Sleep(5000);
+                Debug.Print("Running...\r\n");                
             }
 
         }

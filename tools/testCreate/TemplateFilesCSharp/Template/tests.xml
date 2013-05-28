@@ -14,7 +14,6 @@
 		<TestLocation>
 		</TestLocation>
 		<TestMFVersionNum>
-			4.0
 		</TestMFVersionNum>
 		<TestGitOption>			
 		</TestGitOption>
@@ -22,5 +21,15 @@
 		</TestGitBranch>
 		<TestUsePrecompiledBinary>
 		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
 	</Test>
 </TestSuite>

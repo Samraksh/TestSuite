@@ -1,0 +1,7 @@
+result = PASS
+accuracy = 3
+resultParameter1 = p1x return
+resultParameter2 = p2x return
+resultParameter3 = p3x return
+resultParameter4 = p4x return
+resultParameter5 = p5x return

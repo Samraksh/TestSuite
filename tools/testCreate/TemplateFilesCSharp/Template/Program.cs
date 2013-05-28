@@ -12,12 +12,11 @@ namespace TestSuite
 	
         public static void Main()
         {
-		Parameters parameters = new Parameters();
+			Parameters parameters = new Parameters();
 
         	while(true)
-		{
-		}
+			{
+			}
         }
-
     }
 }
