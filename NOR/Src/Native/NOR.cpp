@@ -23,12 +23,15 @@ NORTest::NORTest( int seedValue, int numberOfEvents )
 
 };
 
-BOOL NORTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, char* accuracy)
+BOOL NORTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
 {
 	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
-	hal_printf("\r\naccuracy=%s\r\n", accuracy);
+	hal_printf("\r\naccuracy=%d\r\n", accuracy);
 	hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
 	hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
+	hal_printf("\r\nresultParameter3=%s\r\n", "null");
+	hal_printf("\r\nresultParameter4=%s\r\n", "null");
+	hal_printf("\r\nresultParameter5=%s\r\n", "null");
 
 	return TRUE;
 }
@@ -45,14 +48,14 @@ BOOL NORTest::Level_0A()
 
 		if(gNORDriver.GetManufactureId() == MANUFACTURE_ID)
 		{
-			DisplayStats(TRUE, "Reading Manufacture Successful", NULL, NULL);
+			DisplayStats(TRUE, "Reading Manufacture Successful", NULL, 0);
 			break;
 		}
 
 		for(UINT16 i = 0; i < 10000; i++);
 	}
 
-	DisplayStats(FALSE, "Reading Manufacture ID Failed", NULL, NULL);
+	DisplayStats(FALSE, "Reading Manufacture ID Failed", NULL, 0);
 
 	return TRUE;
 
