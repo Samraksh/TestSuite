@@ -25,10 +25,10 @@ NORTest::NORTest( int seedValue, int numberOfEvents )
 
 BOOL NORTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, char* accuracy)
 {
-	hal_printf("result = %s\n", (result) ? "true":"false");
-	hal_printf("accuracy = %s\n", accuracy);
-	hal_printf("resultParameter1 = %s\n", resultParameter1);
-	hal_printf("resultParameter2 = %s\n", resultParameter2);
+	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
+	hal_printf("\r\naccuracy=%s\r\n", accuracy);
+	hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
+	hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
 
 	return TRUE;
 }
@@ -109,6 +109,7 @@ BOOL NORTest::Level_1()
 	UINT16 inputdata[20];
 	UINT16 outputdata[20];
 
+	for(UINT32 i = 0; i < 100000; i++);
 
 	while(i++ < this->numberOfEvents)
 	{
