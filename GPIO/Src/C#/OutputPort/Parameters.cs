@@ -5,8 +5,9 @@ namespace ParameterClass
     class Parameters
     {
 	// required TestRig parameters
+	public int testTimeout = 60000;
 	public bool useLogic = true;
-	public double sampleTimeMs = 4000;
+	public double sampleTimeMs = 10000;
 	public double sampleFrequency = 4000000;
 	public bool useExecutable = false;
 	public string executableName = "example.exe";

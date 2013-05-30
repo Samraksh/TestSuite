@@ -15,10 +15,4 @@
 68
 65
 28
-61
-70
-70
-This is a file
-that is to
-be sent across the COM port.
-This is my string.
+61

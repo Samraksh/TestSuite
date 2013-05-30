@@ -4,7 +4,7 @@
 			C# GPIO
 		</Description>
 		<TestPath>
-			GPIO\Src\C#
+			GPIO\Src\C#\OutputPort
 		</TestPath>
 		<TestProjName>
 			GPIO.csproj

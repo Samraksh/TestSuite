@@ -2,12 +2,12 @@
 [publicDecl, typeDecl, parameter, equal_sign, value, semiC] = textread('Parameters.cs', '%s %s %s %c %s%c', 'headerlines', 7); 
 
 % extracting parameters and associated values
-sampleTimeMsStr = value(2);
-sampleFrequencyStr = value(3);
-readFrequencyStr = value(15);
-upperAllowedFrequencyStr = value(16);
-lowerAllowedFrequencyStr = value(17);
-expectedFrequencyStr = value(18);
+sampleTimeMsStr = value(3);
+sampleFrequencyStr = value(4);
+readFrequencyStr = value(16);
+upperAllowedFrequencyStr = value(17);
+lowerAllowedFrequencyStr = value(18);
+expectedFrequencyStr = value(19);
 
 % stripping last ';' character from value
 sampleTimeMsStr = strrep(sampleTimeMsStr, ';', '');
