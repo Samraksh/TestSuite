@@ -4,10 +4,10 @@
 % extracting parameters and associated values
 sampleTimeMsStr = value(3);
 sampleFrequencyStr = value(4);
-readFrequencyStr = value(16);
-upperAllowedFrequencyStr = value(17);
-lowerAllowedFrequencyStr = value(18);
-expectedFrequencyStr = value(19);
+readFrequencyStr = value(19);
+upperAllowedFrequencyStr = value(20);
+lowerAllowedFrequencyStr = value(21);
+expectedFrequencyStr = value(22);
 
 % stripping last ';' character from value
 sampleTimeMsStr = strrep(sampleTimeMsStr, ';', '');

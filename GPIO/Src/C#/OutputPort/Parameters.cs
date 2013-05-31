@@ -6,16 +6,19 @@ namespace ParameterClass
     {
 	// required TestRig parameters
 	public int testTimeout = 60000;
-	public bool useLogic = true;
+	public string useLogic = "normal";
 	public double sampleTimeMs = 10000;
 	public double sampleFrequency = 4000000;
-	public bool useExecutable = false;
-	public string executableName = "example.exe";
-	public int executableTimeoutMs = 9000;
-	public bool useMatlabAnalysis = true;
-	public string matlabScriptName = "analyze.m";
-	public bool usePowershellAnalysis = false;
-	public string powershellName = "analyze.ps1";
+	public bool useCOMPort = false;
+	public string forceCOM = "";
+	public string COMParameters = "115200,N,8,1";
+	public bool useTestScript = false;
+	public string testScriptName = "";
+	public int testScriptTimeoutMs = 9000;
+	public string useAnalysis = "Matlab";
+	public string analysisScriptName = "analyze.m";
+	public bool useResultsFile = false;
+	public string resultsFileName = "results.txt";
 	// Do not change text format above this point
 	
 	// test specific parameters
