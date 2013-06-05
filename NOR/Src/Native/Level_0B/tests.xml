@@ -1,10 +1,10 @@
 <TestSuite>
 	<Test Name='NOR' Type='Native'>
 		<Description>
-			Native NOR Tests Level 0 and Level 1
+			Native NOR Tests Level 0B
 		</Description>
 		<TestPath>
-			NOR\Src\Native
+			NOR\Src\Native\Level_0B
 		</TestPath>
 		<TestProjName>
 			NOR.proj
