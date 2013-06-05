@@ -30,6 +30,9 @@ BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 	hal_printf("accuracy = %s\n", accuracy);
 	hal_printf("resultParameter1 = %s\n", resultParameter1);
 	hal_printf("resultParameter2 = %s\n", resultParameter2);
+	hal_printf("resultParameter3 = %s\n", resultParameter3);
+	hal_printf("resultParameter4 = %s\n", resultParameter4);
+	hal_printf("resultParameter5 = %s\n", resultParameter5);
 
 	USART_Flush(COM1);
 

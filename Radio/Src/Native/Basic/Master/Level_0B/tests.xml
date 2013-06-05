@@ -4,7 +4,7 @@
 			Native Radio Master Test basic ping
 		</Description>
 		<TestPath>
-			Radio\Src\Native\Basic\Master
+			Radio\Src\Native\Basic\Master\Level_0B
 		</TestPath>
 		<TestProjName>
 			Radio.proj

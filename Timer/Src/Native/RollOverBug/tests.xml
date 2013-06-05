@@ -1,10 +1,10 @@
 <TestSuite>
 	<Test Name='TimerTest' Type='Native'>
 		<Description>
-			C++ Timer temp test
+			Roll Over Bug Test
 		</Description>
 		<TestPath>
-			Timer\Src\Native
+			Timer\Src\Native\RollOverBug
 		</TestPath>
 		<TestProjName>
 			Timer.proj

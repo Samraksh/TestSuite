@@ -6,20 +6,35 @@
 
 //---//
 
+RadioTest radioObject;
 
+extern "C"
+{
 
-void* RadioTest::ReceiveHandler (void *msg, UINT16 Size){
+void* myReceiveHandler (void *msg, UINT16 Size){
 
+	UINT8 * data = (UINT8 *) msg;
+
+	if(radioObject.currentpackedId == data[0])
+		radioObject.successfulTestCount++;
+
+	RadioTest::RadioReceivedPending = FALSE;
+
+	Message_15_4_t** temp = &recv_mesg_carrier_ptr;
+	recv_mesg_carrier_ptr = (Message_15_4_t *) msg;
+	return (void *) *temp;
+
+}
 }
 
 void RadioTest::SendAckHandler(void *msg, UINT16 Size, NetOpStatus state){
 	RadioAckPending = FALSE;
 
-	hal_printf("%d", state);
-
 }
 
-RadioTest::RadioTest( int seedValue, int numberOfEvents )
+
+
+BOOL RadioTest::Initialize(int seedValue, int numberOfEvents)
 {
 	CPU_GPIO_Initialize();
 	CPU_SPI_Initialize();
@@ -30,28 +45,140 @@ RadioTest::RadioTest( int seedValue, int numberOfEvents )
 	mac_id = 1;
 	DeviceStatus result;
 
-	radioEventHandler.SetRecieveHandler((void* (*)(void*, UINT16))  &RadioTest::ReceiveHandler);
+	radioEventHandler.SetRecieveHandler(&myReceiveHandler);
 	radioEventHandler.SetSendAckHandler((void (*)(void*, UINT16, NetOpStatus)) &RadioTest::SendAckHandler);
 
 	result = CPU_Radio_Initialize(&radioEventHandler , &radioID, numberOfRadios, mac_id );
+
+	if(result != DS_Success)
+	{
+		DisplayStats(FALSE,"Radio Initialization failed", NULL, NULL);
+		return FALSE;
+	}
 
 	this->numberOfEvents = numberOfEvents;
 
 	msg_carrier_ptr = & msg_carrier;
 
-
-
-};
+	successfulTestCount = 0;
+}
 
 BOOL RadioTest::Level_0A()
 {
+	DeviceStatus result;
+	BOOL SendResult;
+	UINT32 i = 0;
+	UINT8 regValue;
 
+	result = CPU_Radio_TurnOn(radioID);
+
+	if(result == DS_Success)
+	{
+		regValue = grf231Radio.ReadRegister(RF230_TRX_STATUS) & RF230_TRX_STATUS_MASK;
+		if(regValue != RF230_RX_ON)
+		{
+			DisplayStats(FALSE, "Read register failed after turn on",NULL, NULL);
+			return FALSE;
+		}
+	}
+	else
+	{
+		DisplayStats(FALSE,"Turn On Radio failed", NULL, NULL);
+		return FALSE;
+	}
+
+	while(i++ < this->numberOfEvents)
+	{
+		// Try sending a packet now
+		{
+			msg.MSGID= i;
+			msg.data[0] = 0;
+			msg.data[1] = 1;
+			msg.data[2] = 2;
+			msg.data[3] = 3;
+			msg.data[4] = 4;
+
+			// Try sending a packet after turning it on
+			SendResult = SendPacketSync(MAC_BROADCAST_ADDRESS, MFM_DATA, (void *) &msg.data, sizeof(Payload_t));
+
+			while(RadioAckPending == TRUE);
+
+			if(SendResult != TRUE)
+			{
+				DisplayStats(FALSE, "Send failed", NULL, NULL);
+				return FALSE;
+			}
+
+		}
+
+
+	}
+
+	DisplayStats(TRUE,"Send Test Successful", NULL, NULL);
 	return TRUE;
 
 }
 
 BOOL RadioTest::Level_0B()
 {
+	DeviceStatus result;
+		BOOL SendResult;
+		UINT32 i = 0;
+		UINT8 regValue;
+		INIT_STATE_CHECK();
+
+		result = CPU_Radio_TurnOn(radioID);
+
+		if(result == DS_Success)
+		{
+			regValue = grf231Radio.ReadRegister(RF230_TRX_STATUS) & RF230_TRX_STATUS_MASK;
+			if(regValue != RF230_RX_ON)
+			{
+				DisplayStats(FALSE, "Read register failed after turn on",NULL, NULL);
+				return FALSE;
+			}
+		}
+		else
+		{
+			DisplayStats(FALSE,"Turn On Radio failed", NULL, NULL);
+			return FALSE;
+		}
+
+		while(i++ < this->numberOfEvents)
+		{
+			// Try sending a packet now
+			{
+				msg.MSGID= i;
+				msg.data[0] = 0;
+				msg.data[1] = 1;
+				msg.data[2] = 2;
+				msg.data[3] = 3;
+				msg.data[4] = 4;
+
+				currentpackedId = i;
+
+				hal_printf("Transmitting Packet %d", i);
+				// Try sending a packet after turning it on
+				SendResult = SendPacketSync(MAC_BROADCAST_ADDRESS, MFM_DATA, (void *) &msg.data, sizeof(Payload_t));
+
+				//while(RadioAckPending == TRUE);
+				DID_STATE_CHANGE(RadioAckPending,"Timed out waiting for send done ack");
+
+				DID_STATE_CHANGE(RadioReceivedPending,"Timed out waiting for receive ack from slave");
+
+				if(SendResult != TRUE)
+				{
+					DisplayStats(FALSE, "Send failed", NULL, NULL);
+					return FALSE;
+				}
+
+			}
+
+		}
+
+		DisplayStats(TRUE,"Send Test Successful", NULL, NULL);
+		return TRUE;
+
 }
 
 BOOL RadioTest::SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size)
@@ -84,6 +211,7 @@ BOOL RadioTest::SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size)
 
 	if(mymsg != NULL){
 		RadioAckPending = TRUE;
+		RadioReceivedPending = TRUE;
 		msg_carrier_ptr = (Message_15_4_t *) CPU_Radio_Send(1, (mymsg), header->length);
 	}
 
@@ -92,10 +220,20 @@ BOOL RadioTest::SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size)
 
 BOOL RadioTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, char* accuracy)
 {
-	hal_printf("result = %s\n", (result) ? "true":"false");
+	hal_printf("result = %s\n", (result) ? "PASS":"FAIL");
 	hal_printf("accuracy = %s\n", accuracy);
 	hal_printf("resultParameter1 = %s\n", resultParameter1);
 	hal_printf("resultParameter2 = %s\n", resultParameter2);
+	hal_printf("\r\nresultParameter3=%s\r\n", "null");
+	hal_printf("\r\nresultParameter4=%s\r\n", "null");
+	hal_printf("\r\nresultParameter5=%s\r\n", "null");
+
+	hal_printf("\r\nDummy Write\r\n");
+	hal_printf("\r\nDummy Write\r\n");
+	hal_printf("\r\nDummy Write\r\n");
+	hal_printf("\r\nDummy Write\r\n");
+
+	USART_Flush(COM1);
 
 	return TRUE;
 }
@@ -203,6 +341,7 @@ BOOL RadioTest::SleepTest_Level1B()
 					// wait for radio ack pending to be true
 					// this means the radio should have seen that a sleep was pending and must have acted on it
 					while(RadioAckPending == TRUE);
+
 
 					regValue = grf231Radio.ReadRegister(RF230_TRX_STATUS) & RF230_TRX_STATUS_MASK;
 
@@ -349,12 +488,23 @@ BOOL RadioTest::Execute( int testLevel )
 {
 	BOOL result;
 
-	if(testLevel == SLEEPTEST)
+	if(testLevel == LEVEL_0A)
+		result = Level_0A();
+
+	if(testLevel == LEVEL_0B)
+		result = Level_0B();
+
+	if(testLevel == SLEEP_LEVEL_0A)
 	{
-		// result = SleepTest_Level0();
+		 result = SleepTest_Level0();
 		// result &= SleepTest_Level1A();
 		// result &= SleepTest_Level1B();
-		 result = SleepTest_Level1C();
+		// result = SleepTest_Level1C();
+	}
+
+	if(testLevel  == SLEEP_LEVEL_1B)
+	{
+		result = SleepTest_Level1B();
 	}
 
 	return result;
