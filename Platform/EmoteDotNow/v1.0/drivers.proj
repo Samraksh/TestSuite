@@ -1,50 +1,40 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
   <PropertyGroup>
-	 <AssemblyName>NOR</AssemblyName>
+   <Directory>TestSuite/Platform/EmoteDotNow/v1.0</Directory>
+  </PropertyGroup>
+  <!--
+  <PropertyGroup>
+	 <AssemblyName>Drivers</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
     <Description>
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\NOR\Src\Native</Directory>
+    <Directory>TestSuite\Platform\EmoteDotNow\v1.0</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\NOR\Src\Native\NOR.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\drivers.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
-  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Settings" />
+  
+  <Import Project="$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\tools\targets\Microsoft.SPOT.System.Settings" />
   <PropertyGroup>
-    <OutputType>Executable</OutputType>
+    <OutputType>Library</OutputType>
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\NOR\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
-  <ItemGroup>
- 	<Compile Include="EntryPoint.cpp" />
-    <Compile Include="NOR.cpp" />
-    <!--<Compile Include="test.c" />
-	<Compile Include="signalr.c" />
-	<Compile Include="syscalls.c" />
-	-->
-	<Compile Include="GNU_S\tinyclr_vector.cpp" />
-    <ScatterFileReferences Include="$(SRC_DIR)\scatterfile_tools_$(COMPILER_TOOL).xml" />
-  </ItemGroup>
-  <Import Condition="" Project="$(SPOCLIENT)\Framework\Features\USB_Port.featureproj" />
-  <!--
+  -->
    <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\Solutions\STM32F10x\RegressionTest\TestSuite\dotnetmf.proj" />
-    <DriverLibs Include="RegTestSuite.$(LIB_EXT)" />
-  </ItemGroup>
- -->
-  <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\COM\USB\dotNetMF.proj" />
-    <DriverLibs Include="usb_pal.$(LIB_EXT)" />
+    <DriverLibs Include="TinyHal.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\cores\arm\dotNetMF.proj" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\COM\USART\dotNetMF.proj" />
@@ -57,10 +47,6 @@
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Diagnostics\stubs\dotNetMF.proj" />
     <DriverLibs Include="diagnostics_pal_stubs.$(LIB_EXT)" />
-  </ItemGroup>
-  <ItemGroup>
-    <DriverLibs Include="TinyHal.$(LIB_EXT)" />
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\cores\arm\dotNetMF.proj" />
   </ItemGroup>
 <!--  <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\startup\dotNetMF.proj" />
@@ -336,5 +322,5 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Piezo\stubs\dotNetMF.proj" />
     <DriverLibs Include="piezo_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
-  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Targets" />
+  <Import Project="$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\tools\targets\Microsoft.SPOT.System.Targets" />
 </Project>
