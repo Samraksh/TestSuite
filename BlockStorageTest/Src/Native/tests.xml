@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='Neighbour Table testing' Type='C#'>
+	<Test Name='BlockStorageTest' Type='Native'>
 		<Description>
-			Test the neighbour table functionality
+			Native BlockStorage Tests for Internal Flash
 		</Description>
 		<TestPath>
-			Samraksh_SPOT_Net_Tests\Src\C#\NeighbourTable\NeighbourTable\NeighbourTable
+			BlockStorageTest\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
-			NeighbourTable.csproj
+			BlockStorageTest.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

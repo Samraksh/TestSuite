@@ -30,7 +30,7 @@ void ApplicationEntryPoint()
 
     do
     {
-		utest.Execute(0);
+		utest.Execute(3);
     } while(FALSE); // run only once!
 
     while(TRUE);

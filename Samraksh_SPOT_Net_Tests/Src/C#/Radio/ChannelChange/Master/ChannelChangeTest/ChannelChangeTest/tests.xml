@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='Neighbour Table testing' Type='C#'>
+	<Test Name='Radio' Type='C#'>
 		<Description>
-			Test the neighbour table functionality
+			Test the channel change functionality
 		</Description>
 		<TestPath>
-			Samraksh_SPOT_Net_Tests\Src\C#\NeighbourTable\NeighbourTable\NeighbourTable
+			Samraksh_SPOT_Net_Tests\Src\C#\ChannelChangeTest\ChannelChangeTest
 		</TestPath>
 		<TestProjName>
-			NeighbourTable.csproj
+			ChannelChangeTest.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
