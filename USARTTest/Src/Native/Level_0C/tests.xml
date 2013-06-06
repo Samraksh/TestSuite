@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='Neighbour Table testing' Type='C#'>
+	<Test Name='USARTTest' Type='Native'>
 		<Description>
-			Test the neighbour table functionality
+			Native USART Tests Level 0D
 		</Description>
 		<TestPath>
-			Samraksh_SPOT_Net_Tests\Src\C#\NeighbourTable\NeighbourTable\NeighbourTable
+			USARTTest\Src\Native\Level_0D
 		</TestPath>
 		<TestProjName>
-			NeighbourTable.csproj
+			USARTTest.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
