@@ -407,7 +407,7 @@ namespace Samraksh.SPOT.Test
 
             try
             {
-                test.Run(1);
+                test.Run(0);
                 
             }
             catch

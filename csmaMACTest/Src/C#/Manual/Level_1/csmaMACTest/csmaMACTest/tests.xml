@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='csmaMACTest' Type='C#'>
+		<Description>
+			Ping Test from C# using csma Level 1
+		</Description>
+		<TestPath>
+			csmaMACTest\Src\C#\Manual\Level_0\csmMACTest\csmaMACTest
+		</TestPath>
+		<TestProjName>
+			csmaMACTestMaster.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

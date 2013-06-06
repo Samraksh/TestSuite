@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='TimerTest' Type='Native'>
+	<Test Name='GlobalLock' Type='Native'>
 		<Description>
-			C++ Timer temp test
+			Global Lock Level 0B Test
 		</Description>
 		<TestPath>
-			Timer\Src\Native
+			GlobalLock\Src\Native\Level_0B
 		</TestPath>
 		<TestProjName>
-			Timer.proj
+			GlobalLock.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
