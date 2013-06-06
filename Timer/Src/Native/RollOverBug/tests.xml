@@ -1,7 +1,7 @@
 <TestSuite>
-	<Test Name='TimerTest' Type='Native'>
+	<Test Name='Timer' Type='Native'>
 		<Description>
-			Roll Over Bug Test
+			C++ Timer roll over bug test
 		</Description>
 		<TestPath>
 			Timer\Src\Native\RollOverBug

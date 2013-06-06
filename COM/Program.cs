@@ -21,7 +21,7 @@ namespace COM
 			serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortHandler);
 
 			serialPort.Open();
-			//Thread.Sleep(20000);
+			/*Thread.Sleep(20000);
 			Debug.Print("result = PASS\r\n");
 			Debug.Print("accuracy = 1.2\r\n");
 			Debug.Print("resultParameter1 = p1 return\r\n");
@@ -29,7 +29,7 @@ namespace COM
 			Debug.Print("resultParameter3 = p3 return\r\n");
 			Debug.Print("resultParameter4 = p4 return\r\n");
 			Debug.Print("resultParameter5 = p5 return\r\n"); 
-
+			*/
 			while (true) {}	
 		}
 		

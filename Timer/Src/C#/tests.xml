@@ -12,13 +12,24 @@
 		<TesterName>
 		</TesterName>
 		<TestLocation>
-		</TestLocation>		
+		</TestLocation>
 		<TestMFVersionNum>
-			4.0
 		</TestMFVersionNum>
 		<TestGitOption>			
 		</TestGitOption>
 		<TestGitBranch>
 		</TestGitBranch>
-</Test>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
 </TestSuite>
