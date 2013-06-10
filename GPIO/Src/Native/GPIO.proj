@@ -6,23 +6,23 @@
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSys\GPIO\Src\Native</Directory>
+    <Directory>TestSuite\GPIO\Src\Native</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSys\GPIO\Src\Native\GPIO.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\GPIO\Src\Native\GPIO.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
-  <Import Project="$(TESTSOURCE)\TestSys\tools\targets4.3\Microsoft.SPOT.System.Settings" />
+  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Settings" />
   <PropertyGroup>
     <OutputType>Executable</OutputType>
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSys\NOR\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\gpio\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
@@ -336,5 +336,5 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Piezo\stubs\dotNetMF.proj" />
     <DriverLibs Include="piezo_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
-  <Import Project="$(TESTSOURCE)\TestSys\tools\targets4.3\Microsoft.SPOT.System.Targets" />
+  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Targets" />
 </Project>
