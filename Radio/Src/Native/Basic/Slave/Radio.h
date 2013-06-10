@@ -13,6 +13,7 @@
 
 
 #define SLEEPTEST 3
+#define BASIC 0
 
 typedef Buffer_15_4<8> Buffer_15_4_t;
 
@@ -37,7 +38,7 @@ class RadioTest
 	Message_15_4_t* msg_carrier_ptr;
 
 
-	BOOL SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size);
+
 
 public:
 
@@ -49,7 +50,9 @@ public:
 	static BOOL RadioAckPending;
 
 //--//
-    RadioTest ( int seedValue, int numberOfEvents );
+	BOOL SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size);
+
+    BOOL 	 Initialize(int seedValue, int numberOfEvents);
 
     BOOL     Execute( int testLevel );
 
@@ -74,6 +77,8 @@ public:
 	void 	 SendAckHandler(void *msg, UINT16 Size, NetOpStatus state);
 
 	void* 	 ReceiveHandler (void *msg, UINT16 Size);
+
+	BOOL	 BasicReceiver();
 
 
 	BOOL     DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, char* accuracy);

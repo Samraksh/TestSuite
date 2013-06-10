@@ -9,6 +9,7 @@
 #include <tinyhal.h>
 #include "Radio.h"
 
+extern RadioTest gradioObject;
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
@@ -29,9 +30,9 @@ void ApplicationEntryPoint()
 
     do
     {
-    	RadioTest radioObject(0,100);
+    	gradioObject.Initialize(0, 100);
 
-    	radioObject.Execute(SLEEPTEST);
+    	gradioObject.Execute(BASIC);
 
     } while(FALSE); // run only once!
 

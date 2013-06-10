@@ -6,13 +6,13 @@
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSys\Radio\Src\Native\Slave</Directory>
+    <Directory>TestSys\Radio\Src\Native\Basic\Slave</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSys\Radio\Src\Native\Slave\Radio.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSys\Radio\Src\Native\Basic\Slave\Radio.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
@@ -22,7 +22,7 @@
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSys\Radio\Src\Native\Slave\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSys\Radio\Src\Native\Basic\Slave\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>

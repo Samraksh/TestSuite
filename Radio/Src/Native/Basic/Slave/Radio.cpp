@@ -11,6 +11,8 @@
 extern HALTimerManager gHalTimerManagerObject;
 BOOL state = FALSE;
 
+RadioTest gradioObject;
+
 extern "C"
 {
 
@@ -18,8 +20,12 @@ void* myReceiveHandler (void *msg, UINT16 Size){
 
 	UINT8 *data = (UINT8 *) msg;
 
+	hal_printf("Received Packet %d", data[0]);
+
 	CPU_GPIO_SetPinState((GPIO_PIN) 4 , TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 4 , FALSE);
+
+	gradioObject.SendPacketSync(MAC_BROADCAST_ADDRESS, MFM_DATA, (void *) data, sizeof(Payload_t));
 
 	Message_15_4_t** temp = &recv_mesg_carrier_ptr;
 	recv_mesg_carrier_ptr = (Message_15_4_t *) msg;
@@ -68,7 +74,8 @@ void RadioTest::SendAckHandler(void *msg, UINT16 Size, NetOpStatus state){
 
 }
 
-RadioTest::RadioTest( int seedValue, int numberOfEvents )
+
+BOOL RadioTest::Initialize(int seedValue, int numberOfEvents)
 {
 	CPU_GPIO_Initialize();
 	CPU_SPI_Initialize();
@@ -84,6 +91,12 @@ RadioTest::RadioTest( int seedValue, int numberOfEvents )
 
 	result = CPU_Radio_Initialize(&radioEventHandler , &radioID, numberOfRadios, mac_id );
 
+	if(result != DS_Success)
+	{
+		DisplayStats(FALSE,"Radio Initialization failed",NULL, NULL);
+		return FALSE;
+	}
+
 	this->numberOfEvents = numberOfEvents;
 
 	msg_carrier_ptr = & msg_carrier;
@@ -95,8 +108,7 @@ RadioTest::RadioTest( int seedValue, int numberOfEvents )
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 22, FALSE);
 
 	gHalTimerManagerObject.Initialize();
-
-};
+}
 
 BOOL RadioTest::Level_0A()
 {
@@ -363,10 +375,29 @@ BOOL RadioTest::SleepTest_Level1C()
 BOOL RadioTest::SleepTest_Level2()
 {
 	DeviceStatus result;
+	UINT32 i = 0;
 
 	while(i++ < this->numberOfEvents)
 	{
 		result = CPU_Radio_TurnOn(radioID);
+	}
+}
+
+BOOL RadioTest::BasicReceiver()
+{
+	DeviceStatus result;
+
+	result = CPU_Radio_TurnOn(radioID);
+
+	if(result != DS_Success)
+	{
+		DisplayStats(FALSE,"Radio Turn On failed",NULL, NULL);
+		return FALSE;
+	}
+
+	while(TRUE)
+	{
+
 	}
 }
 
@@ -450,6 +481,11 @@ BOOL RadioTest::Execute( int testLevel )
 {
 	BOOL result;
 
+	if(testLevel == BASIC)
+	{
+		result = BasicReceiver();
+	}
+
 	if(testLevel == SLEEPTEST)
 	{
 #if 0
@@ -459,8 +495,8 @@ BOOL RadioTest::Execute( int testLevel )
 		 result &= SleepTest_Level1C();
 #endif
 		 //result = SleepTest_Reciever();
-		 result = SleepTest_Level2();
-		// result = SleepTest_Reciever_Sleeping();
+		 //result = SleepTest_Level2();
+		 result = SleepTest_Reciever_Sleeping();
 	}
 
 	return result;
