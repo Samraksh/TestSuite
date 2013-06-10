@@ -6,23 +6,23 @@
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSys\Radio\Src\Native\Basic\Slave</Directory>
+    <Directory>TestSuite\Radio\Src\Native\Basic\Slave</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSys\Radio\Src\Native\Basic\Slave\Radio.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\Radio\Src\Native\Basic\Slave\Radio.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
-  <Import Project="$(TESTSOURCE)\TestSys\tools\targets4.3\Microsoft.SPOT.System.Settings" />
+  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Settings" />
   <PropertyGroup>
     <OutputType>Executable</OutputType>
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSys\Radio\Src\Native\Basic\Slave\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\Radio\Src\Native\Basic\Slave\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
@@ -340,5 +340,5 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Piezo\stubs\dotNetMF.proj" />
     <DriverLibs Include="piezo_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
-  <Import Project="$(TESTSOURCE)\TestSys\tools\targets4.3\Microsoft.SPOT.System.Targets" />
+  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Targets" />
 </Project>
