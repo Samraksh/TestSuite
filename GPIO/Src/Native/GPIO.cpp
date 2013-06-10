@@ -27,7 +27,7 @@ GPIO::GPIO(  )
 
 BOOL GPIO::Level_0A()
 {
-	int msThreadSleep = (int)( (1/frequency)/2 * 1000);
+	int usThreadSleep = (int)( (1/frequency)/2 * 1000000);
 	while (true){
 		GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_SET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_SET);
@@ -59,7 +59,7 @@ BOOL GPIO::Level_0A()
   		GPIO_WriteBit(GPIOB, GPIO_Pin_15, Bit_SET);
 
   		GPIO_WriteBit(GPIOC, GPIO_Pin_6, Bit_SET);
-		HAL_Time_Sleep_MicroSeconds(msThreadSleep * 1000);
+		HAL_Time_Sleep_MicroSeconds(usThreadSleep);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_RESET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_RESET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_RESET);
@@ -90,7 +90,7 @@ BOOL GPIO::Level_0A()
   		GPIO_WriteBit(GPIOB, GPIO_Pin_15, Bit_RESET);
 
   		GPIO_WriteBit(GPIOC, GPIO_Pin_6, Bit_RESET);
-		HAL_Time_Sleep_MicroSeconds(msThreadSleep * 1000);
+		HAL_Time_Sleep_MicroSeconds(usThreadSleep);
 	}
 	return TRUE;
 

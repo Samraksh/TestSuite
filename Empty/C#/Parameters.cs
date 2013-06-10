@@ -20,11 +20,5 @@ namespace ParameterClass
 	public bool useResultsFile = false;
 	public string resultsFileName = "results.txt";
 	// Do not change text format above this point
-	
-	// test specific parameters
-	public double frequency = 2.5;
-	public double upperAllowedFrequency = 2.7;
-	public double lowerAllowedFrequency = 2.3;
-	public double expectedFrequency = 2.5;
     }
 }

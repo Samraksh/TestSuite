@@ -16,8 +16,9 @@ namespace LCDAnalysis
             string[] matches = new string[10];
             string[] parameter = new string[5];
             int parameterNum = 0;
-            int match = 0;
-            bool testResult = true;
+            int lineMatches = 0;
+            bool matchFailure = false;
+            bool testResult = false;
             char[] trimChars = new char[] { ' ', ']' };
 
             // generating test matches
@@ -63,15 +64,21 @@ namespace LCDAnalysis
                             {
                                 foundChars = true;
                                 System.Diagnostics.Debug.WriteLine(line + " matches at i: " + i.ToString());
+                                lineMatches++;
                             }
                         }
                         if (foundChars == false)
-                            testResult = false;
+                            matchFailure = true;
                         
                         line = reader.ReadLine();
                     }
                     reader.Close();
                 }
+
+                if ((lineMatches > 2) && (matchFailure == false))
+                    testResult = true;
+                else
+                    testResult = false;
 
                 using (StreamWriter writer = new StreamWriter(args[1]))
                 {

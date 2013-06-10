@@ -2,30 +2,32 @@
 using Microsoft.SPOT;
 using System.Threading;
 using Microsoft.SPOT.Hardware;
+using ParameterClass;
 
 namespace TestSuite
 {
     public class Program
     {
-		public static bool state = false;
-		private static OutputPort testPort = new OutputPort(EmotePins.GPIO_PIN_0, true);		
+		private static OutputPort testPort_PB8 = new OutputPort(GPIOPins.GPIO_PIN_PB8, true);
        
 		
         public static void Main()
         {
-			Timer tmr = new Timer(new TimerCallback(Callback), null, 0, 1000);								
+		Parameters parameters = new Parameters();
+		double readFrequency = parameters.frequency;
+		int msThreadSleep = (int)( (1/readFrequency)/2 * 1000);
+
+        	while(true)
+			{
+			testPort_PB8.Write(true);
 			
-			while (true)
-            {
-				Thread.Sleep(100);
-            }	
-           
+			Thread.Sleep(msThreadSleep);
+
+			testPort_PB8.Write(false);
+		
+			Thread.Sleep(msThreadSleep);
+		}
         }
-		private static void Callback(Object state)
-        {
-            testPort.Write(true);						
-			testPort.Write(false);
-        }	
 
     }
 }

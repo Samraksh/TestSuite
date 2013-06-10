@@ -4,7 +4,7 @@
 			Native BlockStorage Tests for Internal Flash
 		</Description>
 		<TestPath>
-			BlockStorageTest\Src\Native\Level_0A
+			BlockStorageTest\Src\Native
 		</TestPath>
 		<TestProjName>
 			BlockStorageTest.proj

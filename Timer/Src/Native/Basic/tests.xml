@@ -1,10 +1,10 @@
 <TestSuite>
-	<Test Name='TimerTest' Type='Native'>
+	<Test Name='Timer' Type='Native'>
 		<Description>
-			C++ Timer temp test
+			C++ BasicTimer temp test
 		</Description>
 		<TestPath>
-			Timer\Src\Native
+			Timer\Src\Native\Basic
 		</TestPath>
 		<TestProjName>
 			Timer.proj
