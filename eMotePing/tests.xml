@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='Radio' Type='Native'>
+	<Test Name='eMotePing' Type='C#'>
 		<Description>
-			Native Radio Master Test basic ping
+			C# eMotePing
 		</Description>
 		<TestPath>
-			Radio\Src\Native\Basic\Master\Level_0B
+			eMotePing
 		</TestPath>
 		<TestProjName>
-			Radio.proj
+			eMotePing.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,8 +31,5 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
-		<TestSupporting>
-			Radio\Src\Native\Basic\Slave\tests.xml
-		</TestSupporting>
 	</Test>
 </TestSuite>

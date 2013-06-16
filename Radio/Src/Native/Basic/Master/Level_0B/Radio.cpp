@@ -127,7 +127,10 @@ BOOL RadioTest::Level_0B()
 		UINT8 regValue;
 		INIT_STATE_CHECK();
 
+		hal_printf("Starting to run Level_0B test\r\n");
 		result = CPU_Radio_TurnOn(radioID);
+
+		hal_printf("2:Starting to run Level_0B test\r\n");
 
 		if(result == DS_Success)
 		{
@@ -144,8 +147,10 @@ BOOL RadioTest::Level_0B()
 			return FALSE;
 		}
 
+		hal_printf("3:Starting to run Level_0B test\r\n");
 		while(i++ < this->numberOfEvents)
 		{
+		hal_printf("4:Starting to run Level_0B test\r\n");
 			// Try sending a packet now
 			{
 				msg.MSGID= i;
@@ -218,10 +223,10 @@ BOOL RadioTest::SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int Size)
 	return TRUE;
 }
 
-BOOL RadioTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, char* accuracy)
+BOOL RadioTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
 {
 	hal_printf("result = %s\n", (result) ? "PASS":"FAIL");
-	hal_printf("accuracy = %s\n", accuracy);
+	hal_printf("\r\naccuracy=%d\r\n", accuracy);
 	hal_printf("resultParameter1 = %s\n", resultParameter1);
 	hal_printf("resultParameter2 = %s\n", resultParameter2);
 	hal_printf("\r\nresultParameter3=%s\r\n", "null");
@@ -487,6 +492,14 @@ BOOL RadioTest::SleepTest_Level1A()
 BOOL RadioTest::Execute( int testLevel )
 {
 	BOOL result;
+	int i;
+
+	hal_printf("before sleep\r\n");
+	for (i=0; i<10000; i++){
+		HAL_Time_Sleep_MicroSeconds(100);	
+		//hal_printf("sleeping %d\r\n",i);
+	}
+	hal_printf("after sleep\r\n");
 
 	if(testLevel == LEVEL_0A)
 		result = Level_0A();
