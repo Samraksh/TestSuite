@@ -10,3 +10,6 @@ D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialT
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.csprojResolveAssemblyReference.cache
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.exe
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.pdb
+D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.exe.config
+D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.exe
+D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.pdb

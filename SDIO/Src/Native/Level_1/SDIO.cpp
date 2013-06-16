@@ -117,12 +117,66 @@ BOOL SDIOTest::Level_0B()
 {
 	UINT16 i = 0;
 
-	while(i++ < this->numberOfEvents)
+	UINT8  inputdata[512];
+	UINT8  outputdata[512];
+
+	if(g_SDIODriver.Initialize() != DS_Success)
 	{
-	
+		DisplayStats(FALSE, "SD Card Initialization Failed", NULL, NULL);
+		return FALSE;
 	}
 
-	DisplayStats(TRUE, "Flash Write Test Successful", NULL, NULL);
+	while(i++ < this->numberOfEvents)
+	{
+		UINT32 address = (testMathInstance.pareto_prng() % 126) * 64 * 1024;
+
+		//address = (1 << 15);
+
+		for(UINT16 j = 0; j < 512; j++)
+		{
+			outputdata[j] = 0;
+		}
+
+		for(UINT16 j = 0; j < 512; j++)
+		{
+			inputdata[j] = (UINT8) (testMathInstance.pareto_prng() % (1 << 7));
+		}
+
+		if(g_SDIODriver.EraseBlock(address, 512 + address) != DS_Success)
+		{
+			DisplayStats(FALSE, "Unable to erase sd card", NULL, NULL);
+			return FALSE;
+		}
+
+		if(g_SDIODriver.WriteBlock(inputdata,address, 512) != DS_Success)
+		{
+			DisplayStats(FALSE, "Unable to write to SD Card", NULL, NULL);
+			return FALSE;
+		}
+
+
+
+		for(UINT32 i = 0; i < 10000; i++);
+
+
+		if(g_SDIODriver.ReadBlock(outputdata, address, 512) != DS_Success)
+		{
+			DisplayStats(FALSE, "Unable to read SD Card", NULL, NULL);
+			return FALSE;
+		}
+
+		for(UINT16 i = 0; i < 512; i++)
+		{
+			if(inputdata[i] != outputdata[i])
+			{
+				DisplayStats(FALSE, "Level 1 SDIO Test Failed", NULL,NULL);
+				return FALSE;
+			}
+		}
+
+	}
+
+	DisplayStats(TRUE, "Level 1 SDIO Test Successful", NULL, NULL);
 	return TRUE;
 
 }
@@ -131,6 +185,10 @@ BOOL SDIOTest::Level_1()
 {
 	UINT16 i = 0;
 
+	while(i++ < this->numberOfEvents)
+	{
+
+	}
 	
 	DisplayStats(TRUE, "Flash Write Level 1 Successful", NULL, NULL);
 	return TRUE;
