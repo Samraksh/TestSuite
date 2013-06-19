@@ -38,6 +38,16 @@ namespace TestSuite
 
         public const Cpu.Pin GPIO_PIN_PC6 = (Cpu.Pin)38;	
 #elif (HARDWARE_ADAPT)
+		public const Cpu.Pin GPIO_PIN_PA0 = (Cpu.Pin)58;	
+        public const Cpu.Pin GPIO_PIN_PA1 = (Cpu.Pin)55;	
+        public const Cpu.Pin GPIO_PIN_PA2 = (Cpu.Pin)53;	
+        public const Cpu.Pin GPIO_PIN_PA3 = (Cpu.Pin)52;	
+        public const Cpu.Pin GPIO_PIN_PA4 = (Cpu.Pin)51;	
+        public const Cpu.Pin GPIO_PIN_PA5 = (Cpu.Pin)50;	
+        public const Cpu.Pin GPIO_PIN_PA6 = (Cpu.Pin)70;	
+        public const Cpu.Pin GPIO_PIN_PA7 = (Cpu.Pin)71;	
+        public const Cpu.Pin GPIO_PIN_PA8 = (Cpu.Pin)72;	
+        public const Cpu.Pin GPIO_PIN_PA9 = (Cpu.Pin)68;		
 #endif
     }
 }
