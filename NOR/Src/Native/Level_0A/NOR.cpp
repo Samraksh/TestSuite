@@ -41,6 +41,8 @@ BOOL NORTest::Level_0A()
 {
 
 	UINT16 i = 0;
+	int j;
+	bool testPassed = false;
 
 	while(i++ < this->numberOfEvents)
 	{
@@ -48,14 +50,16 @@ BOOL NORTest::Level_0A()
 
 		if(gNORDriver.GetManufactureId() == MANUFACTURE_ID)
 		{
-			DisplayStats(TRUE, "Reading Manufacture Successful", NULL, 0);
-			break;
+			testPassed = true;
 		}
 
-		for(UINT16 i = 0; i < 10000; i++);
+		for(j = 0; j < 100000; j++){}
 	}
 
-	DisplayStats(FALSE, "Reading Manufacture ID Failed", NULL, 0);
+	if (testPassed == true)
+		DisplayStats(TRUE, "Reading Manufacture Successful", NULL, 0);
+	else
+		DisplayStats(FALSE, "Reading Manufacture ID Failed", NULL, 0);
 
 	return TRUE;
 
