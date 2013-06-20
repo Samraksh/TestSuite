@@ -27,11 +27,7 @@ void ApplicationEntryPoint()
     BOOL result;
     BlockStorageTest bst(0,0);
 
-    do
-    {
-		bst.Execute(0);
-		
-    } while(FALSE); // run only once!
+	bst.Execute(0);
 
     while(TRUE);
 }
