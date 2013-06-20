@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='NOR' Type='Native'>
+		<Description>
+			Native NOR Tests Level 0B
+		</Description>
+		<TestPath>
+			NOR\Src\Native\Level_0B
+		</TestPath>
+		<TestProjName>
+			NOR.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

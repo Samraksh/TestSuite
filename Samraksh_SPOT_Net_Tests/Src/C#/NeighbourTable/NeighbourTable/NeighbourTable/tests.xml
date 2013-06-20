@@ -1,7 +1,7 @@
 <TestSuite>
-	<Test Name='Samraksh SPOT Net' Type='C#'>
+	<Test Name='Neighbour Table testing' Type='C#'>
 		<Description>
-			C# Samraksh SPOT Net Project
+			Test the neighbour table functionality
 		</Description>
 		<TestPath>
 			Samraksh_SPOT_Net_Tests\Src\C#\NeighbourTable\NeighbourTable\NeighbourTable

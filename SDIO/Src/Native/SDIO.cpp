@@ -30,6 +30,9 @@ BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 	hal_printf("accuracy = %s\n", accuracy);
 	hal_printf("resultParameter1 = %s\n", resultParameter1);
 	hal_printf("resultParameter2 = %s\n", resultParameter2);
+	hal_printf("resultParameter3 = %s\n", "");
+	hal_printf("resultParameter4 = %s\n", "");
+	hal_printf("resultParameter5 = %s\n", "");
 
 	USART_Flush(COM1);
 
@@ -63,7 +66,14 @@ BOOL SDIOTest::Level_0A()
 
 	while(i++ < this->numberOfEvents)
 	{
-		if(g_SDIODriver.WriteBlock(input,(2 << 15), 512) != DS_Success)
+
+		if(g_SDIODriver.EraseBlock((1 << 15), 512 + (1 << 15)) != DS_Success)
+		{
+			DisplayStats(FALSE, "Unable to erase sd card", NULL, NULL);
+			return FALSE;
+		}
+
+		if(g_SDIODriver.WriteBlock(input,(1 << 15), 512) != DS_Success)
 		{
 			DisplayStats(FALSE, "Unable to write to SD Card", NULL, NULL);
 			return FALSE;
@@ -71,9 +81,12 @@ BOOL SDIOTest::Level_0A()
 
 
 
+		for(UINT32 i = 0; i < 10000; i++);
 
 
-		if(g_SDIODriver.ReadBlock(output, (2 << 15), 512) != DS_Success)
+
+
+		if(g_SDIODriver.ReadBlock(output, (1 << 15), 512) != DS_Success)
 		{
 			DisplayStats(FALSE, "Unable to read SD Card", NULL, NULL);
 			return FALSE;
@@ -81,7 +94,7 @@ BOOL SDIOTest::Level_0A()
 
 
 
-		for(UINT8 i = 0; i < 24; i++)
+		for(UINT8 i = 0; i < 512; i++)
 		{
 			if(input[i] != output[i])
 			{

@@ -26,7 +26,6 @@ BlockStorageTest::BlockStorageTest( int seedValue, int numberOfEvents )
 	for(j = 0; j < 500000; j++){}
 };
 
-
 BOOL BlockStorageTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
 {
 	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
@@ -39,6 +38,7 @@ BOOL BlockStorageTest::DisplayStats(BOOL result, char* resultParameter1, char* r
 
 	return TRUE;
 }
+
 
 
 BOOL BlockStorageTest::Level_0A()

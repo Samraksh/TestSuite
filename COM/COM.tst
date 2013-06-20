@@ -1,6 +1,5 @@
 # test script comments start with '#'
 # execute <executable> <timeout ms>
-execute calc.exe 1000
 # sleep ms
 sleep 5000
 # file <enable/disable> <file name>
@@ -26,4 +25,3 @@ COM_receive file disable rx_data.txt
 file disable local_data.txt
 sleep 2000
 test_result file compare local_data.txt rx_data.txt
-#test_result results results.txt

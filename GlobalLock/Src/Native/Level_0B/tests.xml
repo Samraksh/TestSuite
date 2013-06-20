@@ -1,0 +1,23 @@
+<TestSuite>
+	<Test Name='GlobalLock' Type='Native'>
+		<Description>
+			Global Lock Level 0B Test
+		</Description>
+		<TestPath>
+			GlobalLock\Src\Native\Level_0B
+		</TestPath>
+		<TestProjName>
+			GlobalLock.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+</Test>
+</TestSuite>

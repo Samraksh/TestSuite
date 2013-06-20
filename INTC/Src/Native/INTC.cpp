@@ -7,8 +7,12 @@
 
 //---//
 
+void Timer_4_Handler( void* Param );
+void Timer_3_Handler( void* Param );
 
-INTC::INTC( int seedValue, int numberOfEvents )
+INTC gIntcTestObject;
+
+BOOL INTC::Initialize( int seedValue, int numberOfEvents )
 {
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 3, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 4, FALSE);
@@ -23,6 +27,8 @@ INTC::INTC( int seedValue, int numberOfEvents )
 		return FALSE;
 	}
 	
+	return TRUE;
+
 		
 };
 

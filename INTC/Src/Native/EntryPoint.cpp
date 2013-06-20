@@ -7,8 +7,9 @@
 #define __regtest
 
 #include <tinyhal.h>
+#include "INTC.h"
 
-
+extern INTC gIntcTestObject;
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
@@ -29,6 +30,10 @@ void ApplicationEntryPoint()
 
     do
     {
+    	gIntcTestObject.Initialize(0,100);
+
+    	gIntcTestObject.Execute(LEVEL_0B);
+
     
     } while(FALSE); // run only once!
 

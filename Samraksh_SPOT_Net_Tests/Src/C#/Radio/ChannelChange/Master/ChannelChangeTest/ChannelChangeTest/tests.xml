@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='Radio' Type='C#'>
+		<Description>
+			Test the channel change functionality
+		</Description>
+		<TestPath>
+			Samraksh_SPOT_Net_Tests\Src\C#\ChannelChangeTest\ChannelChangeTest
+		</TestPath>
+		<TestProjName>
+			ChannelChangeTest.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

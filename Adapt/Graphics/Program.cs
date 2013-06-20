@@ -50,6 +50,7 @@ namespace Graphics1
 			x1 = 190;
 			y1 = 190;
 			while (true){
+				Debug.Print("Running\r\n");
 				LCD.Clear();
 				LCD.DrawLine(Colors.Red, 3, x0, y0, x1, y1);
 				if (cc == 0){
