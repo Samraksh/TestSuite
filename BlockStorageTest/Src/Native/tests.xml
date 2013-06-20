@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='BlockStorageTest' Type='Native'>
 		<Description>
-			Native BlockStorageTest Tests Level 0 and Level 1
+			Native BlockStorageTest Tests for Internal Flash
 		</Description>
 		<TestPath>
 			BlockStorageTest\Src\Native
