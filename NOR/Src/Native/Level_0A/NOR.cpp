@@ -230,6 +230,71 @@ BOOL NORTest::Level_0C()
 }
 
 
+// Tests the buffer write and read interface for various address values
+BOOL NORTest::Level_0D()
+{
+	UINT16 i = 0;
+
+	UINT16 inputdata[20];
+	UINT16 outputdata[20];
+
+	for(UINT16 j = 0; j < 20; j++)
+	{
+		outputdata[j] = 0;
+	}
+
+	for(UINT16 j = 0; j < 20; j++)
+	{
+		inputdata[j] = (UINT16) (testMathInstance.pareto_prng() % (1 << 15));
+	}
+
+	while(i++ < this->numberOfEvents)
+	{
+		gNORDriver.ReadID();
+
+		if(gNORDriver.GetManufactureId() == MANUFACTURE_ID)
+		{
+			if(gNORDriver.ReadHalfWord(0x8000) != 0xffff)
+			{
+				if(gNORDriver.EraseBlock(0x8000) != DS_Success)
+				{
+					DisplayStats(FALSE, "Erasing the flash failed",  NULL, NULL);
+					return FALSE;
+				}
+			}
+
+			if(gNORDriver.WriteBuffer(inputdata, 0x8000, 20) == DS_Success)
+			{
+				gNORDriver.ReadBuffer(outputdata, 0x8000, 20);
+			}
+			else
+			{
+				DisplayStats(FALSE, "Write Buffer failed", NULL, NULL);
+				return FALSE;
+			}
+
+		}
+		else
+		{
+			DisplayStats(FALSE, "Reading Manufacture id failed", NULL, NULL);
+			return FALSE;
+		}
+
+		for(UINT16 i = 0; i < 20; i++)
+		{
+			if(inputdata[i] != outputdata[i])
+			{
+				DisplayStats(FALSE, "Read data is not same as written data", NULL,NULL);
+				return FALSE;
+			}
+		}
+	}
+
+	DisplayStats(TRUE, "Write and Read Buffer Test was successful", NULL,NULL);
+	return TRUE;
+}
+
+
 BOOL NORTest::Execute( int testLevel )
 {
 	BOOL result;
@@ -246,6 +311,9 @@ BOOL NORTest::Execute( int testLevel )
 		result = Level_0C();
 		break;
 	case 3:
+		result = Level_0D();
+		break;
+	case 4:
 		result = Level_1();
 		break;
 	}
