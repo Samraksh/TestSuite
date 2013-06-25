@@ -1,0 +1,12 @@
+D:\Users\Chris\AppData\Local\Temporary Projects\LCDAnalysis\bin\Debug\LCDAnalysis.exe
+D:\Users\Chris\AppData\Local\Temporary Projects\LCDAnalysis\bin\Debug\LCDAnalysis.pdb
+D:\Users\Chris\AppData\Local\Temporary Projects\LCDAnalysis\obj\x86\Debug\LCDAnalysis.exe
+D:\Users\Chris\AppData\Local\Temporary Projects\LCDAnalysis\obj\x86\Debug\LCDAnalysis.pdb
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.exe
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.pdb
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.exe
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.pdb
+D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.exe
+D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.pdb
+D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.exe
+D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.pdb

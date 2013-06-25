@@ -26,12 +26,12 @@ void ApplicationEntryPoint()
 {
     BOOL result;
 		
-	HALTimerTest halTimerTest(0,0);
+	//HALTimerTest halTimerTest(0,0);
 
     do
     {
-	  if(halTimerTest.Execute(0))
-		break;
+	  //if(halTimerTest.Execute(0))
+		//break;
     } while(FALSE); // run only once!
 
     while(TRUE);

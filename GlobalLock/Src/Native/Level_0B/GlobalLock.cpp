@@ -13,6 +13,12 @@ GlobalLockTest::GlobalLockTest( UINT32 DisplayIntervalSeconds, UINT32 GlobalLock
 
 	//Time_Initialize();
 
+	int j;
+	for(j = 0; j < 500000; j++){}
+	for(j = 0; j < 500000; j++){}
+	for(j = 0; j < 500000; j++){}
+	for(j = 0; j < 500000; j++){}
+
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 1, FALSE);
@@ -29,10 +35,23 @@ GlobalLockTest::GlobalLockTest( UINT32 DisplayIntervalSeconds, UINT32 GlobalLock
 
 };
 
+BOOL GlobalLockTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
+{
+	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
+	hal_printf("\r\naccuracy=%d\r\n", accuracy);
+	hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
+	hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
+	hal_printf("\r\nresultParameter3=%s\r\n", "null");
+	hal_printf("\r\nresultParameter4=%s\r\n", "null");
+	hal_printf("\r\nresultParameter5=%s\r\n", "null");
+
+	return TRUE;
+}
+
 // Test the unsigned int theory
 BOOL GlobalLockTest::Level_0B()
 {
-
+DisplayStats(FALSE, "ERROR:Test is an endless loop", NULL, 0);
 	while(TRUE)
 	{
 		UINT64 lastVal = m_lastRead;
