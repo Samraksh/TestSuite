@@ -25,6 +25,7 @@ public:
     BOOL    Level_0B();
 
     void    ISR(void* param);
+	BOOL     DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy);
 
 };
 

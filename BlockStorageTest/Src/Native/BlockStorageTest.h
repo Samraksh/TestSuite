@@ -3,9 +3,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <tinyhal.h>
+#include "testMath.h"
 
 class BlockStorageTest
 {
+
+	testMath testMathInstance;
 
 public:
 
@@ -17,6 +20,8 @@ public:
 	BOOL 	 Level_0A();
 
 	BOOL 	 Level_0B();
+	
+	BOOL     DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy);
 
 };
 

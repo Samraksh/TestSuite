@@ -9,24 +9,28 @@ extern HALTimerManager gHalTimerManagerObject;
 //---//
 void Timer_1_Handler(void *arg)
 {
+
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
 }
 
 void Timer_2_Handler(void *arg)
 {
+
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
 }
 
 void Timer_3_Handler(void *arg)
 {
+
 	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
 }
 
 void Timer_4_Handler(void *arg)
 {
+
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 }
@@ -34,11 +38,11 @@ void Timer_4_Handler(void *arg)
 
 HALTimerTest::HALTimerTest( int seedValue, int numberOfEvents )
 {
-	// Initialize the timer manager object
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 29, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 30, TRUE);
+
 	gHalTimerManagerObject.Initialize();
 };
 

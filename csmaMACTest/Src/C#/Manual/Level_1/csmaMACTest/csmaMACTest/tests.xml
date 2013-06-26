@@ -4,7 +4,7 @@
 			Ping Test from C# using csma Level 1
 		</Description>
 		<TestPath>
-			csmaMACTest\Src\C#\Manual\Level_0\csmMACTest\csmaMACTest
+			csmaMACTest\Src\C#\Manual\Level_1\csmMACTest\csmaMACTest
 		</TestPath>
 		<TestProjName>
 			csmaMACTestMaster.csproj
