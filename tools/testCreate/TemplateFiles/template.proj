@@ -1,33 +1,33 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-	 <AssemblyName>TEMPLATE</AssemblyName>
+	 <AssemblyName>NOR</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
     <Description>
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSys\TEMPLATE\Src\Native</Directory>
+    <Directory>TestSuite\NOR\Src\Native</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSys\TEMPLATE\Src\Native\TEMPLATE.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\NOR\Src\Native\NOR.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
-  <Import Project="$(TESTSOURCE)\TestSys\tools\targets4.3\Microsoft.SPOT.System.Settings" />
+  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Settings" />
   <PropertyGroup>
     <OutputType>Executable</OutputType>
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSys\TEMPLATE\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\NOR\Src\Native\Level_0A\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
  	<Compile Include="EntryPoint.cpp" />
-    <Compile Include="TEMPLATE.cpp" />
+    <Compile Include="NOR.cpp" />
     <!--<Compile Include="test.c" />
 	<Compile Include="signalr.c" />
 	<Compile Include="syscalls.c" />
@@ -77,6 +77,10 @@
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\bootstrap\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_bootstrap.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\radio\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_radio_rf231.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\cmsis\dotNetMF.proj" />
@@ -295,8 +299,8 @@
     <DriverLibs Include="palevent_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\devicecode\pal\TinyCRT\stubs\dotNetMF.proj" />
-    <DriverLibs Include="tinycrt_pal_stubs.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\devicecode\pal\TinyCRT\dotNetMF.proj" />
+    <DriverLibs Include="tinycrt_pal.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\Stubs\USB_Config\dotNetMF.proj" />
@@ -332,5 +336,5 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Piezo\stubs\dotNetMF.proj" />
     <DriverLibs Include="piezo_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
-  <Import Project="$(TESTSOURCE)\TestSys\tools\targets4.3\Microsoft.SPOT.System.Targets" />
+  <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Targets" />
 </Project>

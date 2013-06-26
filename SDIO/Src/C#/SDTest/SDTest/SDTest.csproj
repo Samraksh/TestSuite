@@ -7,7 +7,7 @@
     <ProjectTypeGuids>{b69e3092-b931-443c-abe7-7e7b65f2a37f};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{274C258F-D641-40BA-9168-4B00FEAD08C2}</ProjectGuid>
+    <ProjectGuid>{016CF10F-4A74-4249-ACB7-BD3B9E326B07}</ProjectGuid>
     <TargetFrameworkVersion>v4.3</TargetFrameworkVersion>
     <NetMfTargetsBaseDir Condition="'$(NetMfTargetsBaseDir)'==''">$(MSBuildExtensionsPath32)\Microsoft\.NET Micro Framework\</NetMfTargetsBaseDir>
   </PropertyGroup>
@@ -39,7 +39,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.SPOT.Hardware" />
     <Reference Include="Microsoft.SPOT.Native">
+    </Reference>
+    <Reference Include="Samraksh_SPOT_Hardware">
+      <HintPath>..\..\..\..\..\..\..\SOURCE\STABLE\DotNet-MF\MicroFrameworkPK_v4_3\Samraksh\Interops\Samraksh_SPOT_Hardware\Samraksh_SPOT_Hardware\bin\Debug\Samraksh_SPOT_Hardware.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

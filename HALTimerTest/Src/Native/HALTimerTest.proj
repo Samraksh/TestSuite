@@ -1,18 +1,18 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-	 <AssemblyName>HALTimerTest</AssemblyName>
+	 <AssemblyName>HalTimerTest</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
     <Description>
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\HALTimerTest\Src\Native</Directory>
+    <Directory>TestSuite\HalTimerTest\Src\Native</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\HALTimerTest\Src\Native\HALTimerTest.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\HalTimerTest\Src\Native\HalTimerTest.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
@@ -22,12 +22,12 @@
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\HALTimerTest\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\HalTimerTest\Src\Native\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
  	<Compile Include="EntryPoint.cpp" />
-    <Compile Include="HALTimerTest.cpp" />
+    <Compile Include="HalTimerTest.cpp" />
     <!--<Compile Include="test.c" />
 	<Compile Include="signalr.c" />
 	<Compile Include="syscalls.c" />
@@ -57,6 +57,10 @@
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Diagnostics\stubs\dotNetMF.proj" />
     <DriverLibs Include="diagnostics_pal_stubs.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\HALTimer\dotNetMF.proj" />
+    <DriverLibs Include="HALTimer.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <DriverLibs Include="TinyHal.$(LIB_EXT)" />
@@ -277,10 +281,6 @@
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\FS\stubs\config\dotnetmf.proj" />
     <DriverLibs Include="FS_Config_stubs.$(LIB_EXT)" />
-  </ItemGroup>
-  <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\HALTimer\dotNetMF.proj" />
-    <DriverLibs Include="HALTimer.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\stubs\processor\stubs_I2C\dotNetMF.proj" />

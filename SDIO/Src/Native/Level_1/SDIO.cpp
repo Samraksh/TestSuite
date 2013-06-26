@@ -43,6 +43,9 @@ BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 BOOL SDIOTest::Level_0A()
 {
 
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
+
+
 	UINT8 input[512];
 	UINT8 output[512];
 
@@ -66,6 +69,8 @@ BOOL SDIOTest::Level_0A()
 
 	while(i++ < this->numberOfEvents)
 	{
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 
 		if(g_SDIODriver.EraseBlock((1 << 15), 512 + (1 << 15)) != DS_Success)
 		{
@@ -128,6 +133,10 @@ BOOL SDIOTest::Level_0B()
 
 	while(i++ < this->numberOfEvents)
 	{
+
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+	    CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+
 		UINT32 address = (testMathInstance.pareto_prng() % 126) * 64 * 1024;
 
 		//address = (1 << 15);

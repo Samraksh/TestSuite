@@ -12,6 +12,8 @@
 #define LEVEL_0C 2
 #define LEVEL_1  3
 
+#define NATIVE_TEST 1
+
 class SDIOTest
 {
 
