@@ -24,6 +24,11 @@ SDIOTest::SDIOTest( int seedValue, int numberOfEvents )
 
 };
 
+void SDStatus(DeviceStatus status)
+{
+	hal_printf("The Operations was a %s\n", (status == DS_Success) ? "Success" : "Failure");
+}
+
 BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, char* accuracy)
 {
 	hal_printf("result = %s\n", (result) ? "true":"false");
@@ -42,6 +47,7 @@ BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 // This test only checks if the manufacture id can be read
 BOOL SDIOTest::Level_0A()
 {
+	SDIOStatusFuncPtrType sdCallback = SDStatus;
 
 	UINT8 input[512];
 	UINT8 output[512];
@@ -58,7 +64,7 @@ BOOL SDIOTest::Level_0A()
 
 	UINT16 i = 0;
 
-	if(g_SDIODriver.Initialize() != DS_Success)
+	if(g_SDIODriver.Initialize(sdCallback) != DS_Success)
 	{
 		DisplayStats(FALSE, "SD Card Initialization Failed", NULL, NULL);
 		return FALSE;
@@ -79,12 +85,7 @@ BOOL SDIOTest::Level_0A()
 			return FALSE;
 		}
 
-
-
-		for(UINT32 i = 0; i < 10000; i++);
-
-
-
+		HAL_Time_Sleep_MicroSeconds(500);
 
 		if(g_SDIODriver.ReadBlock(output, (1 << 15), 512) != DS_Success)
 		{
@@ -94,7 +95,7 @@ BOOL SDIOTest::Level_0A()
 
 
 
-		for(UINT8 i = 0; i < 512; i++)
+		for(UINT16 i = 0; i < 512; i++)
 		{
 			if(input[i] != output[i])
 			{
@@ -103,7 +104,6 @@ BOOL SDIOTest::Level_0A()
 			}
 		}
 
-		break;
 
 	}
 

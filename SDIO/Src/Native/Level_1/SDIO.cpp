@@ -24,6 +24,11 @@ SDIOTest::SDIOTest( int seedValue, int numberOfEvents )
 
 };
 
+void SDStatus(DeviceStatus status)
+{
+	hal_printf("The Operations was a %s\n", (status == DS_Success) ? "Success" : "Failure");
+}
+
 BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, char* accuracy)
 {
 	hal_printf("result = %s\n", (result) ? "true":"false");
@@ -43,6 +48,8 @@ BOOL SDIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 BOOL SDIOTest::Level_0A()
 {
 
+	SDIOStatusFuncPtrType sdCallback = SDStatus;
+
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
 
 
@@ -61,7 +68,7 @@ BOOL SDIOTest::Level_0A()
 
 	UINT16 i = 0;
 
-	if(g_SDIODriver.Initialize() != DS_Success)
+	if(g_SDIODriver.Initialize(sdCallback) != DS_Success)
 	{
 		DisplayStats(FALSE, "SD Card Initialization Failed", NULL, NULL);
 		return FALSE;
@@ -99,7 +106,7 @@ BOOL SDIOTest::Level_0A()
 
 
 
-		for(UINT8 i = 0; i < 512; i++)
+		for(UINT16 i = 0; i < 512; i++)
 		{
 			if(input[i] != output[i])
 			{
@@ -122,10 +129,12 @@ BOOL SDIOTest::Level_0B()
 {
 	UINT16 i = 0;
 
+	SDIOStatusFuncPtrType sdCallback = SDStatus;
+
 	UINT8  inputdata[512];
 	UINT8  outputdata[512];
 
-	if(g_SDIODriver.Initialize() != DS_Success)
+	if(g_SDIODriver.Initialize(sdCallback) != DS_Success)
 	{
 		DisplayStats(FALSE, "SD Card Initialization Failed", NULL, NULL);
 		return FALSE;
@@ -164,8 +173,7 @@ BOOL SDIOTest::Level_0B()
 		}
 
 
-
-		for(UINT32 i = 0; i < 10000; i++);
+		HAL_Time_Sleep_MicroSeconds(1000);
 
 
 		if(g_SDIODriver.ReadBlock(outputdata, address, 512) != DS_Success)
@@ -181,6 +189,8 @@ BOOL SDIOTest::Level_0B()
 				DisplayStats(FALSE, "Level 1 SDIO Test Failed", NULL,NULL);
 				return FALSE;
 			}
+			inputdata[i] = 0;
+			outputdata[i] = 0;
 		}
 
 	}
