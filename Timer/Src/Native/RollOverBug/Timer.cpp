@@ -76,6 +76,51 @@ BOOL TimerTest::Level_0B()
 
 }
 
+BOOL TimerTest::Level_0C()
+{
+	UINT8 i = 0;
+
+	INT64 localTime  = 0;
+
+	while(i++ < 10)
+	{
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 1, TRUE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 1, FALSE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 3, TRUE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 3, FALSE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 8, TRUE);
+	    CPU_GPIO_SetPinState((GPIO_PIN) 8, FALSE);
+	    CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
+	    CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+	    CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
+	}
+
+
+	while(true)
+	{
+		localTime = Time_GetLocalTime();
+
+		if(localTime > m_lastRead)
+		{
+				CPU_GPIO_SetPinState((GPIO_PIN) 24, m_toggleFlag);
+				m_toggleFlag = ~m_toggleFlag;
+
+		}
+		else
+		{
+				CPU_GPIO_SetPinState((GPIO_PIN) 1, TRUE);
+				CPU_GPIO_SetPinState((GPIO_PIN) 1, FALSE);
+		}
+
+				m_lastRead = localTime;
+	}
+
+	return TRUE;
+}
+
+// HAL_Time_CurrentTicks test
 BOOL TimerTest::Level_0A()
 {
 	UINT8 i = 0;

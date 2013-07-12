@@ -4,6 +4,8 @@
 #ifndef _Timer_Test_
 #define _Timer_Test_ 1
 
+#define Level_0C_Test 3
+
 #include <tinyhal.h>
 #include <tim/netmf_timers.h>
 
@@ -23,6 +25,8 @@ public:
     BOOL    Level_0A();
 
     BOOL    Level_0B();
+
+    BOOL    Level_0C();
 
     void    ISR(void* param);
 

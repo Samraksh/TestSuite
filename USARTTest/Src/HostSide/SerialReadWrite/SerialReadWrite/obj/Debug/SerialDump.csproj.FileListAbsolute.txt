@@ -27,3 +27,6 @@ D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrit
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\Microsoft.SPOT.Tasks.pdb
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.exe
 D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.pdb
+D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\SerialDump.exe.config
+D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.exe
+D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.pdb

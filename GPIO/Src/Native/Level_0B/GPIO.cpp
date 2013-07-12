@@ -8,27 +8,48 @@
 //---//
 
 
-GPIO::GPIO( int seedValue, int numberOfEvents )
+GPIOTest::GPIOTest( int seedValue, int numberOfEvents )
 {
-	
+	this->numberOfEvents = numberOfEvents;
+
+	CPU_GPIO_Initialize();
+
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) GPIO_J12_PIN1 , FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) GPIO_J12_PIN2, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) GPIO_J12_PIN3, FALSE);
+
 };
 
-BOOL GPIO::Level_0A()
+BOOL GPIOTest::Level_0A()
 {
+
+	UINT16 i = 0;
+
+	//while(i++ < this->numberOfEvents)
+	while(TRUE)
+	{
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, TRUE);
+
+		HAL_Time_Sleep_MicroSeconds(500);
+
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, FALSE);
+	}
 
 	return TRUE;
 
 }
 
-BOOL GPIO::Level_0B()
+BOOL GPIOTest::Level_0B()
 {
 }
 
 
 
 
-BOOL GPIO::Execute( int testLevel )
+BOOL GPIOTest::Execute( int testLevel )
 {
+	if(testLevel == LEVEL_0A_TEST)
+		Level_0A();
 
 } //Execute
 
