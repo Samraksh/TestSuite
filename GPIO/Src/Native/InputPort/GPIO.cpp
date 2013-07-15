@@ -39,6 +39,9 @@ BOOL GPIOTest::DisplayStats(BOOL result, char* resultParameter1, char* resultPar
 	hal_printf("\r\nresultParameter3=%s\r\n", "null");
 	hal_printf("\r\nresultParameter4=%s\r\n", "null");
 	hal_printf("\r\nresultParameter5=%s\r\n", "null");
+	hal_printf("\r\nDummy\r\n");
+	hal_printf("\r\nDummy\r\n");
+	hal_printf("\r\nDummy\r\n");
 
 	return TRUE;
 }

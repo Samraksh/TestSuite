@@ -1,0 +1,8 @@
+<Project  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<SPOCLIENT>G:\Main\MF-Dev\MF4.3\MicroFrameworkPK_v4_3</SPOCLIENT>
+		<BUILD_TREE_DLL>$(SPOCLIENT)\BuildOutput\public\Debug\Client\dll</BUILD_TREE_DLL>
+		
+		<!--<property name="DllPath" value="G:\Main\blah\blah\" />  -->
+	</PropertyGroup>
+</Project>

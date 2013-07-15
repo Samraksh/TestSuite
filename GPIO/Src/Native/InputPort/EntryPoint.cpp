@@ -28,7 +28,7 @@ void ApplicationEntryPoint()
 {
     BOOL result;
     
-    GPIOTest gpio(0, 100);
+    GPIOTest gpio(0, 10000);
 
 
     do
