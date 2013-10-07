@@ -19,11 +19,11 @@ BlockStorageTest::BlockStorageTest( int seedValue, int numberOfEvents )
 	//Initial seed value for random value generator
 	testMathInstance.prng_init(30);
 	// initial wait for COM port to come up
-	int j;
+	/*int j;
 	for(j = 0; j < 500000; j++){}
 	for(j = 0; j < 500000; j++){}
 	for(j = 0; j < 500000; j++){}
-	for(j = 0; j < 500000; j++){}
+	for(j = 0; j < 500000; j++){}*/
 };
 
 BOOL BlockStorageTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
@@ -167,7 +167,8 @@ BOOL BlockStorageTest::Level_0B()
 	//Setting address to the value below as there is a problem between addresses 0x64018000 and 0x64020000
 	Address = 0x64020000;
 
-	while(Address + test_limit < 0x647F0014) //0x64010000 + 0x7E0000 + 0x14
+	//while((Address + test_limit) < 0x647F0014) //0x64010000 + 0x7E0000 + 0x14
+	while((Address + test_limit) < 0x64026000) //0x64010000 + 0x7E0000 + 0x14
 	{
 		if(!device->IsBlockErased(Address, test_limit/2))
 		{
