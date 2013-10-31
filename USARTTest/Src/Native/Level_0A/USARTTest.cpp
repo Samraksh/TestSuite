@@ -47,7 +47,7 @@ BOOL USARTTest::Level_0A()
 			USART_Read(COM1, &c, 1);
 			readData[counter++] = c;
 		}
-		
+
 		if(c == 'z')
 		{
 			for(int i = 0; i < counter; i++)
@@ -57,7 +57,7 @@ BOOL USARTTest::Level_0A()
 			}
 			counter = 0;	
 		}
-			
+
 		
 	}
 	return TRUE;

@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='TimeTest' Type='Native'>
+		<Description>
+			Native Time test Level 0A tests rollover bug on HAL_Time_CurrentTicks and HAL_Time_CurrentTime api
+		</Description>
+		<TestPath>
+			TimeTest\Src\Native\Level_0A
+		</TestPath>
+		<TestProjName>
+			TimeTest.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

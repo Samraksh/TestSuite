@@ -113,7 +113,6 @@ BOOL GlobalLockTest::Level_0A()
 	}
 
 
-DisplayStats(FALSE, "ERROR:Test is an endless loop", NULL, 0);
 	while(TRUE)
 	{
 

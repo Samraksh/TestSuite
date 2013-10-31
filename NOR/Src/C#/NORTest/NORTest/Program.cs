@@ -20,8 +20,12 @@ namespace Samraksh.SPOT.Tests
 
         public bool Run()
         {
+
+            string writtenData = "";
+
             while (true)
             {
+                writtenData = "Data";
 
                 norSize += BufferSize;
 
@@ -30,7 +34,10 @@ namespace Samraksh.SPOT.Tests
                 for (UInt16 i = 0; i < BufferSize; i++)
                 {
                     buffer1[i] = (UInt16)rng.Next(1 << 12);
+                    writtenData += buffer1[i].ToString() + ",";
                 }
+
+                Debug.Print(writtenData.ToString());
 
                 if (Samraksh.SPOT.Hardware.EmoteDotNow.NOR.IsFull())
                 {
@@ -53,13 +60,27 @@ namespace Samraksh.SPOT.Tests
         public void Exfiltrate()
         {
 
+            string readData = "";
+
             while (!Samraksh.SPOT.Hardware.EmoteDotNow.NOR.eof())
             {
+
+                readData = "Data";
+
                 if (Samraksh.SPOT.Hardware.EmoteDotNow.NOR.Read(buffer1, BufferSize) != DeviceStatus.Success)
                 {
                     Debug.Print("Failed to read from NOR\n");
                     return;
                 }
+
+                for (UInt16 i = 0; i < BufferSize; i++)
+                {
+                    readData += buffer1[i].ToString() + ",";
+                }
+
+                Debug.Print(readData.ToString());
+
+                readData = "";
 
                 norReadBytes += BufferSize;
 
@@ -70,6 +91,9 @@ namespace Samraksh.SPOT.Tests
 
         public static void Main()
         {
+
+            Debug.EnableGCMessages(false);
+
             NORTest norTest = new NORTest();
 
             norTest.Run();

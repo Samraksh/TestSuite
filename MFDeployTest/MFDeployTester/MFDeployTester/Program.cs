@@ -106,7 +106,7 @@ namespace Samraksh.SPOT.Tests
 
         public bool Connect(int timeout_ms, bool tryconnect)
         {
-            string port = "COM1";
+            string port = "COM4";
             uint baudrate = 115200;
 
             pd = _DBG.PortDefinition.CreateInstanceForSerial(port, port, baudrate);
@@ -616,7 +616,7 @@ namespace Samraksh.SPOT.Tests
 
             //mf.PingTest();
 
-            //mf.EraseTest();
+            mf.EraseTest();
 
             
 

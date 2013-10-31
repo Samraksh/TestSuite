@@ -1,10 +1,10 @@
 <TestSuite>
 	<Test Name='USARTTest' Type='Native'>
 		<Description>
-			Native USART Tests Level 0D
+			Native USART Tests Level 0C
 		</Description>
 		<TestPath>
-			USARTTest\Src\Native\Level_0D
+			USARTTest\Src\Native\Level_0C
 		</TestPath>
 		<TestProjName>
 			USARTTest.proj

@@ -91,6 +91,10 @@
     <DriverLibs Include="STM32F10x_flash.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
+    <DriverLibs Include="Tasklet.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\bh\dotNetMF.proj" />
+  </ItemGroup>
+  <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\gpio\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_gpio.$(LIB_EXT)" />
   </ItemGroup>

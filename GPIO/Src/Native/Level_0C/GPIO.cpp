@@ -30,9 +30,34 @@ BOOL GPIOTest::Level_0A()
 	{
 		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, TRUE);
 
-		HAL_Time_Sleep_MicroSeconds(500);
+		HAL_Time_Sleep_MicroSeconds(5);
 
 		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, FALSE);
+		
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, TRUE);
+
+		HAL_Time_Sleep_MicroSeconds(70);
+
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, FALSE);
+
+
+		/*
+		HAL_Time_Sleep_MicroSeconds(70);
+		
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, TRUE);
+
+		HAL_Time_Sleep_MicroSeconds(5);
+
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, FALSE);
+
+		HAL_Time_Sleep_MicroSeconds(800);
+
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, TRUE);
+
+		HAL_Time_Sleep_MicroSeconds(5);
+
+		CPU_GPIO_SetPinState((GPIO_PIN) GPIO_J12_PIN1, FALSE);
+		*/
 	}
 
 	return TRUE;

@@ -54,7 +54,7 @@ Copy-Item $TEMPLATEFILEDIR\test.c $TESTDIRNAME
 Copy-Item $TEMPLATEFILEDIR\template.edf $TESTDIRNAME\$TESTNAME.edf
 Copy-Item $TEMPLATEFILEDIR\template.hkp $TESTDIRNAME\$TESTNAME.hkp
 New-Item -ItemType directory -Path $TESTDIRNAME\GNU_S
-Copy-Item $TEMPLATEFILEDIR\tinyclr_vector.cpp $TESTDIRNAME\GNU_S
+Copy-Item $TEMPLATEFILEDIR\GNU_S\tinyclr_vector.cpp $TESTDIRNAME\GNU_S
 
 Get-Content ("$TEMPLATEFILEDIR\template.cpp") | ForEach-Object {$_ -replace 'TEMPLATE',$TESTNAME} | Set-Content  ("$TESTDIRNAME\$TESTNAME.cpp")
 Get-Content ("$TEMPLATEFILEDIR\template.h") | ForEach-Object {$_ -replace 'TEMPLATE',$TESTNAME} | Set-Content  ("$TESTDIRNAME\$TESTNAME.h")

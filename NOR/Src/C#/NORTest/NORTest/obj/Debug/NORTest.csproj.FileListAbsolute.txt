@@ -24,3 +24,5 @@ D:\Main\Work\NewTests\TestSuite\NOR\Src\C#\NORTest\NORTest\obj\Debug\le\NORTest.
 D:\Main\Work\NewTests\TestSuite\NOR\Src\C#\NORTest\NORTest\obj\Debug\le\NORTest.pdbx
 D:\Main\Work\NewTests\TestSuite\NOR\Src\C#\NORTest\NORTest\obj\Debug\NORTest.exe
 D:\Main\Work\NewTests\TestSuite\NOR\Src\C#\NORTest\NORTest\obj\Debug\NORTest.pdb
+D:\Main\Work\NewTests\TestSuite\NOR\Src\C#\NORTest\NORTest\obj\Debug\NORTest.csprojResolveAssemblyReference.cache
+D:\Main\Work\NewTests\TestSuite\NOR\Src\C#\NORTest\NORTest\obj\Debug\TinyCLR_DebugReferences.cache

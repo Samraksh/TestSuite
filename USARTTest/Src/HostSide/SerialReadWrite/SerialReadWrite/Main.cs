@@ -138,7 +138,7 @@ namespace Microsoft.SPOT.Tools
 
             if(pd == null)
             {
-                if(port     == null) port     = "COM1";
+                if(port     == null) port     = "COM4";
                 if(baudrate == 0   ) baudrate = 115200;
 
                 pd = _DBG.PortDefinition.CreateInstanceForSerial( port, port, baudrate );
@@ -308,8 +308,8 @@ namespace Microsoft.SPOT.Tools
 
             //Create Thread for Writing
             //AsyncCallback rcb = new AsyncCallback(ShowText);    //write callback
-            //m_sendThread = new Thread(new ThreadStart(SendThread_Level0));
-            //m_sendThread.Start();
+            m_sendThread = new Thread(new ThreadStart(SendThread_Level0));
+            m_sendThread.Start();
            
 
             //Start reading, never quit

@@ -1,7 +1,19 @@
 #include "GlobalLock.h"
+#include <Samraksh\HALTimer.h>
+
+extern HALTimerManager gHalTimerManagerObject;
 
 int testCount = 0;
 int secCount=0;
+
+void Timer_1_Handler(void *arg)
+{
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
+}
+
+
 
 
 GlobalLockTest::GlobalLockTest( UINT32 DisplayIntervalSeconds, UINT32 GlobalLockDurationSeconds )
@@ -28,6 +40,8 @@ GlobalLockTest::GlobalLockTest( UINT32 DisplayIntervalSeconds, UINT32 GlobalLock
 	//GlobalLock_Driver :: Initialize (2 , TRUE, 0, 0, ISR_GlobalLock, NULL);
 
 	//GlobalLock_Driver :: SetCompare(2 , 1000);
+
+	gHalTimerManagerObject.CreateTimer(1, 0, 500, FALSE, FALSE, Timer_1_Handler);
 
 	m_lastRead = 0;
 

@@ -128,7 +128,7 @@ BOOL NORTest::Level_1()
 			inputdata[j] = (UINT16) (testMathInstance.pareto_prng() % (1 << 15));
 		}
 
-		hal_printf("Writing at address %d\n", address);
+		hal_printf("Writing at address %x\n", address);
 
 		gNORDriver.ReadID();
 
@@ -151,6 +151,15 @@ BOOL NORTest::Level_1()
 			else
 			{
 				DisplayStats(FALSE, "Write Buffer failed", NULL, NULL);
+				return FALSE;
+			}
+		}
+
+		for(UINT16 i = 0; i < 20; i++)
+		{
+			if(inputdata[i] != outputdata[i])
+			{
+				DisplayStats(FALSE, "Read data is not same as written data", NULL,NULL);
 				return FALSE;
 			}
 		}
