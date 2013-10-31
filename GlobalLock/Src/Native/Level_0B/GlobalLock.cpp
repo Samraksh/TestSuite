@@ -25,12 +25,6 @@ GlobalLockTest::GlobalLockTest( UINT32 DisplayIntervalSeconds, UINT32 GlobalLock
 
 	//Time_Initialize();
 
-	int j;
-	for(j = 0; j < 500000; j++){}
-	for(j = 0; j < 500000; j++){}
-	for(j = 0; j < 500000; j++){}
-	for(j = 0; j < 500000; j++){}
-
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 1, FALSE);

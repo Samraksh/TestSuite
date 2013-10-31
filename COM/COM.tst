@@ -8,8 +8,8 @@ file enable local_data.txt
 COM_receive file enable rx_data.txt
 sleep 1000
 # COM_send random <seed> <number> <lower_bound> <upper_bound>
-COM_send random 1 20 0 100
-file random 1 20 0 100
+COM_send random 1 40 0 100
+file random 1 40 0 100
 sleep 1000
 # COM_send file <file_name>
 COM_send file data.txt
