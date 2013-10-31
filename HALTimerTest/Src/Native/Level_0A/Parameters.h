@@ -7,7 +7,7 @@
 #define forceCOM ""
 #define COMParameters "115200,N,8,1"
 #define useTestScript false
-#define testScriptName "Time.tst"
+#define testScriptName "HALTimerTest.tst"
 #define testScriptTimeoutMs 9000
 #define useMatlabAnalysis false
 #define matlabScriptName "analyze.m"

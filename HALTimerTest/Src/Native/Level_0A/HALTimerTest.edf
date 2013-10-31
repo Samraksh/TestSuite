@@ -8,10 +8,5 @@ event(TESTIND)
 	EventEndTest = (F); 
 end;
 
-group TIMERTEST = (Gpio2);
-event(TIMERTEST)
-	TimerFired1 = (R);
-	TimerFired2 = (F);
-end;
 
  
