@@ -7,10 +7,12 @@
 #define forceCOM ""
 #define COMParameters "115200,N,8,1"
 #define useTestScript false
-#define testScriptName "ADC.tst"
+#define testScriptName "HALTimerTest.tst"
 #define testScriptTimeoutMs 9000
-#define useAnalysis "powershell"
-#define analysisScriptName "analyze.ps1"
+#define useMatlabAnalysis false
+#define matlabScriptName "analyze.m"
+#define usePowershellAnalysis true
+#define powershellName "analyze.ps1"
 #define useResultsFile true
 #define resultsFileName "results.txt"
 // Do not change text format above this point

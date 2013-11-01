@@ -24,6 +24,8 @@ ADCTest::ADCTest( int seedValue, int numberOfEvents )
 {
 	//CPU_GPIO_Initialize();
 
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
+
 	this->numberOfEvents = numberOfEvents;
 
 	//testMathInstance.prng_init(30);
@@ -396,9 +398,9 @@ UINT16 adcBuffer[1000];
 BOOL ADCTest::Level_0B()
 {
 
+	for(volatile UINT32 i = 0; i < 100000; i++);
 
-
-	AD_ConfigureContinuousMode(adcBuffer, 1000, 1000, ADCUserHandler, NULL);
+	AD_ConfigureContinuousMode(adcBuffer, 100, 500, ADCUserHandler, NULL);
 
 	while(TRUE);
 

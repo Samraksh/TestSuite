@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='ADC' Type='Native'>
 		<Description>
-			Native ADC Tests Level 0C
+			Native ADC Tests Level 0C AD_ConfigureBatchMode test
 		</Description>
 		<TestPath>
 			ADC\Src\Native\Level_0C

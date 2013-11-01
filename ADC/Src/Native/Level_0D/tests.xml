@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='ADC' Type='Native'>
 		<Description>
-			Native ADC Tests Level 0D (Check manufacture id)
+			Native ADC Tests Level 0D AD_ConfigureContinuous Dual Mode
 		</Description>
 		<TestPath>
 			ADC\Src\Native\Level_0D

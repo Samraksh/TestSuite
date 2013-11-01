@@ -401,22 +401,16 @@ extern "C"
 {
 void ADCUserHandler(void *Param)
 {
-	//CPU_SetPinState((GPIO_PIN) 24, TRUE);
-	//CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+	CPU_SetPinState((GPIO_PIN) 24, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 }
 
 void Timer_1_Handler(void *arg)
 {
-	//CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
-	//CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
 
-	for(UINT16 i = 0 ; i < 50; i++)
-	{
-		hal_printf("Data,%d\n", adcBuffer[i]);
-		adcBuffer[i] = 0;
-	}
-
-	AD_ConfigureBatchMode(adcBuffer, 50, 1000, ADCUserHandler, NULL);
+	AD_ConfigureBatchMode(adcBuffer, 100, 1000, ADCUserHandler, NULL);
 }
 }
 

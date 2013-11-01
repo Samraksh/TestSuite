@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='ADC' Type='Native'>
 		<Description>
-			Native ADC Tests Level 0B
+			Native ADC Tests Level 0B for ConfigureContinuousMode
 		</Description>
 		<TestPath>
 			ADC\Src\Native\Level_0B
