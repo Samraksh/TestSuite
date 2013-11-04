@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='GlobalLock' Type='Native'>
+	<Test Name='GlobalLockTest' Type='Native'>
 		<Description>
-			Global Lock Level 0B Test
+			Native global lock Test Level 0A with virtual timers
 		</Description>
 		<TestPath>
-			GlobalLock\Src\Native\Level_0B
+			GlobalLockTest\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
-			GlobalLock.proj
+			GlobalLockTest.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,5 +31,5 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
-</Test>
+	</Test>
 </TestSuite>

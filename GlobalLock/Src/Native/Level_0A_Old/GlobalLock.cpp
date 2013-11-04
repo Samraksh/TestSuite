@@ -1,5 +1,9 @@
 #include "GlobalLock.h"
 
+#include <Samraksh\HALTimer.h>
+
+extern HALTimerManager gHalTimerManagerObject;
+
 int testCount = 0;
 int secCount=0;
 
@@ -13,11 +17,14 @@ GlobalLockTest::GlobalLockTest( UINT32 DisplayIntervalSeconds, UINT32 GlobalLock
 
 	//Time_Initialize();
 
+	//gHalTimerManagerObject.Initialize();
+
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 1, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 3, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 8, FALSE);
+
+	Tasklet_Initialize();
+
+	gHalTimerManagerObject.Initialize();
 
 	//GlobalLock_Driver :: Initialize (2 , TRUE, 0, 0, ISR_GlobalLock, NULL);
 
@@ -87,57 +94,35 @@ BOOL GlobalLockTest::Level_0B()
 
 }
 
+extern "C"
+{
+
+void Timer_1_Handler(void *arg)
+{
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+}
+
+void Timer_2_Handler(void *arg)
+{
+	GLOBAL_LOCK(irq);
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
+	for(volatile UINT32 i = 0; i < 100000; i++);
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+}
+
+}
+
 BOOL GlobalLockTest::Level_0A()
 {
-	UINT8 i = 0;
 
-	while(i++ < 10)
-	{
-		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 1, TRUE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 1, FALSE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 3, TRUE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 3, FALSE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 8, TRUE);
-	    CPU_GPIO_SetPinState((GPIO_PIN) 8, FALSE);
-	    CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
-	    CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
-	}
+	gHalTimerManagerObject.CreateTimer(1, 0, 20000, FALSE, FALSE, Timer_1_Handler);
+	gHalTimerManagerObject.CreateTimer(2, 0, 110000, FALSE, FALSE, Timer_2_Handler);
 
+	while(TRUE);
 
-	while(TRUE)
-	{
-
-		i = 0;
-
-		{
-
-
-			while(i++ < 1000)
-			{
-				GLOBAL_LOCK(irq);
-				CPU_GPIO_SetPinState((GPIO_PIN) 1, TRUE);
-				CPU_GPIO_SetPinState((GPIO_PIN) 1, FALSE);
-
-			}
-		}
-
-
-		i = 0;
-
-		while(i++ < 1000)
-		{
-			CPU_GPIO_SetPinState((GPIO_PIN) 1, TRUE);
-			CPU_GPIO_SetPinState((GPIO_PIN) 1, FALSE);
-
-		}
-
-
-
-	}
-
-        return TRUE;
+    return TRUE;
 
 }
 

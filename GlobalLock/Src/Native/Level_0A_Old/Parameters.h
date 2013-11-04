@@ -1,18 +1,22 @@
 ﻿// required TestRig parameters
 #define testTimeout 60000
-#define useLogic "normal"
-#define sampleTimeMs 17000
+#define useLogic false
+#define sampleTimeMs 4000
 #define sampleFrequency 4000000
 #define useCOMPort true
 #define forceCOM ""
 #define COMParameters "115200,N,8,1"
 #define useTestScript false
-#define testScriptName "HALTimerTest.tst"
+#define testScriptName "none.tst"
 #define testScriptTimeoutMs 9000
 #define useMatlabAnalysis false
 #define matlabScriptName "analyze.m"
-#define usePowershellAnalysis true
+#define usePowershellAnalysis false
 #define powershellName "analyze.ps1"
-#define useResultsFile true
-#define resultsFileName "results.txt"
 // Do not change text format above this point
+
+// test specific parameters
+#define frequency 2.5
+#define upperAllowedFrequency 2.7
+#define lowerAllowedFrequency 2.3
+#define expectedFrequency 2.5
