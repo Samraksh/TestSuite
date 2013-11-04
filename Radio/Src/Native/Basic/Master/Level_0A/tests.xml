@@ -31,5 +31,8 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>	
+		<TestSupporting>
+			load support projects: Radio\Src\Native\Basic\Slave\tests.xml 
+		</TestSupporting>
 	</Test>
 </TestSuite>

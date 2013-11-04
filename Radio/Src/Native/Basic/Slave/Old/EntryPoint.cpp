@@ -7,9 +7,9 @@
 #define __regtest
 
 #include <tinyhal.h>
-#include "RadioSlaveTest.h"
+#include "Radio.h"
 
-extern RadioSlaveTest gradioObject;
+extern RadioTest gradioObject;
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
@@ -26,7 +26,7 @@ void PostManagedEvent( UINT8 category, UINT8 subCategory, UINT16 data1, UINT32 d
 void ApplicationEntryPoint()
 {
     BOOL result;
-
+    
 
     do
     {

@@ -374,8 +374,8 @@ BOOL RadioTest::SleepTest_Level1C()
 
 	UINT32 i = 0;
 
-	//while(i++ < this->numberOfEvents)
-	while(TRUE)
+	while(i++ < this->numberOfEvents)
+	//while(TRUE)
 	{
 			// Try sending a packet now
 		{

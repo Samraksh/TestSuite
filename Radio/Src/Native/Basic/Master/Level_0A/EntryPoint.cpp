@@ -27,10 +27,13 @@ void ApplicationEntryPoint()
 {
     BOOL result;
     
+    hal_printf("Check Point 1\n");
 
     do
     {
     	radioObject.Initialize(0, 100);
+
+    	hal_printf("Check Point 2\n");
 
     	radioObject.Execute(LEVEL_0A);
 

@@ -15,6 +15,9 @@ void* myReceiveHandler (void *msg, UINT16 Size){
 
 	UINT8 * data = (UINT8 *) msg;
 
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
+
 	if(radioObject.currentpackedId == data[0])
 		radioObject.successfulTestCount++;
 
@@ -28,6 +31,10 @@ void* myReceiveHandler (void *msg, UINT16 Size){
 }
 
 void RadioTest::SendAckHandler(void *msg, UINT16 Size, NetOpStatus state){
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+
 	RadioAckPending = FALSE;
 
 }
@@ -36,9 +43,12 @@ void RadioTest::SendAckHandler(void *msg, UINT16 Size, NetOpStatus state){
 
 BOOL RadioTest::Initialize(int seedValue, int numberOfEvents)
 {
-	CPU_GPIO_Initialize();
+
+	hal_printf("Check Point 1.a\n");
+	//CPU_GPIO_Initialize();
 	CPU_SPI_Initialize();
 
+	hal_printf("Check Point 1.b\n");
 	RadioAckPending = FALSE;
 	radioID = 1;
 	numberOfRadios = 1;
@@ -48,8 +58,10 @@ BOOL RadioTest::Initialize(int seedValue, int numberOfEvents)
 	radioEventHandler.SetRecieveHandler(&myReceiveHandler);
 	radioEventHandler.SetSendAckHandler((void (*)(void*, UINT16, NetOpStatus)) &RadioTest::SendAckHandler);
 
+	hal_printf("Check Point 1.c\n");
 	result = CPU_Radio_Initialize(&radioEventHandler , &radioID, numberOfRadios, mac_id );
 
+	hal_printf("Check Point 1.d\n");
 	if(result != DS_Success)
 	{
 		DisplayStats(FALSE,"Radio Initialization failed", NULL, NULL);
@@ -60,6 +72,11 @@ BOOL RadioTest::Initialize(int seedValue, int numberOfEvents)
 
 	msg_carrier_ptr = & msg_carrier;
 
+	hal_printf("Check Point 1.e\n");
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24 , FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25 , FALSE);
+
+	hal_printf("Check Point 1.f\n");
 	successfulTestCount = 0;
 }
 

@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='Radio' Type='Native'>
+	<Test Name='Radio - Support' Type='Native'>
 		<Description>
-			Native Radio Master Test basic ping
+			Native Radio Slave Test basic send
 		</Description>
 		<TestPath>
-			Radio\Src\Native\Basic\Master\Level_0B
+			Radio\Src\Native\Basic\Slave
 		</TestPath>
 		<TestProjName>
-			Radio.proj
+			RadioSlave.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,7 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			load support projects: Radio\Src\Native\Basic\Slave\tests.xml
+			support project 1
 		</TestSupporting>
 	</Test>
 </TestSuite>

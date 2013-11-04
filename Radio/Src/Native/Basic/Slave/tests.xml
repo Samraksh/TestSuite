@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='Radio - Support' Type='Native'>
+	<Test Name='RadioSlave' Type='Native'>
 		<Description>
-			Native Radio Slave Test basic send
+			Native Radio slave 
 		</Description>
 		<TestPath>
 			Radio\Src\Native\Basic\Slave
 		</TestPath>
 		<TestProjName>
-			RadioSlave.proj
+			RadioSlaveTest.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,7 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			1 support project
+			support project 1
 		</TestSupporting>
 	</Test>
 </TestSuite>

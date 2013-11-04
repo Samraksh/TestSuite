@@ -148,9 +148,10 @@ BOOL RadioTest::Level_0B()
 		}
 
 		hal_printf("3:Starting to run Level_0B test\r\n");
+
 		while(i++ < this->numberOfEvents)
 		{
-		hal_printf("4:Starting to run Level_0B test\r\n");
+
 			// Try sending a packet now
 			{
 				msg.MSGID= i;
