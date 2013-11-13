@@ -29,7 +29,7 @@ void ApplicationEntryPoint()
 
     do
     {
-    	NORTest norTestObject(0,100);
+    	NORTest norTestObject(0,10);
 
     	norTestObject.Execute(LEVEL_0B);
 

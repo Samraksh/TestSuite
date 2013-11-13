@@ -1,10 +1,10 @@
 <TestSuite>
 	<Test Name='BlockStorageTest' Type='Native'>
 		<Description>
-			Native BlockStorage Tests for Internal Flash
+			Native BlockStorage Tests for External Flash, tests external flash integration
 		</Description>
 		<TestPath>
-			BlockStorageTest\Src\Native
+			BlockStorageTest\Src\Native\Level_0B
 		</TestPath>
 		<TestProjName>
 			BlockStorageTest.proj

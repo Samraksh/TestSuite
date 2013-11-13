@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='NOR' Type='Native'>
 		<Description>
-			Native NOR Tests Level 1
+			Native NOR Tests Level 1 random data to random locations read/write
 		</Description>
 		<TestPath>
 			NOR\Src\Native\Level_1

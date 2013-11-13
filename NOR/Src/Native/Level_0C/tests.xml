@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='NOR' Type='Native'>
 		<Description>
-			Native NOR Tests Level 0C
+			Native NOR Tests Level 0C write/read buffer tests on bank1
 		</Description>
 		<TestPath>
 			NOR\Src\Native\Level_0C

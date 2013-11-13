@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='SDIO' Type='Native'>
+	<Test Name='MACLayerTest' Type='Native'>
 		<Description>
-			Native SDIO Tests Level 0A
+			Native MACLayer Tests Level 0A test mac level send functionality using CSMA Mac layer
 		</Description>
 		<TestPath>
-			SDIO\Src\Native\Level_0A
+			MACLayerTest\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
-			SDIO.proj
+			MACLayerTest.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

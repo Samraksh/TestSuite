@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='NOR' Type='Native'>
+	<Test Name='TEMPLATE' Type='Native'>
 		<Description>
-			Native NOR Tests Level 0A (Check manufacture id)
+			Native TEMPLATE Tests 
 		</Description>
 		<TestPath>
-			NOR\Src\Native\Level_0A
+			TEMPLATE\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
-			NOR.proj
+			TEMPLATE.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

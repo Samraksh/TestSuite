@@ -50,6 +50,9 @@ Copy-Item $TEMPLATEFILEDIR\scatterfile_tools_gcc.xml $TESTDIRNAME
 
 Copy-Item $TEMPLATEFILEDIR\signalr.c $TESTDIRNAME
 Copy-Item $TEMPLATEFILEDIR\syscalls.c $TESTDIRNAME
+Copy-Item $TEMPLATEFILEDIR\fixedPoint.h $TESTDIRNAME
+Copy-Item $TEMPLATEFILEDIR\testMath.h $TESTDIRNAME
+Copy-Item $TEMPLATEFILEDIR\Parameters.h $TESTDIRNAME
 Copy-Item $TEMPLATEFILEDIR\test.c $TESTDIRNAME
 Copy-Item $TEMPLATEFILEDIR\template.edf $TESTDIRNAME\$TESTNAME.edf
 Copy-Item $TEMPLATEFILEDIR\template.hkp $TESTDIRNAME\$TESTNAME.hkp
@@ -59,6 +62,7 @@ Copy-Item $TEMPLATEFILEDIR\GNU_S\tinyclr_vector.cpp $TESTDIRNAME\GNU_S
 Get-Content ("$TEMPLATEFILEDIR\template.cpp") | ForEach-Object {$_ -replace 'TEMPLATE',$TESTNAME} | Set-Content  ("$TESTDIRNAME\$TESTNAME.cpp")
 Get-Content ("$TEMPLATEFILEDIR\template.h") | ForEach-Object {$_ -replace 'TEMPLATE',$TESTNAME} | Set-Content  ("$TESTDIRNAME\$TESTNAME.h")
 Get-Content ("$TEMPLATEFILEDIR\template.proj") | ForEach-Object {$_ -replace 'TEMPLATE',$TESTNAME} | Set-Content  ("$TESTDIRNAME\$TESTNAME.proj")
+Get-Content ("$TEMPLATEFILEDIR\tests.xml") | ForEach-Object {$_ -replace 'TEMPLATE',$TESTNAME} | Set-Content  ("$TESTDIRNAME\tests.xml")
 
 Write-Host "/*********************  Test Creation is complete *************************/"
 

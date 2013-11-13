@@ -294,19 +294,11 @@ BOOL TimerTest::Level_0A()
 	TIM_OCInitStructure.TIM_OCIdleState = TIM_OCIdleState_Set;
 	TIM_OCInitStructure.TIM_OCNIdleState = TIM_OCIdleState_Reset;
 
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_Timing;
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+	TIM_OCInitStructure.TIM_Pulse = 1;
 
-	TIM_OC1Init(TIM1, &TIM_OCInitStructure);
-
-	/* Automatic Output enable, Break, dead time and lock configuration*/
-	TIM_BDTRInitStructure.TIM_OSSRState = TIM_OSSRState_Enable;
-	TIM_BDTRInitStructure.TIM_OSSIState = TIM_OSSIState_Enable;
-	TIM_BDTRInitStructure.TIM_LOCKLevel = TIM_LOCKLevel_1;
-	TIM_BDTRInitStructure.TIM_DeadTime = 5;
-	TIM_BDTRInitStructure.TIM_Break = TIM_Break_Disable;
-	TIM_BDTRInitStructure.TIM_BreakPolarity = TIM_BreakPolarity_High;
-	TIM_BDTRInitStructure.TIM_AutomaticOutput = TIM_AutomaticOutput_Disable;
-
-	TIM_BDTRConfig(TIM1, &TIM_BDTRInitStructure);
+	TIM_OC3Init(TIM1, &TIM_OCInitStructure);
 
 	  /* Master Mode selection */
 	TIM_SelectOutputTrigger(TIM1, TIM_TRGOSource_Update);
@@ -337,13 +329,14 @@ BOOL TimerTest::Level_0A()
 
 
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
-	//TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
+	TIM_ITConfig(TIM1, TIM_IT_CC3, ENABLE);
 
 	/* TIM1 counter enable */
 	TIM_Cmd(TIM1, ENABLE);
 
 	TIM_Cmd(TIM2,ENABLE);
 
+	TIM_SetCompare3(TIM1, TIM_GetCounter(TIM1) + 20000);
 	/* Main Output Enable */
 
 	TIM_CtrlPWMOutputs(TIM1, ENABLE);
@@ -355,7 +348,7 @@ BOOL TimerTest::Level_0A()
 
 }
 
-#if 0
+
 extern "C"
 {
 
@@ -373,8 +366,8 @@ void ISR_TIM1( void* Param )
 	 if(TIM_GetFlagStatus(TIM1, TIM_IT_CC1))
 	 {
 		 TIM_ClearITPendingBit(TIM1, TIM_IT_CC1);
-		 CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-		 CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+		 //CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+		 //CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 
 	 }
 	 else if(TIM_GetFlagStatus(TIM1, TIM_IT_CC2))
@@ -382,6 +375,16 @@ void ISR_TIM1( void* Param )
 		 TIM_ITConfig(TIM1, TIM_IT_CC2, DISABLE);
 		 //TIM_SetCompare2(TIM1, TIM_GetCounter(TIM1) + 20000);
 		 TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
+
+		 //CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
+		 //CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+
+	 }
+	 else if(TIM_GetFlagStatus(TIM1, TIM_IT_CC3))
+	 {
+		 //TIM_ITConfig(TIM1, TIM_IT_CC3, DISABLE);
+		 TIM_SetCompare3(TIM1, TIM_GetCounter(TIM1) + 20000);
+ 		 TIM_ClearITPendingBit(TIM1, TIM_IT_CC3);
 
 		 CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
 		 CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
@@ -393,7 +396,7 @@ void ISR_TIM1( void* Param )
 
 }
 }
-#endif
+
 
 BOOL TimerTest::Execute(int level )
 {

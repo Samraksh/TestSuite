@@ -1,10 +1,10 @@
 <TestSuite>
 	<Test Name='SDIO' Type='Native'>
 		<Description>
-			Native SDIO Tests Level 0A
+			Native SDIO Tests Level 0B writing random data to random locations in sd
 		</Description>
 		<TestPath>
-			SDIO\Src\Native\Level_0A
+			SDIO\Src\Native\Level_0B
 		</TestPath>
 		<TestProjName>
 			SDIO.proj

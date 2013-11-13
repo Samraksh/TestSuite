@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='DataStoreTest' Type='Native'>
+		<Description>
+			Native DataStoreTest Tests 
+		</Description>
+		<TestPath>
+			DataStoreTest\Src\Native\Level_0A
+		</TestPath>
+		<TestProjName>
+			DataStoreTest.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

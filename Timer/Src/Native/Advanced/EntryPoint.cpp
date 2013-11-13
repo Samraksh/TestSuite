@@ -40,7 +40,7 @@ void ApplicationEntryPoint()
        // result = gpioTest.Execute2  ( );
         //result = spiTest.Execute   ( STREAM__OUT );
         //result = timersTest.Execute( STREAM__OUT );
-    	result = timerTest.Execute(1);
+    	result = timerTest.Execute(0);
 
     } while(FALSE); // run only once!
 

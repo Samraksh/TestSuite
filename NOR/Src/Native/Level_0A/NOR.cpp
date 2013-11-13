@@ -51,6 +51,7 @@ BOOL NORTest::Level_0A()
 		if(gNORDriver.GetManufactureId() == MANUFACTURE_ID)
 		{
 			testPassed = true;
+			break;
 		}
 
 		for(j = 0; j < 100000; j++){}
