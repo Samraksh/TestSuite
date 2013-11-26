@@ -4,7 +4,7 @@
 			Native global lock Test Level 0A with virtual timers
 		</Description>
 		<TestPath>
-			GlobalLockTest\Src\Native\Level_0A
+			GlobalLock\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
 			GlobalLockTest.proj

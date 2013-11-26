@@ -9,7 +9,7 @@ namespace ParameterClass
 	public int testTimeout = 60000;
 	public string useLogic = "I2C";
 	public double sampleTimeMs = 15000;
-	public double sampleFrequency = 800000;
+	public double sampleFrequency = 4000000;
 	public bool useCOMPort = false;
 	public string forceCOM = "";
 	public string COMParameters = "115200,N,8,1";
