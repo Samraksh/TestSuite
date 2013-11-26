@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='GlobalLockTest' Type='Native'>
+	<Test Name='SDTest' Type='C#'>
 		<Description>
-			Native global lock Test Level 0A with virtual timers
+			C# SD Test simple read and write
 		</Description>
 		<TestPath>
-			GlobalLock\Src\Native\Level_0A
+			SDIO\Src\C#\TestRig
 		</TestPath>
 		<TestProjName>
-			GlobalLockTest.proj
+			SDTest.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
