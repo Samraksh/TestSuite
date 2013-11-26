@@ -10,6 +10,10 @@
 
 //---//
 MacEventHandler_t Event_Handler;
+UINT16 lastPacketID = 0;
+
+UINT32 failureToExtract = 0;
+UINT16 missedResponses = 0;
 
 MACLayerTest::MACLayerTest( int seedValue, int numberOfEvents )
 {
@@ -43,8 +47,36 @@ void  SendAckCallback(void *msg, UINT16 size, NetOpStatus status){
 
 }
 
-void RecieveCallback(UINT16 arg1)
+void RecieveCallback(UINT16 numberOfPacketsInBuffer)
 {
+	UINT8 tempBuffer[128];
+
+	UINT8 *tempBufferPointer = tempBuffer;
+
+	for(UINT16 i = 0 ; i < 128; i++)
+	{
+		tempBuffer[i] = 0;
+	}
+
+	for(UINT16 i = 0; i < numberOfPacketsInBuffer; i++)
+	{
+		if(Mac_GetNextPacket(&tempBufferPointer) != DS_Success)
+		{
+			failureToExtract++;
+			hal_printf("Failed to Extract this packet");
+
+			return;
+		}
+	}
+
+	UINT16 packetIDDiff = tempBuffer[2] - lastPacketID;
+
+	if(packetIDDiff != 1)
+	{
+		missedResponses++;
+	}
+
+	MACLayerTest::ResponsePending = FALSE;
 
 }
 
@@ -150,6 +182,64 @@ BOOL MACLayerTest::Level_0A()
 // This test writes data and then verifies the write has been successful
 BOOL MACLayerTest::Level_0B()
 {
+
+	UINT16 i = 0;
+
+	UINT16 failureToSend = 0;
+
+	if(InitializeMacLayer() != DS_Success)
+	{
+		DisplayStats(FALSE,"Mac Layer initialization failed","",0);
+		return FALSE;
+	}
+
+	UINT8 mesg[10];
+
+		for(UINT16 i = 0 ; i < 10; i++)
+		{
+			mesg[i] = i;
+		}
+
+		while(i++ < 100)
+		{
+
+			// Use the first byte to send message id of some sort
+			mesg[0] = i;
+
+			CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+			if(Mac_Send(MacID, 0xffff, 1, (void*) mesg, 10) != DS_Success)
+			{
+				hal_printf("The current iteration number is %d", i);
+				failureToSend++;
+				//DisplayStats(FALSE,"Mac Layer Send failed","",0);
+				//return FALSE;
+			}
+
+			while(SendAckPending == TRUE);
+			CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+
+			SendAckPending = FALSE;
+
+			// Sleep  for a while
+			for(UINT16 i = 0 ; i < 50000; i++);
+
+		}
+
+		if(failureToSend > 0)
+		{
+			hal_printf("Failed to Send %d Packets", failureToSend);
+			DisplayStats(FALSE,"Mac Layer Send failed","",0);
+		}
+		else
+		{
+			hal_printf("The Number of Missed Responses = %d\n", missedResponses);
+			DisplayStats(TRUE, "Mac Layer Send Test succeeded","",0);
+		}
+
+
+
+
+
 	return TRUE;
 
 }

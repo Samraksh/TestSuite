@@ -11,6 +11,8 @@
 //---//
 MacEventHandler_t Event_Handler;
 
+UINT32 failureToExtract = 0;
+
 MACLayerTest::MACLayerTest( int seedValue, int numberOfEvents )
 {
 	CPU_GPIO_Initialize();
@@ -43,9 +45,48 @@ void  SendAckCallback(void *msg, UINT16 size, NetOpStatus status){
 
 }
 
-void RecieveCallback(UINT16 arg1)
+void RecieveCallback(UINT16 numberOfPacketsInBuffer)
 {
 
+	// Store the buffer here temporarily
+	UINT8 tempBuffer[128];
+
+	UINT8 *tempBufferPointer = tempBuffer;
+
+	for(UINT16 i = 0 ; i < 128; i++)
+	{
+		tempBuffer[i] = 0;
+	}
+
+	for(UINT16 i = 0; i < numberOfPacketsInBuffer; i++)
+	{
+		if(Mac_GetNextPacket(&tempBufferPointer) != DS_Success)
+		{
+			failureToExtract++;
+
+			hal_printf("Failed to Extract this packet");
+
+			return;
+		}
+
+		UINT16 Size = tempBuffer[0];
+		Size |= (UINT16) (tempBuffer[1] << 8);
+
+		hal_printf("Recieved PACKET : %d of Size : %d\n", tempBuffer[2], Size);
+
+		if(Mac_Send(MACLayerTest::MacID, 0xffff, 1, (void*) tempBuffer, 10) != DS_Success)
+		{
+				hal_printf("Response failed to go out for Packet : %d\n", tempBuffer[2]);
+
+					//DisplayStats(FALSE,"Mac Layer Send failed","",0);
+					//return FALSE;
+		}
+
+		while(MACLayerTest::SendAckPending == TRUE);
+
+		hal_printf("Response Sent for Packet : %d\n", tempBuffer[2]);
+
+	}
 }
 
 void NeigbhbourChangeCallback(INT16 arg1)
@@ -150,7 +191,20 @@ BOOL MACLayerTest::Level_0A()
 // This test writes data and then verifies the write has been successful
 BOOL MACLayerTest::Level_0B()
 {
+
+	if(InitializeMacLayer() != DS_Success)
+	{
+		DisplayStats(FALSE,"Mac Layer initialization failed","",0);
+		return FALSE;
+	}
+
+
+	while(TRUE);
+
 	return TRUE;
+
+
+
 
 }
 
