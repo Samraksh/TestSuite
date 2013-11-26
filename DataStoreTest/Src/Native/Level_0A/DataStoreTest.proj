@@ -6,13 +6,13 @@
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\DataStoreTest\Src\Native</Directory>
+    <Directory>TestSuite\DataStoreTest\Src\Native\Level_0A</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\DataStoreTest\Src\Native\DataStoreTest.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\DataStoreTest\Src\Native\Level_0A\DataStoreTest.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>

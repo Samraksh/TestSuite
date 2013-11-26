@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='DataStoreTest' Type='Native'>
 		<Description>
-			Native DataStoreTest Tests 
+			Native DataStoreTest Tests - Initialization
 		</Description>
 		<TestPath>
 			DataStoreTest\Src\Native\Level_0A

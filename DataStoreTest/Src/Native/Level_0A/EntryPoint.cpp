@@ -6,7 +6,7 @@
 
 #define __regtest
 
-#include <tinyhal.h>
+#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\tinyhal.h>
 #include "DataStoreTest.h"
 
 
@@ -31,9 +31,9 @@ void ApplicationEntryPoint()
     {
     	DataStoreTest dsTestObject(0,100);
 
-    	dsTestObject.Execute(LEVEL_0A);
+    	dsTestObject.Execute(TEST_INITIALIZATION);
 
-    } while(FALSE); // run only once!
+    } while(false); // run only once!
 
-    while(TRUE);
+    while(true);
 }
