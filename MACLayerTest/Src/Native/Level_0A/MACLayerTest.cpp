@@ -35,11 +35,11 @@ BOOL MACLayerTest::DisplayStats(BOOL result, char* resultParameter1, char* resul
 
 void  SendAckCallback(void *msg, UINT16 size, NetOpStatus status){
 
+
 	if(status == NO_Success)
 	{
 		MACLayerTest::SendAckPending = FALSE;
 	}
-	else
 
 }
 
@@ -112,7 +112,7 @@ BOOL MACLayerTest::Level_0A()
 		mesg[i] = i;
 	}
 
-	while(i++ < 20)
+	while(i++ < 10)
 	{
 		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 		if(Mac_Send(MacID, 0xffff, 1, (void*) mesg, 10) != DS_Success)
