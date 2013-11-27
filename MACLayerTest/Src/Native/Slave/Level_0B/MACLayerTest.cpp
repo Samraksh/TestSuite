@@ -74,7 +74,7 @@ void RecieveCallback(UINT16 numberOfPacketsInBuffer)
 
 		hal_printf("Recieved PACKET : %d of Size : %d\n", tempBuffer[2], Size);
 
-		if(Mac_Send(MACLayerTest::MacID, 0xffff, 1, (void*) tempBuffer, 10) != DS_Success)
+		if(Mac_Send(MACLayerTest::MacID, 0xffff, 1, (void*) &tempBuffer[2], 10) != DS_Success)
 		{
 				hal_printf("Response failed to go out for Packet : %d\n", tempBuffer[2]);
 

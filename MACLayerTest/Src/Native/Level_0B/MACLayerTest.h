@@ -11,6 +11,18 @@
 #define LEVEL_0C 2
 #define LEVEL_1  3
 
+#define INIT_STATE_CHECK()				UINT16 poll_counter, trx_status;
+
+#define DID_STATE_CHANGE(x,y)				poll_counter = 0;               \
+										do{ 							\
+											if(poll_counter == 0xfffe)    \
+											{  								\
+												DisplayStats(FALSE,y, NULL,NULL); \
+												return FALSE; 				\
+											} 								\
+											poll_counter++; 				\
+										  }while(TRUE == x);							\
+
 class MACLayerTest
 {
 

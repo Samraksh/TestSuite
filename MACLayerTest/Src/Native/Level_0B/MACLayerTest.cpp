@@ -76,6 +76,8 @@ void RecieveCallback(UINT16 numberOfPacketsInBuffer)
 		missedResponses++;
 	}
 
+	lastPacketID = tempBuffer[2];
+
 	MACLayerTest::ResponsePending = FALSE;
 
 }
@@ -183,6 +185,8 @@ BOOL MACLayerTest::Level_0A()
 BOOL MACLayerTest::Level_0B()
 {
 
+	INIT_STATE_CHECK();
+
 	UINT16 i = 0;
 
 	UINT16 failureToSend = 0;
@@ -215,10 +219,13 @@ BOOL MACLayerTest::Level_0B()
 				//return FALSE;
 			}
 
-			while(SendAckPending == TRUE);
+			DID_STATE_CHANGE(SendAckPending, "Did not recieve send ack from radio");
 			CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 
-			SendAckPending = FALSE;
+			DID_STATE_CHANGE(ResponsePending, "Did not recieve response from slave\n");
+
+			SendAckPending = TRUE;
+			ResponsePending = TRUE;
 
 			// Sleep  for a while
 			for(UINT16 i = 0 ; i < 50000; i++);
