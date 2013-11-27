@@ -45,6 +45,7 @@ LPVOID* DataStoreTest::CreateDataStoreRecords(int count)
 	////LPVOID* firstGivenPtr = (void**)new char[count];
 	//LPVOID* firstGivenPtr = (void**)malloc(sizeof(char) * count);
 	//LPVOID* firstGivenPtr[count];
+	// Array of pointers to given addresses
 	LPVOID firstGivenPtr[count];
 	for(UINT16 index = 1; index <= count; ++index)
 	{
@@ -103,6 +104,7 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 
 	//LPVOID* firstGivenPtr = reinterpret_cast<void**>(CreateDataStoreRecords(recordCount));
 	LPVOID* firstGivenPtr = CreateDataStoreRecords(recordCount);
+	// Store the array of given pointers in an array, as the contents of the pointer array is lost for some reason.
 	for(UINT16 index = 0; index < recordCount; ++index)
 	{
 		ptrList[index] = firstGivenPtr[index];
@@ -136,6 +138,7 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 	// Then first delete the record and read from the records to compare read and write data
 	for(UINT16 index = 1; index <= recordCount; index++)
 	{
+		// Get the first given pointer. Index for array starts from zero, but recordID starts from 1.
 		LPVOID givenPtr = ptrList[index-1];
 		if(DeleteDataStoreRecords(index))
 		{
