@@ -7,7 +7,11 @@
 
 //---//
 
-#define J12_PIN4 14
+// PA0 - 15 --- 0 to 15
+// PB0 - 15 --- 16 to 31
+// PC0 - 15 --- 32 to 37
+//J14_PIN4 is PB14 --- which is 30
+#define J12_PIN4 30
 
 extern Data_Store g_dataStoreObject;
 
