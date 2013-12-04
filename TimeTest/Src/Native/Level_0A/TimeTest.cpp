@@ -22,6 +22,8 @@ TimeTest::TimeTest( int seedValue, int numberOfEvents )
 
 	testMathInstance.prng_init(30);
 
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
+
 };
 
 BOOL TimeTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
@@ -46,16 +48,23 @@ BOOL TimeTest::Level_0A()
 	UINT64 currentTicks = 0;
 	UINT64 lastReadTicks = 0;
 
+	UINT32 snapshot  = 0;
 
 	// HAL_Time_CurrentTicks test
 	while(i++ < this->numberOfEvents)
 	{
+
+		hal_printf("Ticks : %u\n", snapshot);
+
 		currentTicks = HAL_Time_CurrentTicks();
+
+		snapshot = (UINT32) currentTicks;
 
 		HAL_Time_Sleep_MicroSeconds(300);
 
 		if(currentTicks < lastReadTicks)
 		{
+			hal_printf("The failure snapshot is %u\n", snapshot);
 			DisplayStats(FALSE,"Time Test Level 0 Failed", "HAL_Time_CurrentTicks is rolling over",0);
 			return FALSE;
 		}
@@ -73,7 +82,11 @@ BOOL TimeTest::Level_0A()
 	// HAL_Time_CurrentTime test
 	while(i++ < this->numberOfEvents)
 	{
+		hal_printf("Time : %u\n", snapshot);
+
 		currentTime = HAL_Time_CurrentTime();
+
+		snapshot = (UINT32) currentTime;
 
 		HAL_Time_Sleep_MicroSeconds(300);
 

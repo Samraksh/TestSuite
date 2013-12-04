@@ -29,7 +29,7 @@ void ApplicationEntryPoint()
 
     do
     {
-    	TimeTest timeTestTestObject(0,10000);
+    	TimeTest timeTestTestObject(0,100000);
 
     	timeTestTestObject.Execute(LEVEL_0A);
 
