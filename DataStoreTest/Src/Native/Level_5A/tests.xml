@@ -1,0 +1,36 @@
+<TestSuite>
+	<Test Name='DataStoreTest' Type='Native'>
+		<Description>
+			Native DataStoreTest Tests - keep writing to multiple (successive) records. Delete (successive) records and read from those records. 
+			(Create multiple records and write 100 sequential uint16 data types and read them back)
+		</Description>
+		<TestPath>
+			DataStoreTest\Src\Native\Level_5A
+		</TestPath>
+		<TestProjName>
+			DataStoreTest.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

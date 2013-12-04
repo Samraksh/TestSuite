@@ -2,14 +2,21 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <tinyhal.h>
+#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\tinyhal.h>
+#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh\DataStore\Datastore.h>
+#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh\HAL_util.h>
+#include <cstdlib>
 #include "testMath.h"
 
 
-#define LEVEL_0A 0
-#define LEVEL_0B 1
-#define LEVEL_0C 2
-#define LEVEL_1  3
+#define TEST_INITIALIZATION 0
+#define TESTREADWRITE 1
+#define TESTDELETE 2
+#define TESTGETADDRESS 3
+#define TESTGETRECORDID 4
+#define LEVEL_0A 5
+#define LEVEL_0C  6
+#define LEVEL_1 7
 
 class DataStoreTest
 {
@@ -27,11 +34,16 @@ public:
 
 	BOOL 	 Level_0A();
 
-	BOOL 	 Level_0B();
-
 	BOOL     Level_0C();
 
 	BOOL 	 Level_1();
+
+	BOOL 	 test_initialization();
+	BOOL 	 TestReadWrite();
+	LPVOID 	 CreateDataStoreRecords(int);
+	BOOL	 DeleteDataStoreRecords();
+	BOOL	 GetAddress();
+	BOOL	 GetRecordID();
 
 	BOOL     DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy);
 
