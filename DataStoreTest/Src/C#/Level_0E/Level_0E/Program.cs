@@ -88,6 +88,15 @@ namespace Samraksh.SPOT.Tests
         {
             int[] recIdArray = new int[256];
             dStore.ReadAllRecordIDs(recIdArray);
+            /*if (dStore.ReadAllRecordIDs(recIdArray))
+            {
+                DisplayStats(false, "persistence failed", "", 0);
+                return;
+            }
+            else
+            {
+                DisplayStats(false, "persistence succeeded", "", 0);
+            }*/
             //Data[] dataObj;
             //recIdArray.Length
             for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)

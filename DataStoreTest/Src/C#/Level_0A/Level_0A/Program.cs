@@ -39,9 +39,9 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0A()
         {
-            for (UInt32 dataIndex = 112; dataIndex <= 122; ++dataIndex)
+            for (UInt32 dataIndex = 143; dataIndex <= 153; ++dataIndex)
             {
-                Data data = new Data(dStore, dataIndex, 256);
+                Data data = new Data(dStore, dataIndex, 512);
 
                 if (data.Create() != DataStatus.Success)
                 {
@@ -98,7 +98,7 @@ namespace Samraksh.SPOT.Tests
         public void method2()
         {
             DataStore dStore = new DataStore((int)StorageType.NOR);
-            bool retVal = dStore.ReadAllRecordIDs();
+            //bool retVal = dStore.ReadAllRecordIDs();
         }
     }
     
