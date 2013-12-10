@@ -41,13 +41,13 @@ namespace Samraksh.SPOT.Tests
         {
             for (UInt32 dataIndex = 143; dataIndex <= 153; ++dataIndex)
             {
-                Data data = new Data(dStore, dataIndex, 512);
+                Data data = new Data(dStore, 512);
 
-                if (data.Create() != DataStatus.Success)
+                /*if (data.Create() != DataStatus.Success)
                 {
                     DisplayStats(false, "Record Creation failed", "", 0);
                     return;
-                }
+                }*/
 
             }
 

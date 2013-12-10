@@ -46,23 +46,10 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0D()
         {
-            for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
+            for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
-                Data data = new Data(dStore, dataIndex, 256);
-
-                if (data.Create() != DataStatus.Success)
-                {
-                    if (data.GetStatus() == DataStatus.AlreadyExists)
-                    {
-                        Debug.Print("Record already exists");
-                    }
-                    else
-                    {
-                        DisplayStats(false, "Record Creation failed", "", 0);
-                        return;
-                    }
-                }
-                DisplayStats(true, "Record creation successful", "", 0);
+                Type dataType = typeof(System.UInt16);
+                Data data = new Data(dStore, 256, dataType);
 
                 rnd.NextBytes(writeBuffer);
                 data.Write(writeBuffer, 256);
@@ -77,6 +64,9 @@ namespace Samraksh.SPOT.Tests
                     DisplayStats(false, "Delete test failed", "", 0);
                     return;
                 }
+
+                writeBuffer = new byte[256];
+                readBuffer = new byte[256];
             }
             
         }

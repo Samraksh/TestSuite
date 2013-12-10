@@ -54,58 +54,33 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0E()
         {
-            if (DataStore.DeleteAllRecords() != (int)DATASTORE_ERROR.DATASTORE_ERROR_NONE)
+            if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");
 
-            if (DataStore.GC() != (int)DATASTORE_ERROR.DATASTORE_ERROR_NONE)
+            if (DataStore.GC() == DataStatus.Success)
                 Debug.Print("Datastore succesfully garbage collected");
 
-            for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
+            Type dataType = typeof(System.UInt32);
+            UInt32 size = 256;
+            for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
-                data[dataIndex - 1] = new Data(dStore, dataIndex, 256);
-
-                if (data[dataIndex - 1].Create() != DataStatus.Success)
-                {
-                    if (data[dataIndex - 1].GetStatus() == DataStatus.AlreadyExists)
-                    {
-                        Debug.Print("Record already exists");
-                    }
-                    else
-                    {
-                        DisplayStats(false, "Record Creation failed", "", 0);
-                        return;
-                    }
-                }
-                DisplayStats(true, "Record creation successful", "", 0);
-
+                data[dataIndex] = new Data(dStore, size, dataType);
                 rnd.NextBytes(writeBuffer);
-                data[dataIndex - 1].Write(writeBuffer, 256);
+                data[dataIndex].Write(writeBuffer, size);
             }
             TestPersistence();
         }
 
         public void TestPersistence()
         {
-            int[] recIdArray = new int[256];
-            dStore.ReadAllRecordIDs(recIdArray);
-            /*if (dStore.ReadAllRecordIDs(recIdArray))
-            {
-                DisplayStats(false, "persistence failed", "", 0);
-                return;
-            }
-            else
-            {
-                DisplayStats(false, "persistence succeeded", "", 0);
-            }*/
-            //Data[] dataObj;
-            //recIdArray.Length
+            int[] dataIdArray = new int[dStore.CountOfDataIds()];
+            dStore.ReadAllDataIds(dataIdArray);
+            Data[] dataRefArray = new Data[10];
+            dStore.ReadAllDataReferences(dStore, dataRefArray, 0);
+            
             for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
-                uint recordId = (uint)recIdArray[dataIndex];
-                //dataObj[dataIndex] = new Data(dStore, recordId, 256);
-                dataObj[dataIndex] = data[dataIndex];
-                
-                if (DataStatus.Failure == dataObj[dataIndex].Read(readBuffer))
+                if (DataStatus.Failure == dataRefArray[dataIndex].Read(readBuffer))
                 {
                     DisplayStats(false, "Read failed", "", 0);
                     return;

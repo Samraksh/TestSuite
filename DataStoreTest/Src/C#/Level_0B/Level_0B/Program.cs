@@ -43,57 +43,40 @@ namespace Samraksh.SPOT.Tests
 
         // Test that creates a bunch of records and returns success if record creation
         // was successful
-        public void Level_0A()
-        {
-            for (UInt32 dataIndex = 112; dataIndex <= 122; ++dataIndex)
-            {
-                Data data = new Data(dStore, dataIndex, 256);
-
-                if (data.Create() != DataStatus.Success)
-                {
-                    DisplayStats(false, "Record Creation failed", "", 0);
-                    return;
-                }
-
-            }
-
-            DisplayStats(true, "Record creation successful", "", 0);
-        }
-
         public void Level_0B()
         {
-            Data d = new Data(dStore, 17, 256);
+            if (DataStore.DeleteAllData() == DataStatus.Success)
+                Debug.Print("Datastore succesfully deleted");
 
-            if (d.Create() != DataStatus.Success)
+            if (DataStore.GC() == DataStatus.Success)
+                Debug.Print("Datastore succesfully garbage collected");
+
+            for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
-                if (d.GetStatus() == DataStatus.AlreadyExists)
+                //UInt16 did = 256;
+                //DataID d = new DataID(256);
+                Type dataType = typeof(System.UInt16);
+                Data data = new Data(dStore, 256, dataType);
+                //Data data1 = new Data(dStore, (DATAID)256);
+
+                rnd.NextBytes(writeBuffer);
+
+                data.Write(writeBuffer, 256);
+                data.Read(readBuffer);
+
+                for (UInt16 i = 0; i < writeBuffer.Length; i++)
                 {
-                    Debug.Print("Record already exists");
-                    
+                    if (readBuffer[i] != writeBuffer[i])
+                    {
+                        DisplayStats(false, "Read Write test failed", "", 0);
+                        return;
+                    }
                 }
-                else
-                {
-                    DisplayStats(false, "Record Creation failed", "", 0);
-                    return;
-                }
+                writeBuffer = new byte[256];
+                readBuffer = new byte[256];
+
+                DisplayStats(true, "Read Write successful", "", 0);
             }
-
-            rnd.NextBytes(writeBuffer);
-
-            d.Write(writeBuffer, 256);
-
-            d.Read(readBuffer);
-
-            for (UInt16 i = 0; i < writeBuffer.Length; i++)
-            {
-                if (readBuffer[i] != writeBuffer[i])
-                {
-                    DisplayStats(false, "Read Write test failed", "", 0);
-                    return;
-                }
-            }
-
-            DisplayStats(true, "Read Write successful", "", 0);
         }
 
 

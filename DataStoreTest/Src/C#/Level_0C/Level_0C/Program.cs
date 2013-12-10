@@ -43,64 +43,29 @@ namespace Samraksh.SPOT.Tests
 
         // Test that creates a bunch of records and returns success if record creation
         // was successful
-        public void Level_0A()
-        {
-            for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
-            {
-                Data data = new Data(dStore, dataIndex, 256);
-
-                if (data.Create() != DataStatus.Success)
-                {
-                    DisplayStats(false, "Record Creation failed", "", 0);
-                    return;
-                }
-
-            }
-
-            DisplayStats(true, "Record creation successful", "", 0);
-        }
-
         public void Level_0C()
         {
-            /*Data d = new Data(dStore, 1, 256);
-
-            if (d.Create() != DataStatus.Success)
-            {
-                if (d.GetStatus() == DataStatus.AlreadyExists)
-                {
-                    Debug.Print("Record already exists");
-
-                }
-                else
-                {
-                    DisplayStats(false, "Record Creation failed", "", 0);
-                    return;
-                }
-            }
-            rnd.NextBytes(writeBuffer);
-            d.Write(writeBuffer, 256);*/
-
-            if (DataStore.DeleteAllRecords() != (int)DATASTORE_ERROR.DATASTORE_ERROR_NONE)
+            if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");
 
-            if (DataStore.GC() != (int)DATASTORE_ERROR.DATASTORE_ERROR_NONE )
+            if (DataStore.GC() == DataStatus.Success)
                 Debug.Print("Datastore succesfully garbage collected");
-            
-            Data d = new Data(dStore, 1, 256);
 
-            if (d.Create() != DataStatus.Success)
+            for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
             {
-                if (d.GetStatus() == DataStatus.AlreadyExists)
-                {
-                    Debug.Print("Record already exists");
-
-                }
-                else
-                {
-                    DisplayStats(false, "Record Creation failed", "", 0);
-                    return;
-                }
+                Type dataType = typeof(System.UInt16);
+                Data data = new Data(dStore, 256, dataType);
             }
+            
+            if (DataStore.DeleteAllData() == DataStatus.Success)
+                Debug.Print("Datastore succesfully deleted");
+
+            if (DataStore.GC() == DataStatus.Success)
+                Debug.Print("Datastore succesfully garbage collected");
+
+
+            Type dataType1 = typeof(System.UInt16);
+            Data d = new Data(dStore, 256, dataType1);
 
             rnd.NextBytes(writeBuffer);
             d.Write(writeBuffer, 256);
@@ -114,6 +79,8 @@ namespace Samraksh.SPOT.Tests
                     return;
                 }
             }
+            writeBuffer = new byte[256];
+            readBuffer = new byte[256];
 
             DisplayStats(true, "Read Write successful. DeleteAll succeeded", "", 0);
         }
@@ -124,7 +91,6 @@ namespace Samraksh.SPOT.Tests
 
             DataStoreTest dtest = new DataStoreTest();
 
-            dtest.Level_0A();
             dtest.Level_0C();
 
             /*
