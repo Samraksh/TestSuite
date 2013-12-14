@@ -51,7 +51,7 @@ namespace Samraksh.SPOT.Tests
             if (DataStore.GC() == DataStatus.Success)
                 Debug.Print("Datastore succesfully garbage collected");
 
-            for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
+            for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
             {
                 //UInt16 did = 256;
                 //DataID d = new DataID(256);

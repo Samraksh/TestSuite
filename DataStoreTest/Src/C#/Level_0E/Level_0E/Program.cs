@@ -67,6 +67,7 @@ namespace Samraksh.SPOT.Tests
                 data[dataIndex] = new Data(dStore, size, dataType);
                 rnd.NextBytes(writeBuffer);
                 data[dataIndex].Write(writeBuffer, size);
+                Array.Clear(writeBuffer, 0, writeBuffer.Length);
             }
             TestPersistence();
         }
@@ -74,9 +75,9 @@ namespace Samraksh.SPOT.Tests
         public void TestPersistence()
         {
             int[] dataIdArray = new int[dStore.CountOfDataIds()];
-            dStore.ReadAllDataIds(dataIdArray);
+            dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
             Data[] dataRefArray = new Data[10];
-            dStore.ReadAllDataReferences(dStore, dataRefArray, 0);
+            dStore.ReadAllDataReferences(dStore, dataRefArray, 0);      //Get the data references into dataRefArray.
             
             for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
@@ -89,7 +90,7 @@ namespace Samraksh.SPOT.Tests
                 {
                     DisplayStats(true, "Read succeeded", "", 0);
                 }
-                readBuffer = new byte[256];
+                Array.Clear(readBuffer, 0, readBuffer.Length);
             }
         }
 
