@@ -1,0 +1,38 @@
+<TestSuite>
+	<Test Name='SlaveBasicPingRig' Type='C#'>
+		<Description>
+			C# Radio slave 
+		</Description>
+		<TestPath>
+			Samraksh_SPOT_Net_Tests\Src\C#\CSMAMAC\Slave\SlaveBasicPingRig
+		</TestPath>
+		<TestProjName>
+			SlaveBasicPing.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+		<TestSupporting>
+			support project 1
+		</TestSupporting>
+	</Test>
+</TestSuite>

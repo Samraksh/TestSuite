@@ -35,18 +35,18 @@ BOOL EventsTest::DisplayStats(BOOL result, char* resultParameter1, char* resultP
 BOOL EventsTest::Level_0A()
 {
 
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 22, FALSE);
 
-	UINT32 timeout =  1000;
+	UINT32 timeout =  100;
 
 	while(TRUE)
 	{
 			const UINT32 c_EventsMask =  SYSTEM_EVENT_FLAG_USB_IN |
 		                                        SYSTEM_EVENT_FLAG_BUTTON;
 
-			CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+			CPU_GPIO_SetPinState((GPIO_PIN) 22, TRUE);
 			UINT32 events = ::Events_WaitForEvents( c_EventsMask, timeout );
-			CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+			CPU_GPIO_SetPinState((GPIO_PIN) 22, FALSE);
 
 		    if(events != 0)
 		    {

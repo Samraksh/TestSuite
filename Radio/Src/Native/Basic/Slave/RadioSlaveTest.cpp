@@ -5,6 +5,7 @@
 #include "RadioSlaveTest.h"
 
 #include <Samraksh/HALTimer.h>
+#include <radio/RF231/RF231.h>
 
 //---//
 
@@ -81,7 +82,7 @@ BOOL RadioSlaveTest::Initialize(int seedValue, int numberOfEvents)
 	CPU_SPI_Initialize();
 
 	RadioAckPending = FALSE;
-	radioID = 1;
+	radioID = RF231RADIO;
 	numberOfRadios = 1;
 	mac_id = 1;
 	DeviceStatus result;
@@ -89,7 +90,7 @@ BOOL RadioSlaveTest::Initialize(int seedValue, int numberOfEvents)
 	radioEventHandler.SetRecieveHandler(&myReceiveHandler);
 	radioEventHandler.SetSendAckHandler((void (*)(void*, UINT16, NetOpStatus)) &RadioSlaveTest::SendAckHandler);
 
-	result = CPU_Radio_Initialize(&radioEventHandler , &radioID, numberOfRadios, mac_id );
+	result = CPU_Radio_Initialize(&radioEventHandler , radioID, numberOfRadios, mac_id );
 
 	if(result != DS_Success)
 	{
@@ -188,7 +189,7 @@ BOOL RadioSlaveTest::SendPacketSync(UINT16 dest, UINT8 dataType, void* msg, int 
 
 	if(mymsg != NULL){
 		RadioAckPending = TRUE;
-		msg_carrier_ptr = (Message_15_4_t *) CPU_Radio_Send(1, (mymsg), header->length);
+		msg_carrier_ptr = (Message_15_4_t *) CPU_Radio_Send(RF231RADIO, (mymsg), header->length);
 	}
 
 	return TRUE;

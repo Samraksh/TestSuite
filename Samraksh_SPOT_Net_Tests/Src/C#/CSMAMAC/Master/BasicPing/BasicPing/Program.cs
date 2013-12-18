@@ -47,6 +47,8 @@ namespace BasicPing
         }
     }
 
+    
+
     public class MasterBasicPing
     {
         CSMA myCSMA;
@@ -66,6 +68,8 @@ namespace BasicPing
 
         UInt16 myAddress;
 
+        NeighbourhoodChangeCallBack myNeighborCB;
+
         Timer sendTimer;
 
         void HandleMessage(UInt16 numberOfPackets)
@@ -75,15 +79,21 @@ namespace BasicPing
             
         }
 
+        void NeighborChange(UInt16 noOfNeigbors)
+        {
+        }
+
         public MasterBasicPing()
         {
             csmaConfig = new MacConfiguration();
 
             callback = HandleMessage;
 
+            myNeighborCB = NeighborChange;
+
             
             // Configure the CSMA object before creating the instance
-            if (CSMA.Configure(csmaConfig, callback) != DeviceStatus.Success)
+            if (CSMA.Configure(csmaConfig, callback, myNeighborCB) != DeviceStatus.Success)
             {
                 Debug.Print("The CSMA configure call failed\n");
             }

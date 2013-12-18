@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='INTC' Type='Native'>
 		<Description>
-			Native INTC Tests Level 0
+			Native INTC Tests Level 0 tests simple interrupt activation and firing
 		</Description>
 		<TestPath>
 			INTC\Src\Native
