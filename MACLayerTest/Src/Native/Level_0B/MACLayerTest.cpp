@@ -7,6 +7,7 @@
 #include <Samraksh\HAL_util.h>
 #include <Samraksh\Mac_decl.h>
 #include <Samraksh\MAC.h>
+#include <radio\RF231\RF231.h>
 
 //---//
 MacEventHandler_t Event_Handler;
@@ -69,16 +70,19 @@ void RecieveCallback(UINT16 numberOfPacketsInBuffer)
 		}
 	}
 
-	UINT16 packetIDDiff = tempBuffer[2] - lastPacketID;
+	UINT16 packetIDDiff = (tempBuffer[2] | tempBuffer[3] << 8) - lastPacketID;
 
 	if(packetIDDiff != 1)
 	{
-		missedResponses++;
+		missedResponses += packetIDDiff;
 	}
 
-	lastPacketID = tempBuffer[2];
+	lastPacketID = (UINT16) (tempBuffer[2] | tempBuffer[3] << 8);
 
 	MACLayerTest::ResponsePending = FALSE;
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
 
 }
 
@@ -94,15 +98,15 @@ DeviceStatus InitializeMacLayer()
 	MacConfig config;
 
 	// Pass the csma macname id because thats what we are using
-	MacName = 0;
+	//MacName = 0;
 
-	MACLayerTest::MacID = 0;
+	MACLayerTest::MacID = CSMAMAC;
 
 	config.CCA = TRUE;
 	config.NumberOfRetries = 0;
 	config.CCASenseTime = 140;
 	config.BufferSize = 8;
-	config.RadioID = 1;
+	config.RadioID = RF231RADIOLR;
 	config.NeighbourLivelinessDelay = 300;
 
 	Event_Handler.SetRecieveHandler(&RecieveCallback);
@@ -111,16 +115,17 @@ DeviceStatus InitializeMacLayer()
 
 	UINT8 MyAppID=3; //pick a number less than MAX_APPS currently 4.
 
-	if(Mac_Initialize(&Event_Handler, &MACLayerTest::MacID, MyAppID, (void*) &config) != DS_Success)
+	if(Mac_Initialize(&Event_Handler, MACLayerTest::MacID, MyAppID, config.RadioID,  (void*) &config) != DS_Success)
 		return DS_Fail;
 
-	if(CPU_Radio_ChangeTxPower(1, 0x0) != DS_Success)
+	if(CPU_Radio_ChangeTxPower(config.RadioID, 0x0) != DS_Success)
 		return DS_Fail;
 
-	if(CPU_Radio_ChangeChannel(1, 0xF) != DS_Success)
+	if(CPU_Radio_ChangeChannel(config.RadioID, 0xF) != DS_Success)
 		return DS_Fail;
 
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24,FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25,FALSE);
 
 	return DS_Success;
 }
@@ -163,7 +168,7 @@ BOOL MACLayerTest::Level_0A()
 		SendAckPending = FALSE;
 
 		// Sleep  for a while
-		for(UINT16 i = 0 ; i < 50000; i++);
+		::Events_WaitForEvents( 0, 100 );
 
 	}
 
@@ -185,7 +190,7 @@ BOOL MACLayerTest::Level_0A()
 BOOL MACLayerTest::Level_0B()
 {
 
-	INIT_STATE_CHECK();
+	INIT_STATE_CHECK_TEST();
 
 	UINT16 i = 0;
 
@@ -204,11 +209,13 @@ BOOL MACLayerTest::Level_0B()
 			mesg[i] = i;
 		}
 
-		while(i++ < 100)
+		while(i++ < 250)
 		{
 
 			// Use the first byte to send message id of some sort
-			mesg[0] = i;
+			mesg[0] = (i & 0xff);
+			mesg[1] = ((i >> 8) & 0xff);
+
 
 			CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 			if(Mac_Send(MacID, 0xffff, 1, (void*) mesg, 10) != DS_Success)
@@ -219,16 +226,16 @@ BOOL MACLayerTest::Level_0B()
 				//return FALSE;
 			}
 
-			DID_STATE_CHANGE(SendAckPending, "Did not recieve send ack from radio");
+			DID_STATE_CHANGE_TEST(SendAckPending, "Did not recieve send ack from radio");
 			CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 
-			DID_STATE_CHANGE(ResponsePending, "Did not recieve response from slave\n");
+			MONITOR_FAILURE(ResponsePending);
 
 			SendAckPending = TRUE;
 			ResponsePending = TRUE;
 
 			// Sleep  for a while
-			for(UINT16 i = 0 ; i < 50000; i++);
+			::Events_WaitForEvents( 0, 100 );
 
 		}
 
@@ -240,7 +247,7 @@ BOOL MACLayerTest::Level_0B()
 		else
 		{
 			hal_printf("The Number of Missed Responses = %d\n", missedResponses);
-			DisplayStats(TRUE, "Mac Layer Send Test succeeded","",0);
+			DisplayStats(TRUE, "Mac Layer Simple Ping Test succeeded","",0);
 		}
 
 

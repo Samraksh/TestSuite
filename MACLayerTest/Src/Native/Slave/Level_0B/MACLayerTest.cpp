@@ -7,6 +7,7 @@
 #include <Samraksh\HAL_util.h>
 #include <Samraksh\Mac_decl.h>
 #include <Samraksh\MAC.h>
+#include <radio\RF231\RF231.h>
 
 //---//
 MacEventHandler_t Event_Handler;
@@ -72,7 +73,7 @@ void RecieveCallback(UINT16 numberOfPacketsInBuffer)
 		UINT16 Size = tempBuffer[0];
 		Size |= (UINT16) (tempBuffer[1] << 8);
 
-		hal_printf("Recieved PACKET : %d of Size : %d\n", tempBuffer[2], Size);
+		hal_printf("Recieved PACKET : %d of Size : %d\n", (tempBuffer[2] | (tempBuffer[3] << 8)), Size);
 
 		if(Mac_Send(MACLayerTest::MacID, 0xffff, 1, (void*) &tempBuffer[2], 10) != DS_Success)
 		{
@@ -84,7 +85,7 @@ void RecieveCallback(UINT16 numberOfPacketsInBuffer)
 
 		while(MACLayerTest::SendAckPending == TRUE);
 
-		hal_printf("Response Sent for Packet : %d\n", tempBuffer[2]);
+		hal_printf("Response Sent for Packet : %d\n", (tempBuffer[2] | (tempBuffer[3] << 8)));
 
 	}
 }
@@ -101,15 +102,15 @@ DeviceStatus InitializeMacLayer()
 	MacConfig config;
 
 	// Pass the csma macname id because thats what we are using
-	MacName = 0;
+	//MacName = 0;
 
-	MACLayerTest::MacID = 0;
+	MACLayerTest::MacID = CSMAMAC;
 
 	config.CCA = TRUE;
 	config.NumberOfRetries = 0;
 	config.CCASenseTime = 140;
 	config.BufferSize = 8;
-	config.RadioID = 1;
+	config.RadioID = RF231RADIO;
 	config.NeighbourLivelinessDelay = 300;
 
 	Event_Handler.SetRecieveHandler(&RecieveCallback);
@@ -118,13 +119,13 @@ DeviceStatus InitializeMacLayer()
 
 	UINT8 MyAppID=3; //pick a number less than MAX_APPS currently 4.
 
-	if(Mac_Initialize(&Event_Handler, &MACLayerTest::MacID, MyAppID, (void*) &config) != DS_Success)
+	if(Mac_Initialize(&Event_Handler, MACLayerTest::MacID, MyAppID, config.RadioID, (void*) &config) != DS_Success)
 		return DS_Fail;
 
-	if(CPU_Radio_ChangeTxPower(1, 0x0) != DS_Success)
+	if(CPU_Radio_ChangeTxPower(config.RadioID, 0x0) != DS_Success)
 		return DS_Fail;
 
-	if(CPU_Radio_ChangeChannel(1, 0xF) != DS_Success)
+	if(CPU_Radio_ChangeChannel(config.RadioID, 0xF) != DS_Success)
 		return DS_Fail;
 
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24,FALSE);

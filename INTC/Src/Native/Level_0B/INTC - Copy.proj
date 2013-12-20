@@ -1,0 +1,43 @@
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	 <AssemblyName>INTC</AssemblyName>
+    <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
+    <Description>
+    </Description>
+    <Documentation>
+    </Documentation>
+    <Directory>TestSuite\INTC\Src\Native</Directory>
+    <IsClrProject>False</IsClrProject>
+    <InteropFeatures>
+    </InteropFeatures>
+    <ExtraAssemblies>
+    </ExtraAssemblies>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\INTC\Src\Native\INTC.proj</ProjectPath>
+    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
+    <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
+  </PropertyGroup>
+  <Import Project="$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\tools\targets\Microsoft.SPOT.System.Settings" />
+  <PropertyGroup>
+    <OutputType>Executable</OutputType>
+    <MultipleOutputSections>false</MultipleOutputSections>
+    <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
+    <ExtraTargets>BuildSigFiles</ExtraTargets>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+ 	<Compile Include="EntryPoint.cpp" />
+    <Compile Include="INTC.cpp" />
+    <Compile Include="test.c" />
+	<Compile Include="signalr.c" />
+	<Compile Include="syscalls.c" />
+	<Compile Include="GNU_S\tinyclr_vector.cpp" />
+    <ScatterFileReferences Include="$(SRC_DIR)\scatterfile_tools_$(COMPILER_TOOL).xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--<RequiredProjects Include="$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\drivers.proj" />
+    <DriverLibs Include="Drivers.$(LIB_EXT)" />-->
+    <SubDirectories Include="..\Platform\EmoteDotNow\v1.0" />
+  </ItemGroup>
+  <Import Project="$(TESTSOURCE)\TestSuite\Platform\EmoteDotNow\v1.0\tools\targets\Microsoft.SPOT.System.Targets" />
+</Project>

@@ -403,6 +403,7 @@ extern "C"
 {
 void ADCUserHandler(void *Param)
 {
+	hal_printf("I = %d, Q =%d\n", adcBuffer1[10], adcBuffer2[10]);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 }
@@ -454,7 +455,7 @@ BOOL ADCTest::Level_0C()
 // Tests the buffer write and read interface for various address values
 BOOL ADCTest::Level_0D()
 {
-	AD_ConfigureContinuousModeDualChannel(adcBuffer1, adcBuffer2, 50, 1000, ADCUserHandler, NULL);
+	AD_ConfigureContinuousModeDualChannel(adcBuffer1, adcBuffer2, 1000, 1000, ADCUserHandler, NULL);
 
 	while(TRUE);
 

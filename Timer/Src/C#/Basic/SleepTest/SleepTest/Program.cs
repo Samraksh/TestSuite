@@ -9,7 +9,7 @@ namespace Samraksh.SPOT.Tests
 
         public OutputPort port1 = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN1, false);
 
-        public const int numberOfRuns = 2000;
+        public const int numberOfRuns = 200000;
 
         public void Run()
         {
@@ -17,8 +17,10 @@ namespace Samraksh.SPOT.Tests
 
             while (counter++ < numberOfRuns)
             {
+                Debug.Print("Alive " + counter.ToString() + "\n");
+
                 port1.Write(true);
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(500);
                 port1.Write(false);
             }
 

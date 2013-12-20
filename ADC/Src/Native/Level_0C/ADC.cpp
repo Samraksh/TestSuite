@@ -401,7 +401,9 @@ extern "C"
 {
 void ADCUserHandler(void *Param)
 {
-	CPU_SetPinState((GPIO_PIN) 24, TRUE);
+	hal_printf("ADC Value %d\n", adcBuffer[200]);
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 }
 
@@ -410,7 +412,7 @@ void Timer_1_Handler(void *arg)
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
 
-	AD_ConfigureBatchMode(adcBuffer, 100, 1000, ADCUserHandler, NULL);
+	AD_ConfigureBatchMode(adcBuffer, 50, 1000, ADCUserHandler, NULL);
 }
 }
 

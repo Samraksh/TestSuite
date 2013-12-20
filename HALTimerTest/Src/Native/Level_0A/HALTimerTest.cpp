@@ -42,7 +42,8 @@ HALTimerTest::HALTimerTest( int seedValue, int numberOfEvents )
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 29, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 30, TRUE);
-
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 22, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 23, FALSE);
 	Tasklet_Initialize();
 
 	gHalTimerManagerObject.Initialize();
@@ -50,7 +51,15 @@ HALTimerTest::HALTimerTest( int seedValue, int numberOfEvents )
 
 BOOL HALTimerTest::Level_0A()
 {
-	gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
+	gHalTimerManagerObject.CreateTimer(1, 0, 10000, FALSE, FALSE, Timer_1_Handler);
+
+	while(TRUE)
+	{
+		CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
+		::Events_WaitForEvents( 0, 100 );
+		CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+	}
+
 
 	return TRUE;
 }

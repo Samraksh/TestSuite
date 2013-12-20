@@ -14,8 +14,8 @@ INTC gIntcTestObject;
 
 BOOL INTC::Initialize( int seedValue, int numberOfEvents )
 {
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 3, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 4, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, FALSE);
 
 	if (!Timer_Driver :: Initialize (3, TRUE, 0, 0, Timer_3_Handler, NULL))
 	{
@@ -64,8 +64,8 @@ void Timer_3_Handler( void* Param )
 	if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET)
 	  {
 		TIM_ClearITPendingBit(TIM3, TIM_IT_CC1 );
-		CPU_GPIO_SetPinState(3,TRUE);
-		CPU_GPIO_SetPinState(3,FALSE);
+		CPU_GPIO_SetPinState(24,TRUE);
+		CPU_GPIO_SetPinState(24,FALSE);
 		
 		counterValue = TIM_GetCounter(TIM3);
 		Timer_Driver::SetCompare( 3, counterValue + 3000);
@@ -83,8 +83,8 @@ void Timer_4_Handler( void* Param )
 	if (TIM_GetITStatus(TIM4, TIM_IT_CC1) != RESET)
 	  {
 		TIM_ClearITPendingBit(TIM4, TIM_IT_CC1 );
-		CPU_GPIO_SetPinState(4,TRUE);
-		CPU_GPIO_SetPinState(4,FALSE);
+		CPU_GPIO_SetPinState(25,TRUE);
+		CPU_GPIO_SetPinState(25,FALSE);
 		
 		counterValue = TIM_GetCounter(TIM4);
 		Timer_Driver::SetCompare( 4, counterValue + 3000);

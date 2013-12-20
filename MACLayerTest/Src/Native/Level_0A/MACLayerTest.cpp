@@ -7,6 +7,7 @@
 #include <Samraksh\HAL_util.h>
 #include <Samraksh\Mac_decl.h>
 #include <Samraksh\MAC.h>
+#include <radio\RF231\RF231.h>
 
 //---//
 MacEventHandler_t Event_Handler;
@@ -60,33 +61,36 @@ DeviceStatus InitializeMacLayer()
 	MacConfig config;
 
 	// Pass the csma macname id because thats what we are using
-	MacName = 0;
+	//MacName = 0;
 
-	MACLayerTest::MacID = 0;
+	MACLayerTest::MacID = CSMAMAC;
 
 	config.CCA = TRUE;
 	config.NumberOfRetries = 0;
 	config.CCASenseTime = 140;
 	config.BufferSize = 8;
-	config.RadioID = 1;
+	config.RadioID = RF231RADIO;
 	config.NeighbourLivelinessDelay = 300;
 
 	Event_Handler.SetRecieveHandler(&RecieveCallback);
 	Event_Handler.SetSendAckHandler(&SendAckCallback);
 	Event_Handler.SetNeighbourChangeHandler(&NeigbhbourChangeCallback);
-
 	UINT8 MyAppID=3; //pick a number less than MAX_APPS currently 4.
 
-	if(Mac_Initialize(&Event_Handler, &MACLayerTest::MacID, MyAppID, (void*) &config) != DS_Success)
+
+	if(Mac_Initialize(&Event_Handler, MACLayerTest::MacID, MyAppID,config.RadioID, (void*) &config) != DS_Success)
 		return DS_Fail;
 
-	if(CPU_Radio_ChangeTxPower(1, 0x0) != DS_Success)
+	if(CPU_Radio_ChangeTxPower(config.RadioID, 0x0) != DS_Success)
 		return DS_Fail;
 
-	if(CPU_Radio_ChangeChannel(1, 0xF) != DS_Success)
+	if(CPU_Radio_ChangeChannel(config.RadioID, 0xF) != DS_Success)
 		return DS_Fail;
 
+
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 23,FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24,FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25,FALSE);
 
 	return DS_Success;
 }
@@ -112,9 +116,10 @@ BOOL MACLayerTest::Level_0A()
 		mesg[i] = i;
 	}
 
-	while(i++ < 100)
+	while(TRUE)
 	{
-		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+
+		CPU_GPIO_EnableOutputPin((GPIO_PIN) 25,TRUE);
 		if(Mac_Send(MacID, 0xffff, 1, (void*) mesg, 10) != DS_Success)
 		{
 			hal_printf("The current iteration number is %d", i);
@@ -124,12 +129,16 @@ BOOL MACLayerTest::Level_0A()
 		}
 
 		while(SendAckPending == TRUE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+		CPU_GPIO_EnableOutputPin((GPIO_PIN) 25,FALSE);
 
 		SendAckPending = FALSE;
 
 		// Sleep  for a while
-		for(UINT16 i = 0 ; i < 50000; i++);
+		//for(volatile UINT32 i = 0; i < 10000; i++);
+
+
+		::Events_WaitForEvents( 0, 100 );
+
 
 	}
 

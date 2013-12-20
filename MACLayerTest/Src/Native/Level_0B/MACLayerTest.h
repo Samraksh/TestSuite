@@ -11,14 +11,24 @@
 #define LEVEL_0C 2
 #define LEVEL_1  3
 
-#define INIT_STATE_CHECK()				UINT16 poll_counter, trx_status;
+#define INIT_STATE_CHECK_TEST()				UINT16 poll_counter, trx_status;   \
+											UINT32 failure;						\
 
-#define DID_STATE_CHANGE(x,y)				poll_counter = 0;               \
+#define DID_STATE_CHANGE_TEST(x,y)				poll_counter = 0;               \
 										do{ 							\
 											if(poll_counter == 0xfffe)    \
 											{  								\
 												DisplayStats(FALSE,y, NULL,NULL); \
 												return FALSE; 				\
+											} 								\
+											poll_counter++; 				\
+										  }while(TRUE == x);							\
+
+#define MONITOR_FAILURE(x)				poll_counter = 0;               \
+										do{ 							\
+											if(poll_counter == 0xfffe)    \
+											{  								\
+												failure++;				\
 											} 								\
 											poll_counter++; 				\
 										  }while(TRUE == x);							\
