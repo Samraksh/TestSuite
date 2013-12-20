@@ -225,6 +225,8 @@ BOOL DataStoreTest::TestReadWrite_Virtual_Records()
 
 	test_initialization();
 
+	g_dataStoreObject.DeleteAll();
+
 	// Create sequential records
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 

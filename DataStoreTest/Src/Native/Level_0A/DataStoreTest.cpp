@@ -108,6 +108,8 @@ BOOL DataStoreTest::TestReadWrite()
 
 	test_initialization();
 
+	g_dataStoreObject.DeleteAll();
+
 	//LPVOID firstGivenPtr = CreateDataStoreRecords(1);
 	LPVOID firstGivenPtr = g_dataStoreObject.createRecord(1,256);
 

@@ -57,8 +57,8 @@ namespace Samraksh.SPOT.Tests
             if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");
 
-            if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");
+            /*if (DataStore.GC() == DataStatus.Success)
+                Debug.Print("Datastore succesfully garbage collected");*/
 
             Type dataType = typeof(System.UInt32);
             UInt32 size = 256;
@@ -77,7 +77,7 @@ namespace Samraksh.SPOT.Tests
             int[] dataIdArray = new int[dStore.CountOfDataIds()];
             dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
             Data[] dataRefArray = new Data[10];
-            dStore.ReadAllDataReferences(dStore, dataRefArray, 0);      //Get the data references into dataRefArray.
+            dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
             
             for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {

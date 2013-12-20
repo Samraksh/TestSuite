@@ -99,6 +99,18 @@ BOOL DataStoreTest::GetRecordID()
 
 
 // This test writes random data and then verifies if the write has been successful
+/* This is how the test works:
+ * 1. Create "recordCount" records.
+ * 2. Each record has "test_limit" number of data. (1 2 3 4....test_limit)
+ * 3. First write all records. While writing, also read from the records. After a successful read, reset the record with all 1's.
+ * 4. Then while reading, break at a random point (to mimic a crash). The variable "crashTest" indicates that a crash has occurred.
+ * 5. Then call the app again. (TestReadWrite_Persistence_Multiple_Seq_Records)
+ * 6. Now build the recordIDs. In order to find out where the app crashed, this line is used -- if(read_data[test_limit-1] == (test_limit - 1)).
+ * 	  This line will not be true for any of the records before the crash as they have been set with 1's.
+ * 7. Now the point of crash is stored here -- recIndexCrashTest = tempIndex;
+ * 8. Now the read begins from where it left off.
+ * 9. Since we are now in the recursive path, as soon as we reach the end of read, the end of recursion is indicated by -- reversePath = 1;
+ * 10. On the way up, since the variable "reversePath" is set, the app now does not enter the loop and the program ends tamely. */
 BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 {
 	UINT16 test_limit = 100;
@@ -123,6 +135,8 @@ BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 	}
 
 	test_initialization();
+
+	//g_dataStoreObject.DeleteAll();
 
 	//myVector table1;
 

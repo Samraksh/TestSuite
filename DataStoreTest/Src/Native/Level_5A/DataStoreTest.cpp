@@ -104,6 +104,8 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 
 	test_initialization();
 
+	g_dataStoreObject.DeleteAll();
+
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
 	// First write data to successive records

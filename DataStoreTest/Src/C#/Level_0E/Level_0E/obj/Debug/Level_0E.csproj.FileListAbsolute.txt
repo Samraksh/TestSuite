@@ -26,3 +26,4 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0E\Level_0E\obj\Debug\l
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0E\Level_0E\obj\Debug\le\Level_0E.pdbx
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0E\Level_0E\obj\Debug\Level_0E.exe
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0E\Level_0E\obj\Debug\Level_0E.pdb
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0E\Level_0E\bin\Debug\Samraksh_SPOT.xml

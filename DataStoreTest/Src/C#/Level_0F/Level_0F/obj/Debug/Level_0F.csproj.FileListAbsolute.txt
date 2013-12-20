@@ -26,3 +26,9 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\obj\Debug\l
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\obj\Debug\le\Level_0F.pdbx
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\obj\Debug\Level_0F.exe
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\obj\Debug\Level_0F.pdb
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\LE\Samraksh_SPOT_Hardware.pe
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\BE\Samraksh_SPOT_Hardware.pe
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\LE\Samraksh_SPOT_Hardware.pdbx
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\BE\Samraksh_SPOT_Hardware.pdbx
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\Samraksh_SPOT_Hardware.dll
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\Samraksh_SPOT_Hardware.pdb

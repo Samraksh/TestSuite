@@ -102,6 +102,8 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 
 	test_initialization();
 
+	g_dataStoreObject.DeleteAll();
+
 	//LPVOID* firstGivenPtr = reinterpret_cast<void**>(CreateDataStoreRecords(recordCount));
 	LPVOID* firstGivenPtr = CreateDataStoreRecords(recordCount);
 	// Store the array of given pointers in an array, as the contents of the pointer array is lost for some reason.

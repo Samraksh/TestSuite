@@ -106,6 +106,8 @@ BOOL DataStoreTest::TestReadWrite_Sequential_UINT8()
 
 	test_initialization();
 
+	g_dataStoreObject.DeleteAll();
+
 	LPVOID firstGivenPtr = CreateDataStoreRecords(1);
 
 	for(UINT8 rwIndex = 0; rwIndex < test_limit; ++rwIndex)

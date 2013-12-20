@@ -113,6 +113,8 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Records()
 
 	test_initialization();
 
+	g_dataStoreObject.DeleteAll();
+
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
 	for(UINT16 index = 1; index <= recordCount; index++)

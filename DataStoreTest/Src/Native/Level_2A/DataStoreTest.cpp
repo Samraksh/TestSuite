@@ -118,6 +118,8 @@ BOOL DataStoreTest::TestReadWrite_Random_Record()
 
 	test_initialization();
 
+	g_dataStoreObject.DeleteAll();
+
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
 	UINT16 rId = GenerateRandomNumber(recordCount);
