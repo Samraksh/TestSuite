@@ -32,3 +32,5 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\L
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\BE\Samraksh_SPOT_Hardware.pdbx
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\Samraksh_SPOT_Hardware.dll
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\Samraksh_SPOT_Hardware.pdb
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\Samraksh_SPOT.xml
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0F\Level_0F\bin\Debug\Samraksh_SPOT_Hardware.xml

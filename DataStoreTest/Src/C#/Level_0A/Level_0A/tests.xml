@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='DataStoreTest' Type='C#'>
+		<Description>
+			Datastore initialization test from C#
+		</Description>
+		<TestPath>
+			DataStoreTest\Src\C#\Level_0A\Level_0A
+		</TestPath>
+		<TestProjName>
+			Level_0A.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='DataStoreTest' Type='C#'>
+		<Description>
+			Erase all pre-existing data.
+		</Description>
+		<TestPath>
+			DataStoreTest\Src\C#\Level_0H\Level_0H
+		</TestPath>
+		<TestProjName>
+			Level_0H.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

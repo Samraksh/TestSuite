@@ -2,6 +2,8 @@
 using Microsoft.SPOT;
 using Samraksh.SPOT.NonVolatileMemory;
 
+/* Test write and read APIs with a byte array (with random data) */
+
 namespace Samraksh.SPOT.Tests
 {
     public class DataStoreTest
@@ -11,7 +13,7 @@ namespace Samraksh.SPOT.Tests
         Random rnd;
         byte[] writeBuffer;
         byte[] readBuffer;
-
+        Type dataType;
 
         public DataStoreTest()
         {
@@ -19,7 +21,7 @@ namespace Samraksh.SPOT.Tests
             rnd = new Random();
             readBuffer = new byte[256];
             writeBuffer = new byte[256];
-
+            dataType = typeof(byte);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -45,24 +47,38 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0B()
         {
-            if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
+            UInt32 size = 256;
+            uint offset = 0;
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
 
-            if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");
+            /*if (DataStore.DeleteAllData() == DataStatus.Success)
+                Debug.Print("Datastore succesfully deleted");*/
+
+            /*if (DataStore.GC() == DataStatus.Success)
+                Debug.Print("Datastore succesfully garbage collected");*/
 
             for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
             {
                 //UInt16 did = 256;
                 //DataID d = new DataID(256);
-                Type dataType = typeof(System.UInt16);
-                Data data = new Data(dStore, 256, dataType);
+                
+                Data data = new Data(dStore, size, dataType);
                 //Data data1 = new Data(dStore, (DATAID)256);
 
+                //writeBuffer.Select(c => (object)c).ToArray();
+                //object[] obj = byte.Cast<object>().ToArray();
                 rnd.NextBytes(writeBuffer);
 
-                data.Write(writeBuffer, 256);
-                data.Read(readBuffer);
+                if(data.Write(writeBuffer, size) == DataStatus.Success)
+                    DisplayStats(true, "Write successful", "", 0);
+                else
+                    DisplayStats(true, "Write not successful", "", 0);
+
+                if (data.Read(readBuffer, offset, size) == DataStatus.Success)
+                    DisplayStats(true, "Read successful", "", 0);
+                else
+                    DisplayStats(true, "Read not successful", "", 0);
 
                 for (UInt16 i = 0; i < writeBuffer.Length; i++)
                 {
@@ -82,39 +98,9 @@ namespace Samraksh.SPOT.Tests
 
         public static void Main()
         {
-
             DataStoreTest dtest = new DataStoreTest();
 
             dtest.Level_0B();
-
-            /*
-            dStore = new DataStore((int)StorageType.NOR);
-            int retVal = dStore.LastErrorStatus();
-            //int ret = dStore.CreateRecord(1, 256);
-            //Debug.Print("dStore.LastErrorStatus()\n");
-            Random rand = new Random();
-            for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
-            {
-                Data data = new Data(dStore, dataIndex, 256);
-                retVal = (int)data.Create();
-                byte[] writeBuffer = new byte[100];
-                byte[] readBuffer = new byte[100];
-                rand.NextBytes(writeBuffer);
-                data.Write(writeBuffer, (UInt32)writeBuffer.Length);
-                data.Read(readBuffer);
-
-                for (UInt32 compareIndex = 0; compareIndex < (UInt32)writeBuffer.Length; ++compareIndex)
-                {
-                    if(writeBuffer[compareIndex] != readBuffer[compareIndex])
-                        throw new SystemException();
-                }
-            }
-
-            //Program2 p2 = new Program2();
-            //p2.method2();
-
-            //Debug.Print(Resources.GetString(Resources.StringResources.String1));
-             * */
         }
     }
 }
