@@ -1,10 +1,10 @@
 <TestSuite>
 	<Test Name='GlobalLock' Type='Native'>
 		<Description>
-			Global Lock Level 0A Test
+			Global Lock Level 1 Test
 		</Description>
 		<TestPath>
-			GlobalLock\Src\Native\Level_0A
+			GlobalLock\Src\Native\Level_1
 		</TestPath>
 		<TestProjName>
 			GlobalLock.proj

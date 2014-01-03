@@ -4,7 +4,7 @@
 			C++ test for gpio
 		</Description>
 		<TestPath>
-			GPIO\Src\Native
+			GPIO\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
 			gpio.proj
