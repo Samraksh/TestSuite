@@ -9,12 +9,10 @@
 //---//
 
 
-TEMPLATE::TEMPLATE( int seedValue, int numberOfEvents )
+TEMPLATE::TEMPLATE(  )
 {
 	CPU_GPIO_Initialize();
 	CPU_SPI_Initialize();
-
-	testMathInstance.prng_init(3);
 
 };
 

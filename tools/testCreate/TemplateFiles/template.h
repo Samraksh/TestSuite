@@ -14,14 +14,10 @@
 class TEMPLATE
 {
 
-	int numberOfEvents;
-
-	testMath testMathInstance;
-
 public:
 
 //--//
-    TEMPLATE ( int seedValue, int numberOfEvents );
+    TEMPLATE (  );
 
     BOOL     Execute( int testLevel );
 

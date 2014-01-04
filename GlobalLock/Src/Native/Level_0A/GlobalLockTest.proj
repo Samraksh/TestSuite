@@ -6,13 +6,13 @@
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\GlobalLockTest\Src\Native\Level_0A</Directory>
+    <Directory>TestSuite\GlobalLock\Src\Native\Level_0A</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\GlobalLockTest\Src\Native\Level_0A\GlobalLockTest.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\GlobalLock\Src\Native\Level_0A\GlobalLockTest.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>

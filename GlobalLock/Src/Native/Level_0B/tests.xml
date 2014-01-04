@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='GlobalLockTest' Type='Native'>
 		<Description>
-			Native global lock Test Level 0A with virtual timers
+			Native global lock Test Level 0B with virtual timers
 		</Description>
 		<TestPath>
 			GlobalLock\Src\Native\Level_0B

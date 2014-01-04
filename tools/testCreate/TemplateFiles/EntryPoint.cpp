@@ -7,7 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-#include "TEMPLATE.h"
+#include "template.h"
 
 
 void Keep_Linker_Happy() {
@@ -25,13 +25,12 @@ void PostManagedEvent( UINT8 category, UINT8 subCategory, UINT16 data1, UINT32 d
 void ApplicationEntryPoint()
 {
     BOOL result;
-    
 
     do
     {
-    	TEMPLATE testObject(0,100);
+    	TemplateTest TestObject();
 
-    	testObject.Execute(LEVEL_0A);
+    	TestObject.Execute(LEVEL_0A);
 
     } while(FALSE); // run only once!
 
