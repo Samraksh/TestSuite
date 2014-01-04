@@ -53,9 +53,6 @@ namespace Samraksh.SPOT.Tests
             if (DataStore.GC() == DataStatus.Success)
                 Debug.Print("Datastore succesfully garbage collected");*/
 
-            if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
-
             /* For "overallIndex" times, create "dataIndex" count of data. For each data, write random data and read it back. 
              * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
              * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
@@ -96,6 +93,9 @@ namespace Samraksh.SPOT.Tests
                     }
                 }
             }
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
         }
 
 

@@ -59,16 +59,13 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_2A");
 
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
+
             for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
             {
                 writeBuffer[writeIndex] = (byte)writeIndex;
             }
-
-            if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
 
             offset = (uint)(rand.Next((int)size));
             numData = (uint)(rand.Next((int)(size - offset)));
@@ -123,6 +120,12 @@ namespace Samraksh.SPOT.Tests
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
+
+            if (DataStore.DeleteAllData() == DataStatus.Success)
+                Debug.Print("Datastore succesfully deleted");
         }
 
 

@@ -3,7 +3,7 @@ using Microsoft.SPOT;
 using Samraksh.SPOT.NonVolatileMemory;
 
 /* Test write and read APIs. Write a byte array (with sequential data - filled with numbers from 0 to 99) from a random offset. 
- * Rread from that same random offset and compare against writeBuffer */
+ * Read from that same random offset and compare against writeBuffer */
 
 namespace Samraksh.SPOT.Tests
 {
@@ -59,12 +59,6 @@ namespace Samraksh.SPOT.Tests
                 writeBuffer[writeIndex] = (byte)writeIndex;
             }
 
-            if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
-
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 Data data = new Data(dStore, size, dataType);
@@ -109,6 +103,12 @@ namespace Samraksh.SPOT.Tests
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
+
+            if (DataStore.DeleteAllData() == DataStatus.Success)
+                Debug.Print("Datastore succesfully deleted");
         }
 
 

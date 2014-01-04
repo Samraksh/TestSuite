@@ -68,6 +68,9 @@ namespace Samraksh.SPOT.Tests
                 writeBuffer = new byte[256];
                 readBuffer = new byte[256];
             }
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
             
         }
 

@@ -49,9 +49,7 @@ namespace Samraksh.SPOT.Tests
         {
             UInt32 size = 256;
             uint offset = 0;
-            if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
-
+            
             /*if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");*/
 
@@ -93,6 +91,9 @@ namespace Samraksh.SPOT.Tests
 
                 DisplayStats(true, "Read Write successful", "", 0);
             }
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
         }
 
 

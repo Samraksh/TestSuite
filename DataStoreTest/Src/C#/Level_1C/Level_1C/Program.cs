@@ -59,12 +59,6 @@ namespace Samraksh.SPOT.Tests
                 writeBuffer[writeIndex] = (byte)writeIndex;
             }
 
-            if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
-
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 Data data = new Data(dStore, size, dataType);
@@ -103,6 +97,12 @@ namespace Samraksh.SPOT.Tests
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
+
+            if (DataStore.DeleteAllData() == DataStatus.Success)
+                Debug.Print("Datastore succesfully deleted");
         }
 
 

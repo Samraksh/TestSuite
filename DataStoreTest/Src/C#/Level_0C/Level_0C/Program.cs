@@ -48,8 +48,8 @@ namespace Samraksh.SPOT.Tests
             if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");
 
-            if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");
+            /*if (DataStore.GC() == DataStatus.Success)
+                Debug.Print("Datastore succesfully garbage collected");*/
 
             for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
             {
@@ -60,8 +60,8 @@ namespace Samraksh.SPOT.Tests
             if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");
 
-            if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");
+            /*if (DataStore.GC() == DataStatus.Success)
+                Debug.Print("Datastore succesfully garbage collected");*/
 
 
             Type dataType1 = typeof(System.UInt16);
@@ -83,6 +83,9 @@ namespace Samraksh.SPOT.Tests
             readBuffer = new byte[256];
 
             DisplayStats(true, "Read Write successful. DeleteAll succeeded", "", 0);
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
         }
 
 

@@ -26,3 +26,4 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\l
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.exe
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.pdb
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.csprojResolveAssemblyReference.cache
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\bin\Debug\Samraksh_SPOT.xml

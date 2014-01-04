@@ -54,9 +54,6 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0E()
         {
-            if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
-
             /*if (DataStore.GC() == DataStatus.Success)
                 Debug.Print("Datastore succesfully garbage collected");*/
 
@@ -92,6 +89,12 @@ namespace Samraksh.SPOT.Tests
                 }
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
+			
+			if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
+				
+			if (DataStore.DeleteAllData() == DataStatus.Success)
+                Debug.Print("Datastore succesfully deleted");
         }
 
 

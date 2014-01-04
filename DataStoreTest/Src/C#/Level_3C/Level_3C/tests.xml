@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='DataStoreTest' Type='C#'>
+		<Description>
+			Test overwrites. Write a UInt32 array of sequential data from offset zero till half of allocation. Then overwrite from a random offset (before half of allocation). 
+		</Description>
+		<TestPath>
+			DataStoreTest\Src\C#\Level_3C\Level_3C
+		</TestPath>
+		<TestProjName>
+			Level_3C.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>
