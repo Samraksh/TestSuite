@@ -32,7 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			load support projects: Samraksh_SPOT_Net_Tests\Src\C#\CSMAMAC\Slave\SlaveBasicPingRig
+			load support projects: Samraksh_SPOT_Net_Tests\Src\C#\CSMAMAC\Slave\SlaveBasicPingRig\tests.xml
 		</TestSupporting>
 	</Test>
 </TestSuite>

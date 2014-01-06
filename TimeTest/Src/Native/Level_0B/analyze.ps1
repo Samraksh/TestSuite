@@ -25,7 +25,7 @@ $workingDirectory=$pwd.Path
 
 Write-Host $workingDirectory
 
-$resultFile = $workingDirectory + "\results.txt"
+$resultFile = $workingDirectory + "\testTemp\results.txt"
 
 $dataFile = $workingDirectory + "\testTemp\testData.csv"
 
