@@ -18,6 +18,26 @@
 61
 70
 70
+94
+9
+16
+38
+79
+16
+79
+30
+82
+88
+55
+71
+69
+1
+99
+80
+85
+6
+51
+52
 This is a file
 that is to
 be sent across the COM port.
