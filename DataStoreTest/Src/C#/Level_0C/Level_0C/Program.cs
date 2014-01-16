@@ -15,11 +15,12 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+			
             rnd = new Random();
             readBuffer = new byte[256];
             writeBuffer = new byte[256];
-
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -54,7 +55,7 @@ namespace Samraksh.SPOT.Tests
             for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
             {
                 Type dataType = typeof(System.UInt16);
-                Data data = new Data(dStore, 256, dataType);
+                DataAllocation data = new DataAllocation(dStore, 256, dataType);
             }
             
             if (DataStore.DeleteAllData() == DataStatus.Success)
@@ -65,7 +66,7 @@ namespace Samraksh.SPOT.Tests
 
 
             Type dataType1 = typeof(System.UInt16);
-            Data d = new Data(dStore, 256, dataType1);
+            DataAllocation d = new DataAllocation(dStore, 256, dataType1);
 
             rnd.NextBytes(writeBuffer);
             d.Write(writeBuffer, 256);

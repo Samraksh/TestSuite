@@ -17,7 +17,9 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             rnd = new Random();
             //readBuffer = new byte[size];
             //writeBuffer = new byte[size];
@@ -63,7 +65,7 @@ namespace Samraksh.SPOT.Tests
                     uint size = (uint)rnd.Next(range) + 1;    // Because random number ranges from 0 to range. I want size to be from 1, so adding 1.
                     Debug.Print("Size is " + size);
                     Type dataType = typeof(System.UInt16);
-                    Data data = new Data(dStore, size, dataType);
+                    DataAllocation data = new DataAllocation(dStore, size, dataType);
 
                     rnd.NextBytes(writeBuffer);
 

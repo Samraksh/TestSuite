@@ -14,7 +14,8 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)

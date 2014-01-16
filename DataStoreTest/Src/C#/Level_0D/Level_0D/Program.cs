@@ -16,7 +16,9 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             rnd = new Random();
             readBuffer = new byte[256];
             writeBuffer = new byte[256];
@@ -49,7 +51,7 @@ namespace Samraksh.SPOT.Tests
             for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
                 Type dataType = typeof(System.UInt16);
-                Data data = new Data(dStore, 256, dataType);
+                DataAllocation data = new DataAllocation(dStore, 256, dataType);
 
                 rnd.NextBytes(writeBuffer);
                 data.Write(writeBuffer, 256);

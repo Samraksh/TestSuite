@@ -11,8 +11,8 @@ namespace Samraksh.SPOT.Tests
     {
         Random rand;
         DataStore dStore;
-        Data[] data;
-        Data[] dataRefArray;
+        DataAllocation[] data;
+        DataAllocation[] dataRefArray;
 
         UInt32[] writeBuffer;
         UInt32[] readBuffer;
@@ -25,12 +25,14 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             experimentIndex = 10;
             size = 256;
             rand = new Random();
-            data = new Data[experimentIndex];
-            dataRefArray = new Data[experimentIndex];
+            data = new DataAllocation[experimentIndex];
+            dataRefArray = new DataAllocation[experimentIndex];
             readBuffer = new UInt32[size];
             writeBuffer = new UInt32[size];
             dataType = typeof(UInt32);
@@ -71,7 +73,7 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                data[dataIndex] = new Data(dStore, size, dataType);
+                data[dataIndex] = new DataAllocation(dStore, size, dataType);
 
                 if (data[dataIndex].Write(writeBuffer, offset, numData) == DataStatus.Success)
                     DisplayStats(true, "Write successful", "", 0);

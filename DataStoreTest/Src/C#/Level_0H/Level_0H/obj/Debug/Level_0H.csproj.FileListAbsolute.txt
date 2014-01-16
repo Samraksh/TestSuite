@@ -14,6 +14,8 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\bin\Debug\L
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\bin\Debug\BE\Samraksh_SPOT.pdbx
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\bin\Debug\Samraksh_SPOT.dll
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\bin\Debug\Samraksh_SPOT.pdb
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\bin\Debug\Samraksh_SPOT.xml
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.csprojResolveAssemblyReference.cache
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\TinyCLR_DebugReferences.cache
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.Resources.resources
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.csproj.GenerateResource.Cache
@@ -25,5 +27,3 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\l
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\le\Level_0H.pdbx
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.exe
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.pdb
-D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\obj\Debug\Level_0H.csprojResolveAssemblyReference.cache
-D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0H\Level_0H\bin\Debug\Samraksh_SPOT.xml

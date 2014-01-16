@@ -29,7 +29,9 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             rnd = new Random();
             offset = 0;
             size = 8192;
@@ -70,14 +72,14 @@ namespace Samraksh.SPOT.Tests
              * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
              * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
 
-            Data data;
+            DataAllocation data;
             
             for (UInt32 overallIndex = 0; overallIndex < 10000; ++overallIndex)
             {
                 for (UInt32 dataIndex = 0; dataIndex < 1; ++dataIndex)
                 {
 
-                    data = new Data(dStore, size, dataType);
+                    data = new DataAllocation(dStore, size, dataType);
                     rnd.NextBytes(writeBuffer);
 
                     if (data.Write(writeBuffer, size) == DataStatus.Success)

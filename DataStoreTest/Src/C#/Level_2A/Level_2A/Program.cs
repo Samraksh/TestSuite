@@ -11,8 +11,8 @@ namespace Samraksh.SPOT.Tests
     {
         Random rand;
         DataStore dStore;
-        Data[] data;
-        Data[] dataRefArray;
+        DataAllocation[] data;
+        DataAllocation[] dataRefArray;
         byte[] writeBuffer;
         byte[] readBuffer;
         Type dataType;
@@ -23,12 +23,14 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             experimentIndex = 10;
             size = 256;
             rand = new Random();
-            data = new Data[experimentIndex];
-            dataRefArray = new Data[experimentIndex];
+            data = new DataAllocation[experimentIndex];
+            dataRefArray = new DataAllocation[experimentIndex];
             readBuffer = new byte[size];
             writeBuffer = new byte[size];
             dataType = typeof(byte);
@@ -72,7 +74,7 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                data[dataIndex] = new Data(dStore, size, dataType);
+                data[dataIndex] = new DataAllocation(dStore, size, dataType);
 
                 if (data[dataIndex].Write(writeBuffer, offset, numData) == DataStatus.Success)
                     DisplayStats(true, "Write successful", "", 0);
@@ -89,7 +91,7 @@ namespace Samraksh.SPOT.Tests
         public void TestPersistence(uint offset, UInt32 numData)
         {
             int[] dataIdArray = new int[dStore.CountOfDataIds()];
-            dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
+            //dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
             dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
 
             // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to

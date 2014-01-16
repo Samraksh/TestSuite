@@ -20,7 +20,9 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             experimentIndex = 100;
             size = 256;
             rand = new Random();
@@ -61,7 +63,7 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                Data data = new Data(dStore, size, dataType);
+                DataAllocation data = new DataAllocation(dStore, size, dataType);
 
                 offset = (uint)(rand.Next((int)size));
                 UInt32 numData = (uint)( rand.Next( (int)(size - offset) ) );

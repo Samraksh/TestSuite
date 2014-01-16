@@ -46,7 +46,7 @@
             <summary>
             Returns a data object corresponding to the input parameter dataId.
             Possible to create max of 256 active data objects.
-            </summary>
+            </summary>Rea
             <param name="dStore">DataStore object</param>
             <param name="dataId">ID of data for which the user wants a reference/handle</param>
         </member>
@@ -61,7 +61,7 @@
             Write a byte array into the data store
             </summary>
             <param name="data">Byte array to be written to data store</param>
-            <param name="offset">Offset within the data array from which to write to data store</param>
+            <param name="offset">Offset from which to write to data store. Recommended to be an even value (only for byte data type)</param>
             <param name="numData">Count of data to be written to data store</param>
             <returns>Returns success or failure</returns>
         </member>
@@ -154,6 +154,13 @@
             <param name="dataId">ID of the data/record to be looked up</param>
             <returns>Returns data type</returns>
         </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.Data.LookupSize(System.UInt32)">
+            <summary>
+            Get the allocation size for dataID
+            </summary>
+            <param name="dataId">ID of the data/record to be looked up</param>
+            <returns>Returns allocation size</returns>
+        </member>
         <member name="M:Samraksh.SPOT.NonVolatileMemory.Data.DeleteData(System.UInt32)">
             <summary>
             Delete the data represented by the dataId from data store.
@@ -187,13 +194,13 @@
             The block storage device type
             </summary>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.#ctor(System.Int32)">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.InitDataStore(System.Int32)">
             <summary>
             DataStore constructor that takes a storageType as parameter and initializes the data store with that storageType.
             </summary>
             <param name="storageType">storageType can be NOR, SD card or any other block storage device</param>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.ReadAllDataIds(System.Int32[])">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.ReadAllDataIds(System.Int32[],System.UInt16)">
             <summary>
             Fills up the array passed as parameter with all dataIDs
             </summary>
@@ -245,15 +252,16 @@
             </summary>
             <returns>Returns last error status of data store</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.Write(System.UInt32,System.Byte[],System.UInt32)">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.Write(System.UInt32,System.Byte[],System.UInt32,System.UInt32,System.Byte)">
             <summary>
-            Write data array to the data store starting from the address (passed as first parameter). Amount of data to be written is specified by numBytes (third parameter)
+            Write data array to the data store starting from the address (passed as first parameter)
             </summary>
             <param name="address">Starting address from which to start writing the data</param>
-            <param name="data">Data array to be written to data store</param>
-            <param name="numBytes">Amount of data to be written</param>
+            <param name="data">Data to be written to data store</param>
+            <param name="offset">Offset from which to start writing</param>
+            <param name="numBytes">Count of bytes to be written</param>
             <param name="dataType">Data type to be written</param>
-            <returns>Returns the number of bytes written, returns -1 if operation failes</returns>
+            <returns>Returns true if successful and false if not</returns>
         </member>
         <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.Read(System.UInt32,System.Byte[],System.UInt32,System.UInt32,System.Byte)">
             <summary>
@@ -264,7 +272,7 @@
             <param name="offset">Offset from which to start reading</param>
             <param name="numBytes">Number of bytes to be read</param>
             <param name="dataType">Data type of the data to be read</param>
-            <returns>Returns the number of bytes written, returns -1 if operation failes</returns>
+            <returns>Returns true if successful and false if not</returns>
         </member>
         <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.Finalize">
             <summary>
@@ -285,25 +293,53 @@
             <param name="dataTypeByte">Data type - byte</param>
             <returns>Reference to the created data</returns>
         </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.CreateData(System.UInt32,System.UInt16)">
+            <summary>
+            Creates data for the specified size in the block storage device. Allocates space, assigns a reference which is returned back to the user
+            </summary>
+            <param name="Size">Size of the data</param>
+            <param name="dataTypeByte">Data type - UInt16</param>
+            <returns>Reference to the created data</returns>
+        </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.CreateData(System.UInt32,System.UInt32)">
+            <summary>
+            Creates data for the specified size in the block storage device. Allocates space, assigns a reference which is returned back to the user
+            </summary>
+            <param name="Size">Size of the data</param>
+            <param name="dataTypeByte">Data type - UInt32</param>
+            <returns>Reference to the created data</returns>
+        </member>
         <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetDataID">
             <summary>
             Returns the current dataID 
             </summary>
             <returns>Current dataID</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetUsedKBytes">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetMaxAllocationSize">
+            <summary>
+            Method that returns maximum allocation size possible in data store
+            </summary>
+            <returns>Maximum allocation size possible in data store</returns>
+        </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetTotalSpace">
+            <summary>
+            Get total available space 
+            </summary>
+            <returns>Amount of total space</returns>
+        </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetUsedBytes">
             <summary>
             Get amount of used space 
             </summary>
             <returns>Amount of used space</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetFreeKBytes">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetFreeBytes">
             <summary>
             Get amount of free space
             </summary>
             <returns>Amount of free space</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetReadAllDataIds(System.Int32[])">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetReadAllDataIds(System.Int32[],System.UInt16,System.UInt16)">
             <summary>
             Returns valid data currently stored in the data store
             </summary>
@@ -352,7 +388,7 @@
             <param name="dataId">ID of the data to be deleted</param>
             <returns>Returns success or failure of operation</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.Write(System.UInt32,System.Byte[],System.UInt32,System.Int32)">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.Write(System.UInt32,System.Byte[],System.UInt32,System.UInt32,System.Byte,System.Int32)">
             <summary>
             Write data present in buffer starting from address and amount equal to numBytes. 
             </summary>
@@ -376,17 +412,22 @@
             <param name="storageType">Block storage type</param>
             <returns>Returns number of bytes read, returns -1 if operation fails</returns>
         </member>
+        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.MaxAllocationSize">
+            <summary>
+            Maximum allocation size possible
+            </summary>
+        </member>
         <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.Size">
             <summary>
             Size of the DataStore in Kilo Bytes
             </summary>
         </member>
-        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.UsedKBytes">
+        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.UsedBytes">
             <summary>
             Number of Kilo Bytes of space already occupied by data
             </summary>
         </member>
-        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.FreeKBytes">
+        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.FreeBytes">
             <summary>
             Number of Kilo Bytes of space available to store data
             </summary>

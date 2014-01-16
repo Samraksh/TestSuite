@@ -15,8 +15,6 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\bin\Debug\B
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\bin\Debug\Samraksh_SPOT.dll
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\bin\Debug\Samraksh_SPOT.pdb
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\bin\Debug\Samraksh_SPOT.xml
-D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\obj\Debug\Level_3A.csprojResolveAssemblyReference.cache
-D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\obj\Debug\TinyCLR_DebugReferences.cache
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\obj\Debug\Level_3A.Resources.resources
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\obj\Debug\Level_3A.csproj.GenerateResource.Cache
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_3A\Level_3A\obj\Debug\Level_3A.Resources.tinyresources

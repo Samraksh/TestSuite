@@ -46,7 +46,7 @@
             <summary>
             Returns a data object corresponding to the input parameter dataId.
             Possible to create max of 256 active data objects.
-            </summary>
+            </summary>Rea
             <param name="dStore">DataStore object</param>
             <param name="dataId">ID of data for which the user wants a reference/handle</param>
         </member>
@@ -194,13 +194,13 @@
             The block storage device type
             </summary>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.#ctor(System.Int32)">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.InitDataStore(System.Int32)">
             <summary>
             DataStore constructor that takes a storageType as parameter and initializes the data store with that storageType.
             </summary>
             <param name="storageType">storageType can be NOR, SD card or any other block storage device</param>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.ReadAllDataIds(System.Int32[])">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.ReadAllDataIds(System.Int32[],System.UInt16)">
             <summary>
             Fills up the array passed as parameter with all dataIDs
             </summary>
@@ -293,25 +293,53 @@
             <param name="dataTypeByte">Data type - byte</param>
             <returns>Reference to the created data</returns>
         </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.CreateData(System.UInt32,System.UInt16)">
+            <summary>
+            Creates data for the specified size in the block storage device. Allocates space, assigns a reference which is returned back to the user
+            </summary>
+            <param name="Size">Size of the data</param>
+            <param name="dataTypeByte">Data type - UInt16</param>
+            <returns>Reference to the created data</returns>
+        </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.CreateData(System.UInt32,System.UInt32)">
+            <summary>
+            Creates data for the specified size in the block storage device. Allocates space, assigns a reference which is returned back to the user
+            </summary>
+            <param name="Size">Size of the data</param>
+            <param name="dataTypeByte">Data type - UInt32</param>
+            <returns>Reference to the created data</returns>
+        </member>
         <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetDataID">
             <summary>
             Returns the current dataID 
             </summary>
             <returns>Current dataID</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetUsedKBytes">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetMaxAllocationSize">
+            <summary>
+            Method that returns maximum allocation size possible in data store
+            </summary>
+            <returns>Maximum allocation size possible in data store</returns>
+        </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetTotalSpace">
+            <summary>
+            Get total available space 
+            </summary>
+            <returns>Amount of total space</returns>
+        </member>
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetUsedBytes">
             <summary>
             Get amount of used space 
             </summary>
             <returns>Amount of used space</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetFreeKBytes">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetFreeBytes">
             <summary>
             Get amount of free space
             </summary>
             <returns>Amount of free space</returns>
         </member>
-        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetReadAllDataIds(System.Int32[])">
+        <member name="M:Samraksh.SPOT.NonVolatileMemory.DataStore.GetReadAllDataIds(System.Int32[],System.UInt16,System.UInt16)">
             <summary>
             Returns valid data currently stored in the data store
             </summary>
@@ -384,17 +412,22 @@
             <param name="storageType">Block storage type</param>
             <returns>Returns number of bytes read, returns -1 if operation fails</returns>
         </member>
+        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.MaxAllocationSize">
+            <summary>
+            Maximum allocation size possible
+            </summary>
+        </member>
         <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.Size">
             <summary>
             Size of the DataStore in Kilo Bytes
             </summary>
         </member>
-        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.UsedKBytes">
+        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.UsedBytes">
             <summary>
             Number of Kilo Bytes of space already occupied by data
             </summary>
         </member>
-        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.FreeKBytes">
+        <member name="P:Samraksh.SPOT.NonVolatileMemory.DataStore.FreeBytes">
             <summary>
             Number of Kilo Bytes of space available to store data
             </summary>

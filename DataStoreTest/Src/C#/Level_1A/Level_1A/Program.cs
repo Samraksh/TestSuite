@@ -19,7 +19,9 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             size = 256;
             offset = 0;
             experimentIndex = 100;
@@ -60,7 +62,7 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                Data data = new Data(dStore, size, dataType);
+                DataAllocation data = new DataAllocation(dStore, size, dataType);
                 
                 if (data.Write(writeBuffer, size) == DataStatus.Success)
                     DisplayStats(true, "Write successful", "", 0);

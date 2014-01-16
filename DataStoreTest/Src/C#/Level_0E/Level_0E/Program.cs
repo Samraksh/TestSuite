@@ -12,17 +12,19 @@ namespace Samraksh.SPOT.Tests
         Random rnd;
         byte[] writeBuffer;
         byte[] readBuffer;
-        Data[] data;
-        Data[] dataObj;
+        DataAllocation[] data;
+        DataAllocation[] dataObj;
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+            
             rnd = new Random();
             readBuffer = new byte[256];
             writeBuffer = new byte[256];
-            data = new Data[10];
-            dataObj = new Data[10];
+            data = new DataAllocation[10];
+            dataObj = new DataAllocation[10];
             /*for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
                 Data dataTemp = new Data();
@@ -61,7 +63,7 @@ namespace Samraksh.SPOT.Tests
             UInt32 size = 256;
             for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
-                data[dataIndex] = new Data(dStore, size, dataType);
+                data[dataIndex] = new DataAllocation(dStore, size, dataType);
                 rnd.NextBytes(writeBuffer);
                 data[dataIndex].Write(writeBuffer, size);
                 Array.Clear(writeBuffer, 0, writeBuffer.Length);
@@ -73,7 +75,7 @@ namespace Samraksh.SPOT.Tests
         {
             int[] dataIdArray = new int[dStore.CountOfDataIds()];
             dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
-            Data[] dataRefArray = new Data[10];
+            DataAllocation[] dataRefArray = new DataAllocation[10];
             dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
             
             for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)

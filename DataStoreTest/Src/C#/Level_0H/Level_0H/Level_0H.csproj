@@ -50,7 +50,7 @@
     </Reference>
     <Reference Include="Samraksh_SPOT, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SPOCLIENT)\Samraksh\Interops\Samraksh_SPOT\Samraksh_SPOT\bin\Debug\Samraksh_SPOT.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\MF\MicroFrameworkPK_v4_3\Samraksh\Interops\Samraksh_SPOT\Samraksh_SPOT\bin\Debug\Samraksh_SPOT.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

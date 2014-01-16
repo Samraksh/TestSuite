@@ -17,7 +17,9 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = new DataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance;
+            dStore.InitDataStore((int)StorageType.NOR);
+			
             rnd = new Random();
             readBuffer = new byte[256];
             writeBuffer = new byte[256];
@@ -61,7 +63,7 @@ namespace Samraksh.SPOT.Tests
                 //UInt16 did = 256;
                 //DataID d = new DataID(256);
                 
-                Data data = new Data(dStore, size, dataType);
+                DataAllocation data = new DataAllocation(dStore, size, dataType);
                 //Data data1 = new Data(dStore, (DATAID)256);
 
                 //writeBuffer.Select(c => (object)c).ToArray();
