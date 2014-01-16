@@ -1,3 +1,7 @@
 */bin/*
 */obj/*
+*.bin
+*.dat
+*.s19
+*.cache
 !*.gitkeep
