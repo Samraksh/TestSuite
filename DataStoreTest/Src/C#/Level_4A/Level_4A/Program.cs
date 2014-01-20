@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using Microsoft.SPOT.Hardware;
 using Samraksh.SPOT.NonVolatileMemory;
 
 /* Write lot of small data (byte) such that the count goes well beyond the count that can be stored in RAM. 
@@ -21,6 +22,10 @@ namespace Samraksh.SPOT.Tests
         int experimentIndex;
 
         UInt16 offsetIndex = 0;
+
+        public static OutputPort erasePort = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN2, false);
+        public static OutputPort writePort = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN4, false);
+        public static OutputPort readPort = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN5, false);
 
         public DataStoreTest()
         {
@@ -63,8 +68,10 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_4A");
 
+            erasePort.Write(true);
             if (DataStore.EraseAll() == DataStatus.Success)
                 Debug.Print("Datastore succesfully erased");
+            erasePort.Write(false);
 
             for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
             {
@@ -78,6 +85,7 @@ namespace Samraksh.SPOT.Tests
             {
                 data = new DataAllocation(dStore, size, dataType);
 
+                writePort.Write(true);
                 if (data.Write(writeBuffer, 0, (uint)writeBuffer.Length) == DataStatus.Success)
                     DisplayStats(true, "Write successful", "", 0);
                 else
@@ -85,6 +93,7 @@ namespace Samraksh.SPOT.Tests
                     DisplayStats(true, "Write not successful", "", 0);
                     return;
                 }
+                writePort.Write(false);
             }
             TestPersistence();
         }
@@ -108,6 +117,7 @@ namespace Samraksh.SPOT.Tests
 
                 while (dataIndex < offsetIndex)
                 {
+                    readPort.Write(true);
                     if (dataRefArray[dataIndex].Read(readBuffer, 0, (uint)readBuffer.Length) == DataStatus.Success)
                         DisplayStats(true, "Read successful", "", 0);
                     else
@@ -115,6 +125,7 @@ namespace Samraksh.SPOT.Tests
                         DisplayStats(true, "Read not successful", "", 0);
                         return;
                     }
+                    readPort.Write(false);
 
                     for (UInt16 rwIndex = 0; rwIndex < readBuffer.Length; ++rwIndex)
                     {
