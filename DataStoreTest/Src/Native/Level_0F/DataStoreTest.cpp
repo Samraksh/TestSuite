@@ -47,12 +47,12 @@ LPVOID DataStoreTest::CreateDataStoreRecords(int count)
 	{
 		if(index == 1)
 		{
-			firstGivenPtr = g_dataStoreObject.createRecord(index,256);
+			firstGivenPtr = g_dataStoreObject.createRecord(index,256,0);
 			hal_printf("");
 		}
 		else
 		{
-			LPVOID nextPtrs = g_dataStoreObject.createRecord(index,256);
+			LPVOID nextPtrs = g_dataStoreObject.createRecord(index,256,0);
 			hal_printf("");
 		}
 	}
@@ -87,7 +87,7 @@ BOOL DataStoreTest::GetRecordID()
 {
 	test_initialization();
 
-	LPVOID givenPtr = g_dataStoreObject.createRecord(1,256);
+	LPVOID givenPtr = g_dataStoreObject.createRecord(1,256,0);
 
 	if(g_dataStoreObject.getRecordID(givenPtr) != NULL)
 		return true;
@@ -106,7 +106,7 @@ BOOL DataStoreTest::TestReadWrite_Random_CHAR()
 
 	test_initialization();
 
-	g_dataStoreObject.DeleteAll();
+	g_dataStoreObject.EraseAllBlocks();
 
 	LPVOID firstGivenPtr = CreateDataStoreRecords(1);
 
@@ -120,9 +120,9 @@ BOOL DataStoreTest::TestReadWrite_Random_CHAR()
 		read_data[rwIndex] = 0;
 	}
 
-	if( g_dataStoreObject.writeRawData(firstGivenPtr, (void*)write_data, test_limit) )
+	if( g_dataStoreObject.writeRawData(firstGivenPtr, (void*)write_data, 0, test_limit) )
 	{
-		if( g_dataStoreObject.readRawData(firstGivenPtr, (void*)read_data, test_limit) )
+		if( g_dataStoreObject.readRawData(firstGivenPtr, (void*)read_data, 0, test_limit) )
 		{
 			for(UINT16 rwIndex = 0; rwIndex < test_limit; ++rwIndex)
 			{
@@ -147,6 +147,7 @@ BOOL DataStoreTest::TestReadWrite_Random_CHAR()
 
 	DisplayStats(true, "Success : Simple read write successful", NULL, 0);
 
+	g_dataStoreObject.EraseAllBlocks();
 	return true;
 
 }

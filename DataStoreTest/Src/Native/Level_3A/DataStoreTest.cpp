@@ -47,11 +47,11 @@ LPVOID DataStoreTest::CreateDataStoreRecords(int count)
 	{
 		if(index == 1)
 		{
-			firstGivenPtr = g_dataStoreObject.createRecord(index,256);
+			firstGivenPtr = g_dataStoreObject.createRecord(index,256,0);
 		}
 		else
 		{
-			LPVOID nextPtrs = g_dataStoreObject.createRecord(index,256);
+			LPVOID nextPtrs = g_dataStoreObject.createRecord(index,256,0);
 		}
 	}
 	return firstGivenPtr;
@@ -83,7 +83,7 @@ BOOL DataStoreTest::GetRecordID()
 {
 	test_initialization();
 
-	LPVOID givenPtr = g_dataStoreObject.createRecord(1,256);
+	LPVOID givenPtr = g_dataStoreObject.createRecord(1,256,0);
 
 	if(g_dataStoreObject.getRecordID(givenPtr) != NULL)
 		return true;
@@ -112,7 +112,7 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Seq_Records()
 
 	test_initialization();
 
-	g_dataStoreObject.DeleteAll();
+	g_dataStoreObject.EraseAllBlocks();
 
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
@@ -123,7 +123,7 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Seq_Records()
 
 		if(givenPtr)
 		{
-			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, test_limit) )
+			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 			{
 				DisplayStats(true, "Success: write data to data store", NULL, 0);
 			}
@@ -146,7 +146,7 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Seq_Records()
 
 		if(givenPtr)
 		{
-			if( g_dataStoreObject.readRawData(givenPtr, (void*)read_data, test_limit) )
+			if( g_dataStoreObject.readRawData(givenPtr, (void*)read_data, 0, test_limit) )
 			{
 				for(UINT16 rwIndex = 0; rwIndex < test_limit; ++rwIndex)
 				{
@@ -178,6 +178,7 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Seq_Records()
 	}
 
 	DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
+	g_dataStoreObject.EraseAllBlocks();
 	return true;
 
 }

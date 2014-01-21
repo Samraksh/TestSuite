@@ -52,7 +52,7 @@ LPVOID* DataStoreTest::CreateDataStoreRecords(int count)
 		//*(firstGivenPtr++) = reinterpret_cast<void**>(g_dataStoreObject.createRecord(index,256));
 		////firstGivenPtr[index-1] = reinterpret_cast<void**>(g_dataStoreObject.createRecord(index,256));
 		//*(firstGivenPtr[index-1]) = g_dataStoreObject.createRecord(index,256);
-		firstGivenPtr[index-1] = g_dataStoreObject.createRecord(index,256);
+		firstGivenPtr[index-1] = g_dataStoreObject.createRecord(index,256,0);
 	}
 	return firstGivenPtr;
 }
@@ -102,7 +102,7 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 
 	test_initialization();
 
-	g_dataStoreObject.DeleteAll();
+	g_dataStoreObject.EraseAllBlocks();
 
 	//LPVOID* firstGivenPtr = reinterpret_cast<void**>(CreateDataStoreRecords(recordCount));
 	LPVOID* firstGivenPtr = CreateDataStoreRecords(recordCount);
@@ -119,7 +119,7 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 
 		if(givenPtr)
 		{
-			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, test_limit) )
+			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 			{
 				DisplayStats(true, "Success: write data to data store", NULL, 0);
 			}
@@ -163,6 +163,7 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 		}
 	}
 
+	g_dataStoreObject.EraseAllBlocks();
 	return true;
 
 }
