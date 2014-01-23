@@ -15,15 +15,9 @@
 
 BlockStorageTest::BlockStorageTest( int seedValue, int numberOfEvents )
 {
-	//USART_Initialize(COM1, 115200, 0, 8, 1, 0);
 	//Initial seed value for random value generator
 	testMathInstance.prng_init(30);
-	// initial wait for COM port to come up
-	/*int j;
-	for(j = 0; j < 500000; j++){}
-	for(j = 0; j < 500000; j++){}
-	for(j = 0; j < 500000; j++){}
-	for(j = 0; j < 500000; j++){}*/
+	
 };
 
 BOOL BlockStorageTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
@@ -50,30 +44,28 @@ BOOL BlockStorageTest::Level_0A()
 	int counter = 0;
 	int aliveCounter = 0;
 	
-	//USART_Write(COM1, "Alive\n" , 6);
-	//USART_Flush(COM1);
 	BlockStorageStream stream;
 	const BlockDeviceInfo* deviceInfo;
 	
-	while(true)
-	{
-		const UINT32 c_EventsMask = SYSTEM_EVENT_FLAG_COM_IN;
-		
-        UINT32 events = Events_MaskedRead( c_EventsMask ); if(!events) continue;
-		
-		if(events != 0)
-        {
-               Events_Clear( events );
-        }
-		
-		if(events & SYSTEM_EVENT_FLAG_COM_IN)
+	const UINT32 c_EventsMask = SYSTEM_EVENT_FLAG_COM_IN;
+	UINT32 events;
+	while (c != 's')
 		{
-			USART_Read(COM1, &c, 1);
-			readData[counter++] = c;
+        	events = Events_MaskedRead( c_EventsMask ); if(!events) continue;
+		
+			if(events != 0)
+        	{
+        	       Events_Clear( events );
+        	}
+		
+			if(events & SYSTEM_EVENT_FLAG_COM_IN)
+			{
+				USART_Read(COM1, &c, 1);
+				readData[counter++] = c;
+			}
 		}
-		
-		if(c == 'z')
-		{
+	
+			hal_printf("\r\nBlockStorageTest test starting\r\n");
 			if(!stream.Initialize(BlockUsage::DEPLOYMENT))
 			{
 				DisplayStats(FALSE, "ERROR: Could not find device for DEPLOYMENT usage", NULL, 0);
@@ -85,6 +77,7 @@ BOOL BlockStorageTest::Level_0A()
 				{
 					if(!stream.Erase(counter))
 						DisplayStats(FALSE, "ERROR : Erase of Block Storage failed", NULL, 0);
+						return FALSE;
 				}
 				if(stream.Write((UINT8 *) readData, counter))
 				{
@@ -100,27 +93,27 @@ BOOL BlockStorageTest::Level_0A()
 					if(!stream.Read((UINT8 **) &readData, counter))
 					{
 						DisplayStats(FALSE, "ERROR : Erase of Block Storage failed", NULL, 0);
+						return FALSE;
 					}
 					else
 					{
 						if(!stream.Erase(counter))
 						{
 							DisplayStats(FALSE, "ERROR : Erase of Block Storage failed", NULL, 0);
+							return FALSE;
 						}
 					}
 				}
 				else
 				{
 					DisplayStats(FALSE, "ERROR :  Unable to write to flash", NULL, 0);
+					return FALSE;
 				}
 			}
 			counter = 0;	
-		}
-		
-	}
-	DisplayStats(TRUE, "Test passed", readData, 0);
-	return TRUE;
-
+			hal_printf("BlockStorageTest end\r\n");
+			DisplayStats(TRUE, "Test passed", readData, 0);
+			return TRUE;
 }
 
 

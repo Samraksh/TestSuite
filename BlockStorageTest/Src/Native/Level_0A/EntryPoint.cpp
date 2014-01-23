@@ -29,7 +29,7 @@ void ApplicationEntryPoint()
 
     do
     {
-		bst.Execute(1);
+		bst.Execute(0);
     } while(FALSE); // run only once!
 
     //while(TRUE);
