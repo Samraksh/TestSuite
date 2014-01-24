@@ -32,8 +32,7 @@ namespace Samraksh.SPOT.Tests
             rand = new Random();
             //data = new Data[experimentIndex];
             offsetIndex = 128;
-            dataRefArray = new DataAllocation[offsetIndex];
-
+            
             readBuffer = new UInt16[size];
             writeBuffer = new UInt16[size];
             dataType = typeof(UInt16);
@@ -94,6 +93,9 @@ namespace Samraksh.SPOT.Tests
         public void TestPersistence()
         {
             offset = 0;
+            UInt32 totalRecords = dStore.CountOfDataIds();
+            UInt32 dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
+            dataRefArray = new DataAllocation[dataAllocationIndex];
             //int[] dataIdArray = new int[256];
             int dataIndex = 0;
 
@@ -102,12 +104,12 @@ namespace Samraksh.SPOT.Tests
             //if (offset % 2 == 1)
             //    offset = offset + sizeof(byte);
 
-            while (offset < experimentIndex)
+            while (offset < totalRecords)
             {
                 //dStore.ReadAllDataIds(dataIdArray, offset);     //Get all dataIDs into the dataIdArray.
                 dStore.ReadAllDataReferences(dataRefArray, offset);      //Get the data references into dataRefArray.
 
-                while (dataIndex < offsetIndex)
+                while (dataIndex < dataAllocationIndex)
                 {
                     if (dataRefArray[dataIndex].Read(readBuffer, 0, (uint)readBuffer.Length) == DataStatus.Success)
                         DisplayStats(true, "Read successful", "", 0);
@@ -133,7 +135,11 @@ namespace Samraksh.SPOT.Tests
                 }
                 dataIndex = 0;
                 Array.Clear(dataRefArray, 0, dataRefArray.Length);
+                offsetIndex = (UInt16)(offsetIndex < totalRecords ? offsetIndex : totalRecords);
                 offset += offsetIndex;
+                
+                dataAllocationIndex = totalRecords - offset;
+                dataAllocationIndex = dataAllocationIndex > offsetIndex ? offsetIndex : dataAllocationIndex;
             }
 
             if (DataStore.EraseAll() == DataStatus.Success)

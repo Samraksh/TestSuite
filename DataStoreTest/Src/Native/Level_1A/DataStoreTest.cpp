@@ -9,6 +9,15 @@
 
 extern Data_Store g_dataStoreObject;
 
+//J11 Pin 3 - PA0 (#0)
+//J11 Pin 8 - PA8 (#8)
+//PA15 - #15
+//J12 Pin 1 - PB8 (#24)
+//J12 Pin 5 - PB15 (#31)
+#define LED1_FOR_ERASE 8 	//(J11_Pin8 -- PA8)
+#define LED2_FOR_WRITE 30 	//(J12_Pin4 -- PB14)
+#define LED3_FOR_READ 31	//(J12_Pin5 -- PB15)
+
 
 DataStoreTest::DataStoreTest( int seedValue, int numberOfEvents )
 {
@@ -113,7 +122,9 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Records()
 
 	test_initialization();
 
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) LED1_FOR_ERASE, true);
 	g_dataStoreObject.EraseAllBlocks();
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) LED1_FOR_ERASE, false);
 
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
@@ -123,10 +134,14 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Records()
 
 		if(givenPtr)
 		{
+			CPU_GPIO_EnableOutputPin((GPIO_PIN) LED2_FOR_WRITE, true);
 			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 			{
+				CPU_GPIO_EnableOutputPin((GPIO_PIN) LED2_FOR_WRITE, false);
+				CPU_GPIO_EnableOutputPin((GPIO_PIN) LED3_FOR_READ, true);
 				if( g_dataStoreObject.readRawData(givenPtr, (void*)read_data, 0, test_limit) )
 				{
+					CPU_GPIO_EnableOutputPin((GPIO_PIN) LED3_FOR_READ, false);
 					for(UINT16 rwIndex = 0; rwIndex < test_limit; ++rwIndex)
 					{
 						if(read_data[rwIndex] != write_data[rwIndex])

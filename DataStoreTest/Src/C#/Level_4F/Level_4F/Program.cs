@@ -29,14 +29,13 @@ namespace Samraksh.SPOT.Tests
             dStore = DataStore.Instance;
             dStore.InitDataStore((int)StorageType.NOR);
 
-            experimentIndex = 1024;
+            experimentIndex = 300;
             size = 256;
             rand = new Random();
             //data = new Data[experimentIndex];
             //offsetIndex = 128;
             offsetIndex = (UInt16)(rand.Next((int)size / 2));
-            dataRefArray = new DataAllocation[offsetIndex];
-
+            
             readBuffer = new UInt32[size];
             writeBuffer = new UInt32[size];
             dataType = typeof(UInt32);
@@ -95,18 +94,22 @@ namespace Samraksh.SPOT.Tests
         {
             int dataIndex = 0;
             offset = 0;
+            UInt32 totalRecords = dStore.CountOfDataIds();
+            UInt32 dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
+
+            dataRefArray = new DataAllocation[dataAllocationIndex];
 
             // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
             // even offsets, but might want to read from odd offsets. 
             //if (offset % 2 == 1)
             //    offset = offset + sizeof(byte);
 
-            while (offset < experimentIndex)
+            while (offset < totalRecords)
             {
                 //dStore.ReadAllDataIds(dataIdArray, offset);     //Get all dataIDs into the dataIdArray.
                 dStore.ReadAllDataReferences(dataRefArray, offset);      //Get the data references into dataRefArray.
 
-                while (dataIndex < offsetIndex)
+                while (dataIndex < dataAllocationIndex)
                 {
                     if (dataRefArray[dataIndex].Read(readBuffer, 0, (uint)readBuffer.Length) == DataStatus.Success)
                         DisplayStats(true, "Read successful", "", 0);
@@ -133,8 +136,12 @@ namespace Samraksh.SPOT.Tests
                 dataIndex = 0;
                 Array.Clear(dataRefArray, 0, dataRefArray.Length);
                 offsetIndex = (UInt16)(rand.Next((int)size / 2));
+                offsetIndex = (UInt16)(offsetIndex < totalRecords ? offsetIndex : totalRecords);
                 dataRefArray = new DataAllocation[offsetIndex];
                 offset += offsetIndex;
+
+                dataAllocationIndex = totalRecords - offset;
+                dataAllocationIndex = dataAllocationIndex > offsetIndex ? offsetIndex : dataAllocationIndex;
             }
 
             if (DataStore.EraseAll() == DataStatus.Success)

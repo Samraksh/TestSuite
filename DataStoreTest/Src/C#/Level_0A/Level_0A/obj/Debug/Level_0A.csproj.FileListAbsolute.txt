@@ -25,3 +25,5 @@ D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\obj\Debug\l
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\obj\Debug\le\Level_0A.pdbx
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\obj\Debug\Level_0A.exe
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\obj\Debug\Level_0A.pdb
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\obj\Debug\Level_0A.csprojResolveAssemblyReference.cache
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\obj\Debug\TinyCLR_DebugReferences.cache
