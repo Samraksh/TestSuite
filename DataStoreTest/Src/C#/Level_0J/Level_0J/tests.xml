@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='DataStoreTest' Type='C#'>
+		<Description>
+			Test to verify that only one instance of dataStore is created
+		</Description>
+		<TestPath>
+			DataStoreTest\Src\C#\Level_0J\Level_0J
+		</TestPath>
+		<TestProjName>
+			Level_0J.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

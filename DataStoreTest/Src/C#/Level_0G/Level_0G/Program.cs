@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Samraksh.SPOT.NonVolatileMemory;
 
 namespace Samraksh.SPOT.Tests
@@ -28,20 +29,23 @@ namespace Samraksh.SPOT.Tests
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
         {
-            if (result)
-            {
-                Debug.Print("\r\nresult=PASS\r\n");
+            while (true){
+                Thread.Sleep(1000);
+                if (result)
+                {
+                    Debug.Print("\r\nresult=PASS\r\n");
+                }
+                else
+                {
+                    Debug.Print("\r\nresult=FAIL\r\n");
+                }
+                Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
+                Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
+                Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
+                Debug.Print("\r\nresultParameter3= \r\b");
+                Debug.Print("\r\nresultParameter4= \r\b");
+                Debug.Print("\r\nresultParameter5= \r\b");
             }
-            else
-            {
-                Debug.Print("\r\nresult=FAIL\r\n");
-            }
-            Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
-            Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
-            Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
-            Debug.Print("\r\nresultParameter3= \r\b");
-            Debug.Print("\r\nresultParameter4= \r\b");
-            Debug.Print("\r\nresultParameter5= \r\b");
 
         }
 
@@ -49,11 +53,8 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0G()
         {
-            /*if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
-
-            if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");*/
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
 
             /* For "overallIndex" times, create "dataIndex" count of data. For each data, write random data and read it back. 
              * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
@@ -70,7 +71,7 @@ namespace Samraksh.SPOT.Tests
                     rnd.NextBytes(writeBuffer);
 
                     data.Write(writeBuffer, size);
-                    data.Read(readBuffer);
+                    data.Read(readBuffer, 0, size);
 
                     for (UInt16 i = 0; i < size; i++)
                     {
@@ -87,7 +88,7 @@ namespace Samraksh.SPOT.Tests
                     data.Write(writeBuffer, size);
                     Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
-                    DisplayStats(true, "Read Write successful", "", 0);
+                    Debug.Print("Read Write successful");
                     if (data.Delete() != DataStatus.Success)
                     {
                         DisplayStats(false, "Delete failed", "", 0);
@@ -97,15 +98,13 @@ namespace Samraksh.SPOT.Tests
             }
 			
 			if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
+                DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 
 
         public static void Main()
         {
-
             DataStoreTest dtest = new DataStoreTest();
-
             dtest.Level_0G();
         }
     }

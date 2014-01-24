@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Samraksh.SPOT.NonVolatileMemory;
 
 namespace Samraksh.SPOT.Tests
@@ -11,6 +12,8 @@ namespace Samraksh.SPOT.Tests
         Random rnd;
         byte[] writeBuffer;
         byte[] readBuffer;
+        UInt16 size;
+        UInt16 experimentIndex;
 
 
         public DataStoreTest()
@@ -19,26 +22,31 @@ namespace Samraksh.SPOT.Tests
             dStore.InitDataStore((int)StorageType.NOR);
 			
             rnd = new Random();
-            readBuffer = new byte[256];
-            writeBuffer = new byte[256];
+            experimentIndex = 10;
+            size = 256;
+            readBuffer = new byte[size];
+            writeBuffer = new byte[size];
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
         {
-            if (result)
-            {
-                Debug.Print("\r\nresult=PASS\r\n");
+            while (true){
+                Thread.Sleep(1000);
+                if (result)
+                {
+                    Debug.Print("\r\nresult=PASS\r\n");
+                }
+                else
+                {
+                    Debug.Print("\r\nresult=FAIL\r\n");
+                }
+                Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
+                Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
+                Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
+                Debug.Print("\r\nresultParameter3= \r\b");
+                Debug.Print("\r\nresultParameter4= \r\b");
+                Debug.Print("\r\nresultParameter5= \r\b");
             }
-            else
-            {
-                Debug.Print("\r\nresult=FAIL\r\n");
-            }
-            Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
-            Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
-            Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
-            Debug.Print("\r\nresultParameter3= \r\b");
-            Debug.Print("\r\nresultParameter4= \r\b");
-            Debug.Print("\r\nresultParameter5= \r\b");
 
         }
 
@@ -46,31 +54,29 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0C()
         {
-            if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
 
-            /*if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");*/
-
-            for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
+            for (UInt32 dataIndex = 1; dataIndex <= experimentIndex; ++dataIndex)
             {
                 Type dataType = typeof(System.UInt16);
-                DataAllocation data = new DataAllocation(dStore, 256, dataType);
+                DataAllocation data = new DataAllocation(dStore, size, dataType);
             }
             
             if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");
 
-            /*if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");*/
-
+            if(dStore.CountOfDataIds() > 0)
+                DisplayStats(false, "DeleteAll failed", "", 0);
+            else
+                Debug.Print("DeleteAll succeeded");
 
             Type dataType1 = typeof(System.UInt16);
-            DataAllocation d = new DataAllocation(dStore, 256, dataType1);
+            DataAllocation d = new DataAllocation(dStore, size, dataType1);
 
             rnd.NextBytes(writeBuffer);
-            d.Write(writeBuffer, 256);
-            d.Read(readBuffer);
+            d.Write(writeBuffer, size);
+            d.Read(readBuffer, 0, size);
 
             for (UInt16 i = 0; i < writeBuffer.Length; i++)
             {
@@ -80,51 +86,20 @@ namespace Samraksh.SPOT.Tests
                     return;
                 }
             }
-            writeBuffer = new byte[256];
-            readBuffer = new byte[256];
+            Array.Clear(writeBuffer, 0, writeBuffer.Length);
+            Array.Clear(readBuffer, 0, readBuffer.Length);
 
-            DisplayStats(true, "Read Write successful. DeleteAll succeeded", "", 0);
+            Debug.Print("Read Write successful. DeleteAll succeeded");
 			
 			if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
+                DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 
 
         public static void Main()
         {
-
             DataStoreTest dtest = new DataStoreTest();
-
             dtest.Level_0C();
-
-            /*
-            dStore = new DataStore((int)StorageType.NOR);
-            int retVal = dStore.LastErrorStatus();
-            //int ret = dStore.CreateRecord(1, 256);
-            //Debug.Print("dStore.LastErrorStatus()\n");
-            Random rand = new Random();
-            for (UInt32 dataIndex = 1; dataIndex <= 10; ++dataIndex)
-            {
-                Data data = new Data(dStore, dataIndex, 256);
-                retVal = (int)data.Create();
-                byte[] writeBuffer = new byte[100];
-                byte[] readBuffer = new byte[100];
-                rand.NextBytes(writeBuffer);
-                data.Write(writeBuffer, (UInt32)writeBuffer.Length);
-                data.Read(readBuffer);
-
-                for (UInt32 compareIndex = 0; compareIndex < (UInt32)writeBuffer.Length; ++compareIndex)
-                {
-                    if(writeBuffer[compareIndex] != readBuffer[compareIndex])
-                        throw new SystemException();
-                }
-            }
-
-            //Program2 p2 = new Program2();
-            //p2.method2();
-
-            //Debug.Print(Resources.GetString(Resources.StringResources.String1));
-             * */
         }
     }
 }

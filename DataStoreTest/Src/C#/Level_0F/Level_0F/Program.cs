@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using Samraksh.SPOT.Hardware;
@@ -45,21 +46,23 @@ namespace Samraksh.SPOT.Tests
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
         {
-            if (result)
-            {
-                Debug.Print("\r\nresult=PASS\r\n");
+            while (true){
+                Thread.Sleep(1000);
+                if (result)
+                {
+                    Debug.Print("\r\nresult=PASS\r\n");
+                }
+                else
+                {
+                    Debug.Print("\r\nresult=FAIL\r\n");
+                }
+                Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
+                Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
+                Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
+                Debug.Print("\r\nresultParameter3= \r\b");
+                Debug.Print("\r\nresultParameter4= \r\b");
+                Debug.Print("\r\nresultParameter5= \r\b");
             }
-            else
-            {
-                Debug.Print("\r\nresult=FAIL\r\n");
-            }
-            Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
-            Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
-            Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
-            Debug.Print("\r\nresultParameter3= \r\b");
-            Debug.Print("\r\nresultParameter4= \r\b");
-            Debug.Print("\r\nresultParameter5= \r\b");
-
         }
 
         // Test that creates a bunch of records and returns success if record creation
@@ -73,20 +76,22 @@ namespace Samraksh.SPOT.Tests
              * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
 
             DataAllocation data;
+
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
             
             for (UInt32 overallIndex = 0; overallIndex < 10000; ++overallIndex)
             {
                 for (UInt32 dataIndex = 0; dataIndex < 1; ++dataIndex)
                 {
-
                     data = new DataAllocation(dStore, size, dataType);
                     rnd.NextBytes(writeBuffer);
 
                     if (data.Write(writeBuffer, size) == DataStatus.Success)
-                        DisplayStats(true, "Data write successful", "", 0);
+                        Debug.Print("Data write successful");
                     else
                     {
-                        DisplayStats(true, "Data write failure", "", 0);
+                        DisplayStats(false, "Data write failure", "", 0);
                         resultRWData.Write(false);
                         resultDeleteData.Write(false);
                         resultFailure.Write(true);
@@ -106,16 +111,16 @@ namespace Samraksh.SPOT.Tests
                             return;
                         }
                     }
-                    DisplayStats(true, "Read Write successful", "", 0);
+                    Debug.Print("Read Write successful");
                     Array.Clear(readBuffer, 0, readBuffer.Length);
                     Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
                     rnd.NextBytes(writeBuffer);
                     if (data.Write(writeBuffer, size) == DataStatus.Success)
-                        DisplayStats(true, "Data re-write successful", "", 0);
+                        Debug.Print("Data re-write successful");
                     else
                     {
-                        DisplayStats(true, "Data re-write failure", "", 0);
+                        DisplayStats(false, "Data re-write failure", "", 0);
                         resultRWData.Write(false);
                         resultDeleteData.Write(false);
                         resultFailure.Write(true);
@@ -148,24 +153,17 @@ namespace Samraksh.SPOT.Tests
                        // UInt32 retVal = Debug.GC(true); //Force GC once in a while to fix the memory leakage issue.
                        // Debug.Print("Free space collected " + retVal.ToString());
                     //}
-
-                    
                 }
             }
 			
 			if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
+                DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 
 
         public static void Main()
         {
-
             DataStoreTest dtest = new DataStoreTest();
-
             dtest.Level_0F();
         }
     }

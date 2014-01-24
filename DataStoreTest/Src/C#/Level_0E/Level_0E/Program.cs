@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Samraksh.SPOT.NonVolatileMemory;
 
 namespace Samraksh.SPOT.Tests
@@ -14,6 +15,8 @@ namespace Samraksh.SPOT.Tests
         byte[] readBuffer;
         DataAllocation[] data;
         DataAllocation[] dataObj;
+        UInt16 experimentIndex;
+        UInt16 size;
 
         public DataStoreTest()
         {
@@ -21,10 +24,12 @@ namespace Samraksh.SPOT.Tests
             dStore.InitDataStore((int)StorageType.NOR);
             
             rnd = new Random();
-            readBuffer = new byte[256];
-            writeBuffer = new byte[256];
-            data = new DataAllocation[10];
-            dataObj = new DataAllocation[10];
+            experimentIndex = 10;
+            size = 256;
+            readBuffer = new byte[size];
+            writeBuffer = new byte[size];
+            data = new DataAllocation[experimentIndex];
+            dataObj = new DataAllocation[experimentIndex];
             /*for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
                 Data dataTemp = new Data();
@@ -35,20 +40,23 @@ namespace Samraksh.SPOT.Tests
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
         {
-            if (result)
-            {
-                Debug.Print("\r\nresult=PASS\r\n");
+            while (true){
+                Thread.Sleep(1000);
+                if (result)
+                {
+                    Debug.Print("\r\nresult=PASS\r\n");
+                }
+                else
+                {
+                    Debug.Print("\r\nresult=FAIL\r\n");
+                }
+                Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
+                Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
+                Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
+                Debug.Print("\r\nresultParameter3= \r\b");
+                Debug.Print("\r\nresultParameter4= \r\b");
+                Debug.Print("\r\nresultParameter5= \r\b");
             }
-            else
-            {
-                Debug.Print("\r\nresult=FAIL\r\n");
-            }
-            Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
-            Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
-            Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
-            Debug.Print("\r\nresultParameter3= \r\b");
-            Debug.Print("\r\nresultParameter4= \r\b");
-            Debug.Print("\r\nresultParameter5= \r\b");
 
         }
 
@@ -56,12 +64,11 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0E()
         {
-            /*if (DataStore.GC() == DataStatus.Success)
-                Debug.Print("Datastore succesfully garbage collected");*/
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
 
             Type dataType = typeof(System.UInt32);
-            UInt32 size = 256;
-            for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
+            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 data[dataIndex] = new DataAllocation(dStore, size, dataType);
                 rnd.NextBytes(writeBuffer);
@@ -73,30 +80,27 @@ namespace Samraksh.SPOT.Tests
 
         public void TestPersistence()
         {
-            int[] dataIdArray = new int[dStore.CountOfDataIds()];
-            dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
-            DataAllocation[] dataRefArray = new DataAllocation[10];
+            ////int[] dataIdArray = new int[dStore.CountOfDataIds()];
+            ////dStore.ReadAllDataIds(dataIdArray, 0);     //Get all dataIDs into the dataIdArray.
+            DataAllocation[] dataRefArray = new DataAllocation[experimentIndex];
             dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
             
-            for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
+            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                if (DataStatus.Failure == dataRefArray[dataIndex].Read(readBuffer))
+                if (DataStatus.Failure == dataRefArray[dataIndex].Read(readBuffer, 0, size))
                 {
                     DisplayStats(false, "Read failed", "", 0);
                     return;
                 }
                 else
                 {
-                    DisplayStats(true, "Read succeeded", "", 0);
+                    Debug.Print("Read succeeded");
                 }
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
 			
 			if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
-				
-			if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");
+                DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 
 
