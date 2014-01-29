@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Microsoft.SPOT.Hardware;
 using Samraksh.SPOT.NonVolatileMemory;
 
@@ -42,7 +43,7 @@ namespace Samraksh.SPOT.Tests
             dataType = typeof(byte);
         }
 
-        public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
+        public static void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
         {
             while (true){
                 Thread.Sleep(1000);
@@ -88,10 +89,10 @@ namespace Samraksh.SPOT.Tests
 
                 writePort.Write(true);
                 if (data.Write(writeBuffer, 0, (uint)writeBuffer.Length) == DataStatus.Success)
-                    DisplayStats(true, "Write successful", "", 0);
+                    Debug.Print("Write successful");
                 else
                 {
-                    DisplayStats(true, "Write not successful", "", 0);
+                    DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
                 writePort.Write(false);
@@ -125,10 +126,10 @@ namespace Samraksh.SPOT.Tests
                 {
                     readPort.Write(true);
                     if (dataRefArray[dataIndex].Read(readBuffer, 0, (uint)readBuffer.Length) == DataStatus.Success)
-                        DisplayStats(true, "Read successful", "", 0);
+                        Debug.Print("Read successful");
                     else
                     {
-                        DisplayStats(true, "Read not successful", "", 0);
+                        DisplayStats(false, "Read not successful", "", 0);
                         return;
                     }
                     readPort.Write(false);
@@ -142,7 +143,7 @@ namespace Samraksh.SPOT.Tests
                         }
                     }
 
-                    DisplayStats(true, "Read Write successful", "", 0);
+                    Debug.Print("Read Write successful");
 
                     Array.Clear(readBuffer, 0, readBuffer.Length);
                     dataIndex++;
@@ -165,8 +166,8 @@ namespace Samraksh.SPOT.Tests
         public static void Main()
         {
             DataStoreTest dtest = new DataStoreTest();
-
             dtest.Level_4A();
+            //DisplayStats(true, "COM port test", null, 0);
         }
     }
 }

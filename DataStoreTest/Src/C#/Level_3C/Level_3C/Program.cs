@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Samraksh.SPOT.NonVolatileMemory;
 
 /* Test overwrites. Write a UInt32 array (with sequential data - filled with numbers from 0 to 99) from offset zero till half of allocation.
@@ -75,10 +76,10 @@ namespace Samraksh.SPOT.Tests
                 DataAllocation data = new DataAllocation(dStore, size, dataType);
 
                 if (data.Write(writeBuffer, 0, size / 2) == DataStatus.Success)
-                    DisplayStats(true, "Write successful", "", 0);
+                    Debug.Print("Write successful");
                 else
                 {
-                    DisplayStats(true, "Write not successful", "", 0);
+                    DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
 
@@ -86,20 +87,20 @@ namespace Samraksh.SPOT.Tests
                 numData = (uint)(rand.Next((int)(size - offset)));
 
                 if (data.Write(writeBuffer, offset, numData) == DataStatus.Success)
-                    DisplayStats(true, "Write successful", "", 0);
+                    Debug.Print("Write successful");
                 else
                 {
-                    DisplayStats(true, "Write not successful", "", 0);
+                    DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
 
                 /*######################################################*/
                 /* Read before the overwrite region and verify */
                 if (data.Read(readBuffer, 0, offset - 1) == DataStatus.Success)
-                    DisplayStats(true, "Read before overwrite successful", "", 0);
+                    Debug.Print("Read before overwrite successful");
                 else
                 {
-                    DisplayStats(true, "Read before overwrite not successful", "", 0);
+                    DisplayStats(false, "Read before overwrite not successful", "", 0);
                     return;
                 }
 
@@ -116,10 +117,10 @@ namespace Samraksh.SPOT.Tests
                 /*######################################################*/
                 /* Read the overwrite region and verify */
                 if (data.Read(readBuffer, offset, numData) == DataStatus.Success)
-                    DisplayStats(true, "Read overwrite region successful", "", 0);
+                    Debug.Print("Read overwrite region successful");
                 else
                 {
-                    DisplayStats(true, "Read overwrite region not successful", "", 0);
+                    DisplayStats(false, "Read overwrite region not successful", "", 0);
                     return;
                 }
 
@@ -138,10 +139,10 @@ namespace Samraksh.SPOT.Tests
                 if ((offset + numData + 1) <= (size / 2))
                 {
                     if (data.Read(readBuffer, (offset + numData + 1), (size / 2 - (offset + numData + 1))) == DataStatus.Success)
-                        DisplayStats(true, "Read after overwrite successful", "", 0);
+                        Debug.Print("Read after overwrite successful");
                     else
                     {
-                        DisplayStats(true, "Read after overwrite not successful", "", 0);
+                        DisplayStats(false, "Read after overwrite not successful", "", 0);
                         return;
                     }
 
@@ -158,7 +159,7 @@ namespace Samraksh.SPOT.Tests
                 }
                 /*######################################################*/
 
-                DisplayStats(true, "Read Write successful", "", 0);
+                Debug.Print("Read Write successful");
 
             }
 

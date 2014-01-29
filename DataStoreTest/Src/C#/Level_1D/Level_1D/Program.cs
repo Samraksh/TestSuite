@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Samraksh.SPOT.NonVolatileMemory;
 
 /* Test write and read APIs. Write a UInt16 array (with sequential data - filled with numbers from 0 to 99), 
@@ -58,6 +59,9 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_1D");
 
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
+
             for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
             {
                 writeBuffer[writeIndex] = writeIndex;
@@ -68,10 +72,10 @@ namespace Samraksh.SPOT.Tests
                 DataAllocation data = new DataAllocation(dStore, size, dataType);
 
                 if (data.Write(writeBuffer, size) == DataStatus.Success)
-                    DisplayStats(true, "Write successful", "", 0);
+                    Debug.Print("Write successful");
                 else
                 {
-                    DisplayStats(true, "Write not successful", "", 0);
+                    DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
 
@@ -81,10 +85,10 @@ namespace Samraksh.SPOT.Tests
                 //UInt32 numData = size;
 
                 if (data.Read(readBuffer, offset, numData) == DataStatus.Success)
-                    DisplayStats(true, "Read successful", "", 0);
+                    Debug.Print("Read successful");
                 else
                 {
-                    DisplayStats(true, "Read not successful", "", 0);
+                    DisplayStats(false, "Read not successful", "", 0);
                     return;
                 }
 
@@ -97,7 +101,7 @@ namespace Samraksh.SPOT.Tests
                     }
                 }
 
-                DisplayStats(true, "Read Write successful", "", 0);
+                Debug.Print("Read Write successful");
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }

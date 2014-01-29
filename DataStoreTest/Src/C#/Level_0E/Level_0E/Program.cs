@@ -67,7 +67,7 @@ namespace Samraksh.SPOT.Tests
             if (DataStore.EraseAll() == DataStatus.Success)
                 Debug.Print("Datastore succesfully erased");
 
-            Type dataType = typeof(System.UInt32);
+            Type dataType = typeof(System.Byte);
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 data[dataIndex] = new DataAllocation(dStore, size, dataType);

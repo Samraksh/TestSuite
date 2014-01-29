@@ -15,6 +15,8 @@ namespace Samraksh.SPOT.Tests
         byte[] writeBuffer;
         byte[] readBuffer;
         Type dataType;
+        UInt16 size;
+        UInt16 experimentIndex;
 
         public DataStoreTest()
         {
@@ -22,8 +24,10 @@ namespace Samraksh.SPOT.Tests
             dStore.InitDataStore((int)StorageType.NOR);
 			
             rnd = new Random();
-            readBuffer = new byte[256];
-            writeBuffer = new byte[256];
+            size = 256;
+            experimentIndex = 10;
+            readBuffer = new byte[size];
+            writeBuffer = new byte[size];
             dataType = typeof(byte);
         }
 
@@ -53,13 +57,12 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0B()
         {
-            UInt32 size = 256;
             uint offset = 0;
 
             if (DataStore.EraseAll() == DataStatus.Success)
                 Debug.Print("Datastore succesfully erased");
 
-            for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
+            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 //UInt16 did = 256;
                 //DataID d = new DataID(256);

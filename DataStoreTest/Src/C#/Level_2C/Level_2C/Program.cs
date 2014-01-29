@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Samraksh.SPOT.NonVolatileMemory;
 
 /* Testing persistence. Write a UInt32 array (with sequential data - filled with numbers from 0 to 99) using an array of data objects. 
@@ -65,6 +66,9 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_2C");
 
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
+
             for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
             {
                 writeBuffer[writeIndex] = writeIndex;
@@ -78,10 +82,10 @@ namespace Samraksh.SPOT.Tests
                 data[dataIndex] = new DataAllocation(dStore, size, dataType);
 
                 if (data[dataIndex].Write(writeBuffer, offset, numData) == DataStatus.Success)
-                    DisplayStats(true, "Write successful", "", 0);
+                    Debug.Print("Write successful");
                 else
                 {
-                    DisplayStats(true, "Write not successful", "", 0);
+                    DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
             }
@@ -92,16 +96,16 @@ namespace Samraksh.SPOT.Tests
         public void TestPersistence(uint offset, UInt32 numData)
         {
             int[] dataIdArray = new int[dStore.CountOfDataIds()];
-            dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
+            dStore.ReadAllDataIds(dataIdArray, 0);     //Get all dataIDs into the dataIdArray.
             dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 if (dataRefArray[dataIndex].Read(readBuffer, offset, numData) == DataStatus.Success)
-                    DisplayStats(true, "Read successful", "", 0);
+                    Debug.Print("Read successful");
                 else
                 {
-                    DisplayStats(true, "Read not successful", "", 0);
+                    DisplayStats(false, "Read not successful", "", 0);
                     return;
                 }
 
@@ -114,7 +118,7 @@ namespace Samraksh.SPOT.Tests
                     }
                 }
 
-                DisplayStats(true, "Read Write successful", "", 0);
+                Debug.Print("Read Write successful");
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }

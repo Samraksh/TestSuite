@@ -71,12 +71,30 @@ namespace Samraksh.SPOT.Tests
             else
                 Debug.Print("DeleteAll succeeded");
 
-            Type dataType1 = typeof(System.UInt16);
+            Type dataType1 = typeof(System.Byte);
             DataAllocation d = new DataAllocation(dStore, size, dataType1);
 
             rnd.NextBytes(writeBuffer);
-            d.Write(writeBuffer, size);
-            d.Read(readBuffer, 0, size);
+            
+            if (DataStatus.Success == d.Write(writeBuffer, size))
+            {
+                Debug.Print("Data write successful");
+            }
+            else
+            {
+                DisplayStats(false, "Data write failed", "", 0);
+                return;
+            }
+            
+            if (DataStatus.Success == d.Read(readBuffer, 0, size))
+            {
+                Debug.Print("Data read successful");
+            }
+            else
+            {
+                DisplayStats(false, "Data read failed", "", 0);
+                return;
+            }
 
             for (UInt16 i = 0; i < writeBuffer.Length; i++)
             {

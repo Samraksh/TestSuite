@@ -65,13 +65,26 @@ namespace Samraksh.SPOT.Tests
                 {
                     uint size = (uint)rnd.Next(range) + 1;    // Because random number ranges from 0 to range. I want size to be from 1, so adding 1.
                     Debug.Print("Size is " + size);
-                    Type dataType = typeof(System.UInt16);
+                    Type dataType = typeof(System.Byte);
                     DataAllocation data = new DataAllocation(dStore, size, dataType);
 
                     rnd.NextBytes(writeBuffer);
 
-                    data.Write(writeBuffer, size);
-                    data.Read(readBuffer, 0, size);
+                    if (data.Write(writeBuffer, size) == DataStatus.Success)
+                        Debug.Print("Data write successful");
+                    else
+                    {
+                        DisplayStats(false, "Data write failure", "", 0);
+                        return;
+                    }
+
+                    if (data.Read(readBuffer, 0, size) == DataStatus.Success)
+                        Debug.Print("Data read successful");
+                    else
+                    {
+                        DisplayStats(false, "Data read failure", "", 0);
+                        return;
+                    }
 
                     for (UInt16 i = 0; i < size; i++)
                     {
@@ -85,7 +98,14 @@ namespace Samraksh.SPOT.Tests
                     Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
                     rnd.NextBytes(writeBuffer);
-                    data.Write(writeBuffer, size);
+                    
+                    if (data.Write(writeBuffer, size) == DataStatus.Success)
+                        Debug.Print("Data write successful");
+                    else
+                    {
+                        DisplayStats(false, "Data write failure", "", 0);
+                        return;
+                    }
                     Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
                     Debug.Print("Read Write successful");

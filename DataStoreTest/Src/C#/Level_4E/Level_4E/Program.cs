@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.SPOT;
+using System.Threading;
 using Samraksh.SPOT.NonVolatileMemory;
 
 /* Write lot of small data (UInt16) such that the count goes well beyond the count that can be stored in RAM. 
@@ -81,10 +82,10 @@ namespace Samraksh.SPOT.Tests
                 data = new DataAllocation(dStore, size, dataType);
 
                 if (data.Write(writeBuffer, 0, (uint)writeBuffer.Length) == DataStatus.Success)
-                    DisplayStats(true, "Write successful", "", 0);
+                    Debug.Print("Write successful");
                 else
                 {
-                    DisplayStats(true, "Write not successful", "", 0);
+                    DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
             }
@@ -114,10 +115,10 @@ namespace Samraksh.SPOT.Tests
                 while (dataIndex < dataAllocationIndex)
                 {
                     if (dataRefArray[dataIndex].Read(readBuffer, 0, (uint)readBuffer.Length) == DataStatus.Success)
-                        DisplayStats(true, "Read successful", "", 0);
+                        Debug.Print("Read successful");
                     else
                     {
-                        DisplayStats(true, "Read not successful", "", 0);
+                        DisplayStats(false, "Read not successful", "", 0);
                         return;
                     }
 
@@ -130,7 +131,7 @@ namespace Samraksh.SPOT.Tests
                         }
                     }
 
-                    DisplayStats(true, "Read Write successful", "", 0);
+                    Debug.Print("Read Write successful");
 
                     Array.Clear(readBuffer, 0, readBuffer.Length);
                     dataIndex++;

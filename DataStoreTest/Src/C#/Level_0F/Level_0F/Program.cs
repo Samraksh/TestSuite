@@ -98,7 +98,16 @@ namespace Samraksh.SPOT.Tests
                         return;
                     }
 
-                    data.Read(readBuffer, offset, size);
+                    if (data.Read(readBuffer, offset, size) == DataStatus.Success)
+                        Debug.Print("Data read successful");
+                    else
+                    {
+                        DisplayStats(false, "Data read failure", "", 0);
+                        resultRWData.Write(false);
+                        resultDeleteData.Write(false);
+                        resultFailure.Write(true);
+                        return;
+                    }
 
                     for (UInt16 i = 0; i < writeBuffer.Length; i++)
                     {
