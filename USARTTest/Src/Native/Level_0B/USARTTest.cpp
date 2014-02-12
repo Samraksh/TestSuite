@@ -74,8 +74,8 @@ BOOL USARTTest::Level_0B()
 	int aliveCounter = 0;
 	BOOL reset_flag = TRUE;
 	
-	USART_Write(COM1, "Alive\n" , 6);
-	USART_Flush(COM1);
+	//USART_Write(COM1, "Alive\n" , 6);
+	//USART_Flush(COM1);
 	
 	CPU_GPIO_SetPinState((GPIO_PIN) 22, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 22, FALSE);
@@ -94,14 +94,13 @@ BOOL USARTTest::Level_0B()
 		if(events & SYSTEM_EVENT_FLAG_COM_IN)
 		{
 			USART_Read(COM1, &c, 1);
-			readData[counter++] = c;
+			USART_Write(COM1, (const char*)&c, 1);
 		}
 		
-		if(c == 'z')
+		/*if(c == 'z')
 		{
 		
 			USART_Write(COM1, (const char*) &readData, counter);
-		
 #if 0
 			for(int i = 0; i < counter; i++)
 			{
@@ -111,7 +110,7 @@ BOOL USARTTest::Level_0B()
 #endif
 			counter = 0;	
 			reset_flag = FALSE;
-		}
+		}*/
 		
 	}
 	

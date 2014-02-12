@@ -45,10 +45,12 @@ BOOL USARTTest::Level_0A()
 		if(events & SYSTEM_EVENT_FLAG_COM_IN)
 		{
 			USART_Read(COM1, &c, 1);
-			readData[counter++] = c;
+			readData[0] = c;
+			USART_Write(COM1,(const char*) readData[0], 1);
+			USART_Flush(COM1);
 		}
 
-		if(c == 'z')
+		/*if(c == 'z')
 		{
 			for(int i = 0; i < counter; i++)
 			{
@@ -56,7 +58,7 @@ BOOL USARTTest::Level_0A()
 				USART_Flush(COM1);
 			}
 			counter = 0;	
-		}
+		}*/
 
 		
 	}

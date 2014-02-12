@@ -7,6 +7,10 @@ file enable local_data.txt
 # COM_receive <enable/disable> <file name>
 COM_receive file enable rx_data.txt
 sleep 1000
+# COM_send string <string>
+COM_send string z
+file string z
+sleep 2000
 # COM_send random <seed> <number> <lower_bound> <upper_bound>
 COM_send random 1 200 0 100
 file random 1 200 0 100
@@ -15,10 +19,6 @@ file random 1 200 0 100
 #COM_send file data.txt
 #file file data.txt
 #sleep 1000
-# COM_send string <string>
-COM_send string z
-file string z
-sleep 2000
 # COM_receive <enable/disable> <file name>
 COM_receive file enable rx_data.txt
 # file <enable/disable> <file name>

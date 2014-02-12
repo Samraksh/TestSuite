@@ -3,10 +3,10 @@
 #define useLogic false
 #define sampleTimeMs 4000
 #define sampleFrequency 4000000
-#define useCOMPort true
+#define useCOMPort false
 #define forceCOM ""
 #define COMParameters "115200,N,8,1"
-#define useTestScript true
+#define useTestScript false
 #define testScriptName "USARTTest.tst"
 #define testScriptTimeoutMs 9000
 #define useMatlabAnalysis false

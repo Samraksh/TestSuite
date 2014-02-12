@@ -4,13 +4,29 @@ using System.IO;
 using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
+using Samraksh.SPOT.Hardware;
 
 namespace COM
 {
     public class Program
     {
+		static void SerialPortHandler(object sender, SerialDataReceivedEventArgs e)
+        {            
+			byte[] m_recvBuffer = new byte[100];
+            SerialPort serialPort = (SerialPort)sender;
+			
+			int numBytes = serialPort.BytesToRead;
+            serialPort.Read(m_recvBuffer, 0, numBytes);
+			serialPort.Write(m_recvBuffer, 0, numBytes);
+			serialPort.Flush();
+
+        }
+
         public static void Main()
         {
+			//Debug.EnableGCMessages(false);
+			//Debug.Print("Starting Main\r\n");
+
 			SerialPort serialPort = new SerialPort("COM1");
 			serialPort.BaudRate = 115200;
             serialPort.Parity = Parity.None;
@@ -30,19 +46,11 @@ namespace COM
 			Debug.Print("resultParameter4 = p4 return\r\n");
 			Debug.Print("resultParameter5 = p5 return\r\n"); 
 			*/
-			while (true) {}	
+			while (true) {
+				//System.Threading.Thread.Sleep(100);
+			}	
 		}
 		
-		static void SerialPortHandler(object sender, SerialDataReceivedEventArgs e)
-        {            
-			byte[] m_recvBuffer = new byte[100];
-            SerialPort serialPort = (SerialPort)sender;
-			
-			int numBytes = serialPort.BytesToRead;
-            serialPort.Read(m_recvBuffer, 0, numBytes);
-			serialPort.Write(m_recvBuffer, 0, numBytes);
-			serialPort.Flush();
-
-        }
+		
    }
 }
