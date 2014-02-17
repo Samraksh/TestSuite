@@ -159,7 +159,8 @@ BOOL RadioLRTest::Level_0A()
 		return FALSE;
 	}
 
-	while(i++ < this->numberOfEvents)
+	//while(i++ < this->numberOfEvents)
+	while(true)
 	{
 			// Try sending a packet now
 		{
@@ -170,7 +171,7 @@ BOOL RadioLRTest::Level_0A()
 			msg.data[3] = 3;
 			msg.data[4] = 4;
 				// Try sending a packet after turning it on
-			SendResult = SendPacketSync(MAC_BROADCAST_ADDRESS, MFM_DATA, (void *) &msg.data, sizeof(Payload_t));
+			//SendResult = SendPacketSync(MAC_BROADCAST_ADDRESS, MFM_DATA, (void *) &msg.data, sizeof(Payload_t));
 
 			while(RadioAckPending == TRUE);
 
@@ -215,7 +216,8 @@ BOOL RadioLRTest::Level_0B()
 		return FALSE;
 	}
 
-	while(i++ < this->numberOfEvents)
+	//while(i++ < this->numberOfEvents)
+	while(true)
 	{
 
 		// Try sending a packet now

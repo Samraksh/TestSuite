@@ -41,7 +41,6 @@ void mySendAckHandler(void *msg, UINT16 size, NetOpStatus state)
 }
 
 
-
 BOOL RadioLRTest::Initialize(int seedValue, int numberOfEvents)
 {
 	hal_printf("Check Point 1.a\n");

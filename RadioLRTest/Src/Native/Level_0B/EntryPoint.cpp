@@ -36,7 +36,7 @@ void ApplicationEntryPoint()
     		break;
     	}
 
-    	testObject.Execute(LEVEL_0B);
+    	testObject.Execute(LEVEL_0A);
 
     } while(FALSE); // run only once!
 

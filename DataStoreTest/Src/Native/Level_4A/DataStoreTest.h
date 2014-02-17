@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\tinyhal.h>
-#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh\DataStore\Datastore.h>
-#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh\HAL_util.h>
-#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh\HALTimer.h>
+#include <..\DeviceCode\Include\tinyhal.h>
+#include <..\DeviceCode\Include\Samraksh\DataStore\Datastore.h>
+#include <..\DeviceCode\Include\Samraksh\HAL_util.h>
+#include <..\DeviceCode\Include\Samraksh\HALTimer.h>
 #include <cstdlib>
 #include "testMath.h"
 

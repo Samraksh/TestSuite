@@ -7,8 +7,9 @@
 #define __regtest
 
 #include <tinyhal.h>
+#include "RadioLRTest.h"
 
-
+extern RadioLRTest testObject;
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
@@ -29,7 +30,14 @@ void ApplicationEntryPoint()
 
     do
     {
-    
+    	if(!testObject.Initialize(0, 100))
+    	{
+    		testObject.DisplayStats(FALSE,"Radio Initialization failed", NULL, NULL);
+    		break;
+    	}
+
+    	testObject.Execute(LEVEL_0A);
+
     } while(FALSE); // run only once!
 
     while(TRUE);

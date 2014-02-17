@@ -32,7 +32,7 @@ namespace Samraksh.SPOT.Tests
         {
             dStore = DataStore.Instance;
             dStore.InitDataStore((int)StorageType.NOR);
-
+            
             experimentIndex = 500;
             size = 256;
             rand = new Random();

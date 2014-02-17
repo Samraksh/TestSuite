@@ -11,6 +11,21 @@
 // PB0 - 15 --- 16 to 31
 // PC0 - 15 --- 32 to 37
 //J14_PIN4 is PB14 --- which is 30
+/*
+ 	public const Cpu.Pin GPIO_J11_PIN10 = 23;
+	public const Cpu.Pin GPIO_J11_PIN3 = 0;
+	public const Cpu.Pin GPIO_J11_PIN4 = 1;
+	public const Cpu.Pin GPIO_J11_PIN5 = 2;
+	public const Cpu.Pin GPIO_J11_PIN6 = 3;
+	public const Cpu.Pin GPIO_J11_PIN7 = 4;
+	public const Cpu.Pin GPIO_J11_PIN8 = 8;
+	public const Cpu.Pin GPIO_J11_PIN9 = 22;
+	public const Cpu.Pin GPIO_J12_PIN1 = 24;
+	public const Cpu.Pin GPIO_J12_PIN2 = 25;
+	public const Cpu.Pin GPIO_J12_PIN3 = 29;
+	public const Cpu.Pin GPIO_J12_PIN4 = 30;
+	public const Cpu.Pin GPIO_J12_PIN5 = 31;
+ */
 #define J12_PIN4 30
 
 extern Data_Store g_dataStoreObject;
