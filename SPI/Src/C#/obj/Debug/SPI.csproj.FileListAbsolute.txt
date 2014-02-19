@@ -25,3 +25,4 @@ D:\AnanthAtSamraksh\TestSuite\SPI\Src\C#\obj\Debug\le\SPI.pe
 D:\AnanthAtSamraksh\TestSuite\SPI\Src\C#\obj\Debug\le\SPI.pdbx
 D:\AnanthAtSamraksh\TestSuite\SPI\Src\C#\obj\Debug\SPI.exe
 D:\AnanthAtSamraksh\TestSuite\SPI\Src\C#\obj\Debug\SPI.pdb
+D:\AnanthAtSamraksh\TestSuite\SPI\Src\C#\obj\Debug\SPI.csprojResolveAssemblyReference.cache
