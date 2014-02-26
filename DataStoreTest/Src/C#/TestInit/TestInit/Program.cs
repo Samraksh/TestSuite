@@ -14,6 +14,7 @@ namespace Samraksh.SPOT.Tests
         Random rand;
         DataStore dStore;
         DataAllocation data;
+        DataAllocation[] dataRefArray;
         byte[] writeBuffer;
         byte[] readBuffer;
         Type dataType;
@@ -23,11 +24,11 @@ namespace Samraksh.SPOT.Tests
         
         public DataStoreTest()
         {
-            dStore = DataStore.Instance((int)StorageType.NOR);
+            dStore = DataStore.Instance(StorageType.NOR);
             //dStore.InitDataStore((int)StorageType.NOR);
 
-            experimentIndex = 5000;
-            //size = 44;
+            experimentIndex = 100;
+            size = 2;
             rand = new Random();
             //data = new Data[experimentIndex];
             readBuffer = new byte[size];
@@ -63,8 +64,8 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_4A");
 
-            //if (DataStore.EraseAll() == DataStatus.Success)
-              //  Debug.Print("Datastore succesfully erased");
+            if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");
             
             for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
             {
@@ -94,6 +95,17 @@ namespace Samraksh.SPOT.Tests
                     DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
+            }
+
+            UInt16 offset = 0;
+            UInt32 totalRecords = dStore.CountOfDataIds();
+            UInt32 dataAllocationIndex = (UInt32)(totalRecords > experimentIndex ? (UInt32)experimentIndex : totalRecords);
+            dataRefArray = new DataAllocation[dataAllocationIndex + 5];
+            dStore.ReadAllDataReferences(dataRefArray, offset);      //Get the data references into dataRefArray.
+            foreach(DataAllocation dataRef in dataRefArray)
+            {
+                if (dataRef == null)
+                    Debug.Print("Null dataRef");
             }
         }
 

@@ -42,7 +42,7 @@ namespace KraitSPITesting
         private static OutputPort SpiCS = new OutputPort((Cpu.Pin)55, true);    
                           //Pin is called MSM_GPIO2_DEBUG. On the Adapt dev board, it is called M_GPIO2. 
                           //This also maps to GPIO_55, but the pin# is 43 (from Dropbox\Adapt\SmartFile\EVT2\Adapt_Core_Module_Documentation\8XXA01_V1.02_DL(120907).pdf -- page 14)
-        private static OutputPort SpiMISO = new OutputPort((Cpu.Pin)53, false);  
+        private static OutputPort SpiMISO = new OutputPort((Cpu.Pin)53, true);  
                           //Pin is called MSM_GPIO3_DEBUG. On the Adapt dev board, it is called M_GPIO3. 
                           //This also maps to GPIO_53, but the pin# is 45 (from Dropbox\Adapt\SmartFile\EVT2\Adapt_Core_Module_Documentation\8XXA01_V1.02_DL(120907).pdf -- page 14)
         private static OutputPort SpiMOSI = new OutputPort((Cpu.Pin)52, true);  

@@ -4,6 +4,9 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 //using Samraksh.SPOT.Hardware;
 
+/* This is a simple working version of a test program for the SPI protocol for the eMote.
+ * This simply sets up the pins and writes data */
+
 namespace Samraksh.SPOT.Testing
 {
     public class SPITest

@@ -107,7 +107,7 @@ namespace Samraksh.SPOT.Tests
             UInt32 totalRecords = dStore.CountOfDataIds();
             UInt32 dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
 
-            dataRefArray = new DataAllocation[dataAllocationIndex];
+            dataRefArray = new DataAllocation[dataAllocationIndex + 5];
 
             //int[] dataIdArray = new int[256];
             int dataIndex = 0;

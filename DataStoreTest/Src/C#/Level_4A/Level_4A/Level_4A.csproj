@@ -28,11 +28,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <!-- Uncommenting below line and commenting the line after that, will allow the creation of the dat file from command line. Just do a msbuild -->
+  <!--<Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />-->
   <Import Project="$(SPOCLIENT)\tools\Targets\Microsoft.SPOT.CSharp.Targets" />
   <PropertyGroup>
-    <MMP_PE_NoBitmapCompression>true</MMP_PE_NoBitmapCompression>
+    <!--<MMP_PE_NoBitmapCompression>true</MMP_PE_NoBitmapCompression>-->
     <MMP_DAT_SKIP>false</MMP_DAT_SKIP>
     <MMP_DAT_CreateDatabaseFile>bin\Release\Level_4A.dat</MMP_DAT_CreateDatabaseFile>
+    <MMP_DAT_CreateDatabaseFileOtherEnd>$(BUILD_TREE_DAT_OTHEREND)\Level_4A.dat</MMP_DAT_CreateDatabaseFileOtherEnd>
+    <MMP_XML_SKIP>false</MMP_XML_SKIP>
+    <MMP_XML_GenerateDependency>$(BUILD_TREE_XML)\DependencyGraph_Microsoft.xml</MMP_XML_GenerateDependency>
   </PropertyGroup>
   
   <ItemGroup>
