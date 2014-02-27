@@ -28,7 +28,7 @@ namespace Samraksh.SPOT.Tests
         public DataStoreTest()
         {
             dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore.InitDataStore(StorageType.NOR);
 
             experimentIndex = 500;
             size = 256;
@@ -83,7 +83,7 @@ namespace Samraksh.SPOT.Tests
             {
                 data = new DataAllocation(dStore, size, dataType);
 
-                if (data.Write(writeBuffer, 0, (uint)writeBuffer.Length) == DataStatus.Success)
+                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStatus.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -117,7 +117,7 @@ namespace Samraksh.SPOT.Tests
 
                 while (dataIndex < dataAllocationIndex)
                 {
-                    if (dataRefArray[dataIndex].Read(readBuffer, 0, (uint)readBuffer.Length) == DataStatus.Success)
+                    if (dataRefArray[dataIndex].Read(readBuffer, 0, readBuffer.Length) == DataStatus.Success)
                         Debug.Print("Read successful");
                     else
                     {

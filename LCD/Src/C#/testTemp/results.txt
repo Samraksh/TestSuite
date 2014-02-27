@@ -1,0 +1,7 @@
+result = FAIL
+accuracy = 0
+resultParameter1 = 
+resultParameter2 = 
+resultParameter3 = 
+resultParameter4 = 
+resultParameter5 = 

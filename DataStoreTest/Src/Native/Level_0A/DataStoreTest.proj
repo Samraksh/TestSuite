@@ -139,8 +139,8 @@
     <DriverLibs Include="STM32F10x_adtim.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\HALTimer\dotNetMF.proj" />
-    <DriverLibs Include="HALTimer.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\VirtualTimer\dotNetMF.proj" />
+    <DriverLibs Include="VirtualTimer.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\usart\dotNetMF.proj" />

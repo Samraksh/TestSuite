@@ -39,3 +39,6 @@ D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialRea
 D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\WinUsbInvoke.pdb
 D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\Microsoft.SPOT.Tasks.pdb
 D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.csprojResolveAssemblyReference.cache
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\bin\Debug\SerialDump.exe.config
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.exe
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\SerialReadWrite\SerialReadWrite\obj\Debug\SerialDump.pdb

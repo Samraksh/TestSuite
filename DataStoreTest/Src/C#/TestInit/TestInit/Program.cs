@@ -13,21 +13,21 @@ namespace Samraksh.SPOT.Tests
     {
         Random rand;
         DataStore dStore;
-        DataAllocation data;
-        DataAllocation[] dataRefArray;
+        DataReference data;
+        DataReference[] dataRefArray;
         byte[] writeBuffer;
         byte[] readBuffer;
         Type dataType;
-        UInt32 size;
+        int size;
         int experimentIndex;
 
         
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             //dStore.InitDataStore((int)StorageType.NOR);
 
-            experimentIndex = 100;
+            experimentIndex = 8000;
             size = 2;
             rand = new Random();
             //data = new Data[experimentIndex];
@@ -64,8 +64,8 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_4A");
 
-            if (DataStore.EraseAll() == DataStatus.Success)
-                Debug.Print("Datastore succesfully erased");
+            /*if (DataStore.EraseAll() == DataStatus.Success)
+                Debug.Print("Datastore succesfully erased");*/
             
             for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
             {
@@ -77,10 +77,10 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                size = (uint)(rand.Next(828) + 2);
-                data = new DataAllocation(dStore, size, dataType);
+                size = rand.Next(828) + 2;
+                data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
 
-                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStatus.Success)
+                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -88,7 +88,7 @@ namespace Samraksh.SPOT.Tests
                     return;
                 }
 
-                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStatus.Success)
+                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -97,16 +97,16 @@ namespace Samraksh.SPOT.Tests
                 }
             }
 
-            UInt16 offset = 0;
-            UInt32 totalRecords = dStore.CountOfDataIds();
-            UInt32 dataAllocationIndex = (UInt32)(totalRecords > experimentIndex ? (UInt32)experimentIndex : totalRecords);
-            dataRefArray = new DataAllocation[dataAllocationIndex + 5];
+            /*UInt16 offset = 0;
+            int totalRecords = dStore.CountOfDataIds();
+            int dataAllocationIndex = totalRecords > experimentIndex ? experimentIndex : totalRecords;
+            dataRefArray = new DataReference[dataAllocationIndex + 5];
             dStore.ReadAllDataReferences(dataRefArray, offset);      //Get the data references into dataRefArray.
-            foreach(DataAllocation dataRef in dataRefArray)
+            foreach (DataReference dataRef in dataRefArray)
             {
                 if (dataRef == null)
                     Debug.Print("Null dataRef");
-            }
+            }*/
         }
 
 

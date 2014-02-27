@@ -13,3 +13,15 @@ D:\Main\Work\Tests\TestSys\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialT
 D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.exe.config
 D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.exe
 D:\Main\Work\NewTests\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.pdb
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.exe.config
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.exe
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.pdb
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.exe
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\SerialTest.pdb
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Debugger.dll
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\WinUsbInvoke.dll
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Tasks.dll
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Debugger.pdb
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\WinUsbInvoke.pdb
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\bin\Debug\Microsoft.SPOT.Tasks.pdb
+D:\AnanthAtSamraksh\TestSuite\USARTTest\Src\HostSide\HostAsSlave\SerialTest\SerialTest\obj\Debug\SerialTest.csprojResolveAssemblyReference.cache

@@ -237,7 +237,8 @@ namespace USARTTest
             Program serialTestPrg = new Program();
 
 
-            serialTestPrg.SlaveMode();
+            //serialTestPrg.SlaveMode();
+            serialTestPrg.MasterMode();
             
             
             

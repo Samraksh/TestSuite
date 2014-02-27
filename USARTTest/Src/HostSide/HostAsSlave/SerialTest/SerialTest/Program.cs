@@ -32,7 +32,7 @@ namespace SerialTest
         public SerialTester()
         {
             _DBG.PortDefinition pd = null;
-            string port = "COM1";
+            string port = "COM165";
             uint baudrate = 115200;
 
             pd = _DBG.PortDefinition.CreateInstanceForSerial(port, port, baudrate);
@@ -52,8 +52,8 @@ namespace SerialTest
                 throw new UnableToOpenPortException();
             }
 
-            inpFile = new StreamWriter("Input.txt", true);
-            OutFile = new StreamWriter("Output.txt", true);
+            //inpFile = new StreamWriter("Input.txt", true);
+            //OutFile = new StreamWriter("Output.txt", true);
 
         }
 
@@ -238,7 +238,8 @@ namespace SerialTest
         {
             SerialTester serialTesterObject = new SerialTester();
 
-            serialTesterObject.Run_MasterMode();
+            //serialTesterObject.Run_MasterMode();
+            serialTesterObject.Run_SlaveMode();
         }
     }
 }

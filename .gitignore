@@ -5,3 +5,6 @@
 *.s19
 *.cache
 !*.gitkeep
+*.pdb
+*.pdbx
+*.pe
