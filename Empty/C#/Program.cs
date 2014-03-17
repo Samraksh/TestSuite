@@ -11,11 +11,9 @@ namespace TestSuite
     {
         public static void Main()
         {
-			EmoteLCD lcd = new EmoteLCD();
-			lcd.Initialize();
             while (true)
             {
-                
+             	System.Threading.Thread.Sleep(1000); 
             }
         }
     }
