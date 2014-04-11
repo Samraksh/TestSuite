@@ -43,26 +43,18 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-  
-  <ItemGroup>	  
-	<Reference Include="Microsoft.SPOT.Native">
-		<HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Native.dll</HintPath>
+  <ItemGroup>
+    <Reference Include="Microsoft.SPOT.Native">
+      <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Native.dll</HintPath>
     </Reference>
-	 <Reference Include="Microsoft.SPOT.Hardware">
+    <Reference Include="Microsoft.SPOT.Hardware">
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.dll</HintPath>
     </Reference>
-	<Reference Include="Samraksh.SPOT.Hardware">
-		 <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Dlls\Samraksh_SPOT_Hardware\Samraksh_SPOT_Hardware.dll</HintPath>
+    <Reference Include="Microsoft.SPOT.Hardware.SerialPort">
+      <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.SerialPort.dll</HintPath>
     </Reference>
-    <Reference Include="Samraksh_SPOT_Net">
-	  <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Dlls\Samraksh_SPOT_Net\Samraksh_SPOT_Net.dll</HintPath>
-    </Reference>
-	<Reference Include="Microsoft.SPOT.Hardware.SerialPort">
-		  <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.SerialPort.dll</HintPath>
-	  </Reference>
- <Reference Include="Samraksh_SPOT">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Dlls\Samraksh_SPOT\Samraksh_SPOT.dll</HintPath>
+    <Reference Include="Samraksh_eMote">
+      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote\Samraksh_eMote.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

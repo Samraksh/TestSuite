@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
 /* Test write and read APIs with a byte array (with random data) */
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
@@ -20,15 +20,13 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
-			
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            
             rnd = new Random();
             size = 256;
             experimentIndex = 10;
             readBuffer = new byte[size];
             writeBuffer = new byte[size];
-            dataType = typeof(byte);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -57,29 +55,29 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0B()
         {
-            uint offset = 0;
+            int offset = 0;
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 //UInt16 did = 256;
                 //DataID d = new DataID(256);
-                
-                DataAllocation data = new DataAllocation(dStore, size, dataType);
+
+                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
                 //Data data1 = new Data(dStore, (DATAID)256);
 
                 //writeBuffer.Select(c => (object)c).ToArray();
                 //object[] obj = byte.Cast<object>().ToArray();
                 rnd.NextBytes(writeBuffer);
 
-                if(data.Write(writeBuffer, size) == DataStatus.Success)
+                if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                     DisplayStats(false, "Write not successful", "", 0);
 
-                if (data.Read(readBuffer, offset, size) == DataStatus.Success)
+                if (data.Read(readBuffer, offset, size) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read successful");
                 else
                     DisplayStats(false, "Read not successful", "", 0);
@@ -97,8 +95,8 @@ namespace Samraksh.SPOT.Tests
 
                 Debug.Print("Read Write successful");
             }
-			
-			if (DataStore.EraseAll() == DataStatus.Success)
+
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 

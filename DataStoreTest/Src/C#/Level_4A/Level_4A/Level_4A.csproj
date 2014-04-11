@@ -55,18 +55,14 @@
     <Reference Include="Microsoft.SPOT.Hardware">
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.dll</HintPath>
     </Reference>
-    <Reference Include="Samraksh.SPOT.Hardware">
-      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Dlls\Samraksh_SPOT_Hardware\Samraksh_SPOT_Hardware.dll</HintPath>
-    </Reference>
-    <Reference Include="Samraksh_SPOT, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Dlls\Samraksh_SPOT\Samraksh_SPOT.dll</HintPath>
-    </Reference>
-    <Reference Include="Samraksh_SPOT_Net">
-      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Dlls\Samraksh_SPOT_Net\Samraksh_SPOT_Net.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.SPOT.Hardware.SerialPort">
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.SerialPort.dll</HintPath>
+    </Reference>
+    <Reference Include="Samraksh_eMote">
+      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote\Samraksh_eMote.dll</HintPath>
+    </Reference>
+    <Reference Include="Samraksh_eMote_DotNow">
+      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

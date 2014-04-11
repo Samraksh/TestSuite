@@ -1,13 +1,13 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
 /* Test overwrites. Write a UInt32 array (with sequential data - filled with numbers from 0 to 99) from offset zero till half of allocation.
  * Then overwrite from a random offset (before half of allocation). Make sure that the overwrite is handled properly.
  * Read from that same random offset and compare against writeBuffer */
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
@@ -17,23 +17,20 @@ namespace Samraksh.SPOT.Tests
         UInt32[] writeBuffer;
         UInt32[] readBuffer;
 
-        Type dataType;
-        UInt32 size;
-        uint offset = 0;
-        UInt32 numData = 0;
+        int size;
+        int offset = 0;
+        int numData = 0;
         int experimentIndex;
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             
             experimentIndex = 100;
             size = 256;
             rand = new Random();
             readBuffer = new UInt32[size];
             writeBuffer = new UInt32[size];
-            dataType = typeof(UInt32);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -63,7 +60,7 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_3C");
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
             for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
@@ -73,9 +70,9 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                DataAllocation data = new DataAllocation(dStore, size, dataType);
+                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.UINT32);
 
-                if (data.Write(writeBuffer, 0, size / 2) == DataStatus.Success)
+                if (data.Write(writeBuffer, 0, size / 2) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -83,10 +80,10 @@ namespace Samraksh.SPOT.Tests
                     return;
                 }
 
-                offset = (uint)(rand.Next((int)size / 2));
-                numData = (uint)(rand.Next((int)(size - offset)));
+                offset = rand.Next((int)size / 2);
+                numData = rand.Next((int)(size - offset));
 
-                if (data.Write(writeBuffer, offset, numData) == DataStatus.Success)
+                if (data.Write(writeBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -96,7 +93,7 @@ namespace Samraksh.SPOT.Tests
 
                 /*######################################################*/
                 /* Read before the overwrite region and verify */
-                if (data.Read(readBuffer, 0, offset - 1) == DataStatus.Success)
+                if (data.Read(readBuffer, 0, offset - 1) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read before overwrite successful");
                 else
                 {
@@ -116,7 +113,7 @@ namespace Samraksh.SPOT.Tests
 
                 /*######################################################*/
                 /* Read the overwrite region and verify */
-                if (data.Read(readBuffer, offset, numData) == DataStatus.Success)
+                if (data.Read(readBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read overwrite region successful");
                 else
                 {
@@ -138,7 +135,7 @@ namespace Samraksh.SPOT.Tests
                 /* Read after the overwrite region and verify */
                 if ((offset + numData + 1) <= (size / 2))
                 {
-                    if (data.Read(readBuffer, (offset + numData + 1), (size / 2 - (offset + numData + 1))) == DataStatus.Success)
+                    if (data.Read(readBuffer, (offset + numData + 1), (size / 2 - (offset + numData + 1))) == DATASTORE_RETURN_STATUS.Success)
                         Debug.Print("Read after overwrite successful");
                     else
                     {
@@ -163,7 +160,7 @@ namespace Samraksh.SPOT.Tests
 
             }
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", null, 0);
 
         }

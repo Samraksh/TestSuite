@@ -1,32 +1,29 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
 
 /* Test to verify that variables that return flash size, used and free bytes work */
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
         DataStore dStore;
         Random rnd;
 
-        const uint size = 256;
+        const int size = 256;
         static byte[] writeBuffer;
         static byte[] readBuffer = new byte[size];
 
-        Type dataType;
-
+        
         public DataStoreTest()
         {
             //dStore = new DataStore();     ////This gives an error as the constructor is private
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
-
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            
             writeBuffer = new byte[size];
-            dataType = typeof(byte);
             rnd = new Random();
         }
 
@@ -56,7 +53,7 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0K()
         {
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
             Debug.Print(dStore.MaxAllocationSize.ToString());
@@ -67,10 +64,10 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
             {
-                DataAllocation data = new DataAllocation(dStore, size, dataType);
+                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
                 rnd.NextBytes(writeBuffer);
 
-                if (data.Write(writeBuffer, size) == DataStatus.Success)
+                if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -88,7 +85,7 @@ namespace Samraksh.SPOT.Tests
             Debug.Print(dStore.UsedBytes.ToString());
             Debug.Print(dStore.FreeBytes.ToString());
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 

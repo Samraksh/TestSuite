@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
@@ -15,8 +15,7 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -48,7 +47,7 @@ namespace Samraksh.SPOT.Tests
             /*if (DataStore.DeleteAllData() == DataStatus.Success)
                 Debug.Print("Datastore succesfully deleted");*/
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 

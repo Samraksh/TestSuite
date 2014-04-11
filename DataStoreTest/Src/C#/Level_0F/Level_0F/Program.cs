@@ -2,10 +2,10 @@
 using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
-using Samraksh.SPOT.Hardware;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.DotNow;
+using Samraksh.eMote.NonVolatileMemory;
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
@@ -13,32 +13,29 @@ namespace Samraksh.SPOT.Tests
         DataStore dStore;
         Random rnd;
         //const uint size;
-        uint size;
-        uint offset;
+        int size;
+        int offset;
 
         //static byte[] writeBuffer = new byte[size];
         //static byte[] readBuffer = new byte[size];
 
         byte[] writeBuffer;
         byte[] readBuffer;
-        Type dataType;
-
-        public static OutputPort resultFailure = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J11_PIN3, false);
-        public static OutputPort resultRWData = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN4, false);
-        public static OutputPort resultDeleteData = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN5, false);
+        
+        public static OutputPort resultFailure = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J11_PIN3, false);
+        public static OutputPort resultRWData = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN4, false);
+        public static OutputPort resultDeleteData = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN5, false);
 
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             
             rnd = new Random();
             offset = 0;
             size = 8192;
             writeBuffer = new byte[size];
             readBuffer = new byte[size];
-            dataType = typeof(byte);
             //readBuffer = new byte[size];
             //writeBuffer = new byte[size];
 
@@ -75,19 +72,19 @@ namespace Samraksh.SPOT.Tests
              * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
              * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
 
-            DataAllocation data;
+            DataReference data;
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
             
             for (UInt32 overallIndex = 0; overallIndex < 10000; ++overallIndex)
             {
                 for (UInt32 dataIndex = 0; dataIndex < 1; ++dataIndex)
                 {
-                    data = new DataAllocation(dStore, size, dataType);
+                    data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
                     rnd.NextBytes(writeBuffer);
 
-                    if (data.Write(writeBuffer, size) == DataStatus.Success)
+                    if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
                         Debug.Print("Data write successful");
                     else
                     {
@@ -98,7 +95,7 @@ namespace Samraksh.SPOT.Tests
                         return;
                     }
 
-                    if (data.Read(readBuffer, offset, size) == DataStatus.Success)
+                    if (data.Read(readBuffer, offset, size) == DATASTORE_RETURN_STATUS.Success)
                         Debug.Print("Data read successful");
                     else
                     {
@@ -125,7 +122,7 @@ namespace Samraksh.SPOT.Tests
                     Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
                     rnd.NextBytes(writeBuffer);
-                    if (data.Write(writeBuffer, size) == DataStatus.Success)
+                    if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
                         Debug.Print("Data re-write successful");
                     else
                     {
@@ -149,7 +146,7 @@ namespace Samraksh.SPOT.Tests
                     {
                         resultDeleteData.Write(true);
                         //System.Threading.Thread.Sleep(750);
-                        if (data.Delete() != DataStatus.Success)
+                        if (data.Delete() != DATASTORE_RETURN_STATUS.Success)
                         {
                             DisplayStats(false, "Delete failed", "", 0);
                             return;
@@ -164,8 +161,8 @@ namespace Samraksh.SPOT.Tests
                     //}
                 }
             }
-			
-			if (DataStore.EraseAll() == DataStatus.Success)
+
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 

@@ -1,35 +1,32 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
 /* Write lot of small data (byte) such that the count goes well beyond the count that can be stored in RAM. 
  * Then get back random references to the data and verify that data read is same as data written. */
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
         Random rand;
         DataStore dStore;
-        DataAllocation data;
-        DataAllocation[] dataRefArray;
+        DataReference data;
+        DataReference[] dataRefArray;
 
         byte[] writeBuffer;
         byte[] readBuffer;
-        Type dataType;
         
-        UInt32 size;
-        UInt16 offset = 0;
+        int size;
+        int offset = 0;
         int experimentIndex;
-
-        UInt16 offsetIndex = 0;
+        int offsetIndex = 0;
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore(StorageType.NOR);
-
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            
             experimentIndex = 500;
             size = 256;
             rand = new Random();
@@ -39,7 +36,6 @@ namespace Samraksh.SPOT.Tests
             
             readBuffer = new byte[size];
             writeBuffer = new byte[size];
-            dataType = typeof(byte);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -69,7 +65,7 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_4D");
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
             for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
@@ -79,9 +75,9 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                data = new DataAllocation(dStore, size, dataType);
+                data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
 
-                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStatus.Success)
+                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -97,10 +93,10 @@ namespace Samraksh.SPOT.Tests
         {
             int dataIndex = 0;
             offset = 0;
-            UInt32 totalRecords = dStore.CountOfDataIds();
-            UInt32 dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
+            int totalRecords = experimentIndex;
+            int dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
 
-            dataRefArray = new DataAllocation[dataAllocationIndex];
+            dataRefArray = new DataReference[dataAllocationIndex];
 
             // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
             // even offsets, but might want to read from odd offsets. 
@@ -114,7 +110,7 @@ namespace Samraksh.SPOT.Tests
 
                 while (dataIndex < dataAllocationIndex)
                 {
-                    if (dataRefArray[dataIndex].Read(readBuffer, 0, readBuffer.Length) == DataStatus.Success)
+                    if (dataRefArray[dataIndex].Read(readBuffer, 0, readBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
                         Debug.Print("Read successful");
                     else
                     {
@@ -140,14 +136,14 @@ namespace Samraksh.SPOT.Tests
                 Array.Clear(dataRefArray, 0, dataRefArray.Length);
                 offsetIndex = (UInt16)(rand.Next((int)size/2));
                 offsetIndex = (UInt16)(offsetIndex < totalRecords ? offsetIndex : totalRecords);
-                dataRefArray = new DataAllocation[offsetIndex];
+                dataRefArray = new DataReference[offsetIndex];
                 offset += offsetIndex;
                 
                 dataAllocationIndex = totalRecords - offset;
                 dataAllocationIndex = dataAllocationIndex > offsetIndex ? offsetIndex : dataAllocationIndex;
             }
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", null, 0);
 
         }

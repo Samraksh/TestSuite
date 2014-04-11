@@ -2,35 +2,35 @@
 using Microsoft.SPOT;
 using System.Threading;
 using Microsoft.SPOT.Hardware;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
 /* Write lot of small data (byte) such that the count goes well beyond the count that can be stored in RAM. 
  * Then get back references to the data and verify that data read is same as data written. */
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
         Random rand;
         DataStore dStore;
-        DataAllocation data;
-        DataAllocation[] dataRefArray;
+        DataReference data;
+        DataReference[] dataRefArray;
         byte[] writeBuffer;
         byte[] readBuffer;
-        Type dataType;
-        UInt32 size;
-        UInt16 offset = 0;
+        
+        int size;
+        int offset = 0;
         int experimentIndex;
 
         UInt16 offsetIndex = 0;
 
-        public static OutputPort erasePort = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN2, false);
-        public static OutputPort writePort = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN4, false);
-        public static OutputPort readPort = new OutputPort(Samraksh.SPOT.Hardware.EmoteDotNow.Pins.GPIO_J12_PIN5, false);
+        public static OutputPort erasePort = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN2, false);
+        public static OutputPort writePort = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN4, false);
+        public static OutputPort readPort = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN5, false);
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             //dStore.InitDataStore(StorageType.NOR);
             
             experimentIndex = 500;
@@ -40,7 +40,6 @@ namespace Samraksh.SPOT.Tests
             offsetIndex = 128; 
             readBuffer = new byte[size];
             writeBuffer = new byte[size];
-            dataType = typeof(byte);
         }
 
         public static void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -71,7 +70,7 @@ namespace Samraksh.SPOT.Tests
             Debug.Print("Starting test Level_4A");
 
             erasePort.Write(true);
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
             erasePort.Write(false);
 
@@ -85,10 +84,10 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                data = new DataAllocation(dStore, size, dataType);
+                data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
 
                 writePort.Write(true);
-                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStatus.Success)
+                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -104,10 +103,11 @@ namespace Samraksh.SPOT.Tests
         public void TestPersistence()
         {
             offset = 0;
-            UInt32 totalRecords = dStore.CountOfDataIds();
-            UInt32 dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
+            //int totalRecords = dStore.CountOfDataIds();
+            int totalRecords = experimentIndex;
+            int dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
 
-            dataRefArray = new DataAllocation[dataAllocationIndex + 5];
+            dataRefArray = new DataReference[dataAllocationIndex + 5];
 
             //int[] dataIdArray = new int[256];
             int dataIndex = 0;
@@ -125,7 +125,7 @@ namespace Samraksh.SPOT.Tests
                 while (dataIndex < dataAllocationIndex)
                 {
                     readPort.Write(true);
-                    if (dataRefArray[dataIndex].Read(readBuffer, 0, readBuffer.Length) == DataStatus.Success)
+                    if (dataRefArray[dataIndex].Read(readBuffer, 0, readBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
                         Debug.Print("Read successful");
                     else
                     {
@@ -157,7 +157,7 @@ namespace Samraksh.SPOT.Tests
                 dataAllocationIndex = dataAllocationIndex > offsetIndex ? offsetIndex : dataAllocationIndex;
             }
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", null, 0);
 
         }

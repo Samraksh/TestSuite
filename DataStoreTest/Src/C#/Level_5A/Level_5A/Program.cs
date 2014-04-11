@@ -2,7 +2,7 @@
 using Microsoft.SPOT;
 using System.Threading;
 using Microsoft.SPOT.Hardware;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
 /* This test is to verify all exception conditions during write 
  * 1. Array length is zero. Exception expected                                                  -- DataStoreException("data array cannot be of zero length");  
@@ -40,7 +40,7 @@ namespace Level_5A
         DataReference[] dataRefArray;
         byte[] writeBuffer;
         byte[] readBuffer;
-        Type dataType;
+        
         int size;
         int experimentIndex;
         int offset = 0, arrayLength = 0;
@@ -48,7 +48,7 @@ namespace Level_5A
         public DataStoreExceptionTest()
         {
             Debug.Print("Starting test Level_5A");
-            dStore = DataStore.Instance(StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             
             experimentIndex = 10;
             size = 2;
@@ -56,9 +56,8 @@ namespace Level_5A
             
             readBuffer = new byte[size];
             writeBuffer = new byte[size];
-            dataType = typeof(byte);
-
-            if (DataStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
+            
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
             else
             {
@@ -100,7 +99,7 @@ namespace Level_5A
                 try
                 {
                     size = rand.Next(828) + 2;
-                    data = new DataReference(dStore, size, dataType);
+                    data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
                     DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, 0, writeBuffer.Length);
                     if (retVal == DATASTORE_RETURN_STATUS.Success)
                         Debug.Print("Write successful");
@@ -128,7 +127,7 @@ namespace Level_5A
         public void Level_5A(int excepType)
         {
             size = rand.Next(828) + 2;
-            data = new DataReference(dStore, size, dataType);
+            data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
 
             switch (excepType)
             {

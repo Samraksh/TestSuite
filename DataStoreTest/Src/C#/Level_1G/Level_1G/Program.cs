@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
 /* Test write and read APIs. Write a UInt16 array (with sequential data - filled with numbers from 0 to 99) from a random offset. 
  * Rread from that same random offset and compare against writeBuffer */
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
@@ -14,22 +14,19 @@ namespace Samraksh.SPOT.Tests
         DataStore dStore;
         UInt16[] writeBuffer;
         UInt16[] readBuffer;
-        Type dataType;
-        UInt32 size;
-        uint offset = 0;
+        int size;
+        int offset = 0;
         int experimentIndex;
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             
             experimentIndex = 100;
             size = 256;
             rand = new Random();
             readBuffer = new UInt16[size];
             writeBuffer = new UInt16[size];
-            dataType = typeof(UInt16);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -59,7 +56,7 @@ namespace Samraksh.SPOT.Tests
         {
             Debug.Print("Starting test Level_1G");
 
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
             for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
@@ -69,12 +66,12 @@ namespace Samraksh.SPOT.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                DataAllocation data = new DataAllocation(dStore, size, dataType);
+                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.UINT16);
 
-                offset = (uint)(rand.Next((int)size));
-                UInt32 numData = (uint)(rand.Next((int)(size - offset)));
+                offset = rand.Next((int)size);
+                int numData = rand.Next((int)(size - offset));
 
-                if (data.Write(writeBuffer, offset, numData) == DataStatus.Success)
+                if (data.Write(writeBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -82,7 +79,7 @@ namespace Samraksh.SPOT.Tests
                     return;
                 }
 
-                if (data.Read(readBuffer, offset, numData) == DataStatus.Success)
+                if (data.Read(readBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read successful");
                 else
                 {
@@ -103,8 +100,8 @@ namespace Samraksh.SPOT.Tests
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
-			
-			if (DataStore.EraseAll() == DataStatus.Success)
+
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", null, 0);
         }
 

@@ -41,8 +41,8 @@
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
-    <Reference Include="Samraksh_SPOT">
-      <HintPath>..\..\..\..\..\..\MF\MicroFrameworkPK_v4_3\Samraksh\Interops\Samraksh_SPOT\Samraksh_SPOT\bin\Debug\Samraksh_SPOT.dll</HintPath>
+    <Reference Include="Samraksh_eMote">
+      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote\Samraksh_eMote.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
@@ -12,8 +12,7 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -42,12 +41,12 @@ namespace Samraksh.SPOT.Tests
         {
             for (UInt32 dataIndex = 0; dataIndex <= 10; ++dataIndex)
             {
-                Type dataType = typeof(UInt16);
-                DataAllocation data = new DataAllocation(dStore, 512, dataType);
+                DataReference data = new DataReference(dStore, 512, REFERENCE_DATA_TYPE.UINT16);
                 Debug.Print("Data created successfully");
             }
 
-            if (DataStore.EraseAll() == DataStatus.Success){
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
+            {
                 Debug.Print("Datastore succesfully erased");
 				DisplayStats(true, "Datastore succesfully erased", null, 0);
 			} else {

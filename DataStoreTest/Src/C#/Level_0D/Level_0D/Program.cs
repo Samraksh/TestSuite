@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
 
     public class DataStoreTest
@@ -18,8 +18,7 @@ namespace Samraksh.SPOT.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             
             rnd = new Random();
             experimentIndex = 10;
@@ -55,19 +54,18 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0D()
         {
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                Type dataType = typeof(System.UInt16);
-                DataAllocation data = new DataAllocation(dStore, size, dataType);
+                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.UINT16);
 
                 rnd.NextBytes(writeBuffer);
                 data.Write(writeBuffer, size);
 
                 data.Delete();
-                if (DataStatus.Failure == data.Read(readBuffer, 0, size))
+                if (DATASTORE_RETURN_STATUS.Failure == data.Read(readBuffer, 0, size))
                 {
                     Debug.Print("Delete test successful");
                 }
@@ -80,8 +78,8 @@ namespace Samraksh.SPOT.Tests
                 Array.Clear(writeBuffer, 0, writeBuffer.Length);
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
-			
-			if (DataStore.EraseAll() == DataStatus.Success)
+
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", "", 0);
             
         }

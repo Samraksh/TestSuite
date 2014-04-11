@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.SPOT;
 using System.Threading;
-using Samraksh.SPOT.NonVolatileMemory;
+using Samraksh.eMote.NonVolatileMemory;
 
-namespace Samraksh.SPOT.Tests
+namespace Samraksh.eMote.Tests
 {
 
     public class DataStoreTest
@@ -13,23 +13,22 @@ namespace Samraksh.SPOT.Tests
         Random rnd;
         byte[] writeBuffer;
         byte[] readBuffer;
-        DataAllocation[] data;
-        DataAllocation[] dataObj;
+        DataReference[] data;
+        DataReference[] dataObj;
         UInt16 experimentIndex;
         UInt16 size;
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance;
-            dStore.InitDataStore((int)StorageType.NOR);
+            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
             
             rnd = new Random();
             experimentIndex = 10;
             size = 256;
             readBuffer = new byte[size];
             writeBuffer = new byte[size];
-            data = new DataAllocation[experimentIndex];
-            dataObj = new DataAllocation[experimentIndex];
+            data = new DataReference[experimentIndex];
+            dataObj = new DataReference[experimentIndex];
             /*for (UInt32 dataIndex = 0; dataIndex < 10; ++dataIndex)
             {
                 Data dataTemp = new Data();
@@ -64,13 +63,12 @@ namespace Samraksh.SPOT.Tests
         // was successful
         public void Level_0E()
         {
-            if (DataStore.EraseAll() == DataStatus.Success)
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
-            Type dataType = typeof(System.Byte);
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                data[dataIndex] = new DataAllocation(dStore, size, dataType);
+                data[dataIndex] = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
                 rnd.NextBytes(writeBuffer);
                 data[dataIndex].Write(writeBuffer, size);
                 Array.Clear(writeBuffer, 0, writeBuffer.Length);
@@ -82,12 +80,12 @@ namespace Samraksh.SPOT.Tests
         {
             ////int[] dataIdArray = new int[dStore.CountOfDataIds()];
             ////dStore.ReadAllDataIds(dataIdArray, 0);     //Get all dataIDs into the dataIdArray.
-            DataAllocation[] dataRefArray = new DataAllocation[experimentIndex];
+            DataReference[] dataRefArray = new DataReference[experimentIndex];
             dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
             
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                if (DataStatus.Failure == dataRefArray[dataIndex].Read(readBuffer, 0, size))
+                if (DATASTORE_RETURN_STATUS.Failure == dataRefArray[dataIndex].Read(readBuffer, 0, size))
                 {
                     DisplayStats(false, "Read failed", "", 0);
                     return;
@@ -98,8 +96,8 @@ namespace Samraksh.SPOT.Tests
                 }
                 Array.Clear(readBuffer, 0, readBuffer.Length);
             }
-			
-			if (DataStore.EraseAll() == DataStatus.Success)
+
+            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 DisplayStats(true, "Datastore succesfully erased", "", 0);
         }
 
