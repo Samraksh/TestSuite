@@ -24,12 +24,12 @@ namespace Graphics1
 			// importing bitmap from resource to display
 			Bitmap image = new Bitmap(Resources.GetBytes(Resources.BinaryResources.logo), Bitmap.BitmapImageType.Bmp);
 
-			accel.ADAPT_Accel_Init();
+			accel.Initialize();
 
 			while (true){
 				try {
-					xVal = accel.ADAPT_Accel_GetX();
-					yVal = accel.ADAPT_Accel_GetY();
+					xVal = accel.GetX();
+					yVal = accel.GetY();
 					Debug.Print("currentData XY: " + xVal.ToString() + " " + yVal.ToString());
 				
 					if ( ((xVal <10000)||(xVal>55000)) && ((yVal>10000)&&(yVal<20000)) ){

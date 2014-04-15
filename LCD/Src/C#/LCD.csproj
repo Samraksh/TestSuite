@@ -51,8 +51,8 @@
     <Reference Include="Microsoft.SPOT.Hardware">
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.dll</HintPath>
     </Reference>
-    <Reference Include="Samraksh.SPOT.Hardware">
-      <HintPath>$(BUILD_TREE_DLL)\Samraksh_SPOT_Hardware.dll</HintPath>
+    <Reference Include="Samraksh.eMote.DotNow">
+      <HintPath>$(BUILD_TREE_DLL)\Samraksh_eMote_DotNow.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

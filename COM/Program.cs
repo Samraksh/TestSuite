@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
-using Samraksh.SPOT.Hardware;
+//using Samraksh.eMote.DotNow;
 
 namespace COM
 {

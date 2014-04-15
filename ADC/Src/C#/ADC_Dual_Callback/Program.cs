@@ -11,9 +11,14 @@ namespace TestSuite
     public class Program
     {
 		private static OutputPort testPort_PA0 = new OutputPort((Cpu.Pin)0, true);
-		public const uint bufferSize = 1000;
+		public const uint bufferSize = 100;
 
-        public const uint sampleTime = 1000;
+        public const uint sampleTime = 250;
+
+		private static readonly ushort[] Ibuffer = new ushort[bufferSize];
+        private static readonly ushort[] Qbuffer = new ushort[bufferSize];
+		
+		private static int callBackCnt = 0;	
 
         public static ushort[] sampleBuffer = new ushort[bufferSize];
 
@@ -23,7 +28,8 @@ namespace TestSuite
         public static void AdcCallbackFn(long NativeTime)
         {               
             //Debug.Print((NativeTime/54000000).ToString());
-            Debug.Print((NativeTime).ToString() + "  " + DateTime.Now.Ticks.ToString());                    
+			callBackCnt++;
+            Debug.Print(callBackCnt.ToString() + " " + (NativeTime).ToString() + "  " + DateTime.Now.Ticks.ToString());                    
         }
 
         public static void Main()
@@ -37,9 +43,10 @@ namespace TestSuite
             lcd.Write(LCD.CHAR_A, LCD.CHAR_E, LCD.CHAR_C, LCD.CHAR_D);
 
 			adcCallbackPtr = AdcCallbackFn;
-            Samraksh.eMote.DotNow.AnalogInput.InitializeADC();
-            Samraksh.eMote.DotNow.AnalogInput.InitChannel(Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1);
-            Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousMode(sampleBuffer, Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1, bufferSize, sampleTime, AdcCallbackFn);
+			Samraksh.eMote.DotNow.AnalogInput.InitializeADC();
+            Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousModeDualChannel(Ibuffer, Qbuffer, bufferSize, sampleTime, AdcCallbackFn);
+            //Samraksh.eMote.DotNow.AnalogInput.InitChannel(Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1);
+            //Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousMode(sampleBuffer, Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1, bufferSize, sampleTime, AdcCallbackFn);
 
             while (true)
             {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
-using Samraksh.SPOT.Hardware.EmoteDotNow;
+//using Samraksh.SPOT.Hardware.EmoteDotNow;
 using System.Threading;
 using ParameterClass;
 
