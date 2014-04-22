@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='ADC' Type='C#'>
 		<Description>
-			ADC Callback test
+			ADC Callback timing test
 		</Description>
 		<TestPath>
 			ADC\Src\C#\ADC_Callback

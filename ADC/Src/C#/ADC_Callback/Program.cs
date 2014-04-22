@@ -10,7 +10,6 @@ namespace TestSuite
 {
     public class Program
     {
-		private static OutputPort testPort_PA0 = new OutputPort((Cpu.Pin)0, true);
 		public const uint bufferSize = 1000;
 
         public const uint sampleTime = 1000;
@@ -22,7 +21,6 @@ namespace TestSuite
 
         public static void AdcCallbackFn(long NativeTime)
         {               
-            //Debug.Print((NativeTime/54000000).ToString());
             Debug.Print((NativeTime).ToString() + "  " + DateTime.Now.Ticks.ToString());                    
         }
 
@@ -43,9 +41,7 @@ namespace TestSuite
 
             while (true)
             {
-				testPort_PA0.Write(true);
                 System.Threading.Thread.Sleep(10000);
-				testPort_PA0.Write(false);
             }
         }
     }
