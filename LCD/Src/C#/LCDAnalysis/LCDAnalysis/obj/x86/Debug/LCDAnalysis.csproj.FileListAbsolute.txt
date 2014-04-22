@@ -10,3 +10,8 @@ D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.exe
 D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.pdb
 D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.exe
 D:\Work\TestSys\LCD\Src\C#\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.pdb
+D:\Work\TestSuite\LCD\Src\C#\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.exe
+D:\Work\TestSuite\LCD\Src\C#\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.pdb
+D:\Work\TestSuite\LCD\Src\C#\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.exe
+D:\Work\TestSuite\LCD\Src\C#\LCDAnalysis\LCDAnalysis\bin\Debug\LCDAnalysis.pdb
+D:\Work\TestSuite\LCD\Src\C#\LCDAnalysis\LCDAnalysis\obj\x86\Debug\LCDAnalysis.csprojResolveAssemblyReference.cache

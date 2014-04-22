@@ -50,26 +50,29 @@ namespace LCDAnalysis
                         }
                         parameterNum++;
 
-                        if (line.StartsWith("[70 80 48 ") == false)
-                            testResult = false;
-                        line = line.Remove(0, 10);
-                        System.Diagnostics.Debug.WriteLine(line);
-                        line = line.TrimEnd(trimChars);
-                        line = line.Trim();
-                        System.Diagnostics.Debug.WriteLine(line);
-                        foundChars = false;
-                        for (int i = 0; i < 10; i++)
+                        if (line.StartsWith("[70 80 F0 ") == true) { }
+                        else
                         {
-                            if (line.Equals(matches[i]))
+                            if (line.StartsWith("[70 80 48 ") == false)
+                                testResult = false;
+                            line = line.Remove(0, 10);
+                            System.Diagnostics.Debug.WriteLine(line);
+                            line = line.TrimEnd(trimChars);
+                            line = line.Trim();
+                            System.Diagnostics.Debug.WriteLine(line);
+                            foundChars = false;
+                            for (int i = 0; i < 10; i++)
                             {
-                                foundChars = true;
-                                System.Diagnostics.Debug.WriteLine(line + " matches at i: " + i.ToString());
-                                lineMatches++;
+                                if (line.Equals(matches[i]))
+                                {
+                                    foundChars = true;
+                                    System.Diagnostics.Debug.WriteLine(line + " matches at i: " + i.ToString());
+                                    lineMatches++;
+                                }
                             }
+                            if (foundChars == false)
+                                matchFailure = true;
                         }
-                        if (foundChars == false)
-                            matchFailure = true;
-                        
                         line = reader.ReadLine();
                     }
                     reader.Close();
