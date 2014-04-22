@@ -17,9 +17,9 @@ namespace TestSuite
 	private static OutputPort testPort_PA5 = new OutputPort(GPIOPins.GPIO_PIN_PA5, true);
 	private static OutputPort testPort_PA6 = new OutputPort(GPIOPins.GPIO_PIN_PA6, true);
 	private static OutputPort testPort_PA7 = new OutputPort(GPIOPins.GPIO_PIN_PA7, true);
-	private static OutputPort testPort_PA8 = new OutputPort(GPIOPins.GPIO_PIN_PA8, true);
-	private static OutputPort testPort_PA9 = new OutputPort(GPIOPins.GPIO_PIN_PA9, true);
-	private static OutputPort testPort_PA10 = new OutputPort(GPIOPins.GPIO_PIN_PA10, true);
+	//private static OutputPort testPort_PA8 = new OutputPort(GPIOPins.GPIO_PIN_PA8, true);
+	//private static OutputPort testPort_PA9 = new OutputPort(GPIOPins.GPIO_PIN_PA9, true);
+	//private static OutputPort testPort_PA10 = new OutputPort(GPIOPins.GPIO_PIN_PA10, true);
 
 	private static OutputPort testPort_PB0 = new OutputPort(GPIOPins.GPIO_PIN_PB0, true);
 	private static OutputPort testPort_PB1 = new OutputPort(GPIOPins.GPIO_PIN_PB1, true);
@@ -32,7 +32,7 @@ namespace TestSuite
 	private static OutputPort testPort_PB8 = new OutputPort(GPIOPins.GPIO_PIN_PB8, true);
 	private static OutputPort testPort_PB9 = new OutputPort(GPIOPins.GPIO_PIN_PB9, true);
 	private static OutputPort testPort_PB10 = new OutputPort(GPIOPins.GPIO_PIN_PB10, true);
-	private static OutputPort testPort_PB11 = new OutputPort(GPIOPins.GPIO_PIN_PB11, true);
+	//private static OutputPort testPort_PB11 = new OutputPort(GPIOPins.GPIO_PIN_PB11, true);
 	private static OutputPort testPort_PB12 = new OutputPort(GPIOPins.GPIO_PIN_PB12, true);
 	private static OutputPort testPort_PB13 = new OutputPort(GPIOPins.GPIO_PIN_PB13, true);
 	private static OutputPort testPort_PB14 = new OutputPort(GPIOPins.GPIO_PIN_PB14, true);
@@ -66,7 +66,7 @@ namespace TestSuite
 			testPort_PA2.Write(true);
 			testPort_PA3.Write(true);
 			testPort_PA4.Write(true);
-			testPort_PA8.Write(true);
+			//testPort_PA8.Write(true);
 			testPort_PB6.Write(true);
 			testPort_PB7.Write(true);
 			testPort_PB8.Write(true);
@@ -83,8 +83,8 @@ namespace TestSuite
 			testPort_PB6.Write(true);
 			testPort_PB7.Write(true);
 
-			testPort_PA9.Write(true);
-			testPort_PA10.Write(true);
+			//testPort_PA9.Write(true);
+			//testPort_PA10.Write(true);
 			testPort_PC6.Write(true);
 			Thread.Sleep(msThreadSleep);
 
@@ -93,7 +93,7 @@ namespace TestSuite
 			testPort_PA2.Write(false);
 			testPort_PA3.Write(false);
 			testPort_PA4.Write(false);
-			testPort_PA8.Write(false);
+			//testPort_PA8.Write(false);
 			testPort_PB6.Write(false);
 			testPort_PB7.Write(false);
 			testPort_PB8.Write(false);
@@ -110,8 +110,8 @@ namespace TestSuite
 			testPort_PB6.Write(false);
 			testPort_PB7.Write(false);
 
-			testPort_PA9.Write(false);
-			testPort_PA10.Write(false);
+			//testPort_PA9.Write(false);
+			//testPort_PA10.Write(false);
 			testPort_PC6.Write(false);
 			Thread.Sleep(msThreadSleep);
 #elif (HARDWARE_ADAPT)

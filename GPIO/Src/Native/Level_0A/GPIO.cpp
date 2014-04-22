@@ -37,9 +37,9 @@ BOOL GPIO::Level_0A()
 		GPIO_WriteBit(GPIOA, GPIO_Pin_5, Bit_SET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_6, Bit_SET);
   		GPIO_WriteBit(GPIOA, GPIO_Pin_7, Bit_SET);
-  		GPIO_WriteBit(GPIOA, GPIO_Pin_8, Bit_SET);
-  		GPIO_WriteBit(GPIOA, GPIO_Pin_9, Bit_SET);
-  		GPIO_WriteBit(GPIOA, GPIO_Pin_10, Bit_SET);
+  		//GPIO_WriteBit(GPIOA, GPIO_Pin_8, Bit_SET);
+  		//GPIO_WriteBit(GPIOA, GPIO_Pin_9, Bit_SET);
+  		//GPIO_WriteBit(GPIOA, GPIO_Pin_10, Bit_SET);
 
 		GPIO_WriteBit(GPIOB, GPIO_Pin_0, Bit_SET);
 		GPIO_WriteBit(GPIOB, GPIO_Pin_1, Bit_SET);
@@ -52,7 +52,7 @@ BOOL GPIO::Level_0A()
   		GPIO_WriteBit(GPIOB, GPIO_Pin_8, Bit_SET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_9, Bit_SET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_10, Bit_SET);
-  		GPIO_WriteBit(GPIOB, GPIO_Pin_11, Bit_SET);
+  		//GPIO_WriteBit(GPIOB, GPIO_Pin_11, Bit_SET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_12, Bit_SET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_13, Bit_SET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_14, Bit_SET);
@@ -68,9 +68,9 @@ BOOL GPIO::Level_0A()
 		GPIO_WriteBit(GPIOA, GPIO_Pin_5, Bit_RESET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_6, Bit_RESET);
   		GPIO_WriteBit(GPIOA, GPIO_Pin_7, Bit_RESET);
-  		GPIO_WriteBit(GPIOA, GPIO_Pin_8, Bit_RESET);
-  		GPIO_WriteBit(GPIOA, GPIO_Pin_9, Bit_RESET);
-  		GPIO_WriteBit(GPIOA, GPIO_Pin_10, Bit_RESET);
+  		//GPIO_WriteBit(GPIOA, GPIO_Pin_8, Bit_RESET);
+  		//GPIO_WriteBit(GPIOA, GPIO_Pin_9, Bit_RESET);
+  		//GPIO_WriteBit(GPIOA, GPIO_Pin_10, Bit_RESET);
 
 		GPIO_WriteBit(GPIOB, GPIO_Pin_0, Bit_RESET);
 		GPIO_WriteBit(GPIOB, GPIO_Pin_1, Bit_RESET);
@@ -83,7 +83,7 @@ BOOL GPIO::Level_0A()
   		GPIO_WriteBit(GPIOB, GPIO_Pin_8, Bit_RESET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_9, Bit_RESET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_10, Bit_RESET);
-  		GPIO_WriteBit(GPIOB, GPIO_Pin_11, Bit_RESET);
+  		//GPIO_WriteBit(GPIOB, GPIO_Pin_11, Bit_RESET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_12, Bit_RESET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_13, Bit_RESET);
   		GPIO_WriteBit(GPIOB, GPIO_Pin_14, Bit_RESET);
@@ -107,12 +107,12 @@ BOOL GPIO::Execute( int testLevel )
 {
 	if (testLevel == LEVEL_0_A){
 		// Indicates the start of the test
-		CPU_GPIO_EnableOutputPin(9,TRUE);
-		CPU_GPIO_SetPinState(9, TRUE);
+		CPU_GPIO_EnableOutputPin(24,TRUE);
+		CPU_GPIO_SetPinState(24, TRUE);
 
 		// Configure Pin 23 as the pin of interest
-		CPU_GPIO_EnableOutputPin(23,TRUE);
-		CPU_GPIO_SetPinState(23, TRUE);
+		//CPU_GPIO_EnableOutputPin(23,TRUE);
+		//CPU_GPIO_SetPinState(23, TRUE);
 
 		Level_0A();
 	}
