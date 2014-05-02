@@ -48,7 +48,7 @@ BOOL RadioTest::Initialize(int seedValue, int numberOfEvents)
 	radioEventHandler.SetRecieveHandler(&myReceiveHandler);
 	radioEventHandler.SetSendAckHandler((void (*)(void*, UINT16, NetOpStatus)) &RadioTest::SendAckHandler);
 
-	result = CPU_Radio_Initialize(&radioEventHandler , &radioID, numberOfRadios, mac_id );
+	result = CPU_Radio_Initialize(&radioEventHandler , radioID, numberOfRadios, mac_id );
 
 	if(result != DS_Success)
 	{
@@ -134,12 +134,12 @@ BOOL RadioTest::Level_0B()
 
 		if(result == DS_Success)
 		{
-			regValue = grf231Radio.ReadRegister(RF230_TRX_STATUS) & RF230_TRX_STATUS_MASK;
+			/*regValue = grf231Radio.ReadRegister(RF230_TRX_STATUS) & RF230_TRX_STATUS_MASK;
 			if(regValue != RF230_RX_ON)
 			{
 				DisplayStats(FALSE, "Read register failed after turn on",NULL, NULL);
 				return FALSE;
-			}
+			}*/
 		}
 		else
 		{
