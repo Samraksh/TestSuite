@@ -101,6 +101,8 @@ namespace Samraksh.eMote.Tests
                 Debug.Print("Read Write successful");
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
+
+                Debug.Print("Experiment run count is " + dataIndex);
             }
 
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)

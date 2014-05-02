@@ -17,7 +17,7 @@ namespace Samraksh.eMote.Tests
         static byte[] writeBuffer;
         static byte[] readBuffer = new byte[size];
 
-        Type dataType;
+        int experimentIndex;
 
         public DataStoreTest()
         {
@@ -28,8 +28,8 @@ namespace Samraksh.eMote.Tests
             dStore1 = DataStore.Instance(STORAGE_TYPE.NOR);
             
             writeBuffer = new byte[size];
-            dataType = typeof(byte);
             rnd = new Random();
+            experimentIndex = 100;
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -61,7 +61,7 @@ namespace Samraksh.eMote.Tests
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
 
-            for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
+            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
                 rnd.NextBytes(writeBuffer);
@@ -79,6 +79,8 @@ namespace Samraksh.eMote.Tests
                     Debug.Print("Write successful");
                 else
                     DisplayStats(false, "Write not successful", "", 0);
+
+                Debug.Print("Experiment run count is " + dataIndex);
             }
 
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)

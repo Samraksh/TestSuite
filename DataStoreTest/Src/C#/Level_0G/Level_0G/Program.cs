@@ -58,9 +58,9 @@ namespace Samraksh.eMote.Tests
             /* For "overallIndex" times, create "dataIndex" count of data. For each data, write random data and read it back. 
              * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
              * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
-            for (UInt32 overallIndex = 0; overallIndex < 100; ++overallIndex)
+            for (UInt32 overallIndex = 0; overallIndex < 50; ++overallIndex)
             {
-                for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
+                for (UInt32 dataIndex = 0; dataIndex < 50; ++dataIndex)
                 {
                     int size = rnd.Next(range) + 1;    // Because random number ranges from 0 to range. I want size to be from 1, so adding 1.
                     Debug.Print("Size is " + size);
@@ -112,7 +112,9 @@ namespace Samraksh.eMote.Tests
                         DisplayStats(false, "Delete failed", "", 0);
                         return;
                     }
+                    Debug.Print("Experiment run count is " + dataIndex);
                 }
+                Debug.Print("Experiment run count is " + overallIndex);
             }
 
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)

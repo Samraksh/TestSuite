@@ -14,7 +14,7 @@ namespace Samraksh.eMote.Tests
         Random rnd;
         byte[] writeBuffer;
         byte[] readBuffer;
-        Type dataType;
+        
         UInt16 size;
         UInt16 experimentIndex;
 

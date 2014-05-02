@@ -69,6 +69,11 @@ namespace Samraksh.eMote.Tests
                 DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
 
                 offset = rand.Next((int)size);
+                // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
+                // even offsets, but might want to read from odd offsets. 
+                if (offset % 2 == 1)
+                    offset = offset + sizeof(byte);
+
                 int numData = rand.Next( (int)(size - offset) );
 
                 if (data.Write(writeBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
@@ -78,11 +83,6 @@ namespace Samraksh.eMote.Tests
                     DisplayStats(false, "Write not successful", "", 0);
                     return;
                 }
-
-                // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
-                // even offsets, but might want to read from odd offsets. 
-                if (offset % 2 == 1)
-                    offset = offset + sizeof(byte);
 
                 if (data.Read(readBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read successful");
@@ -107,6 +107,8 @@ namespace Samraksh.eMote.Tests
                 Debug.Print("Read Write successful");
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
+
+                Debug.Print("Experiment run count is " + (dataIndex + 1));
             }
 
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)

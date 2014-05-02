@@ -80,6 +80,11 @@ namespace Samraksh.eMote.Tests
                 }
 
                 offset = rand.Next((int)size/2);
+                // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
+                // even offsets, but might want to read from odd offsets. 
+                if (offset % 2 == 1)
+                    offset = offset + sizeof(byte);
+
                 numData = rand.Next((int)(size - offset));
 
                 if (data.Write(writeBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
@@ -118,12 +123,9 @@ namespace Samraksh.eMote.Tests
 
                 /*######################################################*/
                 /* Read before the overwrite region and verify */
-                
-                // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
-                // even offsets, but might want to read from odd offsets. 
-                if (offset % 2 == 1)
+                if (offset == 0)
                     offset = offset + sizeof(byte);
-
+                    
                 if (data.Read(readBuffer, 0, offset - 1) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read before overwrite successful");
                 else
@@ -147,8 +149,8 @@ namespace Samraksh.eMote.Tests
 
                 // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
                 // even offsets, but might want to read from odd offsets. 
-                if (offset % 2 == 1)
-                    offset = offset + sizeof(byte);
+                //if (offset % 2 == 1)
+                    //offset = offset + sizeof(byte);
 
                 if (data.Read(readBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read overwrite region successful");
@@ -173,8 +175,8 @@ namespace Samraksh.eMote.Tests
 
                 // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
                 // even offsets, but might want to read from odd offsets. 
-                if (offset % 2 == 1)
-                    offset = offset + sizeof(byte);
+                //if (offset % 2 == 1)
+                    //offset = offset + sizeof(byte);
 
                 if ((offset + numData + 1) <= (size / 2))
                 {

@@ -21,6 +21,8 @@ namespace Samraksh.eMote.Tests
 
         byte[] writeBuffer;
         byte[] readBuffer;
+
+        int experimentIndex;
         
         public static OutputPort resultFailure = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J11_PIN3, false);
         public static OutputPort resultRWData = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN4, false);
@@ -33,9 +35,11 @@ namespace Samraksh.eMote.Tests
             
             rnd = new Random();
             offset = 0;
-            size = 8192;
+            size = 1024;
             writeBuffer = new byte[size];
             readBuffer = new byte[size];
+
+            experimentIndex = 500;
             //readBuffer = new byte[size];
             //writeBuffer = new byte[size];
 
@@ -76,8 +80,8 @@ namespace Samraksh.eMote.Tests
 
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
                 Debug.Print("Datastore succesfully erased");
-            
-            for (UInt32 overallIndex = 0; overallIndex < 10000; ++overallIndex)
+
+            for (UInt32 overallIndex = 0; overallIndex < experimentIndex; ++overallIndex)
             {
                 for (UInt32 dataIndex = 0; dataIndex < 1; ++dataIndex)
                 {
@@ -160,6 +164,7 @@ namespace Samraksh.eMote.Tests
                        // Debug.Print("Free space collected " + retVal.ToString());
                     //}
                 }
+                Debug.Print("Experiment run count is " + overallIndex);
             }
 
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)

@@ -17,6 +17,8 @@ namespace Samraksh.eMote.Tests
         static byte[] writeBuffer;
         static byte[] readBuffer = new byte[size];
 
+        int experimentIndex;
+
         
         public DataStoreTest()
         {
@@ -25,6 +27,7 @@ namespace Samraksh.eMote.Tests
             
             writeBuffer = new byte[size];
             rnd = new Random();
+            experimentIndex = 100;
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -60,9 +63,9 @@ namespace Samraksh.eMote.Tests
             Debug.Print(dStore.Size.ToString());
             Debug.Print(dStore.UsedBytes.ToString());
             Debug.Print(dStore.FreeBytes.ToString());
-            
 
-            for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
+
+            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
                 rnd.NextBytes(writeBuffer);

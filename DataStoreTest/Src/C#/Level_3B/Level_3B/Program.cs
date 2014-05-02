@@ -92,6 +92,9 @@ namespace Samraksh.eMote.Tests
 
                 /*######################################################*/
                 /* Read before the overwrite region and verify */
+                if (offset == 0)
+                    offset = offset + sizeof(byte);
+                    
                 if (data.Read(readBuffer, 0, offset - 1) == DATASTORE_RETURN_STATUS.Success)
                     Debug.Print("Read before overwrite successful");
                 else

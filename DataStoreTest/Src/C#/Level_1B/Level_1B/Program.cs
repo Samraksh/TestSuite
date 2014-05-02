@@ -15,6 +15,7 @@ namespace Samraksh.eMote.Tests
         UInt32[] readBuffer;
         int size;
         int offset;
+        int experimentIndex;
 
         public DataStoreTest()
         {
@@ -24,6 +25,8 @@ namespace Samraksh.eMote.Tests
             offset = 0;
             readBuffer = new UInt32[size];
             writeBuffer = new UInt32[size];
+
+            experimentIndex = 100;
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -61,7 +64,7 @@ namespace Samraksh.eMote.Tests
                 writeBuffer[writeIndex] = writeIndex;
             }
 
-            for (UInt32 dataIndex = 0; dataIndex < 100; ++dataIndex)
+            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.UINT32);
 
@@ -93,6 +96,8 @@ namespace Samraksh.eMote.Tests
                 Debug.Print("Read Write successful");
 
                 Array.Clear(readBuffer, 0, readBuffer.Length);
+
+                Debug.Print("Experiment run count is " + dataIndex);
             }
 
             if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)

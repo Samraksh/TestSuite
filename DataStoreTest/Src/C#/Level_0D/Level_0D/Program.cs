@@ -59,13 +59,13 @@ namespace Samraksh.eMote.Tests
 
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
-                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.UINT16);
+                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
 
                 rnd.NextBytes(writeBuffer);
                 data.Write(writeBuffer, size);
 
                 data.Delete();
-                if (DATASTORE_RETURN_STATUS.Failure == data.Read(readBuffer, 0, size))
+                if (DATASTORE_RETURN_STATUS.Failure == data.Read(readBuffer, 0, size) || DATASTORE_RETURN_STATUS.InvalidReference == data.Read(readBuffer, 0, size))
                 {
                     Debug.Print("Delete test successful");
                 }

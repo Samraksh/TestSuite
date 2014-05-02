@@ -9,7 +9,7 @@ namespace Samraksh.eMote.Tests
     {
 
         DataStore dStore;
-        const uint size = 8192;
+        const uint size = 1024;
         static byte[] writeBuffer = new byte[size];
         static byte[] readBuffer = new byte[size];
 
