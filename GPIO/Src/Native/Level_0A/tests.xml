@@ -7,7 +7,7 @@
 			GPIO\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
-			gpio.proj
+			GPIO.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

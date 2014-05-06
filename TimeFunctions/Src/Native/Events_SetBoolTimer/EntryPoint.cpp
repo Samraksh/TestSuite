@@ -32,14 +32,18 @@ void ApplicationEntryPoint()
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, TRUE);
 
     while (TRUE){
-		m_timeQuantumExpired = false;
+		/*m_timeQuantumExpired = false;
 		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);		
 		::Events_SetBoolTimer( (BOOL*)&m_timeQuantumExpired, wait );	
 		while (m_timeQuantumExpired == false) {}
 		m_timeQuantumExpired = false;
 		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 		::Events_SetBoolTimer( (BOOL*)&m_timeQuantumExpired, wait );	
-		while (m_timeQuantumExpired == false) {}
+		while (m_timeQuantumExpired == false) {}*/
+		CPU_GPIO_SetPinState( 24, TRUE);
+		HAL_Time_Sleep_MicroSeconds(wait);
+		CPU_GPIO_SetPinState( 24, FALSE);
+		HAL_Time_Sleep_MicroSeconds(wait);
 	}
 
 }

@@ -1,7 +1,7 @@
 result = PASS
 accuracy = 0
-resultParameter1 = 8000021
-resultParameter2 = 10000030
+resultParameter1 = 7999980
+resultParameter2 = 9999979
 resultParameter3 =
 resultParameter4 =
 resultParameter5 =

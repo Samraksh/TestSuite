@@ -10,34 +10,23 @@ namespace TestSuite
 {
     public class Program
     {
-		private static OutputPort testPort_PB8 = new OutputPort((Cpu.Pin)24, true);
 		public const uint bufferSize = 1000;
 
         public const uint sampleTime = 1000;
 
-		private static readonly ushort[] Ibuffer = new ushort[bufferSize];
-        private static readonly ushort[] Qbuffer = new ushort[bufferSize];
-		
-		private static int callBackCnt = 0;	
-
-        public static ushort[] sampleBuffer = new ushort[bufferSize];
-
+        public static ushort[] sampleBuffer1 = new ushort[bufferSize];
+		public static ushort[] sampleBuffer2 = new ushort[bufferSize];
         public static Samraksh.eMote.DotNow.AdcCallBack adcCallbackPtr;
 
 
         public static void AdcCallbackFn(long NativeTime)
         {               
-			testPort_PB8.Write(true);
-            //Debug.Print((NativeTime/54000000).ToString());
-			callBackCnt++;
-            Debug.Print(callBackCnt.ToString() + " " + (NativeTime).ToString() + "  " + DateTime.Now.Ticks.ToString()); 
-			System.Threading.Thread.Sleep(1200);			
-			testPort_PB8.Write(false);
+            Debug.Print((NativeTime).ToString() + "  " + DateTime.Now.Ticks.ToString()); 
         }
 
         public static void Main()
         {
-			Debug.EnableGCMessages(true);
+			Debug.EnableGCMessages(false);
 
             Parameters parameters = new Parameters();
             EmoteLCD lcd = new EmoteLCD();
@@ -46,17 +35,12 @@ namespace TestSuite
             lcd.Write(LCD.CHAR_A, LCD.CHAR_E, LCD.CHAR_C, LCD.CHAR_D);
 
 			adcCallbackPtr = AdcCallbackFn;
-			Samraksh.eMote.DotNow.AnalogInput.InitializeADC();
-            Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousModeDualChannel(Ibuffer, Qbuffer, bufferSize, sampleTime, AdcCallbackFn);
-            //Samraksh.eMote.DotNow.AnalogInput.InitChannel(Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1);
-            //Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousMode(sampleBuffer, Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1, bufferSize, sampleTime, AdcCallbackFn);
+            Samraksh.eMote.DotNow.AnalogInput.InitializeADC();
+            Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousModeDualChannel(sampleBuffer1, sampleBuffer2, bufferSize, sampleTime, AdcCallbackFn);
 
             while (true)
             {
-				//testPort_PB8.Write(true);
-                System.Threading.Thread.Sleep(4000);
-				//testPort_PB8.Write(false);
-				
+                System.Threading.Thread.Sleep(10000);
             }
         }
     }

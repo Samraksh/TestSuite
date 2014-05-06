@@ -10,7 +10,8 @@
 
 GPIO::GPIO(  )
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
+	//CPU_GPIO_EnableOutputPin (24, TRUE);
+	/*GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd( RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC, ENABLE);
 
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10;
@@ -22,14 +23,19 @@ GPIO::GPIO(  )
   	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-  	GPIO_Init(GPIOC, &GPIO_InitStructure);
+  	GPIO_Init(GPIOC, &GPIO_InitStructure);*/
 }
 
 BOOL GPIO::Level_0A()
 {
-	int usThreadSleep = (int)( (1/frequency)/2 * 1000000);
+	int usThreadSleep = (int)( (1/(float)frequency)/2 * 1000000);
+	//int usThreadSleep = 250;
 	while (true){
-		GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_SET);
+		CPU_GPIO_SetPinState( 24, TRUE);
+		HAL_Time_Sleep_MicroSeconds(usThreadSleep);
+		CPU_GPIO_SetPinState( 24, FALSE);
+		HAL_Time_Sleep_MicroSeconds(usThreadSleep);
+		/*GPIO_WriteBit(GPIOA, GPIO_Pin_0, Bit_SET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_1, Bit_SET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_2, Bit_SET);
 		GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_SET);
@@ -90,7 +96,7 @@ BOOL GPIO::Level_0A()
   		GPIO_WriteBit(GPIOB, GPIO_Pin_15, Bit_RESET);
 
   		GPIO_WriteBit(GPIOC, GPIO_Pin_6, Bit_RESET);
-		HAL_Time_Sleep_MicroSeconds(usThreadSleep);
+		HAL_Time_Sleep_MicroSeconds(usThreadSleep);*/
 	}
 	return TRUE;
 
