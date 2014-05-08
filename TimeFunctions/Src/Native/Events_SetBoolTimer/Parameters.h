@@ -16,7 +16,7 @@
 // Do not change text format above this point
 
 // test specific parameters
-#define frequency 50
-#define upperAllowedFrequency 64
-#define lowerAllowedFrequency 46 
-#define expectedFrequency 50
+#define frequency 5
+#define upperAllowedFrequency 7
+#define lowerAllowedFrequency 3 
+#define expectedFrequency 5

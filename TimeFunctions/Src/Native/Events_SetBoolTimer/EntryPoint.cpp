@@ -26,24 +26,20 @@ void PostManagedEvent( UINT8 category, UINT8 subCategory, UINT16 data1, UINT32 d
 
 void ApplicationEntryPoint()
 {
-	UINT32 wait = (UINT32)( (1/frequency)/2 * 1000);
+	UINT32 wait = (UINT32)( 500 / frequency);
 	BOOL m_timeQuantumExpired;
 	
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, TRUE);
 
     while (TRUE){
-		/*m_timeQuantumExpired = false;
+		m_timeQuantumExpired = false;
 		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);		
 		::Events_SetBoolTimer( (BOOL*)&m_timeQuantumExpired, wait );	
 		while (m_timeQuantumExpired == false) {}
 		m_timeQuantumExpired = false;
 		CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 		::Events_SetBoolTimer( (BOOL*)&m_timeQuantumExpired, wait );	
-		while (m_timeQuantumExpired == false) {}*/
-		CPU_GPIO_SetPinState( 24, TRUE);
-		HAL_Time_Sleep_MicroSeconds(wait);
-		CPU_GPIO_SetPinState( 24, FALSE);
-		HAL_Time_Sleep_MicroSeconds(wait);
+		while (m_timeQuantumExpired == false) {}
 	}
 
 }
