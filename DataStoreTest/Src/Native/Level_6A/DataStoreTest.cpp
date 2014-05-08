@@ -42,14 +42,26 @@ DataStoreTest::DataStoreTest( int seedValue, int numberOfEvents )
 
 BOOL DataStoreTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
 {
-	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
-	hal_printf("\r\naccuracy=%d\r\n", accuracy);
-	hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
-	hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
-	hal_printf("\r\nresultParameter3=%s\r\n", "null");
-	hal_printf("\r\nresultParameter4=%s\r\n", "null");
-	hal_printf("\r\nresultParameter5=%s\r\n", "null");
-
+	//while (true)
+	//{
+		// Sleep  for a while
+		//for(volatile UINT32 i = 0; i < 10000; i++);
+		if (result)
+		{
+			hal_printf("\r\nresult=PASS\r\n");
+		}
+		else
+		{
+			hal_printf("\r\nresult=FAIL\r\n");
+		}
+		//hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
+		hal_printf("\r\naccuracy=%d\r\n", accuracy);
+		hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
+		hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
+		hal_printf("\r\nresultParameter3=%s\r\n", "null");
+		hal_printf("\r\nresultParameter4=%s\r\n", "null");
+		hal_printf("\r\nresultParameter5=%s\r\n", "null");
+	//}
 	return true;
 }
 
@@ -122,8 +134,8 @@ BOOL DataStoreTest::GetRecordID()
  * 5. Then call the app again. (TestReadWrite_Persistence_Multiple_Seq_Records)
  * 6. Now build the recordIDs. In order to find out where the app crashed, this line is used -- if(read_data[test_limit-1] == (test_limit - 1)).
  * 	  This line will not be true for any of the records before the crash as they have been set with 1's.
- * 7. Now the point of crash is stored here -- recIndexCrashTest = tempIndex;
- * 8. Now the read begins from where it left off.
+ * 7. Point of crash is stored here -- recIndexCrashTest = tempIndex;
+ * 8. Read begins from where it left off.
  * 9. Since we are now in the recursive path, as soon as we reach the end of read, the end of recursion is indicated by -- reversePath = 1;
  * 10. On the way up, since the variable "reversePath" is set, the app now does not enter the loop and the program ends tamely. */
 BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
@@ -158,7 +170,7 @@ BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
 	g_dataStoreObject.init();
-	g_dataStoreObject.EraseAllBlocks();
+	//g_dataStoreObject.EraseAllBlocks();
 	//// DATASTORE_STATUS status = g_dataStoreObject.initDataStore( "NOR", &defaultProperty );
 	////g_dataStoreObject.scanFlashDevice();
 
@@ -175,7 +187,8 @@ BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 			{
 				if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 				{
-					DisplayStats(true, "Success: write data to data store", NULL, 0);
+					hal_printf("Success: write data to data store");
+					//DisplayStats(true, "Success: write data to data store", NULL, 0);
 				}
 				else
 				{
@@ -262,7 +275,8 @@ BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 					return false;
 				}
 
-				DisplayStats(true, "Success : Simple read write successful", NULL, 0);
+				hal_printf("Success : Simple read write successful");
+				//DisplayStats(true, "Success : Simple read write successful", NULL, 0);
 			}
 			else
 			{
@@ -292,7 +306,8 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		hal_printf("SUCCESS: initialize data store");
+		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
 		return true;
 	}
 
