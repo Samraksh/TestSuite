@@ -36,10 +36,17 @@ namespace Samraksh.SPOT.Test
 
     public class csmaMACTestSlave
     {
-        Samraksh.SPOT.Net.Mac.CSMA csmaObject = new Net.Mac.CSMA();
+        static Samraksh.SPOT.Net.Mac.CSMA myCSMA;
+        ReceiveCallBack myReceiveCB;
+        NeighbourhoodChangeCallBack myNeighborCB;
         Samraksh.SPOT.Net.Mac.MacConfiguration macConfig = new Net.Mac.MacConfiguration();
-        ReceiveCallBack receive;
+
+        //Samraksh.SPOT.Net.Mac.CSMA csmaObject = new Net.Mac.CSMA();
         public static State run = new State();
+
+        byte[] data = new byte[111];
+        int packetSize = 0;
+        Random rng;
         
 
         public void Initialize()
@@ -50,20 +57,31 @@ namespace Samraksh.SPOT.Test
             //macConfig.RadioID = (byte) myRadioID;
             macConfig.RadioID = (byte)1;
             macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
+            macConfig.NeighbourLivelinesDelay = 180;
+            macConfig.radioConfig.SetTxPower(Samraksh.SPOT.Net.Radio.TxPowerValue.Power_0Point7dBm);
 
-            receive = HandleMessage;
+            // Set the receive handler 
+            myReceiveCB = HandleMessage;
+
+            // Set the neighbor change handler
+            myNeighborCB = NeighborChange;
 
             // Initially let the test run
             run.SetState(true);
 
+            Debug.Print("Configuring:  CSMA...");
             try
             {
-                csmaObject.Initialize(macConfig, receive);
+                Net.Mac.CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
+                myCSMA = Net.Mac.CSMA.Instance;
             }
-            catch
+            catch (Exception e)
             {
-                throw new TestFailedException("Unable to Initialize CSMA Object");
+                Debug.Print(e.ToString());
             }
+
+            // Initializes the random number generator 
+            rng = new Random(30);
 
         }
 
@@ -81,12 +99,18 @@ namespace Samraksh.SPOT.Test
             Level_0();
         }
 
+        void NeighborChange(UInt16 noOfNeigbors)
+        {
+        }
 
-        public void HandleMessage(byte[] msg, ushort size)
+        //public void HandleMessage(byte[] msg, ushort size)
+        public void HandleMessage(ushort NumberOfPacketsReceived)
         {
             Debug.Print("Recieved message from master\n");
+            packetSize = rng.Next(111);
+            rng.NextBytes(data);
 
-            csmaObject.Send((UInt16)Samraksh.SPOT.Net.Mac.Addresses.BROADCAST, msg, 0, (ushort)size);
+            myCSMA.Send((UInt16)Samraksh.SPOT.Net.Mac.Addresses.BROADCAST, data, 0, (ushort)packetSize);
         }
 
         public static void Main()

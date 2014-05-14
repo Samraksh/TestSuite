@@ -34,7 +34,7 @@
 
   <Import Condition="'$(PLATFORM_FAMILY)'=='x86'"                                    Project="$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.x86.Targets" />
   <!-- IMPORT the COMPILER_TOOL specific targets file (if it exists).  COMPILER_TOOL is set by setenv.cmd -->
-  <Import Condition="'$(PLATFORM_FAMILY)'!='x86' and EXISTS('$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).targets')"    Project="$(TESTSOURCE)\TestSys\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).targets"/>
+  <Import Condition="'$(PLATFORM_FAMILY)'!='x86' and EXISTS('$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).targets')"    Project="$(TESTSOURCE)\TestSuite\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).targets"/>
 
   <PropertyGroup>
     <TargetRule Condition="'$(OutputType)'=='Custom'">$(CustomTargets)</TargetRule>

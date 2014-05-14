@@ -96,7 +96,7 @@
   <!-- set up the base DST_DIR path base on different PLATFORM_FAMILY at the corresponding setting files -->
   <Import Condition="'$(PLATFORM_FAMILY)'=='x86'"    Project="$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.x86.settings"    />
   <!-- IMPORT the COMPILER_TOOL specific settings file (if it exists).  COMPILER_TOOL is set by setenv.cmd -->
-  <Import Condition="'$(PLATFORM_FAMILY)'!='x86' and EXISTS('$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).settings')"    Project="$(TESTSOURCE)\TestSys\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).settings"    />
+  <Import Condition="'$(PLATFORM_FAMILY)'!='x86' and EXISTS('$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).settings')"    Project="$(TESTSOURCE)\TestSuite\tools\targets\Microsoft.SPOT.System.$(COMPILER_TOOL).settings"    />
 
   <PropertyGroup Condition="'$(PlatformIndependentBuild)'!='true'">
     <OBJ_DIR>$(DST_DIR)\$(OBJ_EXT)\$(Directory)</OBJ_DIR>

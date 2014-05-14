@@ -6,6 +6,13 @@
 
 #define LEVEL_0A 0
 
+
+/*enum Radio
+{
+	RF231RADIO,
+	RF231RADIOLR
+};*/
+
 class csmaMACTest
 {
 
