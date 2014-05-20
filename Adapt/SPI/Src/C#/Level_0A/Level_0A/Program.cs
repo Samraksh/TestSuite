@@ -36,13 +36,13 @@ namespace Level_0A
          *                  2. Dropbox\Adapt\Hardware\ADAPT Product Guide v1p0.pdf                                              - page 41
          */
 
-        private static OutputPort SpiCLK = new OutputPort((Cpu.Pin)58, true);
+        ////private static OutputPort SpiCLK = new OutputPort((Cpu.Pin)58, true);
         //Pin is called MSM_GPIO1_DEBUG. On the Adapt dev board, it is called M_GPIO1.
         //This also maps to GPIO_58, but the pin# is 41 (from Dropbox\Adapt\SmartFile\EVT2\Adapt_Core_Module_Documentation\8XXA01_V1.02_DL(120907).pdf -- page 14)
-        private static OutputPort SpiCS = new OutputPort((Cpu.Pin)55, true);
+        ////private static OutputPort SpiCS = new OutputPort((Cpu.Pin)55, true);
         //Pin is called MSM_GPIO2_DEBUG. On the Adapt dev board, it is called M_GPIO2. 
         //This also maps to GPIO_55, but the pin# is 43 (from Dropbox\Adapt\SmartFile\EVT2\Adapt_Core_Module_Documentation\8XXA01_V1.02_DL(120907).pdf -- page 14)
-        private static OutputPort SpiMISO = new OutputPort((Cpu.Pin)53, true);
+        ////private static OutputPort SpiMISO = new OutputPort((Cpu.Pin)53, true);
         //Pin is called MSM_GPIO3_DEBUG. On the Adapt dev board, it is called M_GPIO3. 
         //This also maps to GPIO_53, but the pin# is 45 (from Dropbox\Adapt\SmartFile\EVT2\Adapt_Core_Module_Documentation\8XXA01_V1.02_DL(120907).pdf -- page 14)
         private static OutputPort SpiMOSI = new OutputPort((Cpu.Pin)52, true);
@@ -51,7 +51,14 @@ namespace Level_0A
 
         public static void Main()
         {
-            byte data;
+
+            SpiMOSI.Write(false);
+            SpiMOSI.Write(true);
+            SpiMOSI.Write(false);
+			SpiMOSI.Write(true);
+			SpiMOSI.Write(false);
+
+            /*byte data;
             byte value;
             byte constant = 128; //0x80
 
@@ -90,7 +97,7 @@ namespace Level_0A
                 SpiCS.Write(false);
 
                 Thread.Sleep(250);
-            }
+            }*/
         }
 
     }

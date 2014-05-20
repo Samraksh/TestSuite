@@ -6,6 +6,8 @@
 *.cache
 !*.gitkeep
 .settings/
+*.suo
+*.pdb
 DataStoreTest/Src/C#/Level_0A/Level_0A.v11.suo
 DataStoreTest/Src/C#/Level_0A/Level_0A/obj
 DataStoreTest/Src/C#/Level_0A/Level_0A/bin/Debug/*

@@ -1,18 +1,18 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-	 <AssemblyName>HalTimerTest</AssemblyName>
+	 <AssemblyName>VirtualTimerTest</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
     <Description>
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\HalTimerTest\Src\Native\Level_0B</Directory>
+    <Directory>TestSuite\VirtualTimerTest\Src\Native\Level_0B</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\HalTimerTest\Src\Native\Level_0B\HalTimerTest.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\VirtualTimerTest\Src\Native\Level_0B\VirtualTimerTest.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
@@ -22,12 +22,12 @@
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\HalTimerTest\Src\Native\Level_0B\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\VirtualTimerTest\Src\Native\Level_0B\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
  	<Compile Include="EntryPoint.cpp" />
-    <Compile Include="HalTimerTest.cpp" />
+    <Compile Include="VirtualTimerTest.cpp" />
     <!--<Compile Include="test.c" />
 	<Compile Include="signalr.c" />
 	<Compile Include="syscalls.c" />
