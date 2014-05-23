@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='Native'>
+	<Test Name='DataStoreTest' Type='Native .NOW'>
 		<Description>
 			Native DataStoreTest Tests - Create multiple (sequential) records. Use virtual timers to write and read from (random) records. 
 			(Write 100 sequential uint16 data types and read them back)

@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='Native'>
+	<Test Name='DataStoreTest' Type='Native .NOW'>
 		<Description>
 			Native DataStoreTest Tests - Multiple writes and reads to a single record (Create a single record and write 100 sequential UINT16 data types and read them back)
 		</Description>

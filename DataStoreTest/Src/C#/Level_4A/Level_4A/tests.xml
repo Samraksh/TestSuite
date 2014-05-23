@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C#'>
+	<Test Name='DataStoreTest' Type='C# .NOW'>
 		<Description>
 			Write lot of small data (byte) such that count goes well beyond count that can be stored in RAM. Then get back references to data and verify that data read is same as data written.
 		</Description>
