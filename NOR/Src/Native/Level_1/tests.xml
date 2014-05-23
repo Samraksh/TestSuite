@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='NOR' Type='Native'>
+	<Test Name='NOR' Type='Native .NOW'>
 		<Description>
 			Native NOR Tests Level 1 random data to random locations read/write
 		</Description>

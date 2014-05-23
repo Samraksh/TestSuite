@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='EventsTest' Type='Native'>
 		<Description>
-			Native EventsTest Tests testing waitforevents interface
+			EventsTest Tests waitforevents interface
 		</Description>
 		<TestPath>
 			EventsTest\Src\Native\Level_0A

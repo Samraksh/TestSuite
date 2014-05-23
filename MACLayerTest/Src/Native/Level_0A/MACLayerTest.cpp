@@ -21,16 +21,18 @@ MACLayerTest::MACLayerTest( int seedValue, int numberOfEvents )
 
 };
 
-BOOL MACLayerTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
+BOOL MACLayerTest::DisplayStats(BOOL result, char* resultParameter1, int resultParameter2, int resultParameter3, int accuracy)
 {
-	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
-	hal_printf("\r\naccuracy=%d\r\n", accuracy);
-	hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
-	hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
-	hal_printf("\r\nresultParameter3=%s\r\n", "null");
-	hal_printf("\r\nresultParameter4=%s\r\n", "null");
-	hal_printf("\r\nresultParameter5=%s\r\n", "null");
-
+	while(true){
+		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=%d\n", accuracy);
+		hal_printf("resultParameter1=%s\n", resultParameter1);
+		hal_printf("resultParameter2=%d\n", resultParameter2);
+		hal_printf("resultParameter3=%d\n", resultParameter3);
+		hal_printf("resultParameter4=null\n");
+		hal_printf("resultParameter5=null\n");
+		HAL_Time_Sleep_MicroSeconds(1000000);
+	}
 	return TRUE;
 }
 
@@ -98,14 +100,14 @@ DeviceStatus InitializeMacLayer()
 // This test only checks if sends from the mac layer are successful
 BOOL MACLayerTest::Level_0A()
 {
-
 	UINT16 i = 0;
-
-	UINT16 failureToSend = 0;
+	int failureToSend = 0;
+	int attemptsToSend = 0;
+	char attemptString[30];
 
 	if(InitializeMacLayer() != DS_Success)
 	{
-		DisplayStats(FALSE,"Mac Layer initialization failed","",0);
+		DisplayStats(FALSE,"Mac Layer initialization failed",0,0,0);
 		return FALSE;
 	}
 
@@ -118,14 +120,12 @@ BOOL MACLayerTest::Level_0A()
 
 	while(TRUE)
 	{
-
+		attemptsToSend++;
 		CPU_GPIO_EnableOutputPin((GPIO_PIN) 25,TRUE);
 		if(Mac_Send(MacID, 0xffff, 1, (void*) mesg, 10) != DS_Success)
 		{
 			hal_printf("The current iteration number is %d", i);
 			failureToSend++;
-			//DisplayStats(FALSE,"Mac Layer Send failed","",0);
-			//return FALSE;
 		}
 
 		while(SendAckPending == TRUE);
@@ -133,24 +133,21 @@ BOOL MACLayerTest::Level_0A()
 
 		SendAckPending = FALSE;
 
-		// Sleep  for a while
-		//for(volatile UINT32 i = 0; i < 10000; i++);
-
-
 		::Events_WaitForEvents( 0, 100 );
 
-
+		if (attemptsToSend > 10)
+		{
+			if(failureToSend > 0)
+			{
+				hal_printf("Failed to Send %d Packets", failureToSend);
+				DisplayStats(FALSE,"Mac Layer Send failed",attemptsToSend,failureToSend,0);
+			} else {
+				DisplayStats(TRUE, "Mac Layer Send Test succeeded",attemptsToSend,failureToSend,0);
+			}
+		}
 	}
 
-	if(failureToSend > 0)
-	{
-		hal_printf("Failed to Send %d Packets", failureToSend);
-		DisplayStats(FALSE,"Mac Layer Send failed","",0);
-	}
-	else
-	{
-		DisplayStats(TRUE, "Mac Layer Send Test succeeded","",0);
-	}
+	
 
 	return TRUE;
 

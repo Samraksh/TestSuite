@@ -1,0 +1,13 @@
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LogicAnalysis\LogicAnalysis\bin\Debug\LogicAnalysis.exe
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LogicAnalysis\LogicAnalysis\bin\Debug\LogicAnalysis.pdb
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
+D:\Users\Chris\Documents\Visual Studio 2010\Projects\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
+D:\Work\TestSuite\HALTimerTest\Normal\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
+D:\Work\TestSuite\HALTimerTest\Normal\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
+D:\Work\TestSuite\HALTimerTest\Normal\LogicAnalysis.exe
+D:\Work\TestSuite\HALTimerTest\Normal\LogicAnalysis.pdb
+D:\Work\TestSuite\EventsTest\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
+D:\Work\TestSuite\EventsTest\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
+D:\Work\TestSuite\EventsTest\Src\Native\Level_0A\LogicAnalysis.exe
+D:\Work\TestSuite\EventsTest\Src\Native\Level_0A\LogicAnalysis.pdb

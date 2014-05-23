@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='NOR' Type='Native'>
+	<Test Name='NOR' Type='Native .NOW'>
 		<Description>
 			Native NOR Tests Level 0B  simple read/write test
 		</Description>

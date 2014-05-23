@@ -9,9 +9,13 @@ extern HALTimerManager gHalTimerManagerObject;
 //---//
 void Timer_1_Handler(void *arg)
 {
+	static bool pinState = false;
 
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+	if (pinState == false)
+		pinState = true;
+	else 
+		pinState = false;
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, pinState);
 }
 
 void Timer_2_Handler(void *arg)

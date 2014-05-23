@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='MACLayerTest' Type='Native'>
+	<Test Name='MACLayerTest' Type='Native .NOW'>
 		<Description>
 			Native MACLayer Tests Level 0B test basic send and recieve
 		</Description>

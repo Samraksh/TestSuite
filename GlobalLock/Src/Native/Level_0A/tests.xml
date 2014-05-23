@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='GlobalLockTest' Type='Native'>
+	<Test Name='GlobalLockTest' Type='Native Adapt .NOW'>
 		<Description>
 			Native global lock Test Level 0A with virtual timers
 		</Description>

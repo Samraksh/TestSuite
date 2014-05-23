@@ -20,39 +20,40 @@ EventsTest::EventsTest( int seedValue, int numberOfEvents )
 
 BOOL EventsTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
 {
-	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
-	hal_printf("\r\naccuracy=%d\r\n", accuracy);
-	hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
-	hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
-	hal_printf("\r\nresultParameter3=%s\r\n", "null");
-	hal_printf("\r\nresultParameter4=%s\r\n", "null");
-	hal_printf("\r\nresultParameter5=%s\r\n", "null");
-
+	while(true){
+		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=%d\n", accuracy);
+		hal_printf("resultParameter1=%s\n", resultParameter1);
+		hal_printf("resultParameter2=%s\n", resultParameter2);
+		hal_printf("resultParameter3=null\n");
+		hal_printf("resultParameter4=null\n");
+		hal_printf("resultParameter5=null\n");
+		HAL_Time_Sleep_MicroSeconds(1000000);
+	}
 	return TRUE;
 }
 
 // This test only checks if the manufacture id can be read
 BOOL EventsTest::Level_0A()
 {
-
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 22, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
 
 	UINT32 timeout =  100;
 
-	while(TRUE)
-	{
-			const UINT32 c_EventsMask =  SYSTEM_EVENT_FLAG_USB_IN |
+	const UINT32 c_EventsMask =  SYSTEM_EVENT_FLAG_USB_IN |
 		                                        SYSTEM_EVENT_FLAG_BUTTON;
-
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, TRUE);
-			UINT32 events = ::Events_WaitForEvents( c_EventsMask, timeout );
-			CPU_GPIO_SetPinState((GPIO_PIN) 22, FALSE);
+	UINT32 events;
+	while(TRUE)
+	{		
+			CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+			events = ::Events_WaitForEvents( c_EventsMask, timeout );
+			CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+			events = ::Events_WaitForEvents( c_EventsMask, timeout );
 
 		    if(events != 0)
 		    {
 		         Events_Clear( events );
 		    }
-
 	}
 
 	return TRUE;
@@ -63,7 +64,6 @@ BOOL EventsTest::Level_0A()
 BOOL EventsTest::Level_0B()
 {
 	return TRUE;
-
 }
 
 BOOL EventsTest::Level_1()

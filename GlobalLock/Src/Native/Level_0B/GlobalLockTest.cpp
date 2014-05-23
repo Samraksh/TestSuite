@@ -9,9 +9,13 @@ extern HALTimerManager gHalTimerManagerObject;
 //---//
 void Timer_1_Handler(void *arg)
 {
+	static bool pinState = false;
 
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+	if (pinState == false)
+		pinState = true;
+	else 
+		pinState = false;
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, pinState);
 }
 
 void Timer_2_Handler(void *arg)
@@ -61,19 +65,23 @@ BOOL GlobalLockTest::Level_0A()
 }
 
 void foo()
-{
+{	
+	static bool pinState2 = false;
+
 	GLOBAL_LOCK(irq);
 
-	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+	if (pinState2 == false)
+		pinState2 = true;
+	else 
+		pinState2 = false;
 
-
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, pinState2);
 }
 
 BOOL GlobalLockTest::Level_0B()
 {
-
-	gHalTimerManagerObject.CreateTimer(1, 0, 3000, FALSE, FALSE, Timer_1_Handler);
+	gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
+	gHalTimerManagerObject.StartTimer(1);
 
 	while(TRUE)
 	{
@@ -85,17 +93,11 @@ BOOL GlobalLockTest::Level_0B()
 			CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
 			for(volatile UINT32 i = 0; i < 50000; i++ );
 			CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
-
 		}
-
 	}
-
 
 	return TRUE;
 }
-
-
-
 
 BOOL GlobalLockTest::Execute( int testLevel )
 {

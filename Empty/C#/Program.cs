@@ -13,6 +13,13 @@ namespace TestSuite
         {
             while (true)
             {
+				Debug.Print("result = PASS");
+				Debug.Print("accuracy = null");
+				Debug.Print("resultParameter1 = null");
+				Debug.Print("resultParameter2 = null");
+				Debug.Print("resultParameter3 = null");
+				Debug.Print("resultParameter4 = null");
+				Debug.Print("resultParameter5 = null"); 
              	System.Threading.Thread.Sleep(1000); 
             }
         }

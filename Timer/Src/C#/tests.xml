@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='Timer' Type ='C#'> 
+	<Test Name='Timer' Type ='C# Adapt .NOW'> 
 		<Description>
 			C# test for timers
 		</Description>

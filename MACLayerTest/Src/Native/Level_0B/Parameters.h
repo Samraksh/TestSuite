@@ -1,5 +1,5 @@
 ﻿// required TestRig parameters
-#define testTimeout 60000
+#define testTimeout 30000
 #define useLogic false
 #define sampleTimeMs 4000
 #define sampleFrequency 4000000

@@ -1,0 +1,7 @@
+result = PASS
+accuracy = 0
+resultParameter1 = [70 80 48 AF 8E EB 4E ]
+resultParameter2 = [70 80 48 40 41 2F 60 ]
+resultParameter3 = [70 80 48 EE EF 8D ED ]
+resultParameter4 = [70 80 48 8F 8E CD 6E ]
+resultParameter5 = [70 80 48 60 65 6E 0D ]

@@ -41,7 +41,7 @@ namespace TestSuite
 
             while (true)
             {
-                System.Threading.Thread.Sleep(10000);
+                //System.Threading.Thread.Sleep(10000);
             }
         }
     }

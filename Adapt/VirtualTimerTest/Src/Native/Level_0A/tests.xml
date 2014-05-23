@@ -1,7 +1,7 @@
 <TestSuite>
-	<Test Name='HALTimerTest' Type='Native'>
+	<Test Name='HALTimerTest' Type='Native Adapt'>
 		<Description>
-			Native Virtual Timer Tests Level 0A with one timer, also a timer test
+			Native Virtual Timer Tests Level 0A with one timer
 		</Description>
 		<TestPath>
 			VirtualTimerTest\Src\Native\Level_0A

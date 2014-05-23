@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='GPIO' Type='Native'>
+	<Test Name='GPIO' Type='Native Adapt .NOW'>
 		<Description>
 			C++ test for gpio
 		</Description>

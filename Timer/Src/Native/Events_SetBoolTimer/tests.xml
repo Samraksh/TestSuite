@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='Timer' Type='Native Adapt .NOW'>
+		<Description>
+			Events_SetBoolTimer Test
+		</Description>
+		<TestPath>
+			Timer\Src\Native\Events_SetBoolTimer
+		</TestPath>
+		<TestProjName>
+			Events_SetBoolTimer.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

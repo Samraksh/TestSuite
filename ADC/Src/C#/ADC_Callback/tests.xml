@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='ADC' Type='C#'>
+	<Test Name='ADC' Type='C# Adapt .NOW'>
 		<Description>
 			ADC Callback timing test
 		</Description>

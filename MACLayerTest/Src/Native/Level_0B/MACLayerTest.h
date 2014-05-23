@@ -18,7 +18,7 @@
 										do{ 							\
 											if(poll_counter == 0xfffe)    \
 											{  								\
-												DisplayStats(FALSE,y, NULL,NULL); \
+												DisplayStats(FALSE,y, 0,0,0); \
 												return FALSE; 				\
 											} 								\
 											poll_counter++; 				\
@@ -61,8 +61,7 @@ public:
 
 	BOOL 	 Level_1();
 
-	BOOL     DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy);
-
+	BOOL     DisplayStats(BOOL result, char* resultParameter1, int resultParameter2, int resultParameter3, int accuracy);
 };
 
 BOOL MACLayerTest::SendAckPending = FALSE;

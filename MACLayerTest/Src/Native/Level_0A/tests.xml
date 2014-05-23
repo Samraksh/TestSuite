@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='MACLayerTest' Type='Native'>
+	<Test Name='MACLayerTest' Type='Native .NOW'>
 		<Description>
 			Native MACLayer Tests Level 0A test mac level send functionality using CSMA Mac layer
 		</Description>

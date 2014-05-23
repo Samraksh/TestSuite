@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='Empty' Type='C#'>
+	<Test Name='Empty' Type='C# Adapt .NOW'>
 		<Description>
 			C# Empty Project
 		</Description>

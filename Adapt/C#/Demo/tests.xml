@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='Adapt Demo' Type='C#'>
+	<Test Name='Adapt Demo' Type='C# Adapt'>
 		<Description>
 			Adapt C# Demo
 		</Description>
