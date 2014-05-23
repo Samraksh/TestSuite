@@ -6,7 +6,7 @@
 
 #define __regtest
 
-#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\tinyhal.h>
+#include <tinyhal.h>
 #include "DataStoreTest.h"
 
 
