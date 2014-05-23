@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='EventsTest' Type='Native'>
+	<Test Name='EventsTest' Type='Native Adapt .NOW'>
 		<Description>
 			EventsTest Tests waitforevents interface
 		</Description>

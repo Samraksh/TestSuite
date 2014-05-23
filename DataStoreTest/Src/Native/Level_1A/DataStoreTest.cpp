@@ -30,13 +30,16 @@ DataStoreTest::DataStoreTest( int seedValue, int numberOfEvents )
 
 BOOL DataStoreTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
 {
-	hal_printf("\r\nresult=%s\r\n", (result) ? "PASS":"FAIL");
-	hal_printf("\r\naccuracy=%d\r\n", accuracy);
-	hal_printf("\r\nresultParameter1=%s\r\n", resultParameter1);
-	hal_printf("\r\nresultParameter2=%s\r\n", resultParameter2);
-	hal_printf("\r\nresultParameter3=%s\r\n", "null");
-	hal_printf("\r\nresultParameter4=%s\r\n", "null");
-	hal_printf("\r\nresultParameter5=%s\r\n", "null");
+	while(true){
+		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=%d\n", accuracy);
+		hal_printf("resultParameter1=%s\n", resultParameter1);
+		hal_printf("resultParameter2=%s\n", resultParameter2);
+		hal_printf("resultParameter3=null\n");
+		hal_printf("resultParameter4=null\n");
+		hal_printf("resultParameter5=null\n");
+		HAL_Time_Sleep_MicroSeconds(1000000);
+	}
 
 	return true;
 }

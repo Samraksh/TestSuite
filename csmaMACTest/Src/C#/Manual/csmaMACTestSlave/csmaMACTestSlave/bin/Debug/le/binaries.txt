@@ -1,2 +1,0 @@
-"D:\\AnanthAtSamraksh\\TestSuite\\csmaMACTest\\Src\\C#\\Manual\\csmaMACTestSlave\\csmaMACTestSlave\\bin\\Debug\\le\\csmaMACTestSlave.pe"
-"D:\\AnanthAtSamraksh\\TestSuite\\csmaMACTest\\Src\\C#\\Manual\\csmaMACTestSlave\\csmaMACTestSlave\\bin\\Debug\\le\\Samraksh_SPOT_Net.pe"

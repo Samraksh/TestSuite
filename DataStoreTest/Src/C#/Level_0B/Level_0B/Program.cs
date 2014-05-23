@@ -32,22 +32,22 @@ namespace Samraksh.eMote.Tests
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
         {
             while (true){
-                Thread.Sleep(1000);
-                if (result)
-                {
-                    Debug.Print("\r\nresult=PASS\r\n");
-                }
-                else
-                {
-                    Debug.Print("\r\nresult=FAIL\r\n");
-                }
-                Debug.Print("\r\naccuracy=" + accuracy.ToString() + "\r\n");
-                Debug.Print("\r\nresultParameter1=" + resultParameter1 + "\r\n");
-                Debug.Print("\r\nresultParameter2=" + resultParameter2 + "\r\n");
-                Debug.Print("\r\nresultParameter3= \r\b");
-                Debug.Print("\r\nresultParameter4= \r\b");
-                Debug.Print("\r\nresultParameter5= \r\b");
-            }
+				Thread.Sleep(1000);
+            	if (result)
+            	{
+            	    Debug.Print("result=PASS\n");
+            	}
+            	else
+            	{
+            	    Debug.Print("result=FAIL\n");
+            	}
+            	Debug.Print("accuracy=" + accuracy.ToString());
+            	Debug.Print("resultParameter1=" + resultParameter1);
+            	Debug.Print("resultParameter2=" + resultParameter2);
+            	Debug.Print("resultParameter3=null");
+            	Debug.Print("resultParameter4=null");
+            	Debug.Print("resultParameter5=null");
+			}
 
         }
 
