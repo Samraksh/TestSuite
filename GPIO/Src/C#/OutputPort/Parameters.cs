@@ -15,8 +15,8 @@ namespace ParameterClass
 	public bool useTestScript = false;
 	public string testScriptName = "";
 	public int testScriptTimeoutMs = 9000;
-	public string useAnalysis = "Matlab";
-	public string analysisScriptName = "analyze.m";
+	public string useAnalysis = "exe";
+	public string analysisScriptName = "LogicAnalysis.exe";
 	public bool useResultsFile = false;
 	public string resultsFileName = "results.txt";
 	// Do not change text format above this point
