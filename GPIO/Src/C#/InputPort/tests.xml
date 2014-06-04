@@ -1,10 +1,10 @@
 <TestSuite>
-	<Test Name='GPIO' Type='C# Adapt .NOW'>
+	<Test Name='GPIO' Type='C# .NOW'>
 		<Description>
-			C# GPIO Output
+			C# GPIO Input
 		</Description>
 		<TestPath>
-			GPIO\Src\C#\OutputPort
+			GPIO\Src\C#\InputPort
 		</TestPath>
 		<TestProjName>
 			GPIO.csproj

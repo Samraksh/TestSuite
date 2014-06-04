@@ -16,3 +16,8 @@ D:\AnanthAtSamraksh\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis\LogicAnalysis
 D:\AnanthAtSamraksh\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
 D:\AnanthAtSamraksh\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis.exe
 D:\AnanthAtSamraksh\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis.pdb
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis.exe
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis.pdb
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache

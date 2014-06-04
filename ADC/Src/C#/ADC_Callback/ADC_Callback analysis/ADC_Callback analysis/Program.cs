@@ -11,6 +11,9 @@ namespace ADC_Callback
 {
     class Program
     {
+        const string fileName = @"testTemp\rx_data.txt";
+        const string fileOut = @"testTemp\results.txt";
+
         static void Main(string[] args)
         {
             ulong[] callbackTimeValue = new ulong[4];
@@ -21,7 +24,7 @@ namespace ADC_Callback
             
             try
             {
-                using (StreamReader reader = new StreamReader(args[0]))
+                using (StreamReader reader = new StreamReader(fileName))
                 {
                     string line;
                     string[] timeString;
@@ -47,12 +50,12 @@ namespace ADC_Callback
 
                 System.Diagnostics.Debug.WriteLine("callback diff: " + callbackTimeDiff.ToString() + " dateTime diff: " + dateTimeDiff.ToString());
 
-                if ( (callbackTimeDiff > 7990000) && (callbackTimeDiff < 8010000) && (dateTimeDiff < 10010000) && (dateTimeDiff > 9990000) )
+                if ( (callbackTimeDiff > 7990000) && (callbackTimeDiff < 8010000) && (dateTimeDiff < 10200000) && (dateTimeDiff > 9800000) )
                     testResult = true;
                 else
                     testResult = false;
 
-                using (StreamWriter writer = new StreamWriter(args[1]))
+                using (StreamWriter writer = new StreamWriter(fileOut, false))
                 {
                     if (testResult == true)
                         writer.Write("result = PASS\r\n");
@@ -71,7 +74,7 @@ namespace ADC_Callback
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
-                using (StreamWriter writer = new StreamWriter(args[1]))
+                using (StreamWriter writer = new StreamWriter(fileOut, false))
                 {
                     writer.Write("result = FAIL\r\n");
                     writer.Write("accuracy = 0\r\n");

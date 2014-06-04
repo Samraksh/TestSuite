@@ -1,7 +1,0 @@
-result = PASS
-accuracy = 0
-resultParameter1 = 8000166
-resultParameter2 = 9994271
-resultParameter3 =
-resultParameter4 =
-resultParameter5 =

@@ -12,10 +12,10 @@ namespace LogicAnalysis
     class Program
     {
         const string fileName = @"testTemp\testData.csv";
-        const string fileOut = @"results.txt";
+        const string fileOut = @"testTemp\results.txt";
         const float sampleFreq = 4000000;
 
-        const float expectedFreq0 = 5f;
+        const float expectedFreq0 = 2.5f;
         const float expectedFreq1 = 0f;
         const float expectedFreq2 = 0f;
         const float expectedFreq3 = 0f;
