@@ -12,7 +12,8 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            bool eraseDataStore = false;
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -39,19 +40,29 @@ namespace Samraksh.eMote.Tests
         // Test that creates a bunch of records
         public void Level_0A()
         {
-            for (UInt32 dataIndex = 0; dataIndex <= 10; ++dataIndex)
+            try
             {
-                DataReference data = new DataReference(dStore, 512, REFERENCE_DATA_TYPE.UINT16);
-                Debug.Print("Data created successfully");
+                for (UInt32 dataIndex = 0; dataIndex <= 10; ++dataIndex)
+                {
+                    DataReference data = new DataReference(dStore, 512, ReferenceDataType.UINT16);
+                    Debug.Print("Data created successfully");
+                }
+            
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                {
+                    Debug.Print("Datastore succesfully erased");
+                    DisplayStats(true, "Datastore succesfully erased", null, 0);
+                }
+                else
+                {
+                    DisplayStats(false, "Error: Data failed to be created successfully", null, 0);
+                }
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
+            catch (Exception ex)
             {
-                Debug.Print("Datastore succesfully erased");
-				DisplayStats(true, "Datastore succesfully erased", null, 0);
-			} else {
-				DisplayStats(false, "Error: Data failed to be created successfully", null, 0);
-			}
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
         public static void Main()

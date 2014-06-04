@@ -4,6 +4,8 @@ using System.Threading;
 using Microsoft.SPOT.Hardware;
 using Samraksh.eMote.NonVolatileMemory;
 
+/* NOTE: THIS TEST WILL NOT SHOW A SUCCESS IN THE RIG, BUT IF YOU WATCH THE OUTPUT ON A TERMINAL SCREEN, IT SHOULD SHOW THAT THE TEST WAS SUCCESSFUL */
+
 /* This test is to verify all exception conditions during write 
  * 1. Array length is zero. Exception expected                                                  -- DataStoreException("data array cannot be of zero length");  
  * 2. Offset less than zero. Exception expected                                                 -- DataStoreException("Offset should not be negative");
@@ -47,26 +49,35 @@ namespace Level_5A
 
         public DataStoreExceptionTest()
         {
-            Debug.Print("Starting test Level_5A");
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
-            
-            experimentIndex = 10;
-            size = 2;
-            rand = new Random();
-            
-            readBuffer = new byte[size];
-            writeBuffer = new byte[size];
-            
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-            else
+            try
             {
-                Debug.Print("Datastore could not be erased");
-            }
+                Debug.Print("Starting test Level_5A");
+                bool eraseDataStore = true;
+                dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
+            
+                experimentIndex = 10;
+                size = 2;
+                rand = new Random();
+            
+                readBuffer = new byte[size];
+                writeBuffer = new byte[size];
+            
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
+                else
+                {
+                    Debug.Print("Datastore could not be erased");
+                }
 
-            for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
+                for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
+                {
+                    writeBuffer[writeIndex] = (byte)writeIndex;
+                }
+            }
+            catch (Exception ex)
             {
-                writeBuffer[writeIndex] = (byte)writeIndex;
+                Debug.Print(" Write failed. Exception is: " + ex.Message);
+                return;
             }
         }
 
@@ -98,11 +109,11 @@ namespace Level_5A
                 try
                 {
                     size = rand.Next(828) + 2;
-                    data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-                    DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, 0, writeBuffer.Length);
-                    if (retVal == DATASTORE_RETURN_STATUS.Success)
+                    data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    DataStoreReturnStatus retVal = data.Write(writeBuffer, 0, writeBuffer.Length);
+                    if (retVal == DataStoreReturnStatus.Success)
                         Debug.Print("Write successful");
-                    else if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                    else if (retVal == DataStoreReturnStatus.InvalidReference)
                     {
                         DisplayStats(false, "Write not successful as reference is not valid", "", 0);
                         return;
@@ -116,7 +127,7 @@ namespace Level_5A
                 catch (Exception ex)
                 {
                     Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    throw;
+                    return;
                 }
             }
         }
@@ -125,195 +136,204 @@ namespace Level_5A
         // was successful
         public void Level_5A(int excepType)
         {
-            size = rand.Next(828) + 2;
-            data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-
-            switch (excepType)
+            try
             {
-                case ((int)(exceptionType.DATA_AMOUNT_ZERO)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.DATA_AMOUNT_ZERO)) + ": DATA_AMOUNT_ZERO");
-                    try
-                    {
-                        arrayLength = 0; offset = 0;
-                        byte[] writeTestBuffer = new byte[0];
-                        DATASTORE_RETURN_STATUS retVal = data.Write(writeTestBuffer, offset, arrayLength);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    }
-                    break;
-                }
+                size = rand.Next(828) + 2;
+                data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                Debug.Print("Data created successfully");
 
-                case ((int)(exceptionType.OFFSET_LESS_THAN_ZERO)):
+                switch (excepType)
                 {
-                    Debug.Print("Starting test " + ((int)(exceptionType.OFFSET_LESS_THAN_ZERO)) + ": OFFSET_LESS_THAN_ZERO");
-                    try
+                    case ((int)(exceptionType.DATA_AMOUNT_ZERO)):
                     {
-                        offset = -1; arrayLength = writeBuffer.Length;
-                        DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, offset, arrayLength);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    }
-                    break;
-                }
-
-                case ((int)(exceptionType.DATA_AMOUNT_LESS_THAN_ZERO)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.DATA_AMOUNT_LESS_THAN_ZERO)) + ": DATA_AMOUNT_LESS_THAN_ZERO");
-                    try
-                    {
-                        offset = 0; arrayLength = -1;
-                        DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, offset, arrayLength);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    }
-                    break;
-                }
-
-                case ((int)(exceptionType.NULL_REFERENCE)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.NULL_REFERENCE)) + ": NULL_REFERENCE");
-                    //Write data
-                    try
-                    {
-                        writeData();
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Print("Write failed. Exception is: " + ex.Message);
-                    }
-
-                    //Get the data references into dataRefArray.
-                    offset = 0;
-                    dataRefArray = new DataReference[experimentIndex];
-                    if (dStore.ReadAllDataReferences(dataRefArray, offset) != DATASTORE_RETURN_STATUS.Success)
-                    {
-                        Debug.Print("ReadAllDataReferences failed");
+                        Debug.Print("Starting test " + ((int)(exceptionType.DATA_AMOUNT_ZERO)) + ": DATA_AMOUNT_ZERO");
+                        try
+                        {
+                            arrayLength = 0; offset = 0;
+                            byte[] writeTestBuffer = new byte[0];
+                            DataStoreReturnStatus retVal = data.Write(writeTestBuffer, offset, arrayLength);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        }
                         break;
                     }
-                    
-                    //Delete a random reference
-                    int randValue = rand.Next(experimentIndex);
-                    if(dataRefArray[randValue].Delete() != DATASTORE_RETURN_STATUS.Success)
-                        Debug.Print("Data delete failed");
-                    else
-                        Debug.Print("Data delete succeeded");
-                    
-                    //Read from same reference
-                    try
-                    {
-                        DATASTORE_RETURN_STATUS retVal = dataRefArray[randValue].Read(readBuffer, offset, readBuffer.Length);
 
-                        if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                    case ((int)(exceptionType.OFFSET_LESS_THAN_ZERO)):
+                    {
+                        Debug.Print("Starting test " + ((int)(exceptionType.OFFSET_LESS_THAN_ZERO)) + ": OFFSET_LESS_THAN_ZERO");
+                        try
                         {
-                            Debug.Print("Read failed. Invalid reference");
-                            throw new DataStoreException("Invalid reference");
+                            offset = -1; arrayLength = writeBuffer.Length;
+                            DataStoreReturnStatus retVal = data.Write(writeBuffer, offset, arrayLength);
                         }
-                        else if (retVal != DATASTORE_RETURN_STATUS.Success)
-                            Debug.Print("Read failed");
-                        else
-                            Debug.Print("Read succeeded");
+                        catch (Exception ex)
+                        {
+                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        }
+                        break;
                     }
-                    catch (Exception ex)
+
+                    case ((int)(exceptionType.DATA_AMOUNT_LESS_THAN_ZERO)):
                     {
-                        Debug.Print("Read failed. Exception is: " + ex.Message);
+                        Debug.Print("Starting test " + ((int)(exceptionType.DATA_AMOUNT_LESS_THAN_ZERO)) + ": DATA_AMOUNT_LESS_THAN_ZERO");
+                        try
+                        {
+                            offset = 0; arrayLength = -1;
+                            DataStoreReturnStatus retVal = data.Write(writeBuffer, offset, arrayLength);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        }
+                        break;
                     }
+
+                    case ((int)(exceptionType.NULL_REFERENCE)):
+                    {
+                        Debug.Print("Starting test " + ((int)(exceptionType.NULL_REFERENCE)) + ": NULL_REFERENCE");
+                        //Write data
+                        try
+                        {
+                            writeData();
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print("Write failed. Exception is: " + ex.Message);
+                        }
+
+                        //Get the data references into dataRefArray.
+                        offset = 0;
+                        dataRefArray = new DataReference[experimentIndex];
+                        if (dStore.ReadAllDataReferences(dataRefArray, offset) != DataStoreReturnStatus.Success)
+                        {
+                            Debug.Print("ReadAllDataReferences failed");
+                            break;
+                        }
                     
-                    break;
-                }
+                        //Delete a random reference
+                        int randValue = rand.Next(experimentIndex);
+                        if(dataRefArray[randValue].Delete() != DataStoreReturnStatus.Success)
+                            Debug.Print("Data delete failed");
+                        else
+                            Debug.Print("Data delete succeeded");
+                    
+                        //Read from same reference
+                        try
+                        {
+                            DataStoreReturnStatus retVal = dataRefArray[randValue].Read(readBuffer, offset, readBuffer.Length);
 
-                case ((int)(exceptionType.DATATYPE_DIFFERENT)):
-                {
-                    //Cannot test this, as this can never fail.
-                    Debug.Print("Starting test " + ((int)(exceptionType.DATATYPE_DIFFERENT)) + ": DATATYPE_DIFFERENT");
-                    break;
-                }
+                            if (retVal == DataStoreReturnStatus.InvalidReference)
+                            {
+                                Debug.Print("Read failed. Invalid reference");
+                                throw new DataStoreException("Invalid reference");
+                            }
+                            else if (retVal != DataStoreReturnStatus.Success)
+                                Debug.Print("Read failed");
+                            else
+                                Debug.Print("Read succeeded");
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print("Read failed. Exception is: " + ex.Message);
+                        }
+                    
+                        break;
+                    }
 
-                case ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ARRAY_SIZE)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ARRAY_SIZE)) + ": DATA_SIZE_GREATER_THAN_ARRAY_SIZE");
-                    try
+                    case ((int)(exceptionType.DATATYPE_DIFFERENT)):
                     {
-                        offset = 0; arrayLength = writeBuffer.Length + experimentIndex;
-                        DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, offset, arrayLength);
+                        //Cannot test this, as this can never fail.
+                        Debug.Print("Starting test " + ((int)(exceptionType.DATATYPE_DIFFERENT)) + ": DATATYPE_DIFFERENT");
+                        break;
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    }
-                    break;
-                }
 
-                case ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ALLOCATION_SIZE)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ALLOCATION_SIZE)) + ": DATA_SIZE_GREATER_THAN_ALLOCATION_SIZE");
-                    try
+                    case ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ARRAY_SIZE)):
                     {
-                        offset = 0; arrayLength = experimentIndex * experimentIndex * experimentIndex;
-                        DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, offset, arrayLength);
+                        Debug.Print("Starting test " + ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ARRAY_SIZE)) + ": DATA_SIZE_GREATER_THAN_ARRAY_SIZE");
+                        try
+                        {
+                            offset = 0; arrayLength = writeBuffer.Length + experimentIndex;
+                            DataStoreReturnStatus retVal = data.Write(writeBuffer, offset, arrayLength);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        }
+                        break;
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    }
-                    break;
-                }
 
-                case ((int)(exceptionType.DATA_SIZE_FROM_OFFSET_GREATER_THAN_ARRAY_SIZE)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.DATA_SIZE_FROM_OFFSET_GREATER_THAN_ARRAY_SIZE)) + ": DATA_SIZE_FROM_OFFSET_GREATER_THAN_ARRAY_SIZE");
-                    try
+                    case ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ALLOCATION_SIZE)):
                     {
-                        offset = experimentIndex; arrayLength = experimentIndex * experimentIndex * experimentIndex;
-                        DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, offset, arrayLength);
+                        Debug.Print("Starting test " + ((int)(exceptionType.DATA_SIZE_GREATER_THAN_ALLOCATION_SIZE)) + ": DATA_SIZE_GREATER_THAN_ALLOCATION_SIZE");
+                        try
+                        {
+                            offset = 0; arrayLength = experimentIndex * experimentIndex * experimentIndex;
+                            DataStoreReturnStatus retVal = data.Write(writeBuffer, offset, arrayLength);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        }
+                        break;
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    }
-                    break;
-                }
 
-                case ((int)(exceptionType.BYTE_DATATYPE_OFFSET_ODD)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.BYTE_DATATYPE_OFFSET_ODD)) + ": BYTE_DATATYPE_OFFSET_ODD");
-                    try
+                    case ((int)(exceptionType.DATA_SIZE_FROM_OFFSET_GREATER_THAN_ARRAY_SIZE)):
                     {
-                        offset = 1; arrayLength = writeBuffer.Length;
-                        DATASTORE_RETURN_STATUS retVal = data.Write(writeBuffer, offset, arrayLength);
+                        Debug.Print("Starting test " + ((int)(exceptionType.DATA_SIZE_FROM_OFFSET_GREATER_THAN_ARRAY_SIZE)) + ": DATA_SIZE_FROM_OFFSET_GREATER_THAN_ARRAY_SIZE");
+                        try
+                        {
+                            offset = experimentIndex; arrayLength = experimentIndex * experimentIndex * experimentIndex;
+                            DataStoreReturnStatus retVal = data.Write(writeBuffer, offset, arrayLength);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        }
+                        break;
                     }
-                    catch (Exception ex)
+
+                    case ((int)(exceptionType.BYTE_DATATYPE_OFFSET_ODD)):
                     {
-                        Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        Debug.Print("Starting test " + ((int)(exceptionType.BYTE_DATATYPE_OFFSET_ODD)) + ": BYTE_DATATYPE_OFFSET_ODD");
+                        try
+                        {
+                            offset = 1; arrayLength = writeBuffer.Length;
+                            DataStoreReturnStatus retVal = data.Write(writeBuffer, offset, arrayLength);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                        }
+                        break;
                     }
-                    break;
-                }
 
-                case((int)(exceptionType.NO_EXCEPTION)):
-                {
-                    Debug.Print("Starting test " + ((int)(exceptionType.NO_EXCEPTION)) + ": NO_EXCEPTION");
-                    writeData();
-                    break;
-                }
+                    case((int)(exceptionType.NO_EXCEPTION)):
+                    {
+                        Debug.Print("Starting test " + ((int)(exceptionType.NO_EXCEPTION)) + ": NO_EXCEPTION");
+                        writeData();
+                        DisplayStats(true, "Exception test successful", "", 0);
+                        break;
+                    }
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
-
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
         public static void Main()
         {
             DataStoreExceptionTest dtest = new DataStoreExceptionTest();
 
-            for (int testIndex = 0; testIndex <= (exceptionType.NO_EXCEPTION - exceptionType.DATA_AMOUNT_ZERO); ++testIndex)
             //for (int testIndex = 0; testIndex < 4; ++testIndex)
+            for (int testIndex = 0; testIndex <= (exceptionType.NO_EXCEPTION - exceptionType.DATA_AMOUNT_ZERO); ++testIndex)
             {
                 dtest.Level_5A(testIndex);
             }

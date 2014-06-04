@@ -18,7 +18,8 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            bool eraseDataStore = false;
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();
             experimentIndex = 10;
@@ -54,34 +55,42 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_0D()
         {
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            try
             {
-                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
 
-                rnd.NextBytes(writeBuffer);
-                data.Write(writeBuffer, size);
-
-                data.Delete();
-                if (DATASTORE_RETURN_STATUS.Failure == data.Read(readBuffer, 0, size) || DATASTORE_RETURN_STATUS.InvalidReference == data.Read(readBuffer, 0, size))
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
                 {
-                    Debug.Print("Delete test successful");
-                }
-                else
-                {
-                    DisplayStats(false, "Delete test failed", "", 0);
-                    return;
+                    DataReference data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    Debug.Print("Data created successfully");
+                
+                    rnd.NextBytes(writeBuffer);
+                    data.Write(writeBuffer, size);
+
+                    data.Delete();
+                    if (DataStoreReturnStatus.Failure == data.Read(readBuffer, 0, size) || DataStoreReturnStatus.InvalidReference == data.Read(readBuffer, 0, size))
+                    {
+                        Debug.Print("Delete test successful " + dataIndex);
+                    }
+                    else
+                    {
+                        DisplayStats(false, "Delete test failed", "", 0);
+                        return;
+                    }
+
+                    Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                    Array.Clear(readBuffer, 0, readBuffer.Length);
                 }
 
-                Array.Clear(writeBuffer, 0, writeBuffer.Length);
-                Array.Clear(readBuffer, 0, readBuffer.Length);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", "", 0);
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", "", 0);
-            
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
         
@@ -89,6 +98,7 @@ namespace Samraksh.eMote.Tests
         {
             DataStoreTest dtest = new DataStoreTest();
             dtest.Level_0D();
+            Debug.Print("Delete test successful - final.");
         }
     }
 }

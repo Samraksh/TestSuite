@@ -30,16 +30,25 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
-            //dStore.InitDataStore(StorageType.NOR);
+            try
+            {
+                bool eraseDataStore = true;
+                dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
+                //dStore.InitDataStore(StorageType.NOR);
             
-            experimentIndex = 500;
-            size = 256;
-            rand = new Random();
-            //data = new Data[experimentIndex];
-            offsetIndex = 128; 
-            readBuffer = new byte[size];
-            writeBuffer = new byte[size];
+                experimentIndex = 500;
+                size = 256;
+                rand = new Random();
+                //data = new Data[experimentIndex];
+                offsetIndex = 128; 
+                readBuffer = new byte[size];
+                writeBuffer = new byte[size];
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
         public static void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -67,34 +76,43 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_4A()
         {
-            Debug.Print("Starting test Level_4A");
-
-            erasePort.Write(true);
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-            erasePort.Write(false);
-
-            for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
+            try
             {
-                writeBuffer[writeIndex] = (byte)writeIndex;
-            }
+                Debug.Print("Starting test Level_4A");
 
-            //offset = (uint)(rand.Next((int)size));
-            //numData = (uint)(rand.Next((int)(size - offset)));
+                erasePort.Write(true);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
+                erasePort.Write(false);
 
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
-            {
-                data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-
-                writePort.Write(true);
-                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
+                for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
                 {
-                    DisplayStats(false, "Write not successful", "", 0);
-                    return;
+                    writeBuffer[writeIndex] = (byte)writeIndex;
                 }
-                writePort.Write(false);
+
+                //offset = (uint)(rand.Next((int)size));
+                //numData = (uint)(rand.Next((int)(size - offset)));
+
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                {
+                    data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    Debug.Print("Data created successfully");
+
+                    writePort.Write(true);
+                    if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
+                    else
+                    {
+                        DisplayStats(false, "Write not successful", "", 0);
+                        return;
+                    }
+                    writePort.Write(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
             }
             TestPersistence();
         }
@@ -102,63 +120,77 @@ namespace Samraksh.eMote.Tests
 
         public void TestPersistence()
         {
-            offset = 0;
-            //int totalRecords = dStore.CountOfDataIds();
-            int totalRecords = experimentIndex;
-            int dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
-
-            dataRefArray = new DataReference[dataAllocationIndex + 5];
-
-            //int[] dataIdArray = new int[256];
-            int dataIndex = 0;
-
-            // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
-            // even offsets, but might want to read from odd offsets. 
-            //if (offset % 2 == 1)
-            //    offset = offset + sizeof(byte);
-
-            while (offset < totalRecords)
+            try
             {
-                //dStore.ReadAllDataIds(dataIdArray, offset);     //Get all dataIDs into the dataIdArray.
-                dStore.ReadAllDataReferences(dataRefArray, offset);      //Get the data references into dataRefArray.
+                offset = 0;
+                //int totalRecords = dStore.CountOfDataIds();
+                int totalRecords = experimentIndex;
+                int dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
 
-                while (dataIndex < dataAllocationIndex)
+                dataRefArray = new DataReference[dataAllocationIndex + 5];
+
+                //int[] dataIdArray = new int[256];
+                int dataIndex = 0;
+
+                // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
+                // even offsets, but might want to read from odd offsets. 
+                //if (offset % 2 == 1)
+                //    offset = offset + sizeof(byte);
+
+                while (offset < totalRecords)
                 {
-                    readPort.Write(true);
-                    if (dataRefArray[dataIndex].Read(readBuffer, 0, readBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
-                        Debug.Print("Read successful");
-                    else
+                    //dStore.ReadAllDataIds(dataIdArray, offset);     //Get all dataIDs into the dataIdArray.
+                
+                    //Get the data references into dataRefArray.
+                    if (dStore.ReadAllDataReferences(dataRefArray, offset) != DataStoreReturnStatus.Success)
                     {
-                        DisplayStats(false, "Read not successful", "", 0);
+                        DisplayStats(false, "ReadAllDataReferences", "", 0);
                         return;
                     }
-                    readPort.Write(false);
 
-                    for (UInt16 rwIndex = 0; rwIndex < readBuffer.Length; ++rwIndex)
+                    while (dataIndex < dataAllocationIndex)
                     {
-                        if (readBuffer[rwIndex] != writeBuffer[rwIndex])
+                        readPort.Write(true);
+                        if (dataRefArray[dataIndex].Read(readBuffer, 0, readBuffer.Length) == DataStoreReturnStatus.Success)
+                            Debug.Print("Read successful");
+                        else
                         {
-                            DisplayStats(false, "Read Write test failed", "", 0);
+                            DisplayStats(false, "Read not successful", "", 0);
                             return;
                         }
+                        readPort.Write(false);
+
+                        for (UInt16 rwIndex = 0; rwIndex < readBuffer.Length; ++rwIndex)
+                        {
+                            if (readBuffer[rwIndex] != writeBuffer[rwIndex])
+                            {
+                                DisplayStats(false, "Read Write test failed", "", 0);
+                                return;
+                            }
+                        }
+
+                        Debug.Print("Read Write successful");
+
+                        Array.Clear(readBuffer, 0, readBuffer.Length);
+                        dataIndex++;
                     }
+                    dataIndex = 0;
+                    Array.Clear(dataRefArray, 0, dataRefArray.Length);
+                    offsetIndex = (UInt16)(offsetIndex < totalRecords ? offsetIndex : totalRecords);
+                    offset += offsetIndex;
 
-                    Debug.Print("Read Write successful");
-
-                    Array.Clear(readBuffer, 0, readBuffer.Length);
-                    dataIndex++;
+                    dataAllocationIndex = totalRecords - offset;
+                    dataAllocationIndex = dataAllocationIndex > offsetIndex ? offsetIndex : dataAllocationIndex;
                 }
-                dataIndex = 0;
-                Array.Clear(dataRefArray, 0, dataRefArray.Length);
-                offsetIndex = (UInt16)(offsetIndex < totalRecords ? offsetIndex : totalRecords);
-                offset += offsetIndex;
 
-                dataAllocationIndex = totalRecords - offset;
-                dataAllocationIndex = dataAllocationIndex > offsetIndex ? offsetIndex : dataAllocationIndex;
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", null, 0);
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", null, 0);
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
 
         }
 

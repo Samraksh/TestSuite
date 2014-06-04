@@ -19,13 +19,22 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            try
+            {
+                bool eraseDataStore = true;
+                dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
-            size = 256;
-            offset = 0;
-            experimentIndex = 100;
-            readBuffer = new UInt16[size];
-            writeBuffer = new UInt16[size];
+                size = 256;
+                offset = 0;
+                experimentIndex = 100;
+                readBuffer = new UInt16[size];
+                writeBuffer = new UInt16[size];
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -53,45 +62,54 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_1A()
         {
-            Debug.Print("Starting test Level_1A");
-
-            for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
+            try
             {
-                writeBuffer[writeIndex] = writeIndex;
-            }
+                Debug.Print("Starting test Level_1A");
 
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
-            {
-                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.UINT16);
-
-                if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
-                    DisplayStats(true, "Write successful", "", 0);
-                else
-                    DisplayStats(true, "Write not successful", "", 0);
-
-                if (data.Read(readBuffer, offset, size) == DATASTORE_RETURN_STATUS.Success)
-                    DisplayStats(true, "Read successful", "", 0);
-                else
-                    DisplayStats(true, "Read not successful", "", 0);
-
-                for (UInt16 i = 0; i < writeBuffer.Length; i++)
+                for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
                 {
-                    if (readBuffer[i] != writeBuffer[i])
-                    {
-                        DisplayStats(false, "Read Write test failed", "", 0);
-                        return;
-                    }
+                    writeBuffer[writeIndex] = writeIndex;
                 }
 
-                DisplayStats(true, "Read Write successful", "", 0);
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                {
+                    DataReference data = new DataReference(dStore, size, ReferenceDataType.UINT16);
+                    Debug.Print("Data created successfully");
+                
+                    if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
+                        DisplayStats(true, "Write successful", "", 0);
+                    else
+                        DisplayStats(true, "Write not successful", "", 0);
 
-                Array.Clear(readBuffer, 0, readBuffer.Length);
+                    if (data.Read(readBuffer, offset, size) == DataStoreReturnStatus.Success)
+                        DisplayStats(true, "Read successful", "", 0);
+                    else
+                        DisplayStats(true, "Read not successful", "", 0);
 
-                Debug.Print("Experiment run count is " + dataIndex);
+                    for (UInt16 i = 0; i < writeBuffer.Length; i++)
+                    {
+                        if (readBuffer[i] != writeBuffer[i])
+                        {
+                            DisplayStats(false, "Read Write test failed", "", 0);
+                            return;
+                        }
+                    }
+
+                    DisplayStats(true, "Read Write successful", "", 0);
+
+                    Array.Clear(readBuffer, 0, readBuffer.Length);
+
+                    Debug.Print("Experiment run count is " + dataIndex);
+                }
+
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", null, 0);
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", null, 0);
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
 

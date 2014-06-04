@@ -20,7 +20,8 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            bool eraseDataStore = false;
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();
             experimentIndex = 10;
@@ -63,42 +64,64 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_0E()
         {
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            try
             {
-                data[dataIndex] = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-                rnd.NextBytes(writeBuffer);
-                data[dataIndex].Write(writeBuffer, size);
-                Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
+
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                {
+                    data[dataIndex] = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    rnd.NextBytes(writeBuffer);
+                    data[dataIndex].Write(writeBuffer, size);
+                    Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
             }
             TestPersistence();
         }
 
         public void TestPersistence()
         {
-            ////int[] dataIdArray = new int[dStore.CountOfDataIds()];
-            ////dStore.ReadAllDataIds(dataIdArray, 0);     //Get all dataIDs into the dataIdArray.
-            DataReference[] dataRefArray = new DataReference[experimentIndex];
-            dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
-            
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            try
             {
-                if (DATASTORE_RETURN_STATUS.Failure == dataRefArray[dataIndex].Read(readBuffer, 0, size))
+                ////int[] dataIdArray = new int[dStore.CountOfDataIds()];
+                ////dStore.ReadAllDataIds(dataIdArray, 0);     //Get all dataIDs into the dataIdArray.
+                DataReference[] dataRefArray = new DataReference[experimentIndex];
+
+                //Get the data references into dataRefArray.
+                if (dStore.ReadAllDataReferences(dataRefArray, 0) != DataStoreReturnStatus.Success)
                 {
-                    DisplayStats(false, "Read failed", "", 0);
+                    DisplayStats(false, "ReadAllDataReferences", "", 0);
                     return;
                 }
-                else
-                {
-                    Debug.Print("Read succeeded");
-                }
-                Array.Clear(readBuffer, 0, readBuffer.Length);
-            }
 
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", "", 0);
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                {
+                    if (DataStoreReturnStatus.Failure == dataRefArray[dataIndex].Read(readBuffer, 0, size))
+                    {
+                        DisplayStats(false, "Read failed", "", 0);
+                        return;
+                    }
+                    else
+                    {
+                        Debug.Print("Read succeeded");
+                    }
+                    Array.Clear(readBuffer, 0, readBuffer.Length);
+                }
+
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
 

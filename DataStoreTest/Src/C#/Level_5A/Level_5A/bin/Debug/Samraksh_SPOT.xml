@@ -14,7 +14,7 @@
             DataStore error values 
             </summary>
         </member>
-        <member name="T:Samraksh.SPOT.NonVolatileMemory.DATASTORE_RETURN_STATUS">
+        <member name="T:Samraksh.SPOT.NonVolatileMemory.DataStoreReturnStatus">
             <summary>
             DataStore status types
             </summary>

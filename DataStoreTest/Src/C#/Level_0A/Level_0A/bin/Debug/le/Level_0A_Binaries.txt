@@ -1,4 +1,3 @@
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\bin\Debug\le\Microsoft.SPOT.Hardware.pe
 D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\bin\Debug\le\Microsoft.SPOT.Native.pe
-D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\bin\Debug\le\Samraksh_SPOT.pe
-D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\bin\Debug\le\Samraksh_SPOT_Net.pe
+D:\AnanthAtSamraksh\TestSuite\DataStoreTest\Src\C#\Level_0A\Level_0A\bin\Debug\le\Samraksh_eMote.pe

@@ -24,30 +24,39 @@ namespace SimpleCompleteAppNote
 
         public CompleteAppNote()
         {
-            Debug.Print("Starting complete app note");
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            try
+            {
+                Debug.Print("Starting complete app note");
+                bool eraseDataStore = true;
+                dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
-            experimentIndex = 10;
-            size = 2;
-            rand = new Random();
+                experimentIndex = 10;
+                size = 2;
+                rand = new Random();
 
-            readBufferByte = new byte[size]; writeBufferByte = new byte[size];
-            readBufferUInt16 = new UInt16[size]; writeBufferUInt16 = new UInt16[size];
-            readBufferUInt32 = new UInt32[size]; writeBufferUInt32 = new UInt32[size];
+                readBufferByte = new byte[size]; writeBufferByte = new byte[size];
+                readBufferUInt16 = new UInt16[size]; writeBufferUInt16 = new UInt16[size];
+                readBufferUInt32 = new UInt32[size]; writeBufferUInt32 = new UInt32[size];
 
-            dataType = typeof(byte);
+                dataType = typeof(byte);
 
-            //Create a flash with no data
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-            else
-            {
-                Debug.Print("Datastore could not be erased");
+                //Create a flash with no data
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
+                else
+                {
+                    Debug.Print("Datastore could not be erased");
+                }
+
+                for (UInt16 writeIndex = 0; writeIndex < writeBufferByte.Length; ++writeIndex)
+                {
+                    writeBufferByte[writeIndex] = (byte)writeIndex;
+                }
             }
-
-            for (UInt16 writeIndex = 0; writeIndex < writeBufferByte.Length; ++writeIndex)
+            catch (Exception ex)
             {
-                writeBufferByte[writeIndex] = (byte)writeIndex;
+                Debug.Print(" Write failed. Exception is: " + ex.Message);
+                throw;
             }
         }
 
@@ -82,11 +91,11 @@ namespace SimpleCompleteAppNote
                 try
                 {
                     size = rand.Next(828) + 2;
-                    data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-                    DATASTORE_RETURN_STATUS retVal = data.Write(writeBufferByte, 0, writeBufferByte.Length);
-                    if (retVal == DATASTORE_RETURN_STATUS.Success)
+                    data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    DataStoreReturnStatus retVal = data.Write(writeBufferByte, 0, writeBufferByte.Length);
+                    if (retVal == DataStoreReturnStatus.Success)
                         Debug.Print("Write successful");
-                    else if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                    else if (retVal == DataStoreReturnStatus.InvalidReference)
                     {
                         DisplayStats(false, "Write not successful as reference is not valid", "", 0);
                         return;
@@ -108,7 +117,7 @@ namespace SimpleCompleteAppNote
 
         void Program()
         {
-            DATASTORE_RETURN_STATUS retVal;
+            DataStoreReturnStatus retVal;
             //Write data to flash
             try
             {
@@ -122,7 +131,7 @@ namespace SimpleCompleteAppNote
             //Get the data references into a dataRefArray which is larger than the amount of records created.
             offset = 0;
             dataRefArray = new DataReference[experimentIndex + experimentIndex];
-            if (dStore.ReadAllDataReferences(dataRefArray, offset) != DATASTORE_RETURN_STATUS.Success)
+            if (dStore.ReadAllDataReferences(dataRefArray, offset) != DataStoreReturnStatus.Success)
             {
                 Debug.Print("ReadAllDataReferences failed");
             }
@@ -131,19 +140,18 @@ namespace SimpleCompleteAppNote
             int randValue = rand.Next(experimentIndex);
             try
             {
-                
                 Type dataType = dataRefArray[randValue].getDataReferenceType;
                 int size = dataRefArray[randValue].getDataReferenceSize;
 
                 if (dataType == typeof(byte))
                 {
                     retVal = dataRefArray[randValue].Read(readBufferByte, offset, readBufferByte.Length);
-                    if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                    if (retVal == DataStoreReturnStatus.InvalidReference)
                     {
                         Debug.Print("Read failed. Invalid reference");
                         throw new DataStoreException("Invalid reference");
                     }
-                    else if (retVal != DATASTORE_RETURN_STATUS.Success)
+                    else if (retVal != DataStoreReturnStatus.Success)
                         Debug.Print("Read failed");
                     else
                         Debug.Print("Read succeeded");
@@ -151,12 +159,12 @@ namespace SimpleCompleteAppNote
                 else if (dataType == typeof(UInt16))
                 {
                     retVal = dataRefArray[randValue].Read(readBufferUInt16, offset, readBufferUInt16.Length);
-                    if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                    if (retVal == DataStoreReturnStatus.InvalidReference)
                     {
                         Debug.Print("Read failed. Invalid reference");
                         throw new DataStoreException("Invalid reference");
                     }
-                    else if (retVal != DATASTORE_RETURN_STATUS.Success)
+                    else if (retVal != DataStoreReturnStatus.Success)
                         Debug.Print("Read failed");
                     else
                         Debug.Print("Read succeeded");
@@ -164,18 +172,16 @@ namespace SimpleCompleteAppNote
                 else if (dataType == typeof(UInt32))
                 {
                     retVal = dataRefArray[randValue].Read(readBufferUInt32, offset, readBufferUInt32.Length);
-                    if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                    if (retVal == DataStoreReturnStatus.InvalidReference)
                     {
                         Debug.Print("Read failed. Invalid reference");
                         throw new DataStoreException("Invalid reference");
                     }
-                    else if (retVal != DATASTORE_RETURN_STATUS.Success)
+                    else if (retVal != DataStoreReturnStatus.Success)
                         Debug.Print("Read failed");
                     else
                         Debug.Print("Read succeeded");
                 }
-                
-                
             }
             catch (Exception ex)
             {
@@ -197,12 +203,12 @@ namespace SimpleCompleteAppNote
                     if (dataType == typeof(byte))
                     {
                         retVal = dataRefArray[index].Read(readBufferByte, offset, readBufferByte.Length);
-                        if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                        if (retVal == DataStoreReturnStatus.InvalidReference)
                         {
                             Debug.Print("Read failed. Invalid reference");
                             throw new DataStoreException("Invalid reference");
                         }
-                        else if (retVal != DATASTORE_RETURN_STATUS.Success)
+                        else if (retVal != DataStoreReturnStatus.Success)
                             Debug.Print("Read failed");
                         else
                             Debug.Print("Read succeeded");
@@ -210,12 +216,12 @@ namespace SimpleCompleteAppNote
                     else if (dataType == typeof(UInt16))
                     {
                         retVal = dataRefArray[index].Read(readBufferUInt16, offset, readBufferUInt16.Length);
-                        if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                        if (retVal == DataStoreReturnStatus.InvalidReference)
                         {
                             Debug.Print("Read failed. Invalid reference");
                             throw new DataStoreException("Invalid reference");
                         }
-                        else if (retVal != DATASTORE_RETURN_STATUS.Success)
+                        else if (retVal != DataStoreReturnStatus.Success)
                             Debug.Print("Read failed");
                         else
                             Debug.Print("Read succeeded");
@@ -223,12 +229,12 @@ namespace SimpleCompleteAppNote
                     else if (dataType == typeof(UInt32))
                     {
                         retVal = dataRefArray[index].Read(readBufferUInt32, offset, readBufferUInt32.Length);
-                        if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                        if (retVal == DataStoreReturnStatus.InvalidReference)
                         {
                             Debug.Print("Read failed. Invalid reference");
                             throw new DataStoreException("Invalid reference");
                         }
-                        else if (retVal != DATASTORE_RETURN_STATUS.Success)
+                        else if (retVal != DataStoreReturnStatus.Success)
                             Debug.Print("Read failed");
                         else
                             Debug.Print("Read succeeded");
@@ -244,7 +250,8 @@ namespace SimpleCompleteAppNote
 
             //Delete a random reference
             randValue = rand.Next(experimentIndex);
-            if (dataRefArray[randValue].Delete() != DATASTORE_RETURN_STATUS.Success)
+            Debug.Print("randValue is " + randValue);
+            if (dataRefArray[randValue].Delete() != DataStoreReturnStatus.Success)
                 Debug.Print("Data delete failed");
             else
                 Debug.Print("Data delete succeeded");
@@ -254,15 +261,22 @@ namespace SimpleCompleteAppNote
             {
                 retVal = dataRefArray[randValue].Read(readBufferByte, offset, readBufferByte.Length);
 
-                if (retVal == DATASTORE_RETURN_STATUS.InvalidReference)
+                if (retVal == DataStoreReturnStatus.InvalidReference)
                 {
-                    Debug.Print("Read failed. Invalid reference");
-                    throw new DataStoreException("Invalid reference");
+                    Debug.Print("Read failed, but delete succeeded; Test succeeded. Invalid reference");
+                    //throw new DataStoreException("Invalid reference");
+                    DisplayStats(true, "Read failed, but delete succeeded; Test succeeded. Invalid reference", "", 0);
                 }
-                else if (retVal != DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Read failed");
+                else if (retVal != DataStoreReturnStatus.Success)
+                {
+                    Debug.Print("Read failed, but delete succeeded; Test succeeded");
+                    DisplayStats(true, "Read failed, but delete succeeded; Test succeeded.", "", 0);
+                }
                 else
-                    Debug.Print("Read succeeded");
+                {
+                    Debug.Print("Read succeeded, but delete failed. Test failed");
+                    DisplayStats(false, "Read succeeded, but delete failed. Test failed", "", 0);
+                }
             }
             catch (Exception ex)
             {
