@@ -7,7 +7,7 @@
 			GPIO\Src\C#\InputPortInterrupt
 		</TestPath>
 		<TestProjName>
-			GPIO.csproj
+			InputPortInterrupt.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

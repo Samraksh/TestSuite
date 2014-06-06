@@ -36,7 +36,7 @@ namespace TestSuite
 
 #if (HARDWARE_EMOTE)
 	private static OutputPort testPort_PA0 = new OutputPort(GPIOPins.GPIO_PIN_PA0, true);
-	private static InputPort testPort_PB15 = new InputPort(GPIOPins.GPIO_PIN_PB15, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeHigh);
+	private static InterruptPort testPort_PB15 = new InterruptPort(GPIOPins.GPIO_PIN_PB15, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeHigh);
 	
 #elif (HARDWARE_ADAPT)
 	//private static OutputPort testPort_55 = new OutputPort((Cpu.Pin)55, true);

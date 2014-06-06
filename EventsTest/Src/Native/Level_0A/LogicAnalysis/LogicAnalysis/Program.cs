@@ -106,6 +106,13 @@ namespace LogicAnalysis
             {
                 ReadInFile();
                 System.Diagnostics.Debug.WriteLine("Read in " + listTime.Count.ToString() + " from file " + fileName);
+                if (listNumber <= 1)
+                {
+                    result0 = false;
+                    result1 = false;
+                    result2 = false;
+                    result3 = false;
+                }
                 if (listNumber > 1)
                 {
                     freq0 = GetFrequency(listTime, line0, 0, line0.Count);
