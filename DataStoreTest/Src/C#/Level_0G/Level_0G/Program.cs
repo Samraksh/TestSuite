@@ -15,10 +15,16 @@ namespace Samraksh.eMote.Tests
         byte[] readBuffer = new byte[bufferSize];
         int range = 1011;   // 1011 + 1 + 12 (header size) gives 1024
 
+        /* The product of below 2 variables causes the test to run between 14 and 15 minutes. Set sleep value in DataStore.tst to be equal to "900000" (15 mins).
+         * Setting the sleep to say 600K or 700K causes the test to end prematurely. */
+        int dataIndexLimit = 50;
+        int overallIndexLimit = 50;
+
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            bool eraseDataStore = true;
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();
             //readBuffer = new byte[size];
@@ -52,73 +58,89 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_0G()
         {
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            /* For "overallIndex" times, create "dataIndex" count of data. For each data, write random data and read it back. 
-             * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
-             * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
-            for (UInt32 overallIndex = 0; overallIndex < 50; ++overallIndex)
+            try
             {
-                for (UInt32 dataIndex = 0; dataIndex < 50; ++dataIndex)
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
+
+                /* For "overallIndex" times, create "dataIndex" count of data. For each data, write random data and read it back. 
+                 * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
+                 * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
+                for (UInt32 overallIndex = 0; overallIndex < overallIndexLimit; ++overallIndex)
                 {
-                    int size = rnd.Next(range) + 1;    // Because random number ranges from 0 to range. I want size to be from 1, so adding 1.
-                    Debug.Print("Size is " + size);
-                    DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-
-                    rnd.NextBytes(writeBuffer);
-
-                    if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
-                        Debug.Print("Data write successful");
-                    else
+                    for (UInt32 dataIndex = 0; dataIndex < dataIndexLimit; ++dataIndex)
                     {
-                        DisplayStats(false, "Data write failure", "", 0);
-                        return;
-                    }
+                        int size = rnd.Next(range) + 1;    // Because random number ranges from 0 to range. I want size to be from 1, so adding 1.
+                        //Debug.Print("Size is " + size);
+                    
+                        DataReference data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                        //Debug.Print("Data created successfully");
+                    
+                        rnd.NextBytes(writeBuffer);
 
-                    if (data.Read(readBuffer, 0, size) == DATASTORE_RETURN_STATUS.Success)
-                        Debug.Print("Data read successful");
-                    else
-                    {
-                        DisplayStats(false, "Data read failure", "", 0);
-                        return;
-                    }
-
-                    for (UInt16 i = 0; i < size; i++)
-                    {
-                        if (readBuffer[i] != writeBuffer[i])
+                        if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
                         {
-                            DisplayStats(false, "Read Write test failed", "", 0);
+                            //Debug.Print("Data write successful");
+                        }
+                        else
+                        {
+                            DisplayStats(false, "Data write failure", "", 0);
                             return;
                         }
-                    }
-                    Array.Clear(readBuffer, 0, readBuffer.Length);
-                    Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
-                    rnd.NextBytes(writeBuffer);
+                        if (data.Read(readBuffer, 0, size) == DataStoreReturnStatus.Success)
+                        {
+                            //Debug.Print("Data read successful");
+                        }
+                        else
+                        {
+                            DisplayStats(false, "Data read failure", "", 0);
+                            return;
+                        }
 
-                    if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
-                        Debug.Print("Data write successful");
-                    else
-                    {
-                        DisplayStats(false, "Data write failure", "", 0);
-                        return;
-                    }
-                    Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                        for (UInt16 i = 0; i < size; i++)
+                        {
+                            if (readBuffer[i] != writeBuffer[i])
+                            {
+                                DisplayStats(false, "Read Write test failed", "", 0);
+                                return;
+                            }
+                        }
+                        Array.Clear(readBuffer, 0, readBuffer.Length);
+                        Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
-                    Debug.Print("Read Write successful");
-                    if (data.Delete() != DATASTORE_RETURN_STATUS.Success)
-                    {
-                        DisplayStats(false, "Delete failed", "", 0);
-                        return;
+                        rnd.NextBytes(writeBuffer);
+
+                        if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
+                        {
+                            //Debug.Print("Data write successful");
+                        }
+                        else
+                        {
+                            DisplayStats(false, "Data write failure", "", 0);
+                            return;
+                        }
+                        Array.Clear(writeBuffer, 0, writeBuffer.Length);
+
+                        //Debug.Print("Read Write successful");
+                        if (data.Delete() != DataStoreReturnStatus.Success)
+                        {
+                            DisplayStats(false, "Delete failed", "", 0);
+                            return;
+                        }
+                        Debug.Print("Experiment run count is " + dataIndex);
                     }
-                    Debug.Print("Experiment run count is " + dataIndex);
+                    Debug.Print("Overall experiment run count is " + overallIndex);
                 }
-                Debug.Print("Experiment run count is " + overallIndex);
-            }
 
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", "", 0);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
 

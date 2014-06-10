@@ -21,7 +21,7 @@ namespace DataStoreExample {
             DataStore.DeleteAllData();  // Not static method
 
             // Create the Datastore instance
-            var ds = DataStore.Instance(StorageType.NOR);
+            var ds = DataStore.Instance(StorageType.NOR, eraseDataStore);
 
             var uintData = new uint[] { 1, 0 };
             var byteData = new byte[] { 2, 0 };

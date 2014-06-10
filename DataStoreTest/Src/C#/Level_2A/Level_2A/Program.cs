@@ -24,15 +24,24 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            try
+            {
+                bool eraseDataStore = true;
+                dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
-            experimentIndex = 10;
-            size = 256;
-            rand = new Random();
-            data = new DataReference[experimentIndex];
-            dataRefArray = new DataReference[experimentIndex];
-            readBuffer = new byte[size];
-            writeBuffer = new byte[size];
+                experimentIndex = 10;
+                size = 256;
+                rand = new Random();
+                data = new DataReference[experimentIndex];
+                dataRefArray = new DataReference[experimentIndex];
+                readBuffer = new byte[size];
+                writeBuffer = new byte[size];
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -60,36 +69,45 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_2A()
         {
-            Debug.Print("Starting test Level_2A");
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
+            try
             {
-                writeBuffer[writeIndex] = (byte)writeIndex;
-            }
+                Debug.Print("Starting test Level_2A");
 
-            offset = rand.Next((int)size);
-            // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
-            // even offsets, but might want to read from odd offsets. 
-            if (offset % 2 == 1)
-                offset = offset + sizeof(byte);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
 
-            numData = rand.Next((int)(size - offset));
-
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
-            {
-                data[dataIndex] = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-
-                if (data[dataIndex].Write(writeBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
+                for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
                 {
-                    DisplayStats(false, "Write not successful", "", 0);
-                    return;
+                    writeBuffer[writeIndex] = (byte)writeIndex;
                 }
-                Debug.Print("Experiment run count is " + dataIndex);
+
+                offset = rand.Next((int)size);
+                // This is only for testing (only byte data type) that offset is changed below. In reality the user will always write to
+                // even offsets, but might want to read from odd offsets. 
+                if (offset % 2 == 1)
+                    offset = offset + sizeof(byte);
+
+                numData = rand.Next((int)(size - offset));
+
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                {
+                    data[dataIndex] = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    Debug.Print("Data created successfully");
+
+                    if (data[dataIndex].Write(writeBuffer, offset, numData) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
+                    else
+                    {
+                        DisplayStats(false, "Write not successful", "", 0);
+                        return;
+                    }
+                    Debug.Print("Experiment run count is " + dataIndex);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
             }
             TestPersistence(offset, numData);
         }
@@ -97,38 +115,52 @@ namespace Samraksh.eMote.Tests
 
         public void TestPersistence(int offset, int numData)
         {
-            //int[] dataIdArray = new int[dStore.CountOfDataIds()];
-            //dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
-            dStore.ReadAllDataReferences(dataRefArray, 0);      //Get the data references into dataRefArray.
-
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            try
             {
-                if (dataRefArray[dataIndex].Read(readBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Read successful");
-                else
+                //int[] dataIdArray = new int[dStore.CountOfDataIds()];
+                //dStore.ReadAllDataIds(dataIdArray);     //Get all dataIDs into the dataIdArray.
+
+                //Get the data references into dataRefArray.
+                if (dStore.ReadAllDataReferences(dataRefArray, 0) != DataStoreReturnStatus.Success)
                 {
-                    DisplayStats(false, "Read not successful", "", 0);
+                    DisplayStats(false, "ReadAllDataReferences", "", 0);
                     return;
                 }
-
-                for (UInt16 rwIndex = 0; rwIndex < numData; ++rwIndex)
+            
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
                 {
-                    if (readBuffer[rwIndex] != writeBuffer[rwIndex])
+                    if (dataRefArray[dataIndex].Read(readBuffer, offset, numData) == DataStoreReturnStatus.Success)
+                        Debug.Print("Read successful");
+                    else
                     {
-                        DisplayStats(false, "Read Write test failed", "", 0);
+                        DisplayStats(false, "Read not successful", "", 0);
                         return;
                     }
+
+                    for (UInt16 rwIndex = 0; rwIndex < numData; ++rwIndex)
+                    {
+                        if (readBuffer[rwIndex] != writeBuffer[rwIndex])
+                        {
+                            DisplayStats(false, "Read Write test failed", "", 0);
+                            return;
+                        }
+                    }
+
+                    Debug.Print("Read Write successful");
+
+                    Array.Clear(readBuffer, 0, readBuffer.Length);
+
+                    Debug.Print("Experiment run count is " + dataIndex);
                 }
 
-                Debug.Print("Read Write successful");
-
-                Array.Clear(readBuffer, 0, readBuffer.Length);
-
-                Debug.Print("Experiment run count is " + dataIndex);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", null, 0);
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", null, 0);
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
 

@@ -20,7 +20,8 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            bool eraseDataStore = true;
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();
             size = 256;
@@ -55,49 +56,59 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_0B()
         {
-            int offset = 0;
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            try
             {
-                //UInt16 did = 256;
-                //DataID d = new DataID(256);
+                int offset = 0;
 
-                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-                //Data data1 = new Data(dStore, (DATAID)256);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
 
-                //writeBuffer.Select(c => (object)c).ToArray();
-                //object[] obj = byte.Cast<object>().ToArray();
-                rnd.NextBytes(writeBuffer);
-
-                if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
-                    DisplayStats(false, "Write not successful", "", 0);
-
-                if (data.Read(readBuffer, offset, size) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Read successful");
-                else
-                    DisplayStats(false, "Read not successful", "", 0);
-
-                for (UInt16 i = 0; i < writeBuffer.Length; i++)
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
                 {
-                    if (readBuffer[i] != writeBuffer[i])
+                    //UInt16 did = 256;
+                    //DataID d = new DataID(256);
+
+                    DataReference data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    Debug.Print("Data created successfully");
+                    
+                    //Data data1 = new Data(dStore, (DATAID)256);
+
+                    //writeBuffer.Select(c => (object)c).ToArray();
+                    //object[] obj = byte.Cast<object>().ToArray();
+                    rnd.NextBytes(writeBuffer);
+
+                    if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
+                    else
+                        DisplayStats(false, "Write not successful", "", 0);
+
+                    if (data.Read(readBuffer, offset, size) == DataStoreReturnStatus.Success)
+                        Debug.Print("Read successful");
+                    else
+                        DisplayStats(false, "Read not successful", "", 0);
+
+                    for (UInt16 i = 0; i < writeBuffer.Length; i++)
                     {
-                        DisplayStats(false, "Read Write test failed", "", 0);
-                        return;
+                        if (readBuffer[i] != writeBuffer[i])
+                        {
+                            DisplayStats(false, "Read Write test failed", "", 0);
+                            return;
+                        }
                     }
+                    writeBuffer = new byte[256];
+                    readBuffer = new byte[256];
+
+                    Debug.Print("Read Write successful");
                 }
-                writeBuffer = new byte[256];
-                readBuffer = new byte[256];
-
-                Debug.Print("Read Write successful");
+            
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", "", 0);
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", "", 0);
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
 

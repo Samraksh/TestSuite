@@ -24,7 +24,8 @@ namespace Samraksh.SPOT.Tests
         
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            bool eraseDataStore = true;
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             //dStore.InitDataStore((int)StorageType.NOR);
 
             experimentIndex = 8000;
@@ -78,9 +79,9 @@ namespace Samraksh.SPOT.Tests
             for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
             {
                 size = rand.Next(828) + 2;
-                data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
+                data = new DataReference(dStore, size, ReferenceDataType.BYTE);
 
-                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
+                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStoreReturnStatus.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -88,7 +89,7 @@ namespace Samraksh.SPOT.Tests
                     return;
                 }
 
-                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DATASTORE_RETURN_STATUS.Success)
+                if (data.Write(writeBuffer, 0, writeBuffer.Length) == DataStoreReturnStatus.Success)
                     Debug.Print("Write successful");
                 else
                 {
@@ -101,7 +102,14 @@ namespace Samraksh.SPOT.Tests
             int totalRecords = dStore.CountOfDataIds();
             int dataAllocationIndex = totalRecords > experimentIndex ? experimentIndex : totalRecords;
             dataRefArray = new DataReference[dataAllocationIndex + 5];
-            dStore.ReadAllDataReferences(dataRefArray, offset);      //Get the data references into dataRefArray.
+            
+            //Get the data references into dataRefArray.
+            if (dStore.ReadAllDataReferences(dataRefArray, offset) != DataStoreReturnStatus.Success)
+            {
+                DisplayStats(false, "ReadAllDataReferences", "", 0);
+                return;
+            }
+            
             foreach (DataReference dataRef in dataRefArray)
             {
                 if (dataRef == null)

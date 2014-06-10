@@ -21,11 +21,12 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
+            bool eraseDataStore = true;
             //dStore = new DataStore();     ////This gives an error as the constructor is private
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             ////The same instance is created below because of singleton
-            dStore1 = DataStore.Instance(STORAGE_TYPE.NOR);
+            dStore1 = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             writeBuffer = new byte[size];
             rnd = new Random();
@@ -58,33 +59,43 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_0J()
         {
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            try
             {
-                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-                rnd.NextBytes(writeBuffer);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
 
-                if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
-                    DisplayStats(false, "Write not successful", "", 0);
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                {
+                    DataReference data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    Debug.Print("Data created successfully");
+                
+                    rnd.NextBytes(writeBuffer);
 
-                ////Though a new Data object is created with dStore1, data is written to same block storage device (NOR)
-                DataReference data1 = new DataReference(dStore1, size, REFERENCE_DATA_TYPE.BYTE);
-                rnd.NextBytes(writeBuffer);
+                    if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
+                    else
+                        DisplayStats(false, "Write not successful", "", 0);
 
-                if (data1.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
-                    DisplayStats(false, "Write not successful", "", 0);
+                    ////Though a new Data object is created with dStore1, data is written to same block storage device (NOR)
+                    DataReference data1 = new DataReference(dStore1, size, ReferenceDataType.BYTE);
+                    rnd.NextBytes(writeBuffer);
 
-                Debug.Print("Experiment run count is " + dataIndex);
+                    if (data1.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
+                    else
+                        DisplayStats(false, "Write not successful", "", 0);
+
+                    Debug.Print("Experiment run count is " + dataIndex);
+                }
+
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", "", 0);
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", "", 0);
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
 

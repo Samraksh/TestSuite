@@ -29,8 +29,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <!-- Uncommenting below line and commenting the line after that, will allow the creation of the dat file from command line. Just do a msbuild -->
-  <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
-  <!--<Import Project="$(SPOCLIENT)\tools\Targets\Microsoft.SPOT.CSharp.Targets" />-->
+  <!--Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" /-->
+  <Import Project="$(SPOCLIENT)\tools\Targets\Microsoft.SPOT.CSharp.Targets" />
   <PropertyGroup>
     <MMP_PE_NoBitmapCompression>true</MMP_PE_NoBitmapCompression>
     <MMP_DAT_SKIP>false</MMP_DAT_SKIP>

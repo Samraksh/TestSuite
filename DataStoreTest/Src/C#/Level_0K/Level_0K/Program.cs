@@ -22,8 +22,9 @@ namespace Samraksh.eMote.Tests
         
         public DataStoreTest()
         {
+            bool eraseDataStore = true;
             //dStore = new DataStore();     ////This gives an error as the constructor is private
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             writeBuffer = new byte[size];
             rnd = new Random();
@@ -56,40 +57,49 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_0K()
         {
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            Debug.Print(dStore.MaxAllocationSize.ToString());
-            Debug.Print(dStore.Size.ToString());
-            Debug.Print(dStore.UsedBytes.ToString());
-            Debug.Print(dStore.FreeBytes.ToString());
-
-
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            try
             {
-                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.BYTE);
-                rnd.NextBytes(writeBuffer);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
 
-                if (data.Write(writeBuffer, size) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
-                {
-                    DisplayStats(false, "Write not successful", "", 0);
-                    return;
-                }
-
+                Debug.Print(dStore.MaxAllocationSize.ToString());
+                Debug.Print(dStore.Size.ToString());
                 Debug.Print(dStore.UsedBytes.ToString());
                 Debug.Print(dStore.FreeBytes.ToString());
 
+
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                {
+                    DataReference data = new DataReference(dStore, size, ReferenceDataType.BYTE);
+                    Debug.Print("Data created successfully");
+                
+                    rnd.NextBytes(writeBuffer);
+
+                    if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
+                    else
+                    {
+                        DisplayStats(false, "Write not successful", "", 0);
+                        return;
+                    }
+
+                    Debug.Print(dStore.UsedBytes.ToString());
+                    Debug.Print(dStore.FreeBytes.ToString());
+                }
+
+                Debug.Print(dStore.MaxAllocationSize.ToString());
+                Debug.Print(dStore.Size.ToString());
+                Debug.Print(dStore.UsedBytes.ToString());
+                Debug.Print(dStore.FreeBytes.ToString());
+
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", "", 0);
             }
-
-            Debug.Print(dStore.MaxAllocationSize.ToString());
-            Debug.Print(dStore.Size.ToString());
-            Debug.Print(dStore.UsedBytes.ToString());
-            Debug.Print(dStore.FreeBytes.ToString());
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", "", 0);
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
 

@@ -24,13 +24,24 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            dStore = DataStore.Instance(STORAGE_TYPE.NOR);
+            try
+            {
+                bool eraseDataStore = true;
+                dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
-            experimentIndex = 100;
-            size = 256;
-            rand = new Random();
-            readBuffer = new UInt32[size];
-            writeBuffer = new UInt32[size];
+                experimentIndex = 100;
+                size = 256;
+                rand = new Random(1437);  //used to fail at iteration 46
+                //rand = new Random(314);   //used to fail at iteration 98
+                //rand = new Random(108);     //used to fail at iteration 12
+                readBuffer = new UInt32[size];
+                writeBuffer = new UInt32[size];
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -58,113 +69,144 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_3C()
         {
-            Debug.Print("Starting test Level_3C");
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                Debug.Print("Datastore succesfully erased");
-
-            for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
+            try
             {
-                writeBuffer[writeIndex] = writeIndex;
-            }
+                Debug.Print("Starting test Level_3C");
 
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
-            {
-                DataReference data = new DataReference(dStore, size, REFERENCE_DATA_TYPE.UINT32);
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    Debug.Print("Datastore succesfully erased");
 
-                if (data.Write(writeBuffer, 0, size / 2) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
+                for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
                 {
-                    DisplayStats(false, "Write not successful", "", 0);
-                    return;
+                    writeBuffer[writeIndex] = writeIndex;
                 }
 
-                offset = rand.Next((int)size / 2);
-                numData = rand.Next((int)(size - offset));
-
-                if (data.Write(writeBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Write successful");
-                else
+                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
                 {
-                    DisplayStats(false, "Write not successful", "", 0);
-                    return;
-                }
+                    //Debug.Print("Exp count " + dataIndex);
 
-                /*######################################################*/
-                /* Read before the overwrite region and verify */
-                if (offset == 0)
-                    offset = offset + sizeof(byte);
-
-                if (data.Read(readBuffer, 0, offset - 1) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Read before overwrite successful");
-                else
-                {
-                    DisplayStats(false, "Read before overwrite not successful", "", 0);
-                    return;
-                }
-
-                for (UInt16 rwIndex = 0; rwIndex < offset - 1; ++rwIndex)
-                {
-                    if (readBuffer[rwIndex] != writeBuffer[rwIndex])
-                    {
-                        DisplayStats(false, "Read Write test failed - before overwrite", "", 0);
-                        return;
-                    }
-                }
-                Array.Clear(readBuffer, 0, readBuffer.Length);
-
-                /*######################################################*/
-                /* Read the overwrite region and verify */
-                if (data.Read(readBuffer, offset, numData) == DATASTORE_RETURN_STATUS.Success)
-                    Debug.Print("Read overwrite region successful");
-                else
-                {
-                    DisplayStats(false, "Read overwrite region not successful", "", 0);
-                    return;
-                }
-
-                for (UInt16 rwIndex = 0; rwIndex < numData; ++rwIndex)
-                {
-                    if (readBuffer[rwIndex] != writeBuffer[rwIndex])
-                    {
-                        DisplayStats(false, "Read Write test failed - overwrite", "", 0);
-                        return;
-                    }
-                }
-                Array.Clear(readBuffer, 0, readBuffer.Length);
-
-                /*######################################################*/
-                /* Read after the overwrite region and verify */
-                if ((offset + numData + 1) <= (size / 2))
-                {
-                    if (data.Read(readBuffer, (offset + numData + 1), (size / 2 - (offset + numData + 1))) == DATASTORE_RETURN_STATUS.Success)
-                        Debug.Print("Read after overwrite successful");
+                    DataReference data = new DataReference(dStore, size, ReferenceDataType.UINT32);
+                    Debug.Print("Data created successfully");
+                
+                    if (data.Write(writeBuffer, 0, size / 2) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
                     else
                     {
-                        DisplayStats(false, "Read after overwrite not successful", "", 0);
+                        DisplayStats(false, "Write not successful", "", 0);
                         return;
                     }
 
-                    int readIndex = 0;
-                    for (UInt16 rwIndex = (UInt16)(offset + numData + 1); rwIndex < size / 2; ++rwIndex)
+                    offset = rand.Next((int)size / 2);
+                    numData = rand.Next((int)(size - offset));
+
+                    //Debug.Print("offset is " + offset);
+                    //Debug.Print("numData is " + numData);
+
+                    if (data.Write(writeBuffer, offset, numData) == DataStoreReturnStatus.Success)
+                        Debug.Print("Write successful");
+                    else
                     {
-                        if (readBuffer[readIndex++] != writeBuffer[rwIndex])
+                        DisplayStats(false, "Write not successful", "", 0);
+                        return;
+                    }
+
+                    /*######################################################*/
+                    /* Read before the overwrite region and verify */
+                    /* Not sure why I added the below line. It might have been before I added the change to raise an exception for a byte dataType when offset is 1.
+                     * if (offset == 0)
+                        offset = offset + sizeof(byte);*/
+
+                    if (data.Read(readBuffer, 0, offset) == DataStoreReturnStatus.Success)
+                        Debug.Print("Read before overwrite successful");
+                    else
+                    {
+                        DisplayStats(false, "Read before overwrite not successful", "", 0);
+                        return;
+                    }
+
+                    for (UInt16 rwIndex = 0; rwIndex < offset; ++rwIndex)
+                    {
+                        if (readBuffer[rwIndex] != writeBuffer[rwIndex])
                         {
-                            DisplayStats(false, "Read Write test failed - after overwrite", "", 0);
+                            DisplayStats(false, "Read Write test failed - before overwrite", "", 0);
+                            Array.Clear(readBuffer, 0, readBuffer.Length);
                             return;
                         }
                     }
                     Array.Clear(readBuffer, 0, readBuffer.Length);
+
+                    /*######################################################*/
+                    /* Read the overwrite region and verify */
+                    if (data.Read(readBuffer, offset, numData) == DataStoreReturnStatus.Success)
+                        Debug.Print("Read overwrite region successful");
+                    else
+                    {
+                        DisplayStats(false, "Read overwrite region not successful", "", 0);
+                        return;
+                    }
+
+                    /*if (dataIndex >= 0)
+                    {
+                        for (int i = 0; i < numData; i++)
+                        {
+                            Debug.Print(readBuffer[i].ToString());
+                        }
+                        Debug.Print("End of readBuffer");
+                        for (int i = 0; i < numData; i++)
+                        {
+                            Debug.Print(writeBuffer[i].ToString());
+                        }
+                        Debug.Print("End of writeBuffer");
+                    }*/
+
+                    for (UInt16 rwIndex = 0; rwIndex < numData; ++rwIndex)
+                    {
+                        if (readBuffer[rwIndex] != writeBuffer[rwIndex])
+                        {
+                            DisplayStats(false, "Read Write test failed - overwrite", "", 0);
+                            Array.Clear(readBuffer, 0, readBuffer.Length);
+                            return;
+                        }
+                    }
+                    Array.Clear(readBuffer, 0, readBuffer.Length);
+
+                    /*######################################################*/
+                    /* Read after the overwrite region and verify */
+                    if ((offset + numData + 1) <= (size / 2))
+                    {
+                        if (data.Read(readBuffer, (offset + numData + 1), (size / 2 - (offset + numData + 1))) == DataStoreReturnStatus.Success)
+                            Debug.Print("Read after overwrite successful");
+                        else
+                        {
+                            DisplayStats(false, "Read after overwrite not successful", "", 0);
+                            return;
+                        }
+
+                        int readIndex = 0;
+                        for (UInt16 rwIndex = (UInt16)(offset + numData + 1); rwIndex < size / 2; ++rwIndex)
+                        {
+                            if (readBuffer[readIndex++] != writeBuffer[rwIndex])
+                            {
+                                DisplayStats(false, "Read Write test failed - after overwrite", "", 0);
+                                Array.Clear(readBuffer, 0, readBuffer.Length);
+                                return;
+                            }
+                        }
+                        Array.Clear(readBuffer, 0, readBuffer.Length);
+                    }
+                    /*######################################################*/
+
+                    Debug.Print("Read Write successful");
                 }
-                /*######################################################*/
 
-                Debug.Print("Read Write successful");
-
+                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
+                    DisplayStats(true, "Datastore succesfully erased", null, 0);
             }
-
-            if (dStore.EraseAllData() == DATASTORE_RETURN_STATUS.Success)
-                DisplayStats(true, "Datastore succesfully erased", null, 0);
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+                return;
+            }
 
         }
 
