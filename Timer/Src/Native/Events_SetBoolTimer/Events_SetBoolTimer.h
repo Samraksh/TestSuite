@@ -4,13 +4,13 @@
 
 #include <tinyhal.h>
 
-class HALTimerTest
+class Events_SetBoolTimerTest
 {
 
 public:
 
 //--//
-    HALTimerTest ( int seedValue, int numberOfEvents );
+    Events_SetBoolTimerTest ( int seedValue, int numberOfEvents );
 
     BOOL     Execute( int testLevel );
 

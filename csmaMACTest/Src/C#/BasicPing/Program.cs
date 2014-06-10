@@ -141,7 +141,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 						}
 					}
 					if (found!=true){
-						Debug.Print("couldn't find " + (comparisonValue+1).ToString() + " @ " + i.ToString() + " found " + rxBuffer[j].ToString());
+						Debug.Print("couldn't find " + (comparisonValue+1).ToString() + " @ " + i.ToString() + " found " + rxBuffer[i].ToString());
 						errors++;
 					}
 					comparisonValue = rxBuffer[i];
