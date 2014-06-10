@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='Events_SetBoolTimer' Type='Native Adapt .NOW'>
+	<Test Name='Timer' Type='Native Adapt .NOW'>
 		<Description>
 			Events_SetBoolTimer Test
 		</Description>
