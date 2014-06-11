@@ -18,6 +18,6 @@ D:\Work\TestSuite\GlobalLock\Src\Native\Level_0B\LogicAnalysis.pdb
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0B\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
-D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis.exe
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis.pdb
+D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache

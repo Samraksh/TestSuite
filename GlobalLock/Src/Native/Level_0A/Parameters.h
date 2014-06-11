@@ -3,7 +3,7 @@
 #define useLogic "normal"
 #define sampleTimeMs 7000
 #define sampleFrequency 4000000
-#define useCOMPort true
+#define useCOMPort false
 #define forceCOM ""
 #define COMParameters "115200,N,8,1"
 #define useTestScript false

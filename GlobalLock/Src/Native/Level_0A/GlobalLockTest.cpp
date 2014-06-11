@@ -15,15 +15,15 @@ void Timer_1_Handler(void *arg)
 		pinState = true;
 	else 
 		pinState = false;
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, pinState);
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, pinState);
 }
 
 void Timer_2_Handler(void *arg)
 {
 	GLOBAL_LOCK(irq);
-	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	for(volatile UINT32 i = 0; i < 100000; i++);
-	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 
 	ENABLE_INTERRUPTS();
 
@@ -60,6 +60,10 @@ BOOL GlobalLockTest::Level_0A()
 {
 	gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
 	gHalTimerManagerObject.CreateTimer(2, 0, 120000, FALSE, FALSE, Timer_2_Handler);
+
+	gHalTimerManagerObject.StartTimer(1);
+	gHalTimerManagerObject.StartTimer(2);
+	
 
 	return TRUE;
 }
