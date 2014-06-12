@@ -249,7 +249,8 @@ BOOL DataStoreTest::TestReadWrite_Virtual_Records()
 
 BOOL DataStoreTest::test_initialization(void)
 {
-	if(g_dataStoreObject.init() != DS_Success)
+	int eraseDataStore = true;
+	if(g_dataStoreObject.init(eraseDataStore) != DS_Success)
 	{
 		DisplayStats(false, "ERROR: Could not initialize data store", NULL, 0);
 		return false;
