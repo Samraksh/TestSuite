@@ -159,7 +159,8 @@ BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
-	g_dataStoreObject.init();
+	int eraseDataStore = true;
+	g_dataStoreObject.init(eraseDataStore);
 	//g_dataStoreObject.EraseAllBlocks();
 	//// DATASTORE_STATUS status = g_dataStoreObject.initDataStore( "NOR", &defaultProperty );
 	////g_dataStoreObject.scanFlashDevice();
