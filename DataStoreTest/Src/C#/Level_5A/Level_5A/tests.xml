@@ -2,7 +2,6 @@
 	<Test Name='DataStoreTest' Type='C# .NOW'>
 		<Description>
 			Test to verify all exception conditions during write. 
-			Test will not be successful from rig, but watch for this output on terminal - "Exception test successful"
 		</Description>
 		<TestPath>
 			DataStoreTest\Src\C#\Level_5A\Level_5A

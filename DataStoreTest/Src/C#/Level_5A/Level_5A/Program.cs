@@ -87,11 +87,11 @@ namespace Level_5A
 				Thread.Sleep(1000);
             	if (result)
             	{
-            	    Debug.Print("result=PASS\n");
+            	    Debug.Print("result=PASS");
             	}
             	else
             	{
-            	    Debug.Print("result=FAIL\n");
+            	    Debug.Print("result=FAIL");
             	}
             	Debug.Print("accuracy=" + accuracy.ToString());
             	Debug.Print("resultParameter1=" + resultParameter1);
