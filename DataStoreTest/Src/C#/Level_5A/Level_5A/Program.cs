@@ -155,7 +155,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                            Debug.Print(" result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                         break;
                     }
@@ -170,7 +171,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                            Debug.Print(" result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                         break;
                     }
@@ -185,7 +187,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                            Debug.Print(" result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                         break;
                     }
@@ -200,7 +203,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print("Write failed. Exception is: " + ex.Message);
+                            Debug.Print("result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
 
                         //Get the data references into dataRefArray.
@@ -236,7 +240,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print("Read failed. Exception is: " + ex.Message);
+                            Debug.Print("result=PASS. Read failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                     
                         break;
@@ -245,7 +250,8 @@ namespace Level_5A
                     case ((int)(exceptionType.DATATYPE_DIFFERENT)):
                     {
                         //Cannot test this, as this can never fail.
-                        Debug.Print("Starting test " + ((int)(exceptionType.DATATYPE_DIFFERENT)) + ": DATATYPE_DIFFERENT");
+                        Debug.Print("result=PASS. Starting test " + ((int)(exceptionType.DATATYPE_DIFFERENT)) + ": DATATYPE_DIFFERENT");
+                        //Debug.Print("result=PASS\n");
                         break;
                     }
 
@@ -259,7 +265,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                            Debug.Print(" result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                         break;
                     }
@@ -274,7 +281,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                            Debug.Print(" result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                         break;
                     }
@@ -289,7 +297,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                            Debug.Print(" result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                         break;
                     }
@@ -304,7 +313,8 @@ namespace Level_5A
                         }
                         catch (Exception ex)
                         {
-                            Debug.Print(" Write failed. Exception is: " + ex.Message);
+                            Debug.Print(" result=PASS. Write failed. Exception is: " + ex.Message);
+                            //Debug.Print("result=PASS\n");
                         }
                         break;
                     }
