@@ -59,8 +59,8 @@
     <DriverLibs Include="diagnostics_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\HALTimer\dotNetMF.proj" />
-    <DriverLibs Include="HALTimer.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\VirtualTimer\dotNetMF.proj" />
+    <DriverLibs Include="VirtualTimer.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <DriverLibs Include="TinyHal.$(LIB_EXT)" />
@@ -119,21 +119,33 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\spi\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_spi.$(LIB_EXT)" />
   </ItemGroup>
+  
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\tim\dotNetMF.proj" />
-    <DriverLibs Include="STM32F10x_tim.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Timer\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_timer.$(LIB_EXT)" />
   </ItemGroup>
-  <!--<ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\time\dotNetMF.proj" />
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Timer\advancedtim\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_adtim.$(LIB_EXT)" />
+  </ItemGroup>
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Timer\Timer16Bit\dotNetMF.proj" />
+    <DriverLibs Include="Timer16Bit.$(LIB_EXT)" />
+  </ItemGroup>
+  
+  <!--ItemGroup>
     <DriverLibs Include="STM32F10x_time.$(LIB_EXT)" />
-  </ItemGroup>-->
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\time\dotNetMF.proj" />
+  </ItemGroup-->
+  <!-- 									Samraksh Time Extension        								-->
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\Time\dotNetMF.proj" />
+    <DriverLibs Include="eMote_time.$(LIB_EXT)" />
+  </ItemGroup>
+  
   <ItemGroup>
     <DriverLibs Include="Tasklet.$(LIB_EXT)" />
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\bh\dotNetMF.proj" />
-  </ItemGroup>
-  <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\advancedtim\dotNetMF.proj" />
-    <DriverLibs Include="STM32F10x_adtim.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\usart\dotNetMF.proj" />

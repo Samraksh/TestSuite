@@ -1,21 +1,26 @@
-﻿using System;
+﻿//#define HARDWARE_EMOTE
+#define HARDWARE_ADAPT
+
+using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
 using ParameterClass;
 //using Samraksh.eMote.RealTime;
 using Samraksh.eMote.RealTime;
+using Samraksh.eMote.DotNow;
 
 namespace TestSuite
 {
     public class Program
     {
 #if (HARDWARE_EMOTE)
-		private static OutputPort testPort_PB7 = new OutputPort(GPIOPins.GPIO_PIN_PB8, true);
+        private static OutputPort testPort_PIN1 = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN1, true);
 #elif (HARDWARE_ADAPT)
+        private enum PinMap { Gpio01 = 58, Gpio02 = 55, Gpio03 = 53, Gpio04 = 52, Gpio05 = 51 };
 		//private static OutputPort testPort_55 = new OutputPort((Cpu.Pin)55, true);
-		private static OutputPort testPort_PA0 = new OutputPort(GPIOPins.GPIO_PIN_PA0, true);
-		private static OutputPort testPort_PA1 = new OutputPort(GPIOPins.GPIO_PIN_PA1, true);
+		private static OutputPort testPort_PIN1 = new OutputPort((Cpu.Pin)PinMap.Gpio01, true);
+		/*private static OutputPort testPort_PA1 = new OutputPort(GPIOPins.GPIO_PIN_PA1, true);
 		private static OutputPort testPort_PA2 = new OutputPort(GPIOPins.GPIO_PIN_PA2, true);
 		private static OutputPort testPort_PA3 = new OutputPort(GPIOPins.GPIO_PIN_PA3, true);
 		private static OutputPort testPort_PA4 = new OutputPort(GPIOPins.GPIO_PIN_PA4, true);
@@ -23,33 +28,40 @@ namespace TestSuite
 		private static OutputPort testPort_PA6 = new OutputPort(GPIOPins.GPIO_PIN_PA6, true);
 		private static OutputPort testPort_PA7 = new OutputPort(GPIOPins.GPIO_PIN_PA7, true);
 		private static OutputPort testPort_PA8 = new OutputPort(GPIOPins.GPIO_PIN_PA8, true);
-		private static OutputPort testPort_PA9 = new OutputPort(GPIOPins.GPIO_PIN_PA9, true);
-#endif	
+		private static OutputPort testPort_PA9 = new OutputPort(GPIOPins.GPIO_PIN_PA9, true);*/
+#endif
 
-		private static void RT_TimerCallback(uint data1, uint data2, DateTime time)
+        private static void RT_TimerCallback(uint data1, uint data2, DateTime time)
         {
-			if (pinState == false)
+			/*if (pinState == false)
 				pinState = true;
 			else 
 				pinState = false;
 
-            testPort_PB7.Write(pinState);
+            testPort_PIN1.Write(pinState);*/
+
+            testPort_PIN1.Write(true);
+            testPort_PIN1.Write(false);
         } 
 
 		static Samraksh.eMote.RealTime.Timer RT_Timer;
 		static NativeEventHandler RT_EventHandler = new NativeEventHandler(RT_TimerCallback);
-		static bool pinState = false;
+		//static bool pinState = false;
 
         public static void Main()
         {
-			Parameters parameters = new Parameters();
-			double readFrequency = parameters.frequency;
-			ulong usThreadSleep = (ulong) (500000 / readFrequency);
+			/*Parameters parameters = new Parameters();*/
+			
 		
 			try
             {
-                RT_Timer = new Samraksh.eMote.RealTime.Timer("RealTimeInteropTimer", usThreadSleep, 0);
+                //The 2nd parameter is in usec.
+                RT_Timer = new Samraksh.eMote.RealTime.Timer("RealTimeInteropTimer", 500000, 0);
                 RT_Timer.OnInterrupt += RT_EventHandler;
+                //RT_Timer.EnableInterrupt();
+                /*Samraksh.eMote.RealTime.Timer.Change(0, 50);
+                Samraksh.eMote.RealTime.Timer.GenerateInterrupt();
+                Samraksh.eMote.RealTime.Timer.Dispose();*/
             }
             catch (Exception)
             {
@@ -67,7 +79,7 @@ namespace TestSuite
             }
 
 			while (true){
-				Debug.Print(".");
+				//Debug.Print(".");
 				Thread.Sleep(1000);
 			}
         }

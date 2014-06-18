@@ -8,7 +8,7 @@
 
 #include <tinyhal.h>
 
-#include "HALTimerTest.h"
+#include "VirtualTimerTest.h"
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
@@ -26,12 +26,12 @@ void ApplicationEntryPoint()
 {
     BOOL result;
 		
-	HALTimerTest halTimerTest(0,0);
+    VirtualTimerTest virtualTimerTest(0,0);
 
     do
     {
 
-    	halTimerTest.Execute(2);
+    	virtualTimerTest.Execute(2);
 	  //if(halTimerTest.Execute(0))
 		//break;
     } while(FALSE); // run only once!

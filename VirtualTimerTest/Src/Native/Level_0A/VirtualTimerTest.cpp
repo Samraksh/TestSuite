@@ -3,9 +3,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "VirtualTimerTest.h"
-#include <Samraksh\VirtualTimer.h>
+//TODO: AnanthAtSamraksh -- below 2 includes need to be fixed
+#include "D:/AnanthAtSamraksh/MF/MicroFrameworkPK_v4_3/DeviceCode/Include/Samraksh/VirtualTimer.h"
 
-extern VirtualTimerManager gVirtualTimerManagerObject;
+
+//extern VirtualTimerManager gVirtualTimerManagerObject;
 //---//
 void Timer_1_Handler(void *arg)
 {
@@ -46,12 +48,14 @@ VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 23, FALSE);
 	Tasklet_Initialize();
 
-	gVirtualTimerManagerObject.Initialize();
+	if(!VirtTimer_Initialize())
+		hal_printf("Error");
 };
 
 BOOL VirtualTimerTest::Level_0A()
 {
-	gVirtualTimerManagerObject.CreateTimer(1, 0, 10000, FALSE, FALSE, Timer_1_Handler);
+	if(!VirtTimer_SetTimer(1, 0, 10000, FALSE, FALSE, Timer_1_Handler))
+		return FALSE;
 
 	while(TRUE)
 	{
@@ -66,10 +70,14 @@ BOOL VirtualTimerTest::Level_0A()
 
 BOOL VirtualTimerTest::Level_0B()
 {
-	gVirtualTimerManagerObject.CreateTimer(1, 0, 20000, FALSE, FALSE, Timer_1_Handler);
-	gVirtualTimerManagerObject.CreateTimer(2, 0, 25000, FALSE, FALSE, Timer_2_Handler);
-	gVirtualTimerManagerObject.CreateTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler);
-	gVirtualTimerManagerObject.CreateTimer(4, 0, 500, FALSE, FALSE, Timer_4_Handler);
+	if(!VirtTimer_SetTimer(1, 0, 20000, FALSE, FALSE, Timer_1_Handler))
+		return FALSE;
+	if(!VirtTimer_SetTimer(2, 0, 25000, FALSE, FALSE, Timer_2_Handler))
+		return FALSE;
+	if(!VirtTimer_SetTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler))
+		return FALSE;
+	if(!VirtTimer_SetTimer(4, 0, 500, FALSE, FALSE, Timer_4_Handler))
+		return FALSE;
 
 	return TRUE;
 }

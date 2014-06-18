@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='VirtualTimerTest' Type='Native'>
+		<Description>
+			Native Virtual Timer Tests Level 0E, 5 virtual timers are started
+		</Description>
+		<TestPath>
+			VirtualTimerTest\Src\Native\Level_0E
+		</TestPath>
+		<TestProjName>
+			VirtualTimerTest.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

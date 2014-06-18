@@ -3,9 +3,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "VirtualTimerTest.h"
-#include <Samraksh\HALTimer.h>
+//TODO: AnanthAtSamraksh -- below 2 includes need to be fixed
+#include "D:/AnanthAtSamraksh/MF/MicroFrameworkPK_v4_3/DeviceCode/Include/Samraksh/VirtualTimer.h"
 
-extern HALTimerManager gHalTimerManagerObject;
+
+
 //---//
 
 /*void Timer_1_Handler(void *arg)
@@ -23,12 +25,14 @@ void Timer_2_Handler(void *arg)
 void Timer_2_Handler(void *arg)
 {
 	//GLOBAL_LOCK(irq);
+
 	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
 	//HAL_Time_Sleep_MicroSeconds_InterruptEnabled(1000000);
 	for(volatile UINT32 i = 0; i < 100000; i++);
 	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
 
 	ENABLE_INTERRUPTS();
+
 
 }
 
@@ -40,10 +44,10 @@ void Timer_1_Handler(void *arg)
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 	if ((handlerCount%50)==0){
-		gHalTimerManagerObject.StartTimer(2);
+		VirtTimer_Start(2);
 	}
 	if ((handlerCount%100)==0){
-		HAL_Time_Sleep_MicroSeconds(1000000);
+		CPU_Timer_Sleep_MicroSeconds(1000000);
 	}
 }
 
@@ -71,12 +75,13 @@ VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 
 	Tasklet_Initialize();
 
-	gHalTimerManagerObject.Initialize();
+	if(!VirtTimer_Initialize())
+		hal_printf("Error");
 };
 
 BOOL VirtualTimerTest::Level_0A()
 {
-	gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
+	VirtTimer_SetTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
 
 	return TRUE;
 }
@@ -88,12 +93,18 @@ BOOL VirtualTimerTest::Level_0B()
 	gHalTimerManagerObject.CreateTimer(2, 0, 30000, FALSE, FALSE, Timer_2_Handler);
 	gHalTimerManagerObject.CreateTimer(3, 0, 40000, FALSE, FALSE, Timer_3_Handler);*/
 
-	gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
-	gHalTimerManagerObject.CreateTimer(2, 0, 2000000, TRUE, FALSE, Timer_2_Handler);
+	if(!VirtTimer_SetTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler))
+		return FALSE;
+	if(!VirtTimer_SetTimer(2, 0, 2000000, TRUE, FALSE, Timer_2_Handler))
+		return FALSE;
 
-	HAL_Time_Sleep_MicroSeconds(1000000);
-	gHalTimerManagerObject.StartTimer(1);
-	gHalTimerManagerObject.StartTimer(2);
+	CPU_Timer_Sleep_MicroSeconds(1000000);
+
+	if(!VirtTimer_Start(1))
+		return FALSE;
+
+	if(!VirtTimer_Start(2))
+		return FALSE;
 
 	return TRUE;
 }

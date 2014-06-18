@@ -3,9 +3,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "VirtualTimerTest.h"
-#include <Samraksh\VirtualTimer.h>
+#include "D:/AnanthAtSamraksh/MF/MicroFrameworkPK_v4_3/DeviceCode/Include/Samraksh/VirtualTimer.h"
 
-extern VirtualTimerManager gVirtualTimerManagerObject;
+//extern VirtualTimerManager gVirtualTimerManagerObject;
 //---//
 void Timer_1_Handler(void *arg)
 {
@@ -44,14 +44,15 @@ VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 58, TRUE);
 	//CPU_GPIO_EnableOutputPin((GPIO_PIN) 22, FALSE);
 	//CPU_GPIO_EnableOutputPin((GPIO_PIN) 23, FALSE);
-	Tasklet_Initialize();
+	////Tasklet_Initialize();
 
-	gVirtualTimerManagerObject.Initialize();
+	////gVirtualTimerManagerObject.Initialize();
 };
 
 BOOL VirtualTimerTest::Level_0A()
 {
-	gVirtualTimerManagerObject.CreateTimer(1, 0, 10000, FALSE, FALSE, Timer_1_Handler);
+	////gVirtualTimerManagerObject.CreateTimer(1, 0, 10000, FALSE, FALSE, Timer_1_Handler);
+	VirtTimer_SetTimer(1, 0, 10000, FALSE, FALSE, Timer_1_Handler);
 
 	while(TRUE)
 	{
@@ -66,10 +67,15 @@ BOOL VirtualTimerTest::Level_0A()
 
 BOOL VirtualTimerTest::Level_0B()
 {
-	gVirtualTimerManagerObject.CreateTimer(1, 0, 20000, FALSE, FALSE, Timer_1_Handler);
-	gVirtualTimerManagerObject.CreateTimer(2, 0, 25000, FALSE, FALSE, Timer_2_Handler);
-	gVirtualTimerManagerObject.CreateTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler);
-	gVirtualTimerManagerObject.CreateTimer(4, 0, 500, FALSE, FALSE, Timer_4_Handler);
+	//gVirtualTimerManagerObject.CreateTimer(1, 0, 20000, FALSE, FALSE, Timer_1_Handler);
+	//gVirtualTimerManagerObject.CreateTimer(2, 0, 25000, FALSE, FALSE, Timer_2_Handler);
+	//gVirtualTimerManagerObject.CreateTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler);
+	//gVirtualTimerManagerObject.CreateTimer(4, 0, 500, FALSE, FALSE, Timer_4_Handler);
+
+	VirtTimer_SetTimer(1, 0, 20000, FALSE, FALSE, Timer_1_Handler);
+	VirtTimer_SetTimer(2, 0, 25000, FALSE, FALSE, Timer_2_Handler);
+	VirtTimer_SetTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler);
+	VirtTimer_SetTimer(4, 0, 500, FALSE, FALSE, Timer_4_Handler);
 
 	return TRUE;
 }
