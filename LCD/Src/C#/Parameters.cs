@@ -19,7 +19,7 @@ namespace ParameterClass
 	public string useAnalysis = "exe";
 	public string analysisScriptName = "LCDAnalysis.exe";
 	public bool useResultsFile = true;
-	public string resultsFileName = "results.txt";
+	public string resultsFileName = "testTemp\\results.txt";
 	// Do not change text format above this point
     }
 }

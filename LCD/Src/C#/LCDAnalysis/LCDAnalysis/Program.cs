@@ -13,7 +13,9 @@ namespace LCDAnalysis
     {
         static void Main(string[] args)
         {
-            string[] matches = new string[10];
+            const string fileName = @"testTemp\testData.txt";
+            const string fileOut = @"testTemp\results.txt";
+            string[] matches = new string[11];
             string[] parameter = new string[5];
             int parameterNum = 0;
             int lineMatches = 0;
@@ -30,12 +32,13 @@ namespace LCDAnalysis
             matches[5] = "6D 29 C5 6E";
             matches[6] = "6A A7 00 00";
             matches[7] = "E7 4F 07 67";
-            matches[8] = "AF 8E EB 4E";
-            matches[9] = "40 41 2F 60";
+            matches[8] = "00 00 00 00";
+            matches[9] = "AF 8E EB 4E";
+            matches[10] = "40 41 2F 60";
             
             try
             {
-                using (StreamReader reader = new StreamReader(args[0]))
+                using (StreamReader reader = new StreamReader(fileName))
                 {
                     string line;
                     bool foundChars;
@@ -83,7 +86,7 @@ namespace LCDAnalysis
                 else
                     testResult = false;
 
-                using (StreamWriter writer = new StreamWriter(args[1]))
+                using (StreamWriter writer = new StreamWriter(fileOut))
                 {
                     if (testResult == true)
                         writer.Write("result = PASS\r\n");
@@ -102,7 +105,7 @@ namespace LCDAnalysis
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine("test results read FAIL: " + ex.Message);
-                using (StreamWriter writer = new StreamWriter(args[1]))
+                using (StreamWriter writer = new StreamWriter(fileOut))
                 {
                     writer.Write("result = FAIL\r\n");
                     writer.Write("accuracy = 0\r\n");

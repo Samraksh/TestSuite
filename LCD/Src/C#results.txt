@@ -1,7 +1,0 @@
-result = PASS
-accuracy = 0
-resultParameter1 = [70 80 48 60 65 6E 0D ]
-resultParameter2 = [70 80 48 C6 EC ED AE ]
-resultParameter3 = [70 80 48 EA 8C CB E0 ]
-resultParameter4 = [70 80 48 6D 29 C5 6E ]
-resultParameter5 = [70 80 48 6A A7 00 00 ]

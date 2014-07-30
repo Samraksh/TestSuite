@@ -59,7 +59,7 @@
 	  <HintPath>$(BUILD_TREE_DLL)\Samraksh_SPOT_Hardware.dll</HintPath>
 	</Reference>-->
 	<Reference Include="Samraksh.eMote.DotNow">
-      <HintPath>$(BUILD_TREE_DLL)\Samraksh_eMote_DotNow.dll</HintPath>
+      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
