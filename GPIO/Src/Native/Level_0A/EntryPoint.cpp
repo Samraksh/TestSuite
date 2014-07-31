@@ -8,9 +8,7 @@
 
 #include <tinyhal.h>
 #include "GPIO.h"
-#include <i2c/stm32f10x_i2c.h>
-#include <rcc/stm32f10x_rcc.h>
-#include <gpio/stm32f10x_gpio.h>
+#include <stm32f10x.h>
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
