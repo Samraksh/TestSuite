@@ -3,9 +3,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "VirtualTimerTest.h"
-//TODO: AnanthAtSamraksh -- below 2 includes need to be fixed
-#include "D:/AnanthAtSamraksh/MF/MicroFrameworkPK_v4_3/DeviceCode/Include/Samraksh/VirtualTimer.h"
-#include "D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Time_decl.h"
+#include "../DeviceCode/Include/Samraksh/VirtualTimer.h"
+#include "../DeviceCode/Include/Time_decl.h"
 
 
 //---//
@@ -125,7 +124,6 @@ BOOL VirtualTimerTest::Level_0E()
 			VirtTimer_Stop( 0 );
 		}*/
 	}
-
 
 	return TRUE;
 }

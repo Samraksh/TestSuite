@@ -33,7 +33,7 @@
   <PropertyGroup>
     <MMP_PE_NoBitmapCompression>true</MMP_PE_NoBitmapCompression>
     <MMP_DAT_SKIP>false</MMP_DAT_SKIP>
-    <MMP_DAT_CreateDatabaseFile>D:\AnanthAtSamraksh\TestSuite\TimeTest\Src\C#\TimeAndTimerTest\Level_0A\Level_0A\bin\Debug\Level_0A.dat</MMP_DAT_CreateDatabaseFile>
+    <MMP_DAT_CreateDatabaseFile>bin\Release\Level_0A.dat</MMP_DAT_CreateDatabaseFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -55,7 +55,7 @@
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.SerialPort.dll</HintPath>
     </Reference>
     <Reference Include="Samraksh_eMote_DotNow">
-      <HintPath>..\..\..\..\..\..\..\MF\MicroFrameworkPK_v4_3\Samraksh\Executables\Release\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.dll</HintPath>
+      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.dll</HintPath>
     </Reference>
     <!--Reference Include="Microsoft.SPOT.Hardware" />
     <Reference Include="Microsoft.SPOT.Hardware.SerialPort" />

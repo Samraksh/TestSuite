@@ -4,13 +4,13 @@
 
 #include <tinyhal.h>
 
-class VirtualTimerTest
+class AdvancedTimerTest
 {
 
 public:
 
 //--//
-	VirtualTimerTest ( int seedValue, int numberOfEvents );
+	AdvancedTimerTest ( int seedValue, int numberOfEvents );
 
     BOOL     Execute( int testLevel );
 

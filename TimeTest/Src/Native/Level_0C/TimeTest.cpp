@@ -7,8 +7,7 @@
  * This test makes use of events to set a delay and check if the time-elapse measured before and after the event is roughly equal to the delay. */
 
 #include "TimeTest.h"
-//TODO: AnanthAtSamraksh -- below include needs to be fixed
-#include "D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Time_decl.h"
+#include "..\DeviceCode\Include\Time_decl.h"
 
 
 //---//
@@ -61,6 +60,21 @@ void Timer_7_Handler(void *arg)
 	CPU_GPIO_SetPinState((GPIO_PIN) 8, FALSE);
 }
 
+BOOL TimeTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
+{
+	while(true){
+		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=%d\n", accuracy);
+		hal_printf("resultParameter1=%s\n", resultParameter1);
+		hal_printf("resultParameter2=%s\n", resultParameter2);
+		hal_printf("resultParameter3=null\n");
+		hal_printf("resultParameter4=null\n");
+		hal_printf("resultParameter5=null\n");
+		HAL_Time_Sleep_MicroSeconds(1000000);
+	}
+
+	return true;
+}
 
 TimeTest::TimeTest( int seedValue, int numberOfEvents )
 {

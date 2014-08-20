@@ -18,6 +18,8 @@ public:
 
 	BOOL 	 Level_0B();
 
+	BOOL     DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy);
+
 };
 
 

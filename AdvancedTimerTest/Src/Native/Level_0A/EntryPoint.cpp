@@ -26,12 +26,12 @@ void ApplicationEntryPoint()
 {
     BOOL result;
 		
-    VirtualTimerTest virtualTimerTest(0,0);
+    AdvancedTimerTest advancedTimerTest(0,0);
 
     do
     {
 
-    	if(!virtualTimerTest.Execute(5))
+    	if(!advancedTimerTest.Execute(0))
     		hal_printf("Error");
 	  //if(halTimerTest.Execute(0))
 		//break;

@@ -5,12 +5,11 @@
 /* This is a test for profiling the AdvancedTimer driver. */
 
 #include "AdvancedTimerTest.h"
-//TODO: AnanthAtSamraksh -- below 2 includes need to be fixed
-#include "D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\time_decl.h"
+#include "..\DeviceCode\Include\time_decl.h"
 
 //extern STM32F10x_AdvancedTimer g_STM32F10x_AdvancedTimer;
-void VirtualTimerCallback(void *arg);
-VirtualTimerTest VTtest(0,0);
+void AdvancedTimerCallback(void *arg);
+AdvancedTimerTest advTest(0,0);
 
 //---//
 
@@ -68,7 +67,7 @@ void Timer_7_Handler(void *arg)
 }
 
 
-VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
+AdvancedTimerTest::AdvancedTimerTest( int seedValue, int numberOfEvents )
 {
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, TRUE);
@@ -79,25 +78,19 @@ VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 4, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 8, TRUE);
 
-	Tasklet_Initialize();
+	//Tasklet_Initialize();
 
 	//g_STM32F10x_AdvancedTimer.Initialize(0, VirtualTimerCallback, NULL);
-	CPU_Timer_Initialize(0, FALSE, 0, VirtualTimerCallback, NULL);
+	CPU_Timer_Initialize(0, FALSE, 0, AdvancedTimerCallback, NULL);
 };
 
-BOOL VirtualTimerTest::Level_0A()
-{
-	//VirtTimer_SetTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
-
-	return TRUE;
-}
 
 UINT64 MicrosecondsToTicks( UINT64 uSec ) {
 	return uSec * (8000000/1000000);
 }
 
 
-BOOL VirtualTimerTest::Level_0F()
+BOOL AdvancedTimerTest::Level_0A()
 {
 	//g_STM32F10x_AdvancedTimer.SetCompare(g_STM32F10x_AdvancedTimer.Get64Counter(), MicrosecondsToTicks(250000), SET_COMPARE_TIMER);
 	//The below line makes the timer fire only once.
@@ -109,21 +102,17 @@ BOOL VirtualTimerTest::Level_0F()
 }
 
 
-BOOL VirtualTimerTest::Execute( int testLevel )
+BOOL AdvancedTimerTest::Execute( int testLevel )
 {
 	if(testLevel == 0)
 		return Level_0A();
-	else if(testLevel == 5)
-	{
-		Level_0F();
-	}
 } //Execute
 
 
-void VirtualTimerCallback(void *arg)
+void AdvancedTimerCallback(void *arg)
 {
 	Timer_0_Handler(NULL);
-	VTtest.Level_0F();
+	advTest.Level_0A();
 }
 
 

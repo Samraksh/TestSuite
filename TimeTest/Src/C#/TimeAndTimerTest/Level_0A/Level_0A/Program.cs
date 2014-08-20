@@ -25,6 +25,27 @@ namespace Level_0A
     public class Program
     {
 
+        public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
+        {
+            while (true)
+            {
+                Thread.Sleep(1000);
+                if (result)
+                {
+                    Debug.Print("result=PASS\n");
+                }
+                else
+                {
+                    Debug.Print("result=FAIL\n");
+                }
+                Debug.Print("accuracy=" + accuracy.ToString());
+                Debug.Print("resultParameter1=" + resultParameter1);
+                Debug.Print("resultParameter2=" + resultParameter2);
+                Debug.Print("resultParameter3=null");
+                Debug.Print("resultParameter4=null");
+                Debug.Print("resultParameter5=null");
+            }
+        }
 
         Timer sampleTimer;
 
@@ -46,7 +67,25 @@ namespace Level_0A
             Led3 = new OutputPort((Cpu.Pin)PinMap.Gpio03, false);
             Led4 = new OutputPort((Cpu.Pin)PinMap.Gpio04, false);
 #endif
-            sampleTimer = new Timer(new TimerCallback(TimerCallbackFunction), null, 0, 100);
+            try
+            {
+                sampleTimer = new Timer(new TimerCallback(TimerCallbackFunction), null, 0, 100);
+            }
+            catch (Exception)
+            {
+                while (true)
+                {
+                    Thread.Sleep(1000);
+
+                    Debug.Print("result=FAIL\n");
+                    Debug.Print("accuracy=0");
+                    Debug.Print("resultParameter1=Failed to initialize timer");
+                    Debug.Print("resultParameter2=null");
+                    Debug.Print("resultParameter3=null");
+                    Debug.Print("resultParameter4=null");
+                    Debug.Print("resultParameter5=null");
+                }
+            }
         }
 
         public static void Main()

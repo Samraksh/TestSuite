@@ -63,7 +63,7 @@
     <DriverLibs Include="diagnostics_pal_stubs.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\VirtualTimer\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\VirtualTimer\dotNetMF.proj" />
     <DriverLibs Include="VirtualTimer.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +130,7 @@
   </ItemGroup-->
   <!-- 									Samraksh Time Extension        								-->
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\Time\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\eMote_time\dotNetMF.proj" />
     <DriverLibs Include="eMote_time.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 //
 
 
-#include <D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\Krait\DeviceCode\Krait.h>
+#include <..\DeviceCode\Targets\Native\Krait\DeviceCode\Krait.h>
 #define VectorTableOffsetRegister 0xE000ED08
 
 #define OFFSET 0x20000

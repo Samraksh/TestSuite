@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='VirtualTimerTest' Type='Native'>
 		<Description>
-			Native Virtual Timer Tests Level 0A with one timer, also a timer test
+			Native virtual timer test Level 0A - one timer and an event
 		</Description>
 		<TestPath>
 			VirtualTimerTest\Src\Native\Level_0A

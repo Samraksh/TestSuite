@@ -5,8 +5,7 @@
 
 /* Test to check if time increases monotonically or not. */
 #include "TimeTest.h"
-//TODO: AnanthAtSamraksh -- below include needs to be fixed
-#include "D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Time_decl.h"
+#include "..\DeviceCode\Include\Time_decl.h"
 
 
 //---//
@@ -59,6 +58,21 @@ void Timer_7_Handler(void *arg)
 	CPU_GPIO_SetPinState((GPIO_PIN) 8, FALSE);
 }
 
+BOOL TimeTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
+{
+	while(true){
+		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=%d\n", accuracy);
+		hal_printf("resultParameter1=%s\n", resultParameter1);
+		hal_printf("resultParameter2=%s\n", resultParameter2);
+		hal_printf("resultParameter3=null\n");
+		hal_printf("resultParameter4=null\n");
+		hal_printf("resultParameter5=null\n");
+		HAL_Time_Sleep_MicroSeconds(1000000);
+	}
+
+	return true;
+}
 
 TimeTest::TimeTest( int seedValue, int numberOfEvents )
 {
@@ -96,7 +110,8 @@ BOOL TimeTest::Level_0A()
 		{
 			Timer_1_Handler(NULL);
 			hal_printf("prevTime: %llu; currentTime: %llu  \n", prevTime, currentTime);
-			//break;
+			DisplayStats(false, "ERROR: currentTime is less than prevTime", NULL, 0);
+			break;
 		}
 	}
 

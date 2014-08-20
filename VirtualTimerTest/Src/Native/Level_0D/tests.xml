@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='VirtualTimerTest' Type='Native'>
 		<Description>
-			Native Virtual Timer Tests Level 0D change timer test
+			Native virtual timer test Level 0D - change timer value
 		</Description>
 		<TestPath>
 			VirtualTimerTest\Src\Native\Level_0D

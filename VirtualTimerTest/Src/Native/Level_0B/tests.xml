@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='VirtualTimerTest' Type='Native'>
 		<Description>
-			Native Virtual Timer Tests Level 0B, 3 virtual timers 20000, 30000, 40000
+			Native virtual timer test Level 0B - 2 virtual timers 
 		</Description>
 		<TestPath>
 			VirtualTimerTest\Src\Native\Level_0B

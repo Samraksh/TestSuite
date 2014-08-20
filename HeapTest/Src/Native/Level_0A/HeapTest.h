@@ -3,9 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <tinyhal.h>
-
-//TODO: AnanthAtSamraksh -- below include needs to be fixed
-#include "D:/AnanthAtSamraksh/MF/MicroFrameworkPK_v4_3/DeviceCode/Include/Samraksh/heap.h"
+#include "../DeviceCode/Include/Samraksh/heap.h"
 
 class HeapTest
 {
@@ -22,6 +20,8 @@ public:
 	BOOL 	 Level_0A();
 
 	BOOL 	 Level_0B();
+
+	BOOL     DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy);
 
 };
 
