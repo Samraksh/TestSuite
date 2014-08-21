@@ -4,7 +4,7 @@
 
 #include "VirtualTimerTest.h"
 #include "../DeviceCode/Include/Samraksh/VirtualTimer.h"
-#include "D:\AnanthAtSamraksh\MF\MicroFrameworkPK_v4_3\DeviceCode\Include\Time_decl.h"
+#include "../DeviceCode/Include/Time_decl.h"
 
 //extern VirtualTimerManager gVirtualTimerManagerObject;
 //---//
