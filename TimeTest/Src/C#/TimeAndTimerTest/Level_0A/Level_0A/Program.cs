@@ -1,5 +1,5 @@
-﻿#define HARDWARE_DOTNOW
-//#define HARDWARE_ADAPT
+﻿//#define HARDWARE_DOTNOW
+#define HARDWARE_ADAPT
 
 using System;
 using System.IO.Ports;
@@ -69,7 +69,7 @@ namespace Level_0A
 #endif
             try
             {
-                sampleTimer = new Timer(new TimerCallback(TimerCallbackFunction), null, 0, 100);
+                sampleTimer = new Timer(new TimerCallback(TimerCallbackFunction), null, 0, 500);
             }
             catch (Exception)
             {
@@ -90,10 +90,10 @@ namespace Level_0A
 
         public static void Main()
         {
-            Program pgm = new Program();
-            Thread.Sleep(1000);
+            /*Program pgm = new Program();
+            Thread.Sleep(Timeout.Infinite);*/
 
-            /*DateTime prevTime, currentTime;
+            DateTime prevTime, currentTime;
 
             Program pgm = new Program();
 
@@ -101,9 +101,9 @@ namespace Level_0A
             {
                 ////Thread.Sleep(100);
                 prevTime = DateTime.Now;
-                Thread.Sleep(50);
+                Thread.Sleep(1000);
                 currentTime = DateTime.Now;
-                //Debug.Print("currentTime: \n" + currentTime);
+                Debug.Print(currentTime + "\r\n");
 
                 if (currentTime > prevTime)
                 {
@@ -115,7 +115,7 @@ namespace Level_0A
                     Led2.Write(true);
                     Led2.Write(false);
                 }
-            }*/
+            }
         }
 
         private static void TimerCallbackFunction(object state)

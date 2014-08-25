@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='TimeTest' Type='C# Adapt .NOW'>
+	<Test Name='TimeAndTimerTest' Type='C# Adapt .NOW'>
 		<Description>
 			Test accuracy and precision of C# timer; Also tests if time increases monotonically or not (commented out)
 		</Description>
