@@ -81,7 +81,7 @@ AdvancedTimerTest::AdvancedTimerTest( int seedValue, int numberOfEvents )
 	//Tasklet_Initialize();
 
 	//g_STM32F10x_AdvancedTimer.Initialize(0, VirtualTimerCallback, NULL);
-	CPU_Timer_Initialize(0, FALSE, 0, AdvancedTimerCallback, NULL);
+	CPU_Timer_Initialize(1, FALSE, 0, AdvancedTimerCallback, NULL);
 };
 
 
