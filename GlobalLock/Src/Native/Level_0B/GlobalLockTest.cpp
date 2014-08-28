@@ -3,11 +3,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include "GlobalLockTest.h"
-#include <Samraksh\HALTimer.h>
+#include <Samraksh\VirtualTimer.h>
 
-extern HALTimerManager gHalTimerManagerObject;
+//extern HALTimerManager gHalTimerManagerObject;
 //---//
-void Timer_1_Handler(void *arg)
+void Timer_3_Handler(void *arg)
 {
 	static bool pinState = false;
 
@@ -18,7 +18,7 @@ void Timer_1_Handler(void *arg)
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, pinState);
 }
 
-void Timer_2_Handler(void *arg)
+void Timer_4_Handler(void *arg)
 {
 	GLOBAL_LOCK(irq);
 	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
@@ -29,16 +29,14 @@ void Timer_2_Handler(void *arg)
 
 }
 
-void Timer_3_Handler(void *arg)
+void Timer_5_Handler(void *arg)
 {
-
 	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
 }
 
-void Timer_4_Handler(void *arg)
+void Timer_6_Handler(void *arg)
 {
-
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
 }
@@ -51,15 +49,20 @@ GlobalLockTest::GlobalLockTest( int seedValue, int numberOfEvents )
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 29, FALSE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 30, FALSE);
 
-	Tasklet_Initialize();
+	//Tasklet_Initialize();
 
-	gHalTimerManagerObject.Initialize();
+	//gHalTimerManagerObject.Initialize();
 };
 
 BOOL GlobalLockTest::Level_0A()
 {
-	gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
-	gHalTimerManagerObject.CreateTimer(2, 0, 120000, FALSE, FALSE, Timer_2_Handler);
+	//gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
+	//gHalTimerManagerObject.CreateTimer(2, 0, 120000, FALSE, FALSE, Timer_2_Handler);
+
+	if(!VirtTimer_SetTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler))
+		return FALSE;
+	if(!VirtTimer_SetTimer(4, 0, 120000, FALSE, FALSE, Timer_4_Handler))
+		return FALSE;
 
 	return TRUE;
 }
@@ -80,8 +83,13 @@ void foo()
 
 BOOL GlobalLockTest::Level_0B()
 {
-	gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
-	gHalTimerManagerObject.StartTimer(1);
+	/*gHalTimerManagerObject.CreateTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
+	gHalTimerManagerObject.StartTimer(1);*/
+
+	if(!VirtTimer_SetTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler))
+		return FALSE;
+
+	VirtTimer_Start( 3 );
 
 	while(TRUE)
 	{

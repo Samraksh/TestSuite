@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='VirtualTimerTest' Type='Native'>
+	<Test Name='VirtualTimerTest' Type='Native .NOW'>
 		<Description>
 			Native virtual timer test Level 0E - 5 virtual timers are started
 		</Description>

@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='TimeTest' Type='Native'>
+	<Test Name='TimeTest' Type='Native .NOW'>
 		<Description>
 			Native time test Level 0D - checks if time increases monotonically, but after sleeping for increasing periods. 
 		</Description>

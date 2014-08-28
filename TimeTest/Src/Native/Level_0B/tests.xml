@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='TimeTest' Type='Native'>
+	<Test Name='TimeTest' Type='Native .NOW'>
 		<Description>
 			Native time test Level 0B - checks if ticks increase monotonically
 		</Description>

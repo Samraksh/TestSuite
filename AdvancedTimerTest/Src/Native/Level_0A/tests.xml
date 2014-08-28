@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='AdvancedTimerTest' Type='Native'>
+	<Test Name='AdvancedTimerTest' Type='Native .NOW'>
 		<Description>
 			Native hardware timer test Level 0A - tests accuracy and precision of 32 bit advanced timer
 		</Description>

@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='TimeTest' Type='Native'>
+	<Test Name='TimeTest' Type='Native .NOW'>
 		<Description>
 			Native time test Level 0C - checks if events happen at set intervals
 		</Description>
