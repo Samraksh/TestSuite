@@ -4,6 +4,7 @@
 
 
 #include "DataStoreTest.h"
+#include "..\DeviceCode\Include\Time_decl.h"
 
 //---//
 
@@ -13,9 +14,9 @@ extern Data_Store g_dataStoreObject;
 DataStoreTest::DataStoreTest( int seedValue, int numberOfEvents )
 {
 	CPU_GPIO_Initialize();
-	CPU_SPI_Initialize();
+	//CPU_SPI_Initialize();
 
-	testMathInstance.prng_init(3);
+	//testMathInstance.prng_init(3);
 
 };
 
@@ -29,7 +30,7 @@ BOOL DataStoreTest::DisplayStats(BOOL result, char* resultParameter1, char* resu
 		hal_printf("resultParameter3=null\n");
 		hal_printf("resultParameter4=null\n");
 		hal_printf("resultParameter5=null\n");
-		HAL_Time_Sleep_MicroSeconds(1000000);
+		//HAL_Time_Sleep_MicroSeconds(1000000);
 	}
 
 	return true;
@@ -165,7 +166,8 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		hal_printf("SUCCESS: initialize data store \n");
 		return true;
 	}
 
