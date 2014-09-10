@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='GPIO' Type='C# .NOW'>
 		<Description>
-			C# GPIO Input
+			C# GPIO Input - connect .Now's J11 pin 3 with J12 pin 5
 		</Description>
 		<TestPath>
 			GPIO\Src\C#\InputPort

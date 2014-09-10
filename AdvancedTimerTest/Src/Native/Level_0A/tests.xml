@@ -4,7 +4,7 @@
 			Native hardware timer test Level 0A - tests accuracy and precision of 32 bit advanced timer
 		</Description>
 		<TestPath>
-			AdvancedTimerTest\Src\Native\Level_0B
+			AdvancedTimerTest\Src\Native\Level_0A
 		</TestPath>
 		<TestProjName>
 			AdvancedTimerTest.proj

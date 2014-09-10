@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define HARDWARE_EMOTE
+
+using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
