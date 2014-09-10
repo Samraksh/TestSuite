@@ -12,14 +12,28 @@ namespace COM
     {
 		static void SerialPortHandler(object sender, SerialDataReceivedEventArgs e)
         {            
+			try{
 			byte[] m_recvBuffer = new byte[100];
             SerialPort serialPort = (SerialPort)sender;
-			
+			int bytesToRead;			
 			int numBytes = serialPort.BytesToRead;
-            serialPort.Read(m_recvBuffer, 0, numBytes);
-			serialPort.Write(m_recvBuffer, 0, numBytes);
-			serialPort.Flush();
 
+			while (numBytes > 0){
+				if (numBytes > 100){
+					bytesToRead = 100;
+					numBytes -= 100;
+				} else {
+					bytesToRead = numBytes;
+					numBytes -= bytesToRead;
+				}
+            	serialPort.Read(m_recvBuffer, 0, bytesToRead);
+				serialPort.Write(m_recvBuffer, 0, bytesToRead);
+				serialPort.Flush();
+			}
+			}
+			catch(Exception){
+
+			}
         }
 
         public static void Main()
