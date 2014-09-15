@@ -222,7 +222,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 							Debug.Print("***** Missing seq no: " + (lastRxSeqNo + 1).ToString() + " *****");
 						}
 						lastRxSeqNo = (UInt16)rcvMsg.MsgID;
-						if ( (receivePackets % 1000) == 0)
+						//if ( (receivePackets % 1000) == 0)
  	                       Debug.Print("Received response from: " + rcvMsg.Src.ToString() + " for seq no: " + rcvMsg.MsgID.ToString() + " total error cnt: " + errorCnt.ToString());						
                         lcd.Write(LCD.CHAR_P, LCD.CHAR_P, LCD.CHAR_P, LCD.CHAR_P);
                     }
