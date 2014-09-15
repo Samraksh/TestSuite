@@ -60,6 +60,23 @@ void Timer_7_Handler(void *arg)
 }
 
 
+BOOL VirtualTimerTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
+{
+	while(true){
+		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=%d\n", accuracy);
+		hal_printf("resultParameter1=%s\n", resultParameter1);
+		hal_printf("resultParameter2=%s\n", resultParameter2);
+		hal_printf("resultParameter3=null\n");
+		hal_printf("resultParameter4=null\n");
+		hal_printf("resultParameter5=null\n");
+		HAL_Time_Sleep_MicroSeconds(1000000);
+	}
+
+	return true;
+}
+
+
 VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 {
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, TRUE);
@@ -133,20 +150,42 @@ BOOL VirtualTimerTest::Level_0E()
 
 BOOL VirtualTimerTest::Level_0F()
 {
-	while(true)
+	UINT32 i = 0; currentTicks = 0;
+
+	while(currentTicks >= 0 && currentTicks < ((1<<32)-1))
 	{
 		currentTicks = VirtTimer_GetTicks(VIRT_TIMER_TIME);
 
-		if(currentTicks < prevTicks)
+		if(currentTicks < 0 || currentTicks < prevTicks)
 		{
-			Timer_0_Handler(NULL);
+			if(prevTicks > ((1<<31)-1))
+			{
+				hal_printf("count: %u currentTicks > prevTicks \r\n", i);
+				hal_printf("currentTicks: %u\r\n", currentTicks);
+				break;
+			}
+			else
+			{
+				//Timer_0_Handler(NULL);
+				DisplayStats(false, "ERROR: currentTicks is less than prevTicks", NULL, 0);
+				return false;
+			}
 		}
 		else
 		{
-			Timer_1_Handler(NULL);
+			//Timer_1_Handler(NULL);
+			if(!(i % 10000000))
+			{
+				hal_printf("count: %llu currentTicks > prevTicks \r\n", i);
+				hal_printf("currentTicks: %u\r\n", currentTicks);
+			}
 		}
 		prevTicks = currentTicks;
+		i++;
 	}
+
+	DisplayStats(true, "SUCCESS: currentTicks is always greater than prevTicks", NULL, 0);
+
 }
 
 

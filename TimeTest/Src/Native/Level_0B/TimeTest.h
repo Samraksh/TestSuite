@@ -10,6 +10,7 @@ class TimeTest
 public:
 
 //--//
+	static UINT64 prevTicks;
 	TimeTest ( int seedValue, int numberOfEvents );
 
     BOOL     Execute( int testLevel );

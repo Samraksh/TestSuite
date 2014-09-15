@@ -1,5 +1,5 @@
-﻿//#define HARDWARE_DOTNOW
-#define HARDWARE_ADAPT
+﻿#define HARDWARE_DOTNOW
+//#define HARDWARE_ADAPT
 
 using System;
 using System.IO.Ports;

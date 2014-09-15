@@ -10,6 +10,8 @@
 
 //---//
 
+UINT64 TimeTest::prevTicks = 0;
+
 void Timer_0_Handler(void *arg)
 {
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
@@ -112,22 +114,57 @@ BOOL TimeTest::Level_0A()
 //Under the current implementation, HAL_Time_CurrentTime and HAL_Time_CurrentTicks return the same value (ticks) for the "AdvancedTimer" driver
 BOOL TimeTest::Level_0B()
 {
-	UINT64 prevTicks = 0, currentTicks = 0;
+	UINT64 currentTicks = 0;
+	UINT64 i = 0;
 
-	while(true)
+	UINT64 compareValue = (0x3FFFFFFFF);
+
+	while(currentTicks >= 0 && currentTicks < (compareValue-1))
 	{
-		prevTicks = HAL_Time_CurrentTicks();
+		//prevTicks = HAL_Time_CurrentTicks();
+		////HAL_Time_Sleep_MicroSeconds(5000);
 		currentTicks = HAL_Time_CurrentTicks();
 
-		if(currentTicks > prevTicks)
-			Timer_0_Handler(NULL);
-		else
+		if( currentTicks > ( compareValue-1 ) )
 		{
-			Timer_1_Handler(NULL);
-			DisplayStats(false, "ERROR: currentTicks is less than prevTicks", NULL, 0);
+			hal_printf("currentTicks: %llu; prevTicks: %llu\r\n", currentTicks, prevTicks);
 			break;
 		}
+
+		if(currentTicks < 0 || currentTicks < prevTicks)
+		{
+			//Sometimes, bigCounter is updated after ticks flow-over, which causes this test to fail.
+			//That is why, the ticks are obtained once again after waiting for sometime.
+			/*HAL_Time_Sleep_MicroSeconds(5000);
+			currentTicks = HAL_Time_CurrentTicks();
+			if(currentTicks < 0 || currentTicks < prevTicks)
+			{*/
+				//Timer_1_Handler(NULL);
+				hal_printf("count: %llu currentTicks < prevTicks \r\n", i);
+				hal_printf("currentTicks: %llu; prevTicks: %llu\r\n", currentTicks, prevTicks);
+				DisplayStats(false, "ERROR: currentTicks is less than prevTicks", NULL, 0);
+				//break;
+			/*}
+			else
+			{
+				hal_printf("count: %llu currentTicks > prevTicks \r\n", i);
+				hal_printf("currentTicks: %llu; prevTicks: %llu\r\n", currentTicks, prevTicks);
+			}*/
+		}
+		else
+		{
+			//Timer_0_Handler(NULL);
+			if(!(i % 1000000))
+			{
+				hal_printf("count: %llu currentTicks > prevTicks \r\n", i);
+				hal_printf("currentTicks: %llu; prevTicks: %llu\r\n", currentTicks, prevTicks);
+			}
+		}
+		i++;
+
+		prevTicks = currentTicks;
 	}
+	DisplayStats(true, "SUCCESS: currentTicks is always greater than prevTicks", NULL, 0);
 
 	return TRUE;
 }

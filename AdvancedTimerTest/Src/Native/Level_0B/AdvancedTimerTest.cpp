@@ -130,6 +130,7 @@ BOOL AdvancedTimerTest::Level_0B()
 			{
 				hal_printf("count: %llu currentTicks > prevTicks \r\n", i);
 				hal_printf("currentTicks: %u\r\n", currentTicks);
+				break;
 			}
 			else
 			{

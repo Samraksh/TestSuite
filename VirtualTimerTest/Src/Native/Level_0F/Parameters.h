@@ -1,6 +1,6 @@
 ﻿// required TestRig parameters
-#define testTimeout 60000
-#define useLogic "normal"
+#define testTimeout 600000
+#define useLogic "none"
 #define sampleTimeMs 170000
 #define sampleFrequency 4000000
 #define useCOMPort true
