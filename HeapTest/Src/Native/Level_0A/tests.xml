@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='HeapTest' Type='Native'>
+	<Test Name='HeapTest' Type='Native Adapt .NOW'>
 		<Description>
 			Native heap test level 0A - Inserts random elements and checks if extract works correctly
 		</Description>

@@ -55,20 +55,20 @@ namespace TestSuite
 
         private static void RT_TimerCallback(uint data1, uint data2, DateTime time)
         {
-			/*if (pinState == false)
+			if (pinState == false)
 				pinState = true;
 			else 
 				pinState = false;
 
-            testPort_PIN1.Write(pinState);*/
+            testPort_PIN1.Write(pinState);
 
-            testPort_PIN1.Write(true);
-            testPort_PIN1.Write(false);
+            /*testPort_PIN1.Write(true);
+            testPort_PIN1.Write(false);*/
         } 
 
 		static Samraksh.eMote.RealTime.Timer RT_Timer;
 		static NativeEventHandler RT_EventHandler = new NativeEventHandler(RT_TimerCallback);
-		//static bool pinState = false;
+		static bool pinState = false;
 
         public static void Main()
         {

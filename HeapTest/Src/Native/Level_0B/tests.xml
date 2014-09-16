@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='HeapTest' Type='Native'>
+	<Test Name='HeapTest' Type='Native Adapt .NOW'>
 		<Description>
 			Native heap test level 0B - Inserts random elements and checks if peek works correctly
 		</Description>
