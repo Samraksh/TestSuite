@@ -20,4 +20,3 @@ D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis.exe
 D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis.pdb
-D:\Work\TestSuite\GlobalLock\Src\Native\Level_0A\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
