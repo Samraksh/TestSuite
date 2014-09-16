@@ -1,5 +1,5 @@
-﻿//#define HARDWARE_EMOTE
-#define HARDWARE_ADAPT
+﻿#define HARDWARE_EMOTE
+//#define HARDWARE_ADAPT
 
 using System;
 using Microsoft.SPOT;
@@ -78,7 +78,7 @@ namespace TestSuite
 			try
             {
                 //The 2nd parameter is in usec.
-                RT_Timer = new Samraksh.eMote.RealTime.Timer("RealTimeInteropTimer", 750, 0);
+                RT_Timer = new Samraksh.eMote.RealTime.Timer("RealTimeInteropTimer", 1000000, 0);
                 RT_Timer.OnInterrupt += RT_EventHandler;
                 //RT_Timer.EnableInterrupt();
                 /*Samraksh.eMote.RealTime.Timer.Change(0, 50);
