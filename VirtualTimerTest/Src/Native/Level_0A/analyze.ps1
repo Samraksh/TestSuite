@@ -5,8 +5,14 @@
 #
 #
 
-# This variable describes the sleep time of the function which is 300us
-$sleepTime = 30000
+#Period set on timer1 
+$timer1Period = 100
+
+#Period set on timer2
+#$timer2Period = 2000000
+
+#Period set on timer3
+#$timer3Period = 20000
 
 # The acceptable error in percentage
 $acceptableError = 10
@@ -17,15 +23,21 @@ $samplesPerUSecond = 4
 # determines if the test was successful
 $acceptedAccuracy = 10
 
-$totalSamples = 0
+$totalSamplestimer1 = 0
+#$totalSamplestimer2 = 0
+#$totalSamplestimer3 = 0
 
-$errSamples - 0
+$errSamplestimer1 =  0
+#$errSamplestimer2 =  0
+#$errSamplestimer3 =  0
 
 $workingDirectory=$pwd.Path
 
 Write-Host $workingDirectory
 
 $resultFile = $workingDirectory + "\results.txt"
+
+Clear-Content $resultFile
 
 $dataFile = $workingDirectory + "\testTemp\testData.csv"
 
@@ -45,7 +57,9 @@ $csvReaderObject = New-Object FileReader.CsvReader($dataFile)
 
 $dataTable = $csvReaderObject.GetTable()
 
-$lastSampleNumber = 0
+$lastSampleNumbertimer1 = 0
+#$lastSampleNumbertimer2 = 0
+#$lastSampleNumbertimer3 = 0
 
 function Abs($value)
 {
@@ -54,26 +68,57 @@ function Abs($value)
 
 foreach($row in $dataTable.Rows)
 {
-#	Write-Host $row[0]
-#	Write-Host $dataTable.Columns[1]
+	
 	if($row[1] -eq 1)
 	{
-		$timeDifference = ($row[0] - $lastSampleNumber) 
-		$lastSampleNumber = $row[0] 
-		$error = Abs(($timeDifference / 4) - $sleepTime)
-		if($error -gt (($acceptableError / 100) * $sleepTime))
+		$timeDifference = ($row[0] - $lastSampleNumbertimer1) 
+		$lastSampleNumbertimer1 = $row[0] 
+		$timerError = Abs(($timeDifference / $samplesPerUSecond) - $timer1Period)
+		if($timerError -gt (($acceptableError / 100) * $timer1Period))
 		{
-			$errSamples++
+			$errSamplestimer1++
 		}
-		$totalSamples++
+		$totalSamplestimer1++
 	}	
+
+	<#if($row[2] -eq 1)
+	{
+		$timeDifference = ($row[0] - $lastSampleNumbertimer2)
+		$lastSampleNumbertimer2 = $row[0]
+		$timerError = Abs(($timeDifference / $samplesPerUSecond) - $timer2Period)
+		if($timerError -gt (($acceptableError / 100) * $timer2Period))
+		{
+			$errSamplestimer2++
+		}
+		$totalSamplestimer2++
+
+	}#>
+
+	<#if($row[3] -eq 1)
+	{
+		$timeDifference = ($row[0] - $lastSampleNumbertimer3)
+		$lastSampleNumbertimer3 = $row[0]
+		$timerError = Abs(($timeDifference / $samplesPerUSecond) - $timer3Period)
+		if($timerError -gt (($acceptableError /100) * $timer3Period))
+		{
+			$errSamplestimer3++
+		}
+		$totalSamplestimer3++
+	}#>
 }
 
-Write-Host "Total Measurements " + $totalSamples
-Write-Host "Error Samples "  $errSamples
-$accuracy =  ($errSamples / $totalSamples)
+Write-Host "Total Measurements timer1 "  $totalSamplestimer1
+#Write-Host "Total Measurements timer2"  $totalSamplestimer2
+#Write-Host "Total Measurements timer3"  $totalSamplestimer3
+Write-Host "Error Samples timer1"  $errSamplestimer1
+#Write-Host "Error Samples timer2"  $errSamplestimer2
+#Write-Host "Error Samples timer3"  $errSamplestimer3
+$accuracytimer1 =  ($errSamplestimer1 / $totalSamplestimer1)
+#$accuracytimer2 =  ($errSamplestimer2 / $totalSamplestimer2)
+#$accuracytimer3 =  ($errSamplestimer3 / $totalSamplestimer3)
 
-if(($accuracy * 100) -gt $acceptedAccuracy)
+#if((($accuracytimer1 * 100) -gt $acceptedAccuracy) -and (($accuracytimer2 * 100) -gt $acceptedAccuracy) -and (($accuracytimer3 * 100) -gt $acceptedAccuracy))
+if( (($accuracytimer1 * 100) -gt $acceptedAccuracy) )
 {
 	$result = "FAIL"
 }
@@ -84,7 +129,9 @@ else
 
 
 "result=" + $result  | Out-File -FilePath $resultFile -Append
-"accuracy=" + (1 - $accuracy) | Out-File -FilePath $resultFile -Append
+"accuracy=" + (1 - $accuracytimer1) | Out-File -FilePath $resultFile -Append
+#"accuracy=" + (1 - $accuracytimer2) | Out-File -FilePath $resultFile -Append
+#"accuracy=" + (1 - $accuracytimer3) | Out-File -FilePath $resultFile -Append
 if($result -eq "PASS")
 {
 "resultParameter1=Test was successful" | Out-File -FilePath $resultFile -Append

@@ -12,6 +12,7 @@
 #define useMatlabAnalysis false
 #define matlabScriptName "analyze.m"
 #define usePowershellAnalysis true
+#define useAnalysis "powershell"
 #define powershellName "analyze.ps1"
 #define useResultsFile true
 #define resultsFileName "results.txt"

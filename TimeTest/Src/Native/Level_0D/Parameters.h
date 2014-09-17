@@ -1,6 +1,6 @@
 ﻿// required TestRig parameters
 #define testTimeout 60000
-#define useLogic "normal"
+#define useLogic "none"
 #define sampleTimeMs 17000
 #define sampleFrequency 4000000
 #define useCOMPort true
@@ -12,6 +12,7 @@
 #define useMatlabAnalysis false
 #define matlabScriptName "analyze.m"
 #define usePowershellAnalysis true
+#define useAnalysis "powershell"
 #define powershellName "analyze.ps1"
 #define useResultsFile true
 #define resultsFileName "results.txt"

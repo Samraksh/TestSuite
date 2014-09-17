@@ -177,11 +177,12 @@ BOOL TimeTest::Level_0D()
 	UINT16 ticksScalingFactor = 600;
 	UINT32 sleepValue = 100;
 	UINT16 incrementVal = 10;
+	UINT64 sleepValue_ticks = CPU_MicrosecondsToTicks(sleepValue);
 
 	while(true)
 	{
 		//sleepValue = (UINT32)(testMathInstance.pareto_prng() % (1 << 7));
-		UINT64 sleepValue_ticks = CPU_MicrosecondsToTicks(sleepValue);
+
 		prevTime = HAL_Time_CurrentTime();			//returns ticks value
 
 		HAL_Time_Sleep_MicroSeconds(sleepValue);
@@ -190,12 +191,20 @@ BOOL TimeTest::Level_0D()
 		elapsedTime = currentTime - prevTime;
 
 		if(elapsedTime <= (sleepValue_ticks + ticksScalingFactor))
-			Timer_0_Handler(NULL);
+		{
+			//Timer_0_Handler(NULL);
+			DisplayStats(false, "ERROR: elapsedTime is less than sleep time", NULL, 0);
+		}
 		else if(elapsedTime > (sleepValue_ticks + ticksScalingFactor))
-			Timer_1_Handler(NULL);
+		{
+			//Timer_1_Handler(NULL);
+
+		}
 
 		sleepValue += incrementVal;
 	}
+
+	DisplayStats(true, "SUCCESS: elapsedTime is always greater than sleep time", NULL, 0);
 
 	return TRUE;
 }

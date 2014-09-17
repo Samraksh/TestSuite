@@ -117,6 +117,7 @@ BOOL TimeTest::Level_0B()
 	UINT64 currentTicks = 0;
 	UINT64 i = 0;
 
+	//The compareValue can be any power of 2 value above 2^32. It has been set to 2^34 below.
 	UINT64 compareValue = (0x3FFFFFFFF);
 
 	while(currentTicks >= 0 && currentTicks < (compareValue-1))

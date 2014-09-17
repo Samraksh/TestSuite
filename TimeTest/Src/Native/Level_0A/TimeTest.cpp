@@ -97,7 +97,7 @@ BOOL TimeTest::Level_0A()
 	while(true)
 	{
 		prevTime = HAL_Time_CurrentTime();
-		HAL_Time_Sleep_MicroSeconds(5000);
+		//HAL_Time_Sleep_MicroSeconds(5000);
 		//for(int i = 0; i < 10000; i++);
 		currentTime = HAL_Time_CurrentTime();
 
