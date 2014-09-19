@@ -6,20 +6,20 @@ namespace ParameterClass
     {
 	// required TestRig parameters	
 	// parameters used to gather data
-	public int testTimeout = 360000;
-	public string useLogic = "none";
-	public double sampleTimeMs = 15000;
+	public int testTimeout = 60000;
+	public string useLogic = "I2C";
+	public double sampleTimeMs = 10000;
 	public double sampleFrequency = 4000000;
-	public bool useCOMPort = true;
+	public bool useCOMPort = false;
 	public string forceCOM = "";
 	public string COMParameters = "115200,N,8,1";
 	public bool useTestScript = false;
-	public string testScriptName = "DataStore.tst";
+	public string testScriptName = "";
 	public int testScriptTimeoutMs = 9000;
-	public string useAnalysis = "none";
-	public string analysisScriptName = "none.exe";
-	public bool useResultsFile = false;
-	public string resultsFileName = "testTemp\\test_results.txt";
+	public string useAnalysis = "exe";
+	public string analysisScriptName = "GPIOAnalysis.exe";
+	public bool useResultsFile = true;
+	public string resultsFileName = "testTemp\\results.txt";
 	// Do not change text format above this point
     }
 }

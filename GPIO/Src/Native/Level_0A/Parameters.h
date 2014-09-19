@@ -9,10 +9,10 @@
 #define useTestScript false
 #define testScriptName "none.tst"
 #define testScriptTimeoutMs 9000
-#define useAnalysis "Matlab"
-#define	analysisScriptName "analyze_h.m"
-#define	useResultsFile false
-#define resultsFileName "results.txt"
+#define useAnalysis "exe"
+#define	analysisScriptName "GPIOAnalysis.exe"
+#define	useResultsFile true
+#define resultsFileName "testTemp\\results.txt"
 // Do not change text format above this point
 
 // test specific parameters
