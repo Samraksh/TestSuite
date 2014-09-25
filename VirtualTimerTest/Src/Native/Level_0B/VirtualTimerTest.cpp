@@ -67,7 +67,7 @@ BOOL VirtualTimerTest::Level_0B()
 
 	if(!VirtTimer_SetTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler))
 		return FALSE;
-	if(!VirtTimer_SetTimer(4, 0, 2000000, FALSE, FALSE, Timer_4_Handler))
+	if(!VirtTimer_SetTimer(4, 0, 2000000, TRUE, FALSE, Timer_4_Handler))
 		return FALSE;
 
 	if(!VirtTimer_Start(3))
