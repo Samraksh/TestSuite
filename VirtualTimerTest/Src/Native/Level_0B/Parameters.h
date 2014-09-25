@@ -1,5 +1,5 @@
 ﻿// required TestRig parameters
-#define testTimeout 60000
+#define testTimeout 25000
 #define useLogic "normal"
 #define sampleTimeMs 17000
 #define sampleFrequency 4000000
@@ -9,11 +9,8 @@
 #define useTestScript false
 #define testScriptName "HALTimerTest.tst"
 #define testScriptTimeoutMs 9000
-#define useMatlabAnalysis false
-#define matlabScriptName "analyze.m"
-#define usePowershellAnalysis true
 #define useAnalysis "powershell"
-#define powershellName "analyze.ps1"
-#define useResultsFile true
-#define resultsFileName "results.txt"
+#define	analysisScriptName "analyze.ps1"
+#define	useResultsFile true
+#define resultsFileName "testTemp\\results.txt"
 // Do not change text format above this point

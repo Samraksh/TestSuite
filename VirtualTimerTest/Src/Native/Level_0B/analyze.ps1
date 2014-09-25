@@ -35,7 +35,7 @@ $workingDirectory=$pwd.Path
 
 Write-Host $workingDirectory
 
-$resultFile = $workingDirectory + "\results.txt"
+$resultFile = $workingDirectory + "\testTemp\results.txt"
 
 Clear-Content $resultFile
 
