@@ -50,7 +50,10 @@ VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 
 BOOL VirtualTimerTest::Level_0A()
 {
-	if(!VirtTimer_SetTimer(3, 0, 10000, FALSE, FALSE, Timer_3_Handler))
+	if(!VirtTimer_SetTimer(3, 0, 10000, FALSE, FALSE, Timer_1_Handler))
+		return FALSE;
+
+	if(!VirtTimer_Start(3))
 		return FALSE;
 
 	while(TRUE)
