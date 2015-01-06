@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='Adapt Timer' Type='C# Adapt'>
+		<Description>
+			Adapt C# Timer
+		</Description>
+		<TestPath>
+			Adapt\C#\Timer
+		</TestPath>
+		<TestProjName>
+			Timer.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>
