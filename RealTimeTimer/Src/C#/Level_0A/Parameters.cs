@@ -8,7 +8,7 @@ namespace ParameterClass
 	public int testTimeout = 15000;
 	public string useLogic = "normal";
 	public double sampleTimeMs = 10000;
-	public double sampleFrequency = 8000000;
+	public double sampleFrequency = 4000000;
 	public bool useCOMPort = true;
 	public string forceCOM = "";
 	public string COMParameters = "115200,N,8,1";
@@ -23,8 +23,5 @@ namespace ParameterClass
 	
 	// test specific parameters
 	public double frequency = 100;
-	public double upperAllowedFrequency = 100.1;
-	public double lowerAllowedFrequency = 99.9;
-	public double expectedFrequency = 100;
     }
 }

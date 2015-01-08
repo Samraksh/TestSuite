@@ -72,13 +72,13 @@ namespace TestSuite
 
         public static void Main()
         {
-			/*Parameters parameters = new Parameters();*/
+			Parameters parameters = new Parameters();
 			
-		
+			ulong timeTransition = (ulong)(500000 / parameters.frequency);
 			try
             {
                 //The 2nd parameter is in usec.
-                RT_Timer = new Samraksh.eMote.RealTime.Timer("RealTimeInteropTimer", 1000000, 0);
+                RT_Timer = new Samraksh.eMote.RealTime.Timer("RealTimeInteropTimer", timeTransition, 0);
                 RT_Timer.OnInterrupt += RT_EventHandler;
                 //RT_Timer.EnableInterrupt();
                 /*Samraksh.eMote.RealTime.Timer.Change(0, 50);
