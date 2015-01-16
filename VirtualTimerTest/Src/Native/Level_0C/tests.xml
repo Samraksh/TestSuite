@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='VirtualTimerTest' Type='Native .NOW'>
 		<Description>
-			Native virtual timer test Level 0C - start, stop timer
+			Native virtual timer test - start, stop timer
 		</Description>
 		<TestPath>
 			VirtualTimerTest\Src\Native\Level_0C

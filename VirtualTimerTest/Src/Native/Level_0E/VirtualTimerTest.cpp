@@ -11,26 +11,50 @@
 
 void Timer_0_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
+	static bool pinState0 = false;
+
+	if (pinState0 == false)
+		pinState0 = true;
+	else 
+		pinState0 = false;
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, pinState0);
 }
 
 void Timer_1_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+	static bool pinState1 = false;
+
+	if (pinState1 == false)
+		pinState1 = true;
+	else 
+		pinState1 = false;
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 25, pinState1);
 }
 
 void Timer_2_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
+	static bool pinState2 = false;
+
+	if (pinState2 == false)
+		pinState2 = true;
+	else 
+		pinState2 = false;
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 29, pinState2);
 }
 
 void Timer_3_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
+	static bool pinState3 = false;
+
+	if (pinState3 == false)
+		pinState3 = true;
+	else 
+		pinState3 = false;
+
+	CPU_GPIO_SetPinState((GPIO_PIN) 30, pinState3);
 }
 
 void Timer_4_Handler(void *arg)
@@ -64,10 +88,7 @@ VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 29, TRUE);
 	CPU_GPIO_EnableOutputPin((GPIO_PIN) 30, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 31, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 2, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 4, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 8, TRUE);
+	
 };
 
 BOOL VirtualTimerTest::Level_0A()
@@ -93,19 +114,16 @@ BOOL VirtualTimerTest::Level_0E()
 		if(!VirtTimer_SetTimer(2, 0, periodValue*1000, FALSE, FALSE, Timer_2_Handler))
 			return FALSE;*/
 		//periodValue = (i+2)%9;
-		if(!VirtTimer_SetTimer(3, 0, periodValue*500000, FALSE, FALSE, Timer_3_Handler))
+		if(!VirtTimer_SetTimer(3, 0, periodValue*100000, FALSE, FALSE, Timer_0_Handler))
 			return FALSE;
 		//periodValue = (i+1)%9;
-		if(!VirtTimer_SetTimer(4, 0, periodValue*500000, FALSE, FALSE, Timer_4_Handler))
+		if(!VirtTimer_SetTimer(4, 0, periodValue*200000, FALSE, FALSE, Timer_1_Handler))
 			return FALSE;
 		//periodValue = (i+2)%9;
-		if(!VirtTimer_SetTimer(5, 0, periodValue*500000, FALSE, FALSE, Timer_5_Handler))
+		if(!VirtTimer_SetTimer(5, 0, periodValue*300000, FALSE, FALSE, Timer_2_Handler))
 			return FALSE;
 		//periodValue = (i+1)%9;
-		if(!VirtTimer_SetTimer(6, 0, periodValue*500000, FALSE, FALSE, Timer_6_Handler))
-			return FALSE;
-		//periodValue = (i+2)%9;
-		if(!VirtTimer_SetTimer(7, 0, periodValue*500000, FALSE, FALSE, Timer_7_Handler))
+		if(!VirtTimer_SetTimer(6, 0, periodValue*400000, FALSE, FALSE, Timer_3_Handler))
 			return FALSE;
 	}
 
@@ -113,7 +131,7 @@ BOOL VirtualTimerTest::Level_0E()
 	int timerValue = 0;
 	for(UINT16 i = 0; i <= 0; i++)
 	{
-		for (UINT16 j = 3; j <= 7; j++)
+		for (UINT16 j = 3; j <= 6; j++)
 		{
 			//timerValue = (i+j)%8 == 0 ? ((i+j)%8)+1 : (i+j)%8;
 			VirtTimer_Start( (i+j)%8 );

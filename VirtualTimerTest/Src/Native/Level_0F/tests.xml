@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='VirtualTimerTest' Type='Native .NOW'>
 		<Description>
-			Native virtual timer test Level 0F - tests if ticks increase monotonically
+			Native virtual timer test - tests if ticks increase monotonically
 		</Description>
 		<TestPath>
 			VirtualTimerTest\Src\Native\Level_0F

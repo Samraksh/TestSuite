@@ -33,21 +33,21 @@ void Timer_2_Handler(void *arg)
 
 void Timer_3_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 }
 
 void Timer_4_Handler(void *arg)
 {
 	if(timerToggle == FALSE)
 	{
-		CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
-		VirtTimer_Change(4, 0, 30000, FALSE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
+		VirtTimer_Change(4, 0, 70000, FALSE);
 		timerToggle = TRUE;
 	}
 	else
 	{
-		CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
+		CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
 		VirtTimer_Change(4, 0, 20000, FALSE);
 		timerToggle = FALSE;
 	}

@@ -198,12 +198,12 @@ namespace LogicAnalysis
                     if (return1 == 1)
                     {
                         System.Diagnostics.Debug.WriteLine("Found gap sequence for line 1");
-                        result0 = true;
+                        result1 = true;
                     }
                     else
                     {
                         System.Diagnostics.Debug.WriteLine("Failed to find gap sequence for line 1");
-                        result0 = false;
+                        result1 = false;
                     }
                     for (int i = 0; i < expectedGapSequence0.Count; i++)
                     {

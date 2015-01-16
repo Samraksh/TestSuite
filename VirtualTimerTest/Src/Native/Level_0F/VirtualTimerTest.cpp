@@ -150,6 +150,10 @@ BOOL VirtualTimerTest::Level_0E()
 
 BOOL VirtualTimerTest::Level_0F()
 {
+	while (true){
+		hal_printf(".");
+		HAL_Time_Sleep_MicroSeconds(1000000);
+	}
 	UINT32 i = 0; currentTicks = 0;
 
 	while(currentTicks >= 0 && currentTicks < ((1<<32)-1))
