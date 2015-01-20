@@ -196,9 +196,6 @@ BOOL VirtualTimerTest::Level_0F()
 
 BOOL VirtualTimerTest::Execute( int testLevel )
 {
-	while (true){
-		hal_printf("Does this work?\r\n");
-	}
 	if(testLevel == 0)
 		return Level_0A();
 	else if(testLevel == 5)
