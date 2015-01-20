@@ -150,16 +150,17 @@ BOOL VirtualTimerTest::Level_0E()
 
 BOOL VirtualTimerTest::Level_0F()
 {
-	while (true){
+	/*while (true){
 		hal_printf(".");
 		HAL_Time_Sleep_MicroSeconds(1000000);
-	}
+	}*/
 	UINT32 i = 0; currentTicks = 0;
 
 	while(currentTicks >= 0 && currentTicks < ((1<<32)-1))
 	{
 		currentTicks = VirtTimer_GetTicks(VIRT_TIMER_TIME);
 
+		//hal_printf("%llu\r\n",currentTicks);
 		if(currentTicks < 0 || currentTicks < prevTicks)
 		{
 			if(prevTicks > ((1<<31)-1))
@@ -195,6 +196,9 @@ BOOL VirtualTimerTest::Level_0F()
 
 BOOL VirtualTimerTest::Execute( int testLevel )
 {
+	while (true){
+		hal_printf("Does this work?\r\n");
+	}
 	if(testLevel == 0)
 		return Level_0A();
 	else if(testLevel == 5)

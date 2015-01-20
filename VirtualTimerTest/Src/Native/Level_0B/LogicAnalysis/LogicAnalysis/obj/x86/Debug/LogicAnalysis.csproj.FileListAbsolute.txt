@@ -24,3 +24,4 @@ D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0B\LogicAnalysis\LogicAnalys
 D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0B\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
 D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0B\LogicAnalysis.exe
 D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0B\LogicAnalysis.pdb
+D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0B\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
