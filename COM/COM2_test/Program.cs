@@ -10,42 +10,57 @@ namespace COM
 {
     public class Program
     {
-		static void SerialPortHandler(object sender, SerialDataReceivedEventArgs e)
+		public static SerialPort serialPort1;
+		public static SerialPort serialPort2;
+
+		static void SerialPort1Handler(object sender, SerialDataReceivedEventArgs e)
         {            
 			byte[] m_recvBuffer = new byte[100];
             SerialPort serialPort = (SerialPort)sender;
 			
 			int numBytes = serialPort.BytesToRead;
             serialPort.Read(m_recvBuffer, 0, numBytes);
-			serialPort.Write(m_recvBuffer, 0, numBytes);
-			serialPort.Flush();
+			serialPort2.Write(m_recvBuffer, 0, numBytes);
+			serialPort2.Flush();
+
+        }
+
+		static void SerialPort2Handler(object sender, SerialDataReceivedEventArgs e)
+        {            
+			byte[] m_recvBuffer = new byte[100];
+            SerialPort serialPort = (SerialPort)sender;
+			
+			int numBytes = serialPort.BytesToRead;
+            serialPort.Read(m_recvBuffer, 0, numBytes);
+			for (int i = 0; i<numBytes; i++){
+				m_recvBuffer[i] = m_recvBuffer[i]+1;
+			}
+			serialPort1.Write(m_recvBuffer, 0, numBytes);
+			serialPort1.Flush();
 
         }
 
         public static void Main()
         {
-			//Debug.EnableGCMessages(false);
-			//Debug.Print("Starting Main\r\n");
+			serialPort1 = new SerialPort("COM1");
+			serialPort1.BaudRate = 115200;
+            serialPort1.Parity = Parity.None;
+            serialPort1.StopBits = StopBits.One;
+            serialPort1.DataBits = 8;
+            serialPort1.Handshake = Handshake.None;
+			serialPort1.DataReceived += new SerialDataReceivedEventHandler(SerialPort1Handler);
 
-			SerialPort serialPort = new SerialPort("COM2");
-			serialPort.BaudRate = 115200;
-            serialPort.Parity = Parity.None;
-            serialPort.StopBits = StopBits.One;
-            serialPort.DataBits = 8;
-            serialPort.Handshake = Handshake.None;
+			serialPort2 = new SerialPort("COM2");
+			serialPort2.BaudRate = 115200;
+            serialPort2.Parity = Parity.None;
+            serialPort2.StopBits = StopBits.One;
+            serialPort2.DataBits = 8;
+            serialPort2.Handshake = Handshake.None;
+			serialPort2.DataReceived += new SerialDataReceivedEventHandler(SerialPort1Handler);
 
-			serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortHandler);
+			serialPort1.Open();			
+			serialPort2.Open();
 
-			serialPort.Open();
-			/*Thread.Sleep(20000);
-			Debug.Print("result = PASS\r\n");
-			Debug.Print("accuracy = 1.2\r\n");
-			Debug.Print("resultParameter1 = p1 return\r\n");
-			Debug.Print("resultParameter2 = p2 return\r\n");
-			Debug.Print("resultParameter3 = p3 return\r\n");
-			Debug.Print("resultParameter4 = p4 return\r\n");
-			Debug.Print("resultParameter5 = p5 return\r\n"); 
-			*/
 			while (true) {
 				//System.Threading.Thread.Sleep(100);
 			}	
