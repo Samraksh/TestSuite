@@ -60,7 +60,7 @@ BOOL Events_SetBoolTimerTest::Level_0B()
 BOOL Events_SetBoolTimerTest::Execute( int testLevel )
 {
 	UINT32 wait =123;
-	BOOL m_timeQuantumExpired;
+	volatile BOOL m_timeQuantumExpired;
 	while (TRUE){
 		m_timeQuantumExpired = false;
 		CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);		
