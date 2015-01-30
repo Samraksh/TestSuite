@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='HeapTest' Type='Native Adapt .NOW'>
+		<Description>
+			Native heap test level 0A - Inserts random elements and checks if extract works correctly
+		</Description>
+		<TestPath>
+			HeapTest\Src\Native\Level_0A
+		</TestPath>
+		<TestProjName>
+			HeapTest.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

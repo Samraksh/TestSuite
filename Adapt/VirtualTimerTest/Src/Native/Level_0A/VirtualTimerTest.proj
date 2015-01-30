@@ -60,17 +60,16 @@
   </ItemGroup>
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_PreStackInit\dotNetMF.proj" />
-    <DriverLibs Include="Krait_PreStackInit.$(LIB_EXT)" />
+    <DriverLibs Include="TIAM3517_PreStackInit.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
     <DriverLibs Include="TinyHal.$(LIB_EXT)" />
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\cores\arm\dotNetMF.proj" />
   </ItemGroup>
-  <!--<ItemGroup>
+  <!--ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\startup\dotNetMF.proj" />
     <DriverLibs Include="startup.$(LIB_EXT)" />
-  </ItemGroup> 
-  -->
+  </ItemGroup--> 
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\Support\WireProtocol\dotNetMF.proj" />
     <PlatformIndependentLibs Include="WireProtocol.$(LIB_EXT)" />
@@ -87,10 +86,10 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_Clock\dotNetMF.proj" />
     <DriverLibs Include="Krait_Clock.$(LIB_EXT)" />
   </ItemGroup>
-  <ItemGroup>
+  <!--ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\Samraksh\radio\dotNetMF.proj" />
     <DriverLibs Include="Radio_rf231.$(LIB_EXT)" />
-  </ItemGroup>
+  </ItemGroup-->
   <!--<ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\cmsis\dotNetMF.proj" />
     <DriverLibs Include="Krait_cmsis.$(LIB_EXT)" />
@@ -133,10 +132,10 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_TIMER\dotNetMF.proj" />
     <DriverLibs Include="Krait_timer.$(LIB_EXT)" />
   </ItemGroup>
-  <ItemGroup>
+  <!--ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_TIME\dotNetMF.proj" />
     <DriverLibs Include="Krait_time.$(LIB_EXT)" />
-  </ItemGroup>
+  </ItemGroup-->
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_LCD\dotNetMF.proj" />
     <DriverLibs Include="Krait_LCD.$(LIB_EXT)" />
@@ -151,9 +150,15 @@
   </ItemGroup>
   -->
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\VirtualTimer\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\VirtualTimer\dotNetMF.proj" />
     <DriverLibs Include="VirtualTimer.$(LIB_EXT)" />
   </ItemGroup>
+  <!-- 									Samraksh Time Extension        								-->
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\eMote_Time\dotNetMF.proj" />
+    <DriverLibs Include="eMote_time.$(LIB_EXT)" />
+  </ItemGroup>
+  
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_USART\dotNetMF.proj" />
     <DriverLibs Include="Krait_usart.$(LIB_EXT)" />
@@ -347,8 +352,13 @@
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_USB\dotNetMF.proj" />
     <DriverLibs Include="Krait_usb.$(LIB_EXT)" />
+  </ItemGroup-->
+  
+  <ItemGroup>
+    <DriverLibs Include="Krait_ADC.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\Krait\DeviceCode\Krait_ADC\dotNetMF.proj" />
   </ItemGroup>
-  -->
+  
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\stubs\Processor\stubs_watchdog\dotNetMF.proj" />
     <DriverLibs Include="cpu_watchdog_stubs.$(LIB_EXT)" />

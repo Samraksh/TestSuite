@@ -8,7 +8,7 @@
 //---//
 
 extern Data_Store g_dataStoreObject;
-extern HALTimerManager gHalTimerManagerObject;
+//extern HALTimerManager gHalTimerManagerObject;
 
 UINT16 recordCount = 20;
 
@@ -104,22 +104,6 @@ UINT16 DataStoreTest::GenerateRandomNumber(UINT16 upperBound)
 }
 
 
-void Timer_1_Handler(void *arg)
-{
-	if(dataStoreTestObj.Read_And_Write())
-		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
-	else
-		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
-}
-
-void Timer_2_Handler(void *arg)
-{
-	if(dataStoreTestObj.Read_And_Write())
-		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
-	else
-		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
-}
-
 void Timer_3_Handler(void *arg)
 {
 	if(dataStoreTestObj.Read_And_Write())
@@ -129,6 +113,22 @@ void Timer_3_Handler(void *arg)
 }
 
 void Timer_4_Handler(void *arg)
+{
+	if(dataStoreTestObj.Read_And_Write())
+		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
+	else
+		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
+}
+
+void Timer_5_Handler(void *arg)
+{
+	if(dataStoreTestObj.Read_And_Write())
+		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
+	else
+		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
+}
+
+void Timer_6_Handler(void *arg)
 {
 	if(dataStoreTestObj.Read_And_Write())
 		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
@@ -234,15 +234,33 @@ BOOL DataStoreTest::TestReadWrite_Virtual_Records()
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
 	UINT32 dtime = GenerateRandomNumber(sleepTimeLimit);
-	gHalTimerManagerObject.CreateTimer(1, 0, dtime, false, false, Timer_1_Handler);
+	//gHalTimerManagerObject.CreateTimer(1, 0, dtime, false, false, Timer_1_Handler);
+	if(!VirtTimer_SetTimer(3, 0, dtime, FALSE, FALSE, Timer_3_Handler))
+		return FALSE;
+
 	dtime = GenerateRandomNumber(sleepTimeLimit);
-	gHalTimerManagerObject.CreateTimer(2, 0, dtime, false, false, Timer_2_Handler);
+	//gHalTimerManagerObject.CreateTimer(2, 0, dtime, false, false, Timer_2_Handler);
+	if(!VirtTimer_SetTimer(4, 0, dtime, FALSE, FALSE, Timer_4_Handler))
+		return FALSE;
+
 	dtime = GenerateRandomNumber(sleepTimeLimit);
-	gHalTimerManagerObject.CreateTimer(3, 0, dtime, false, false, Timer_3_Handler);
+	//gHalTimerManagerObject.CreateTimer(3, 0, dtime, false, false, Timer_3_Handler);
+	if(!VirtTimer_SetTimer(5, 0, dtime, FALSE, FALSE, Timer_5_Handler))
+		return FALSE;
+
 	dtime = GenerateRandomNumber(sleepTimeLimit);
-	gHalTimerManagerObject.CreateTimer(4, 0, dtime, false, false, Timer_4_Handler);
+	//gHalTimerManagerObject.CreateTimer(4, 0, dtime, false, false, Timer_4_Handler);
+	if(!VirtTimer_SetTimer(6, 0, dtime, FALSE, FALSE, Timer_6_Handler))
+		return FALSE;
+
 
 	g_dataStoreObject.EraseAllBlocks();
+
+	for (UINT16 j = 3; j < 7; j++)
+	{
+		VirtTimer_Start( j );
+	}
+
 	return true;
 
 }

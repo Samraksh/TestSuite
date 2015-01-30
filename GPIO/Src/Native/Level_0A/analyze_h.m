@@ -18,16 +18,16 @@ lowerAllowedFrequencyStr = strrep(lowerAllowedFrequencyStr, ';', '');
 expectedFrequencyStr = strrep(expectedFrequencyStr, ';', '');
 
 % converting strings to doubles
-sampleTimeMs = str2double(sampleTimeMsStr)
-sampleFrequency = str2double(sampleFrequencyStr)
-readFrequency = str2double(readFrequencyStr)
-upperAllowedFrequency = str2double(upperAllowedFrequencyStr)
-lowerAllowedFrequency = str2double(lowerAllowedFrequencyStr)
-expectedFrequency = str2double(expectedFrequencyStr)
+sampleTimeMs = str2double(sampleTimeMsStr);
+sampleFrequency = str2double(sampleFrequencyStr);
+readFrequency = str2double(readFrequencyStr);
+upperAllowedFrequency = str2double(upperAllowedFrequencyStr);
+lowerAllowedFrequency = str2double(lowerAllowedFrequencyStr);
+expectedFrequency = str2double(expectedFrequencyStr);
 
 % dataFileName given by TestRig variable set function
 %dataFileName = 'testData.csv'
-input = csvread (dataFileName,1,0);
+input = csvread ('testData.csv',1,0);
 
 SampleNo = input(:,1);
 value = input(:,2);
@@ -38,16 +38,16 @@ period = 2*mean(diff(edges));
 calcFrequency = 1/(period * time_period);
 
 if ( (calcFrequency <= upperAllowedFrequency) && (calcFrequency >= lowerAllowedFrequency))
-	result = 'PASS'
+	result = 'PASS';
 else
-	result = 'FAIL'
+	result = 'FAIL';
 end
 
-accuracy = expectedFrequency / calcFrequency
+accuracy = expectedFrequency / calcFrequency;
 
 % setting return values that will be read by TestRig
-resultParameter1 = sprintf('%d', calcFrequency)
-resultParameter2 = sprintf('%f', expectedFrequency)
+resultParameter1 = sprintf('%d', calcFrequency);
+resultParameter2 = sprintf('%f', expectedFrequency);
 resultParameter3 = '';
 resultParameter4 = '';
 resultParameter5 = '';

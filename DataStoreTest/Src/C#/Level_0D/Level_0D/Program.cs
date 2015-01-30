@@ -18,7 +18,7 @@ namespace Samraksh.eMote.Tests
 
         public DataStoreTest()
         {
-            bool eraseDataStore = false;
+            bool eraseDataStore = true;
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();

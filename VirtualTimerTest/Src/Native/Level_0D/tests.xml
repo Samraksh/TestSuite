@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='HALTimerTest' Type='Native'>
+	<Test Name='VirtualTimerTest' Type='Native .NOW'>
 		<Description>
-			Native Virtual Timer Tests Level 0D change timer test
+			Native virtual timer test - change timer value
 		</Description>
 		<TestPath>
-			HALTimerTest\Src\Native\Level_0D
+			VirtualTimerTest\Src\Native\Level_0D
 		</TestPath>
 		<TestProjName>
-			HALTimerTest.proj
+			VirtualTimerTest.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

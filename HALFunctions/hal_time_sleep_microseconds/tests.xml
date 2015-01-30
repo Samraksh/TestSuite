@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='HAL_Functions' Type='Native .NOW'>
+		<Description>
+			hal_time_sleep_microseconds test
+		</Description>
+		<TestPath>
+			HALFunctions\hal_time_sleep_microseconds
+		</TestPath>
+		<TestProjName>
+			hal_time_sleep.proj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

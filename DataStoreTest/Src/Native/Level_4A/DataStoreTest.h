@@ -5,7 +5,7 @@
 #include <..\DeviceCode\Include\tinyhal.h>
 #include <..\DeviceCode\Include\Samraksh\DataStore\Datastore.h>
 #include <..\DeviceCode\Include\Samraksh\HAL_util.h>
-#include <..\DeviceCode\Include\Samraksh\HALTimer.h>
+#include <..\DeviceCode\Include\Samraksh\VirtualTimer.h>
 #include <cstdlib>
 #include "testMath.h"
 

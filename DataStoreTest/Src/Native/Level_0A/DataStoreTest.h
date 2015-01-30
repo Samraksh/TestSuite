@@ -2,9 +2,9 @@
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <..\DeviceCode\Include\tinyhal.h>
+#include <tinyhal.h>
 #include <..\DeviceCode\Include\Samraksh\DataStore\Datastore.h>
-#include <..\DeviceCode\Include\Samraksh\HAL_util.h>
+//#include <..\DeviceCode\Include\Samraksh\HAL_util.h>
 #include <cstdlib>
 #include "testMath.h"
 

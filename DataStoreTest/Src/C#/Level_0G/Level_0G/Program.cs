@@ -17,8 +17,8 @@ namespace Samraksh.eMote.Tests
 
         /* The product of below 2 variables causes the test to run between 14 and 15 minutes. Set sleep value in DataStore.tst to be equal to "900000" (15 mins).
          * Setting the sleep to say 600K or 700K causes the test to end prematurely. */
-        int dataIndexLimit = 50;
-        int overallIndexLimit = 50;
+        int dataIndexLimit = 25;
+        int overallIndexLimit = 25;
 
 
         public DataStoreTest()
@@ -128,9 +128,9 @@ namespace Samraksh.eMote.Tests
                             DisplayStats(false, "Delete failed", "", 0);
                             return;
                         }
-                        Debug.Print("Experiment run count is " + dataIndex);
+                        Debug.Print("Count: " + dataIndex);
                     }
-                    Debug.Print("Overall experiment run count is " + overallIndex);
+                    Debug.Print("Overall count: " + overallIndex);
                 }
 
                 if (dStore.EraseAllData() == DataStoreReturnStatus.Success)

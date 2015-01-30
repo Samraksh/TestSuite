@@ -1,7 +1,0 @@
-result = FAIL
-accuracy = 1
-resultParameter1 = 2.48909
-resultParameter2 = 0
-resultParameter3 = 0
-resultParameter4 = 0
-resultParameter5 = null
