@@ -146,10 +146,6 @@ BOOL TimeFunctions::Execute( int testLevel )
 {
 	BOOL result;
 
-	while (true){
-	hal_printf("Got here\r\n");
-	}
-
 	switch(testLevel)
 	{
 	case 0:
