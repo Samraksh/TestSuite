@@ -19,6 +19,7 @@ namespace ParameterClass
 	public string analysisScriptName = "LogicAnalysis.exe";
 	public bool useResultsFile = false;
 	public string resultsFileName = "testTemp\\results.txt";
+	public int testDelay = 0;
 	// Do not change text format above this point
 	
 	// test specific parameters

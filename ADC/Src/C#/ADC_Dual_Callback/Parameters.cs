@@ -20,6 +20,7 @@ namespace ParameterClass
 	public string analysisScriptName = "ADC_Callback.exe";
 	public bool useResultsFile = true;
 	public string resultsFileName = "testTemp\\results.txt";
+	public int testDelay = 0;
 	// Do not change text format above this point
     }
 }

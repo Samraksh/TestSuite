@@ -13,6 +13,7 @@
 #define	analysisScriptName "GPIOAnalysis.exe"
 #define	useResultsFile true
 #define resultsFileName "testTemp\\results.txt"
+#define testDelay 0
 // Do not change text format above this point
 
 // test specific parameters

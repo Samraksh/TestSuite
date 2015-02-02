@@ -20,6 +20,7 @@ namespace ParameterClass
 	public string analysisScriptName = "none.exe";
 	public bool useResultsFile = false;
 	public string resultsFileName = "results.txt";
+	public int testDelay = 0;
 	// Do not change text format above this point
     }
 }

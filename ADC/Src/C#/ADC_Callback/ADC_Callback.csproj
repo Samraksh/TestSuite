@@ -54,10 +54,6 @@
 	<Reference Include="Microsoft.SPOT.Hardware">
 		 <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.dll</HintPath>
     </Reference>
-	<!--<Reference Include="Samraksh_SPOT_Hardware, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-	  <HintPath>$(BUILD_TREE_DLL)\Samraksh_SPOT_Hardware.dll</HintPath>
-	</Reference>-->
 	<Reference Include="Samraksh.eMote.DotNow">
       <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.dll</HintPath>
 	</Reference>

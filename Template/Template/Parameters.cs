@@ -13,18 +13,19 @@ namespace ParameterClass
 	public string forceCOM = "";
 	public string COMParameters = "115200,N,8,1";
 	public bool useTestScript = false;
-	public string testScriptName = "";
+	public string testScriptName = "template.tst";
 	public int testScriptTimeoutMs = 9000;
 	public string useAnalysis = "none";
 	public string analysisScriptName = "none.exe";
 	public bool useResultsFile = false;
-	public string resultsFileName = "results.txt";
+	public string resultsFileName = "testTemp\\results.txt";
+	public int testDelay = 0;
 	// Do not change text format above this point
 	
 	// test specific parameters
-	public double frequency = 2.5;
-	public double upperAllowedFrequency = 2.7;
-	public double lowerAllowedFrequency = 2.3;
-	public double expectedFrequency = 2.5;
+	public double testParameter1 = 2.5;
+	public double testParameter2 = 2.7;
+	public double testParameter3 = 2.3;
+	public double lastTestParameter = 2.5;
     }
 }
