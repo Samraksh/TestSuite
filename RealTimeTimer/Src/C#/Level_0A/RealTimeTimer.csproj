@@ -58,11 +58,11 @@
     <Reference Include="Microsoft.SPOT.Native">
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Native.dll</HintPath>
     </Reference>
-    <Reference Include="Samraksh_eMote_DotNow, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Samraksh_eMote_DotNow">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.dll</HintPath>
     </Reference>
-    <Reference Include="Samraksh_eMote_RealTime, Version=4.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Samraksh_eMote_RealTime">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote_RealTime\Samraksh_eMote_RealTime.dll</HintPath>
     </Reference>
