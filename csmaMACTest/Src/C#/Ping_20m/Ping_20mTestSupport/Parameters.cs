@@ -10,7 +10,7 @@ namespace ParameterClass
 	public string useLogic = "none";
 	public double sampleTimeMs = 15000;
 	public double sampleFrequency = 4000000;
-	public bool useCOMPort = true;
+	public bool useCOMPort = false;
 	public string forceCOM = "";
 	public string COMParameters = "115200,N,8,1";
 	public bool useTestScript = false;

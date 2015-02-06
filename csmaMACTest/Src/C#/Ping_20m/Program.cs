@@ -59,7 +59,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
     public class Program
     {
-		const int testCount = 150;
+		// should give a pass fail after 19.5 minutes
+		const int testCount = 2925;
         UInt16 myAddress;
         UInt16 mySeqNo = 1;
 		UInt16 errorCnt = 0;
@@ -126,17 +127,18 @@ namespace Samraksh.eMote.Net.Mac.Ping
         {
 			// We receieved enough data....looking to see if we received all packets (even in best case scenario we could have a few errors)
 			// we wait a bit longer just so the other side will also receive enough packets
-			if (receivePackets == 50){
+			if (receivePackets >= ((int)(testCount * 0.98))){
 				Debug.Print("result = PASS");
 				Debug.Print("accuracy = null");
-				Debug.Print("resultParameter1 = null");
-				Debug.Print("resultParameter2 = null");
+				Debug.Print("resultParameter1 = " + receivePackets.ToString());
+				Debug.Print("resultParameter2 = " + testCount.ToString());
 				Debug.Print("resultParameter3 = null");
 				Debug.Print("resultParameter4 = null");
 				Debug.Print("resultParameter5 = null"); 			
 			}
             try
             {
+				Debug.Print("Sending ping"); 	
                 Send_Ping(sendMsg);
             }
             catch (Exception e)
