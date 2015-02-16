@@ -38,6 +38,12 @@ namespace LogicAnalysis
         static List<int> gap2 = new List<int>();
         static List<int> gap3 = new List<int>();
 
+        // These values are to be used to skip a certain number of samples beyond the first before an analysis is made
+        const int skipSamples0 = 500;
+        const int skipSamples1 = 0;
+        const int skipSamples2 = 0;
+        const int skipSamples3 = 0;
+
         static void ReadInFile()
         {
             var reader = new StreamReader(File.OpenRead(fileName));
@@ -199,7 +205,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 1)
                 {
-                    return0 = GetFrequency(listTime, line0, 0, line0.Count);
+                    return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 0 " + return0.ToString());
                     if ((return0 < expectedFreq0 * (1+accuracy)) && (return0 > expectedFreq0 * (1-accuracy)))
                     {
@@ -226,7 +232,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 2)
                 {
-                    return1 = GetFrequency(listTime, line1, 0, line1.Count);
+                    return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 1 " + return1.ToString());
                     if ((return1 < expectedFreq1 * (1+accuracy)) && (return1 > expectedFreq1 * (1-accuracy)))
                     {
@@ -253,7 +259,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 3)
                 {
-                    return2 = GetFrequency(listTime, line2, 0, line2.Count);
+                    return2 = GetFrequency(listTime, line2, skipSamples2, line2.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 2 " + return2.ToString());
                     if ((return2 < expectedFreq2 * (1+accuracy)) && (return2 > expectedFreq2 * (1-accuracy) ))
                     {
@@ -265,7 +271,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 4)
                 {
-                    return3 = GetFrequency(listTime, line3, 0, line3.Count);
+                    return3 = GetFrequency(listTime, line3, skipSamples3, line3.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 3 " + return3.ToString());
                     if ((return3 < expectedFreq3 * (1+accuracy)) && (return3 > expectedFreq3 * (1-accuracy)))
                     {

@@ -13,6 +13,7 @@ namespace TestSuite
     {
 #if (HARDWARE_EMOTE)
         private static OutputPort testPort_PIN1 = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN1, true);
+        private static OutputPort testPort_PIN2 = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN2, true);
 #elif (HARDWARE_ADAPT)
         private enum PinMap { Gpio01 = 58, Gpio02 = 55, Gpio03 = 53, Gpio04 = 52, Gpio05 = 51 };
 		//private static OutputPort testPort_55 = new OutputPort((Cpu.Pin)55, true);
@@ -50,19 +51,31 @@ namespace TestSuite
             }
         }
 
-        private static void RT_TimerCallback(uint data1, uint data2, DateTime time)
+        private static void RT_TimerCallback1(uint data1, uint data2, DateTime time)
         {
-			if (pinState == false)
-				pinState = true;
+			if (pinState1 == false)
+				pinState1 = true;
 			else 
-				pinState = false;
+				pinState1 = false;
 
-            testPort_PIN1.Write(pinState);
+            testPort_PIN1.Write(pinState1);
+        } 
+
+		private static void RT_TimerCallback2(uint data1, uint data2, DateTime time)
+        {
+			if (pinState2 == false)
+				pinState2 = true;
+			else 
+				pinState2 = false;
+
+            testPort_PIN2.Write(pinState2);
         } 
 
 		static Samraksh.eMote.RealTime.Timer RT_Timer;
-		static NativeEventHandler RT_EventHandler = new NativeEventHandler(RT_TimerCallback);
-		static bool pinState = false;
+		static NativeEventHandler RT_EventHandler1 = new NativeEventHandler(RT_TimerCallback1);
+		static NativeEventHandler RT_EventHandler2 = new NativeEventHandler(RT_TimerCallback2);
+		static bool pinState1 = false;
+		static bool pinState2 = false;
 
         public static void Main()
         {
@@ -73,15 +86,15 @@ namespace TestSuite
             {
                 //The 2nd parameter is in usec.
                 RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition, 0);
-                RT_Timer.OnInterrupt += RT_EventHandler;
+                RT_Timer.OnInterrupt += RT_EventHandler1;
 
-				Thread.Sleep(1000);
+				Thread.Sleep(20000);
 				Samraksh.eMote.RealTime.Timer.Dispose();
 
 				Thread.Sleep(1000);
 
-				RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition, 0);
-                RT_Timer.OnInterrupt += RT_EventHandler;
+				RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition*2, 0);
+                RT_Timer.OnInterrupt += RT_EventHandler2;
             }
             catch (Exception)
             {
