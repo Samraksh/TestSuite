@@ -100,24 +100,6 @@ BOOL VirtualTimerTest::Level_0A()
 
 BOOL VirtualTimerTest::Level_0E()
 {
-	UINT64 readTicks = 0;
-	UINT64 prevTicks = 0;
-
-	readTicks =	VirtTimer_GetTicks(0);
-	prevTicks = readTicks;
-	while (true){
-		readTicks =	VirtTimer_GetTicks(0);
-		if (readTicks < prevTicks){
-			hal_printf("< ct: %lld pt: %lld\r\n",readTicks, prevTicks);
-		}
-		if (readTicks > (prevTicks + 10000000) ){
-			hal_printf("> ct: %lld pt: %lld\r\n",readTicks, prevTicks);
-		}
-		prevTicks = readTicks;
-		CPU_GPIO_SetPinState((GPIO_PIN) 25, TRUE);
-		CPU_GPIO_SetPinState((GPIO_PIN) 25, FALSE);
-	}
-	
 	int periodValue = 1;
 	for(int i = 0; i < 1; i++)
 	{

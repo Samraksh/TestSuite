@@ -24,13 +24,13 @@ MACLayerTest::MACLayerTest( int seedValue, int numberOfEvents )
 BOOL MACLayerTest::DisplayStats(BOOL result, char* resultParameter1, int resultParameter2, int resultParameter3, int accuracy)
 {
 	while(true){
-		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
-		hal_printf("accuracy=%d\n", accuracy);
-		hal_printf("resultParameter1=%s\n", resultParameter1);
-		hal_printf("resultParameter2=%d\n", resultParameter2);
-		hal_printf("resultParameter3=%d\n", resultParameter3);
-		hal_printf("resultParameter4=null\n");
-		hal_printf("resultParameter5=null\n");
+		hal_printf("result=%s\r\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=%d\r\n", accuracy);
+		hal_printf("resultParameter1=%s\r\n", resultParameter1);
+		hal_printf("resultParameter2=%d\r\n", resultParameter2);
+		hal_printf("resultParameter3=%d\r\n", resultParameter3);
+		hal_printf("resultParameter4=null\r\n");
+		hal_printf("resultParameter5=null\r\n");
 		HAL_Time_Sleep_MicroSeconds(1000000);
 	}
 	return TRUE;
@@ -109,6 +109,8 @@ BOOL MACLayerTest::Level_0A()
 	{
 		DisplayStats(FALSE,"Mac Layer initialization failed",0,0,0);
 		return FALSE;
+	} else {
+		hal_printf("MAC layer initialized.\r\n");
 	}
 
 	UINT8 mesg[10];
@@ -139,7 +141,7 @@ BOOL MACLayerTest::Level_0A()
 		{
 			if(failureToSend > 0)
 			{
-				hal_printf("Failed to Send %d Packets", failureToSend);
+				hal_printf("Failed to Send %d Packets\r\n", failureToSend);
 				DisplayStats(FALSE,"Mac Layer Send failed",attemptsToSend,failureToSend,0);
 			} else {
 				DisplayStats(TRUE, "Mac Layer Send Test succeeded",attemptsToSend,failureToSend,0);

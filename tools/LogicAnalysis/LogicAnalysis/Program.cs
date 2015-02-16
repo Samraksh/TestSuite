@@ -20,6 +20,8 @@ namespace LogicAnalysis
         const float expectedFreq2 = 2.5f;
         const float expectedFreq3 = 5f;
 
+        const float accuracy = 0.01f;
+
         static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
         const int USE_EVERY_TRANSITION = 1;
         const int USE_RISING_TRANSITION = 2;
@@ -147,7 +149,7 @@ namespace LogicAnalysis
                     if (foundNotEg1 == false)
                     {
                         // So we look for the first instance of a gap that does not equal eG1                        
-                        if ((gapTime <= (expectedGapSequence[0] * 1.1)) && (gapTime >= (expectedGapSequence[0] * 0.9)))
+                        if ((gapTime <= (expectedGapSequence[0] * (1+accuracy) )) && (gapTime >= (expectedGapSequence[0] * (1-accuracy))))
                         {
                             foundNotEg1 = true;
                             System.Diagnostics.Debug.WriteLine("Found notEg1 at " + i.ToString());
@@ -155,7 +157,7 @@ namespace LogicAnalysis
                     }
                     else
                     {
-                        if ((gapTime <= (expectedGapSequence[currentGapSearchNum] * 1.1)) && (gapTime >= (expectedGapSequence[currentGapSearchNum] * 0.9)))
+                        if ((gapTime <= (expectedGapSequence[currentGapSearchNum] * (1+accuracy))) && (gapTime >= (expectedGapSequence[currentGapSearchNum] * (1-accuracy))))
                         {
                             currentGapSearchNum++;
                         }
@@ -199,7 +201,7 @@ namespace LogicAnalysis
                 {
                     return0 = GetFrequency(listTime, line0, 0, line0.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 0 " + return0.ToString());
-                    if ((return0 < expectedFreq0 * 1.1) && (return0 > expectedFreq0 * 0.9))
+                    if ((return0 < expectedFreq0 * (1+accuracy)) && (return0 > expectedFreq0 * (1-accuracy)))
                     {
                         result0 = true;
                     } else
@@ -226,7 +228,7 @@ namespace LogicAnalysis
                 {
                     return1 = GetFrequency(listTime, line1, 0, line1.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 1 " + return1.ToString());
-                    if ((return1 < expectedFreq1 * 1.1) && (return1 > expectedFreq1 * 0.9))
+                    if ((return1 < expectedFreq1 * (1+accuracy)) && (return1 > expectedFreq1 * (1-accuracy)))
                     {
                         result1 = true;
                     }
@@ -253,7 +255,7 @@ namespace LogicAnalysis
                 {
                     return2 = GetFrequency(listTime, line2, 0, line2.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 2 " + return2.ToString());
-                    if ((return2 < expectedFreq2 * 1.1) && (return2 > expectedFreq2 * 0.9))
+                    if ((return2 < expectedFreq2 * (1+accuracy)) && (return2 > expectedFreq2 * (1-accuracy) ))
                     {
                         result2 = true;
                     }
@@ -265,7 +267,7 @@ namespace LogicAnalysis
                 {
                     return3 = GetFrequency(listTime, line3, 0, line3.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 3 " + return3.ToString());
-                    if ((return3 < expectedFreq3 * 1.1) && (return3 > expectedFreq3 * 0.9))
+                    if ((return3 < expectedFreq3 * (1+accuracy)) && (return3 > expectedFreq3 * (1-accuracy)))
                     {
                         result3 = true;
                     }
