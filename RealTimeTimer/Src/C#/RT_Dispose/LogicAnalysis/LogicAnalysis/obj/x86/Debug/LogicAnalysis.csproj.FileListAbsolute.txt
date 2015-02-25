@@ -44,4 +44,3 @@ D:\Work\TestSuite\RealTimeTimer\Src\C#\RT_Dispose\LogicAnalysis\LogicAnalysis\ob
 D:\Work\TestSuite\RealTimeTimer\Src\C#\RT_Dispose\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
 D:\Work\TestSuite\RealTimeTimer\Src\C#\RT_Dispose\LogicAnalysis.exe
 D:\Work\TestSuite\RealTimeTimer\Src\C#\RT_Dispose\LogicAnalysis.pdb
-D:\Work\TestSuite\RealTimeTimer\Src\C#\RT_Dispose\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache

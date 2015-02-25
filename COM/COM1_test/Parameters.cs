@@ -14,7 +14,7 @@ namespace ParameterClass
 	public string forceCOM = "";
 	public string COMParameters = "115200,N,8,1";
 	public bool useTestScript = true;
-	public string testScriptName = "COM.tst";
+	public string testScriptName = "COM1_test.tst";
 	public int testScriptTimeoutMs = 9000;
 	public string useAnalysis = "none";
 	public string analysisScriptName = "none.exe";

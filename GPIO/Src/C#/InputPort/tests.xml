@@ -7,7 +7,7 @@
 			GPIO\Src\C#\InputPort
 		</TestPath>
 		<TestProjName>
-			GPIO.csproj
+			InputPort.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

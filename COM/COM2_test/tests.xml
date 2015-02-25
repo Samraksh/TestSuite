@@ -7,7 +7,7 @@
 			COM\COM2_test
 		</TestPath>
 		<TestProjName>
-			COM.csproj
+			COM2_test.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

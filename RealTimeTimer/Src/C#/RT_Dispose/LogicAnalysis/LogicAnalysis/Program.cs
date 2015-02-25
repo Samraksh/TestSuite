@@ -39,10 +39,15 @@ namespace LogicAnalysis
         static List<int> gap3 = new List<int>();
 
         // These values are to be used to skip a certain number of samples beyond the first before an analysis is made
-        const int skipSamples0 = 500;
-        const int skipSamples1 = 0;
+        const int skipSamples0 = 5;
+        const int skipSamples1 = 5;
         const int skipSamples2 = 0;
         const int skipSamples3 = 0;
+
+        const int skipLineTransitions0 = 50;
+        const int skipLineTransitions1 = 0;
+        const int skipLineTransitions2 = 0;
+        const int skipLineTransitions3 = 0;
 
         static void ReadInFile()
         {
@@ -67,7 +72,7 @@ namespace LogicAnalysis
             }
         }
 
-        static float GetFrequency(List<int> time, List<int> line, int startPoint, int stopPoint)
+        static float GetFrequency(List<int> time, List<int> line, int startPoint, int stopPoint, int skipLineTransitions)
         {
             float calcFreq = 0;
 
@@ -84,6 +89,20 @@ namespace LogicAnalysis
                 samplePoint++;
             }
             System.Diagnostics.Debug.WriteLine("Found first point at " + samplePoint.ToString());
+
+            int skipsMade = 0;
+            int prevValue = line[samplePoint];
+            // skipping line transitions
+            while ((samplePoint < stopPoint) && (skipsMade < skipLineTransitions) )
+            {
+                if (line[samplePoint] != prevValue)
+                {
+                    // transition found...skipping it.
+                    skipsMade++;
+                }
+                prevValue = line[samplePoint];
+                samplePoint++;                
+            }
 
             int totalTime = 0;
             int totalTransistions = 0;
@@ -205,7 +224,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 1)
                 {
-                    return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count);
+                    return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count, skipLineTransitions0);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 0 " + return0.ToString());
                     if ((return0 < expectedFreq0 * (1+accuracy)) && (return0 > expectedFreq0 * (1-accuracy)))
                     {
@@ -232,7 +251,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 2)
                 {
-                    return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
+                    return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count, skipLineTransitions1);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 1 " + return1.ToString());
                     if ((return1 < expectedFreq1 * (1+accuracy)) && (return1 > expectedFreq1 * (1-accuracy)))
                     {
@@ -259,7 +278,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 3)
                 {
-                    return2 = GetFrequency(listTime, line2, skipSamples2, line2.Count);
+                    return2 = GetFrequency(listTime, line2, skipSamples2, line2.Count, skipLineTransitions2);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 2 " + return2.ToString());
                     if ((return2 < expectedFreq2 * (1+accuracy)) && (return2 > expectedFreq2 * (1-accuracy) ))
                     {
@@ -271,7 +290,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 4)
                 {
-                    return3 = GetFrequency(listTime, line3, skipSamples3, line3.Count);
+                    return3 = GetFrequency(listTime, line3, skipSamples3, line3.Count, skipLineTransitions3);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 3 " + return3.ToString());
                     if ((return3 < expectedFreq3 * (1+accuracy)) && (return3 > expectedFreq3 * (1-accuracy)))
                     {

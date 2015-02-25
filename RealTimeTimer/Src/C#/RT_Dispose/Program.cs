@@ -88,7 +88,7 @@ namespace TestSuite
                 RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition, 0);
                 RT_Timer.OnInterrupt += RT_EventHandler1;
 
-				Thread.Sleep(20000);
+				Thread.Sleep(10000);
 				Samraksh.eMote.RealTime.Timer.Dispose();
 
 				Thread.Sleep(1000);
