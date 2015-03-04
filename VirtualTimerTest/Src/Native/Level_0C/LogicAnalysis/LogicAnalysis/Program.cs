@@ -20,7 +20,7 @@ namespace LogicAnalysis
         const float expectedFreq2 = 0f;
         const float expectedFreq3 = 0f;
 
-        static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.020, 0.020, 0.020, 0.140 };
+        static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.020, 0.020, 0.020, 0.130 };
 
         static int listNumber = 0;
         static List<int> listTime = new List<int>();
