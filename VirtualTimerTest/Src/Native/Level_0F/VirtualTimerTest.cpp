@@ -9,7 +9,6 @@
 
 //---//
 
-UINT32 VirtualTimerTest::prevTicks = 0;
 
 void Timer_0_Handler(void *arg)
 {
@@ -60,16 +59,16 @@ void Timer_7_Handler(void *arg)
 }
 
 
-BOOL VirtualTimerTest::DisplayStats(BOOL result, char* resultParameter1, char* resultParameter2, int accuracy)
+BOOL VirtualTimerTest::DisplayStats(BOOL result, char* resultParameter1, UINT64 currentTime, UINT64 prevTime)
 {
 	while(true){
-		hal_printf("result=%s\n", (result) ? "PASS":"FAIL");
-		hal_printf("accuracy=%d\n", accuracy);
-		hal_printf("resultParameter1=%s\n", resultParameter1);
-		hal_printf("resultParameter2=%s\n", resultParameter2);
-		hal_printf("resultParameter3=null\n");
-		hal_printf("resultParameter4=null\n");
-		hal_printf("resultParameter5=null\n");
+		hal_printf("result=%s\r\n", (result) ? "PASS":"FAIL");
+		hal_printf("accuracy=0\r\n");
+		hal_printf("resultParameter1=%llu\r\n", currentTime);
+		hal_printf("resultParameter2=%llu\r\n", prevTime);
+		hal_printf("resultParameter3=null\r\n");
+		hal_printf("resultParameter4=null\r\n");
+		hal_printf("resultParameter5=null\r\n");
 		HAL_Time_Sleep_MicroSeconds(1000000);
 	}
 
@@ -150,46 +149,38 @@ BOOL VirtualTimerTest::Level_0E()
 
 BOOL VirtualTimerTest::Level_0F()
 {
-	/*while (true){
-		hal_printf(".");
-		HAL_Time_Sleep_MicroSeconds(1000000);
-	}*/
-	UINT32 i = 0; currentTicks = 0;
+	INT64 i = 0; 
+	INT64 currentTime = 0;
+	INT64 prevTime = 0;
 
-	while(currentTicks >= 0 && currentTicks < ((1<<32)-1))
+	currentTime = Time_GetMachineTime();
+	prevTime = currentTime;
+	while( i < 80000000 )
 	{
-		currentTicks = VirtTimer_GetTicks(VIRT_TIMER_TIME);
-
-		//hal_printf("%llu\r\n",currentTicks);
-		if(currentTicks < 0 || currentTicks < prevTicks)
+		currentTime = Time_GetMachineTime();
+		if(!(i % 1000000))
 		{
-			if(prevTicks > ((1<<31)-1))
-			{
-				hal_printf("count: %u currentTicks > prevTicks \r\n", i);
-				hal_printf("currentTicks: %u\r\n", currentTicks);
-				break;
-			}
-			else
-			{
-				//Timer_0_Handler(NULL);
-				DisplayStats(false, "ERROR: currentTicks is less than prevTicks", NULL, 0);
-				return false;
-			}
+			hal_printf("count: %lld currentTime: %lld prevTime: %lld \r\n", i, currentTime, prevTime);
 		}
-		else
+		if(currentTime < 0 || currentTime < prevTime)
 		{
-			//Timer_1_Handler(NULL);
-			if(!(i % 10000000))
-			{
-				hal_printf("count: %llu currentTicks > prevTicks \r\n", i);
-				hal_printf("currentTicks: %u\r\n", currentTicks);
-			}
+			hal_printf("<*******************\r\n");
+			hal_printf("count: %lld currentTime: %lld prevTime: %lld \r\n", i, currentTime, prevTime);
+			DisplayStats(false, "ERROR: currentTime is less than prevTime", currentTime, prevTime);
+			return false;
 		}
-		prevTicks = currentTicks;
+		else if (currentTime > (prevTime + 10000000)){
+			hal_printf(">*******************\r\n");
+			hal_printf("count: %lld currentTime: %lld prevTime: %lld \r\n", i, currentTime, prevTime);
+			DisplayStats(false, "ERROR: currentTime 10,000,000 more than prevTime", currentTime, prevTime);
+			return false;
+		}
+	
+		prevTime = currentTime;
 		i++;
 	}
 
-	DisplayStats(true, "SUCCESS: currentTicks is always greater than prevTicks", NULL, 0);
+	DisplayStats(true, "SUCCESS: currentTime is always greater than prevTime", 0, 0);
 
 }
 
