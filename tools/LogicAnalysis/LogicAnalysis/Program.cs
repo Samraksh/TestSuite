@@ -39,7 +39,7 @@ namespace LogicAnalysis
         static List<int> gap3 = new List<int>();
 
         // These values are to be used to skip a certain number of samples beyond the first before an analysis is made
-        const int skipSamples0 = 500;
+        const int skipSamples0 = 0;
         const int skipSamples1 = 0;
         const int skipSamples2 = 0;
         const int skipSamples3 = 0;

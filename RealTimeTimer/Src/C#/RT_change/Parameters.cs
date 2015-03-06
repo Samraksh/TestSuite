@@ -5,7 +5,7 @@ namespace ParameterClass
     class Parameters
     {
 	// required TestRig parameters
-	public int testTimeout = 15000;
+	public int testTimeout = 20000;
 	public string useLogic = "normal";
 	public double sampleTimeMs = 10000;
 	public double sampleFrequency = 4000000;
@@ -19,7 +19,7 @@ namespace ParameterClass
 	public string analysisScriptName = "LogicAnalysis.exe";
 	public bool useResultsFile = true;
 	public string resultsFileName = "testTemp\\results.txt";
-	public int testDelay = 5000;
+	public int testDelay = 10000;
 	// Do not change text format above this point
 	
 	// test specific parameters
