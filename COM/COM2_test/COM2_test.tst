@@ -1,5 +1,4 @@
 # test script comments start with '#'
-COM2 initialize
 # execute <executable> <timeout ms>
 # sleep ms
 sleep 5000
@@ -9,8 +8,8 @@ file enable testTemp\local_data.txt
 COM_receive file enable testTemp\rx_data.txt
 sleep 1000
 # COM_send random <seed> <number> <lower_bound> <upper_bound>
-COM_send random 1 40 0 100
-file random 1 40 0 100
+COM_send random 1 10000 0 100
+file random 1 10000 0 100
 sleep 1000
 # COM_send file <file_name>
 COM_send file data.txt
