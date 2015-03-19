@@ -46,13 +46,16 @@ namespace Level_5A
         int size;
         int experimentIndex;
         int offset = 0, arrayLength = 0;
+        static UInt32 dataIndex = 0;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 10;
 
         public DataStoreExceptionTest()
         {
             try
             {
-                Debug.Print("Starting test Level_5A");
                 bool eraseDataStore = true;
+                Debug.Print("Initializing datastore");
                 dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
                 experimentIndex = 10;
@@ -62,13 +65,6 @@ namespace Level_5A
                 readBuffer = new byte[size];
                 writeBuffer = new byte[size];
             
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
-                else
-                {
-                    Debug.Print("Datastore could not be erased");
-                }
-
                 for (UInt16 writeIndex = 0; writeIndex < writeBuffer.Length; ++writeIndex)
                 {
                     writeBuffer[writeIndex] = (byte)writeIndex;
@@ -76,7 +72,8 @@ namespace Level_5A
             }
             catch (Exception ex)
             {
-                Debug.Print(" Write failed. Exception is: " + ex.Message);
+                Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_5A failed", "", 0);
                 return;
             }
         }
@@ -104,7 +101,7 @@ namespace Level_5A
 
         public void writeData()
         {
-            for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+            for (; dataIndex < experimentIndex; ++dataIndex)
             {
                 try
                 {
@@ -112,22 +109,34 @@ namespace Level_5A
                     data = new DataReference(dStore, size, ReferenceDataType.BYTE);
                     DataStoreReturnStatus retVal = data.Write(writeBuffer, 0, writeBuffer.Length);
                     if (retVal == DataStoreReturnStatus.Success)
+                    {
                         Debug.Print("Write successful");
+                    }
                     else if (retVal == DataStoreReturnStatus.InvalidReference)
                     {
-                        DisplayStats(false, "Write not successful as reference is not valid", "", 0);
+                        DisplayStats(false, "Write not successful as reference is not valid - test Level_5A failed", "", 0);
                         return;
                     }
                     else
                     {
-                        DisplayStats(false, "Write not successful", "", 0);
+                        DisplayStats(false, "Write not successful - test Level_5A failed", "", 0);
                         return;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.Print(" Write failed. Exception is: " + ex.Message);
-                    return;
+                    Debug.Print(ex.Message);
+                    errorCounter++;
+                    if (errorCounter > errorLimit)
+                    {
+                        DisplayStats(false, "Test Level_5A failed", "", 0);
+                        return;
+                    }
+                    else
+                    {
+                        Debug.Print("errorCounter: " + errorCounter.ToString());
+                        continue;
+                    }
                 }
             }
         }
@@ -323,7 +332,7 @@ namespace Level_5A
                     {
                         Debug.Print("Starting test " + ((int)(exceptionType.NO_EXCEPTION)) + ": NO_EXCEPTION");
                         writeData();
-                        DisplayStats(true, "Exception test successful", "", 0);
+                        DisplayStats(true, "Exception test successful - test Level_5A successfully completed", "", 0);
                         break;
                     }
 
@@ -334,6 +343,7 @@ namespace Level_5A
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_5A failed", "", 0);
                 return;
             }
         }
@@ -341,6 +351,7 @@ namespace Level_5A
         public static void Main()
         {
             DataStoreExceptionTest dtest = new DataStoreExceptionTest();
+            Debug.Print("Starting test Level_5A");
 
             //for (int testIndex = 0; testIndex < 4; ++testIndex)
             for (int testIndex = 0; testIndex <= (exceptionType.NO_EXCEPTION - exceptionType.DATA_AMOUNT_ZERO); ++testIndex)

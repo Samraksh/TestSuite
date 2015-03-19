@@ -6,7 +6,7 @@ namespace ParameterClass
     {
 	// required TestRig parameters	
 	// parameters used to gather data
-	public int testTimeout = 20000;
+	public int testTimeout = 270000;
 	public string useLogic = "none";
 	public double sampleTimeMs = 15000;
 	public double sampleFrequency = 4000000;

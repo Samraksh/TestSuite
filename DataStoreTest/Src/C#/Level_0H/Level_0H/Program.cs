@@ -16,6 +16,7 @@ namespace Samraksh.eMote.Tests
         public DataStoreTest()
         {
             bool eraseDataStore = true;
+            Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
         }
 
@@ -45,16 +46,15 @@ namespace Samraksh.eMote.Tests
         // was successful
         public void Level_0H()
         {
-            /*if (DataStore.DeleteAllData() == DataStatus.Success)
-                Debug.Print("Datastore succesfully deleted");*/
             try
             {
                 if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+                    DisplayStats(true, "Datastore succesfully erased - test Level_0H successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_0H failed", "", 0);
                 return;
             }
         }
@@ -64,7 +64,6 @@ namespace Samraksh.eMote.Tests
         {
 
             DataStoreTest dtest = new DataStoreTest();
-
             dtest.Level_0H();
         }
     }

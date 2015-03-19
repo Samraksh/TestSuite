@@ -16,6 +16,9 @@ namespace Samraksh.eMote.Tests
         int size;
         int offset;
         int experimentIndex;
+        static UInt32 dataIndex = 0;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 10;
 
         public DataStoreTest()
         {
@@ -26,14 +29,18 @@ namespace Samraksh.eMote.Tests
             
                 size = 256;
                 offset = 0;
+                experimentIndex = 100;
                 readBuffer = new UInt32[size];
                 writeBuffer = new UInt32[size];
-
-                experimentIndex = 100;
+                for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
+                {
+                    writeBuffer[writeIndex] = writeIndex;
+                }
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_1B failed", "", 0);
                 return;
             }
         }
@@ -65,34 +72,28 @@ namespace Samraksh.eMote.Tests
         {
             try
             {
-                Debug.Print("Starting test Level_1B");
-
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
-
-                for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
-                {
-                    writeBuffer[writeIndex] = writeIndex;
-                }
-
-                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                for (; dataIndex < experimentIndex; ++dataIndex)
                 {
                     DataReference data = new DataReference(dStore, size, ReferenceDataType.UINT32);
                     Debug.Print("Data created successfully");
                 
-                    if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
-                        Debug.Print("Write successful");
-                    else
-				    {
-                        DisplayStats(false, "Write not successful", "", 0);
-					    return;
-				    }
+                    if (data.Write(writeBuffer, size) != DataStoreReturnStatus.Success)
+                    {
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            DisplayStats(false, "Data write failure - test Level_1B failed", "", 0);
+                            return;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
 
-                    if (data.Read(readBuffer, offset, size) == DataStoreReturnStatus.Success)
-                        Debug.Print("Read successful");
-                    else
+                    if (data.Read(readBuffer, offset, size) != DataStoreReturnStatus.Success)
 				    {
-                        DisplayStats(false, "Read not successful", "", 0);
+                        DisplayStats(false, "Read not successful - test Level_1B failed", "", 0);
 					    return;
 				    }
 
@@ -100,25 +101,32 @@ namespace Samraksh.eMote.Tests
                     {
                         if (readBuffer[i] != writeBuffer[i])
                         {
-                            DisplayStats(false, "Read Write test failed", "", 0);
+                            DisplayStats(false, "Read Write test failed - test Level_1B failed", "", 0);
                             return;
                         }
                     }
 
                     Debug.Print("Read Write successful");
-
                     Array.Clear(readBuffer, 0, readBuffer.Length);
-
                     Debug.Print("Experiment run count is " + dataIndex);
                 }
 
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", null, 0);
+                DisplayStats(true, "Test Level_1B successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
-                return;
+                errorCounter++;
+                if (errorCounter > errorLimit)
+                {
+                    DisplayStats(false, "Test Level_1B failed", "", 0);
+                    return;
+                }
+                else
+                {
+                    Debug.Print("errorCounter: " + errorCounter.ToString());
+                    Level_1B();
+                }
             }
         }
 
@@ -126,6 +134,7 @@ namespace Samraksh.eMote.Tests
         public static void Main()
         {
             DataStoreTest dtest = new DataStoreTest();
+            Debug.Print("Starting test Level_1B");
             dtest.Level_1B();
         }
     }

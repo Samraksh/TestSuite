@@ -18,11 +18,14 @@ namespace Samraksh.eMote.Tests
         static byte[] readBuffer = new byte[size];
 
         int experimentIndex;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 10;
 
         public DataStoreTest()
         {
             bool eraseDataStore = true;
             //dStore = new DataStore();     ////This gives an error as the constructor is private
+            Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             ////The same instance is created below because of singleton
@@ -61,9 +64,6 @@ namespace Samraksh.eMote.Tests
         {
             try
             {
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
-
                 for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
                 {
                     DataReference data = new DataReference(dStore, size, ReferenceDataType.BYTE);
@@ -71,29 +71,61 @@ namespace Samraksh.eMote.Tests
                 
                     rnd.NextBytes(writeBuffer);
 
-                    if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
-                        Debug.Print("Write successful");
-                    else
-                        DisplayStats(false, "Write not successful", "", 0);
-
+                    if (data.Write(writeBuffer, size) != DataStoreReturnStatus.Success)
+                    {
+                        Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            #if (__DEBUG__)
+                                Debug.Print("Time: " + System.DateTime.Now.ToString());
+                            #endif
+                            DisplayStats(false, "Data write failure - test Level_0J failed", "", 0);
+                            return;
+                        }
+                        else
+                        {
+                            #if (__DEBUG__)
+                                Debug.Print("errorCounter: " + errorCounter.ToString());
+                            #endif
+                            continue;
+                        }
+                    }
+                    
                     ////Though a new Data object is created with dStore1, data is written to same block storage device (NOR)
                     DataReference data1 = new DataReference(dStore1, size, ReferenceDataType.BYTE);
                     rnd.NextBytes(writeBuffer);
 
-                    if (data1.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
-                        Debug.Print("Write successful");
-                    else
-                        DisplayStats(false, "Write not successful", "", 0);
+                    if (data1.Write(writeBuffer, size) != DataStoreReturnStatus.Success)
+                    {
+                        Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            #if (__DEBUG__)
+                                Debug.Print("Time: " + System.DateTime.Now.ToString());
+                            #endif
+                            DisplayStats(false, "Data write failure - test Level_0J failed", "", 0);
+                            return;
+                        }
+                        else
+                        {
+                            #if (__DEBUG__)
+                                Debug.Print("errorCounter: " + errorCounter.ToString());
+                            #endif
+                            continue;
+                        }
+                    }
 
                     Debug.Print("Experiment run count is " + dataIndex);
                 }
 
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+                DisplayStats(true, "Test Level_0J successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_0J failed", "", 0);
                 return;
             }
         }

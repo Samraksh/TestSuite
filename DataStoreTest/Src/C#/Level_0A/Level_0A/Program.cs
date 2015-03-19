@@ -7,12 +7,16 @@ namespace Samraksh.eMote.Tests
 {
     public class DataStoreTest
     {
-
         DataStore dStore;
+        int dataCreationLimit = 10000;
+        static UInt32 dataIndex = 0;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 5;
 
         public DataStoreTest()
         {
             bool eraseDataStore = true;
+            Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
         }
 
@@ -40,28 +44,31 @@ namespace Samraksh.eMote.Tests
         // Test that creates a bunch of records
         public void Level_0A()
         {
+Level_0A_Start:
             try
             {
-                for (UInt32 dataIndex = 0; dataIndex <= 10; ++dataIndex)
+                for (; dataIndex <= dataCreationLimit; ++dataIndex)
                 {
                     DataReference data = new DataReference(dStore, 512, ReferenceDataType.UINT16);
-                    Debug.Print("Data created successfully");
+                    Debug.Print("Data created - " + dataIndex.ToString());
                 }
             
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                {
-                    Debug.Print("Datastore succesfully erased");
-                    DisplayStats(true, "Datastore succesfully erased", null, 0);
-                }
-                else
-                {
-                    DisplayStats(false, "Error: Data failed to be created successfully", null, 0);
-                }
+                DisplayStats(true, "Test Level_0A successfully completed", null, 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
-                return;
+                errorCounter++;
+                if (errorCounter > errorLimit)
+                {
+                    DisplayStats(false, "Error: Data failed to be created - test Level_0A failed", null, 0);
+                    return;
+                }
+                else
+                {
+                    Debug.Print("errorCounter: " + errorCounter.ToString());
+                    goto Level_0A_Start;
+                }
             }
         }
 

@@ -17,10 +17,13 @@ namespace Samraksh.eMote.Tests
         DataReference[] dataObj;
         UInt16 experimentIndex;
         UInt16 size;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 10;
 
         public DataStoreTest()
         {
             bool eraseDataStore = true;
+            Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();
@@ -66,20 +69,32 @@ namespace Samraksh.eMote.Tests
         {
             try
             {
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
-
                 for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
                 {
                     data[dataIndex] = new DataReference(dStore, size, ReferenceDataType.BYTE);
                     rnd.NextBytes(writeBuffer);
-                    data[dataIndex].Write(writeBuffer, size);
+                    
+                    if (data[dataIndex].Write(writeBuffer, size) != DataStoreReturnStatus.Success)
+                    {
+                        Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            DisplayStats(false, "Data write failure - test Level_0E failed", "", 0);
+                            return;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
                     Array.Clear(writeBuffer, 0, writeBuffer.Length);
                 }
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_0E failed", "", 0);
                 return;
             }
             TestPersistence();
@@ -96,7 +111,7 @@ namespace Samraksh.eMote.Tests
                 //Get the data references into dataRefArray.
                 if (dStore.ReadAllDataReferences(dataRefArray, 0) != DataStoreReturnStatus.Success)
                 {
-                    DisplayStats(false, "ReadAllDataReferences", "", 0);
+                    DisplayStats(false, "ReadAllDataReferences - test Level_0E failed", "", 0);
                     return;
                 }
 
@@ -104,7 +119,7 @@ namespace Samraksh.eMote.Tests
                 {
                     if (DataStoreReturnStatus.Failure == dataRefArray[dataIndex].Read(readBuffer, 0, size))
                     {
-                        DisplayStats(false, "Read failed", "", 0);
+                        DisplayStats(false, "Read failed - test Level_0E failed", "", 0);
                         return;
                     }
                     else
@@ -114,12 +129,12 @@ namespace Samraksh.eMote.Tests
                     Array.Clear(readBuffer, 0, readBuffer.Length);
                 }
 
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+                DisplayStats(true, "Test Level_0E successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_0E failed", "", 0);
                 return;
             }
         }

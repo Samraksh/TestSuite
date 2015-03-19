@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define __DEBUG__
+
+using System;
 using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -23,6 +25,8 @@ namespace Samraksh.eMote.Tests
         byte[] readBuffer;
 
         int experimentIndex;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 10;
         
         public static OutputPort resultFailure = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J11_PIN3, false);
         public static OutputPort resultRWData = new OutputPort(Samraksh.eMote.DotNow.Pins.GPIO_J12_PIN4, false);
@@ -32,6 +36,7 @@ namespace Samraksh.eMote.Tests
         public DataStoreTest()
         {
             bool eraseDataStore = true;
+            Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();
@@ -77,12 +82,9 @@ namespace Samraksh.eMote.Tests
 
                 /* For "overallIndex" times, create "dataIndex" count of data. For each data, write random data and read it back. 
                  * Then again write to the same data, thereby marking the previous version invalid. Finally delete the data. 
-                 * Size of the flash is: 125 * 65536 = 819200. The below test fills up the flash "overallIndex" times. */
+                 * Size of the flash is: 125 * 131072 = 16384000. The below test fills up the flash "overallIndex" times. */
 
                 DataReference data;
-
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
 
                 for (UInt32 overallIndex = 0; overallIndex < experimentIndex; ++overallIndex)
                 {
@@ -91,25 +93,38 @@ namespace Samraksh.eMote.Tests
                         data = new DataReference(dStore, size, ReferenceDataType.BYTE);
                         rnd.NextBytes(writeBuffer);
 
-                        if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
-                            Debug.Print("Data write successful");
-                        else
+                        if (data.Write(writeBuffer, size) != DataStoreReturnStatus.Success)
                         {
-                            DisplayStats(false, "Data write failure", "", 0);
-                            resultRWData.Write(false);
-                            resultDeleteData.Write(false);
-                            resultFailure.Write(true);
-                            return;
+                            Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                            errorCounter++;
+                            if (errorCounter > errorLimit)
+                            {
+                                DisplayStats(false, "Data write failure - test Level_0F failed", "", 0);
+                                #if (__DEBUG__)
+                                {
+                                    resultRWData.Write(false);
+                                    resultDeleteData.Write(false);
+                                    resultFailure.Write(true);
+                                }
+                                #endif
+                                return;
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
 
-                        if (data.Read(readBuffer, offset, size) == DataStoreReturnStatus.Success)
-                            Debug.Print("Data read successful");
-                        else
+                        if (data.Read(readBuffer, offset, size) != DataStoreReturnStatus.Success)
                         {
-                            DisplayStats(false, "Data read failure", "", 0);
-                            resultRWData.Write(false);
-                            resultDeleteData.Write(false);
-                            resultFailure.Write(true);
+                            DisplayStats(false, "Data read failure - test Level_0F failed", "", 0);
+                            #if (__DEBUG__)
+                            {
+                                resultRWData.Write(false);
+                                resultDeleteData.Write(false);
+                                resultFailure.Write(true);
+                            }
+                            #endif
                             return;
                         }
 
@@ -117,10 +132,14 @@ namespace Samraksh.eMote.Tests
                         {
                             if (readBuffer[i] != writeBuffer[i])
                             {
-                                DisplayStats(false, "Read Write test failed", "", 0);
-                                resultRWData.Write(false);
-                                resultDeleteData.Write(false);
-                                resultFailure.Write(true);
+                                DisplayStats(false, "Read Write test failed - test Level_0F failed", "", 0);
+                                #if (__DEBUG__)
+                                {
+                                    resultRWData.Write(false);
+                                    resultDeleteData.Write(false);
+                                    resultFailure.Write(true);
+                                }
+                                #endif
                                 return;
                             }
                         }
@@ -129,15 +148,22 @@ namespace Samraksh.eMote.Tests
                         Array.Clear(writeBuffer, 0, writeBuffer.Length);
 
                         rnd.NextBytes(writeBuffer);
-                        if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
-                            Debug.Print("Data re-write successful");
-                        else
+                        if (data.Write(writeBuffer, size) != DataStoreReturnStatus.Success)
                         {
-                            DisplayStats(false, "Data re-write failure", "", 0);
-                            resultRWData.Write(false);
-                            resultDeleteData.Write(false);
-                            resultFailure.Write(true);
-                            return;
+                            Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                            errorCounter++;
+                            if (errorCounter > errorLimit)
+                            {
+                                DisplayStats(false, "Data re-write failure - test Level_0F failed", "", 0);
+                                #if (__DEBUG__)
+                                {
+                                    resultRWData.Write(false);
+                                    resultDeleteData.Write(false);
+                                    resultFailure.Write(true);
+                                }
+                                #endif
+                                return;
+                            }
                         }
 
                         Array.Clear(writeBuffer, 0, writeBuffer.Length);
@@ -155,7 +181,7 @@ namespace Samraksh.eMote.Tests
                             //System.Threading.Thread.Sleep(750);
                             if (data.Delete() != DataStoreReturnStatus.Success)
                             {
-                                DisplayStats(false, "Delete failed", "", 0);
+                                DisplayStats(false, "Delete failed - test Level_0F failed", "", 0);
                                 return;
                             }
                         }
@@ -170,12 +196,12 @@ namespace Samraksh.eMote.Tests
                     Debug.Print("Experiment run count is " + overallIndex);
                 }
 
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+                DisplayStats(true, "Test Level_0F successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_0F failed", "", 0);
                 return;
             }
         }

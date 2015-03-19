@@ -19,6 +19,7 @@ namespace Samraksh.eMote.Tests
         public DataStoreTest()
         {
             bool eraseDataStore = true;
+            Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             rnd = new Random();
@@ -56,9 +57,6 @@ namespace Samraksh.eMote.Tests
         {
             try
             {
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
-
                 for (UInt32 dataIndex = 1; dataIndex <= experimentIndex; ++dataIndex)
                 {
                     DataReference data = new DataReference(dStore, size, ReferenceDataType.UINT16);
@@ -78,7 +76,7 @@ namespace Samraksh.eMote.Tests
                 }
                 else
                 {
-                    DisplayStats(false, "Data write failed", "", 0);
+                    DisplayStats(false, "Data write failed - test Level_0C failed", "", 0);
                     return;
                 }
 
@@ -88,7 +86,7 @@ namespace Samraksh.eMote.Tests
                 }
                 else
                 {
-                    DisplayStats(false, "Data read failed", "", 0);
+                    DisplayStats(false, "Data read failed - test Level_0C failed", "", 0);
                     return;
                 }
 
@@ -96,7 +94,7 @@ namespace Samraksh.eMote.Tests
                 {
                     if (readBuffer[i] != writeBuffer[i])
                     {
-                        DisplayStats(false, "Read Write test failed. DeleteAll failed", "", 0);
+                        DisplayStats(false, "Read Write test failed. DeleteAll failed - test Level_0C failed", "", 0);
                         return;
                     }
                 }
@@ -105,12 +103,12 @@ namespace Samraksh.eMote.Tests
 
                 Debug.Print("Read Write successful. DeleteAll succeeded");
 
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+                DisplayStats(true, "Test Level_0C successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_0C failed", "", 0);
                 return;
             }
         }

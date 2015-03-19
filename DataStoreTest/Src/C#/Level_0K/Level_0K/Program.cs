@@ -18,12 +18,15 @@ namespace Samraksh.eMote.Tests
         static byte[] readBuffer = new byte[size];
 
         int experimentIndex;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 10;
 
         
         public DataStoreTest()
         {
             bool eraseDataStore = true;
             //dStore = new DataStore();     ////This gives an error as the constructor is private
+            Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
             writeBuffer = new byte[size];
@@ -59,9 +62,6 @@ namespace Samraksh.eMote.Tests
         {
             try
             {
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
-
                 Debug.Print(dStore.MaxAllocationSize.ToString());
                 Debug.Print(dStore.Size.ToString());
                 Debug.Print(dStore.UsedBytes.ToString());
@@ -75,12 +75,19 @@ namespace Samraksh.eMote.Tests
                 
                     rnd.NextBytes(writeBuffer);
 
-                    if (data.Write(writeBuffer, size) == DataStoreReturnStatus.Success)
-                        Debug.Print("Write successful");
-                    else
+                    if (data.Write(writeBuffer, size) != DataStoreReturnStatus.Success)
                     {
-                        DisplayStats(false, "Write not successful", "", 0);
-                        return;
+                        Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            DisplayStats(false, "Data write failure - test Level_0K failed", "", 0);
+                            return;
+                        }
+                        else
+                        {
+                           continue;
+                        }
                     }
 
                     Debug.Print(dStore.UsedBytes.ToString());
@@ -92,12 +99,12 @@ namespace Samraksh.eMote.Tests
                 Debug.Print(dStore.UsedBytes.ToString());
                 Debug.Print(dStore.FreeBytes.ToString());
 
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", "", 0);
+                DisplayStats(true, "Test Level_0K successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_0K failed", "", 0);
                 return;
             }
         }

@@ -53,7 +53,8 @@
     <Reference Include="Microsoft.SPOT.Hardware.SerialPort">
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Hardware.SerialPort.dll</HintPath>
     </Reference>
-    <Reference Include="Samraksh_eMote">
+    <Reference Include="Samraksh_eMote, Version=4.3.0.12, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\Samraksh_eMote\Samraksh_eMote.dll</HintPath>
     </Reference>
   </ItemGroup>

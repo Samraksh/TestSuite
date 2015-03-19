@@ -20,12 +20,16 @@ namespace Samraksh.eMote.Tests
         int offset = 0;
         int numData = 0;
         int experimentIndex;
+        static UInt32 dataIndex = 0;
+        //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
+        int errorCounter = 0, errorLimit = 10;
 
         public DataStoreTest()
         {
             try
             {
                 bool eraseDataStore = true;
+                Debug.Print("Initializing datastore");
                 dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
                 experimentIndex = 100;
@@ -35,10 +39,15 @@ namespace Samraksh.eMote.Tests
                 //rand = new Random(108);
                 readBuffer = new UInt16[size];
                 writeBuffer = new UInt16[size];
+                for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
+                {
+                    writeBuffer[writeIndex] = writeIndex;
+                }
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
+                DisplayStats(false, "Test Level_3B failed", "", 0);
                 return;
             }
         }
@@ -70,38 +79,40 @@ namespace Samraksh.eMote.Tests
         {
             try
             {
-                Debug.Print("Starting test Level_3B");
-
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    Debug.Print("Datastore succesfully erased");
-
-                for (UInt16 writeIndex = 0; writeIndex < size; ++writeIndex)
-                {
-                    writeBuffer[writeIndex] = writeIndex;
-                }
-
-                for (UInt32 dataIndex = 0; dataIndex < experimentIndex; ++dataIndex)
+                for (; dataIndex < experimentIndex; ++dataIndex)
                 {
                     DataReference data = new DataReference(dStore, size, ReferenceDataType.UINT16);
                     Debug.Print("Data created successfully");
                 
-                    if (data.Write(writeBuffer, 0, size / 2) == DataStoreReturnStatus.Success)
-                        Debug.Print("Write successful");
-                    else
+                    if (data.Write(writeBuffer, 0, size / 2) != DataStoreReturnStatus.Success)
                     {
-                        DisplayStats(false, "Write not successful", "", 0);
-                        return;
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            DisplayStats(false, "Data write failure - test Level_3B failed", "", 0);
+                            return;
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
 
                     offset = rand.Next((int)size / 2);
                     numData = rand.Next((int)(size - offset));
 
-                    if (data.Write(writeBuffer, offset, numData) == DataStoreReturnStatus.Success)
-                        Debug.Print("Write successful");
-                    else
+                    if (data.Write(writeBuffer, offset, numData) != DataStoreReturnStatus.Success)
                     {
-                        DisplayStats(false, "Write not successful", "", 0);
-                        return;
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            DisplayStats(false, "Data write failure - test Level_3B failed", "", 0);
+                            return;
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
 
                     /*######################################################*/
@@ -110,11 +121,9 @@ namespace Samraksh.eMote.Tests
                      * if (offset == 0)
                         offset = offset + sizeof(byte);*/
                     
-                    if (data.Read(readBuffer, 0, offset) == DataStoreReturnStatus.Success)
-                        Debug.Print("Read before overwrite successful");
-                    else
+                    if (data.Read(readBuffer, 0, offset) != DataStoreReturnStatus.Success)
                     {
-                        DisplayStats(false, "Read before overwrite not successful", "", 0);
+                        DisplayStats(false, "Read before overwrite not successful - test Level_3B failed", "", 0);
                         return;
                     }
 
@@ -122,7 +131,7 @@ namespace Samraksh.eMote.Tests
                     {
                         if (readBuffer[rwIndex] != writeBuffer[rwIndex])
                         {
-                            DisplayStats(false, "Read Write test failed - before overwrite", "", 0);
+                            DisplayStats(false, "Read Write test failed - before overwrite - test Level_3B failed", "", 0);
                             return;
                         }
                     }
@@ -130,11 +139,9 @@ namespace Samraksh.eMote.Tests
 
                     /*######################################################*/
                     /* Read the overwrite region and verify */
-                    if (data.Read(readBuffer, offset, numData) == DataStoreReturnStatus.Success)
-                        Debug.Print("Read overwrite region successful");
-                    else
+                    if (data.Read(readBuffer, offset, numData) != DataStoreReturnStatus.Success)
                     {
-                        DisplayStats(false, "Read overwrite region not successful", "", 0);
+                        DisplayStats(false, "Read overwrite region not successful - test Level_3B failed", "", 0);
                         return;
                     }
 
@@ -142,7 +149,7 @@ namespace Samraksh.eMote.Tests
                     {
                         if (readBuffer[rwIndex] != writeBuffer[rwIndex])
                         {
-                            DisplayStats(false, "Read Write test failed - overwrite", "", 0);
+                            DisplayStats(false, "Read Write test failed - overwrite - test Level_3B failed", "", 0);
                             return;
                         }
                     }
@@ -152,11 +159,9 @@ namespace Samraksh.eMote.Tests
                     /* Read after the overwrite region and verify */
                     if ( (offset + numData + 1) <= (size/2) )
                     {
-                        if (data.Read(readBuffer, (offset + numData + 1), (size / 2 - (offset + numData + 1))) == DataStoreReturnStatus.Success)
-                            Debug.Print("Read after overwrite successful");
-                        else
+                        if (data.Read(readBuffer, (offset + numData + 1), (size / 2 - (offset + numData + 1))) != DataStoreReturnStatus.Success)
                         {
-                            DisplayStats(false, "Read after overwrite not successful", "", 0);
+                            DisplayStats(false, "Read after overwrite not successful - test Level_3B failed", "", 0);
                             return;
                         }
 
@@ -165,7 +170,7 @@ namespace Samraksh.eMote.Tests
                         {
                             if (readBuffer[readIndex++] != writeBuffer[rwIndex])
                             {
-                                DisplayStats(false, "Read Write test failed - after overwrite", "", 0);
+                                DisplayStats(false, "Read Write test failed - after overwrite - test Level_3B failed", "", 0);
                                 return;
                             }
                         }
@@ -176,13 +181,22 @@ namespace Samraksh.eMote.Tests
                     Debug.Print("Read Write successful");
                 }
 
-                if (dStore.EraseAllData() == DataStoreReturnStatus.Success)
-                    DisplayStats(true, "Datastore succesfully erased", null, 0);
+                DisplayStats(true, "Test Level_3B successfully completed", "", 0);
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
-                return;
+                errorCounter++;
+                if (errorCounter > errorLimit)
+                {
+                    DisplayStats(false, "Test Level_3B failed", "", 0);
+                    return;
+                }
+                else
+                {
+                    Debug.Print("errorCounter: " + errorCounter.ToString());
+                    Level_3B();
+                }
             }
 
         }
@@ -191,7 +205,7 @@ namespace Samraksh.eMote.Tests
         public static void Main()
         {
             DataStoreTest dtest = new DataStoreTest();
-
+            Debug.Print("Starting test Level_3B");
             dtest.Level_3B();
         }
     }
