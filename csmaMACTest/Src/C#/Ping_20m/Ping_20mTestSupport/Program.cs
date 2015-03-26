@@ -76,7 +76,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         static Mac.CSMA myCSMA;
         ReceiveCallBack myReceiveCB;
-        NeighbourhoodChangeCallBack myNeighborCB;
+        NeighborhoodChangeCallBack myNeighborCB;
 
         Mac.MacConfiguration macConfig = new MacConfiguration();
 
@@ -88,7 +88,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_N, LCD.CHAR_I, LCD.CHAR_7);
 
-            macConfig.NeighbourLivelinesDelay = 180;
+            macConfig.NeighborLivelinessDelay = 180;
             macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
 
             Debug.Print("Configuring:  CSMA...");
