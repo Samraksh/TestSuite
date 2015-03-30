@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='COM2' Type='C# Adapt .NOW'>
+	<Test Name='COM1' Type='C# Adapt .NOW'>
 		<Description>
 			C# COM2 test
 		</Description>

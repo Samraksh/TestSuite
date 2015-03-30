@@ -185,8 +185,9 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         }
 
-        void NeighborChange(UInt16 noOfNeigbors)
+        void NeighborChange(UInt16 noOfNeighbors)
         {
+			Debug.Print("neighbor count: " + noOfNeighbors.ToString());
         }
 
         void Receive(UInt16 noOfPackets)

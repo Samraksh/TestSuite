@@ -10,7 +10,9 @@ namespace COM
 {
     public class Program
     {
-		static void SerialPortHandler(object sender, SerialDataReceivedEventArgs e)
+		public static SerialPort serialPort1;
+
+		static void SerialPort1Handler(object sender, SerialDataReceivedEventArgs e)
         {            
 			try{
 				byte[] m_recvBuffer = new byte[100];
@@ -31,30 +33,18 @@ namespace COM
 
         public static void Main()
         {
-			//Debug.EnableGCMessages(false);
-			//Debug.Print("Starting Main\r\n");
+			serialPort1 = new SerialPort("COM1");
+			serialPort1.BaudRate = 115200;
+            serialPort1.Parity = Parity.None;
+            serialPort1.StopBits = StopBits.One;
+            serialPort1.DataBits = 8;
+            serialPort1.Handshake = Handshake.None;
 
-			SerialPort serialPort = new SerialPort("COM1");
-			serialPort.BaudRate = 115200;
-            serialPort.Parity = Parity.None;
-            serialPort.StopBits = StopBits.One;
-            serialPort.DataBits = 8;
-            serialPort.Handshake = Handshake.None;
+			serialPort1.DataReceived += new SerialDataReceivedEventHandler(SerialPort1Handler);
 
-			serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPortHandler);
-
-			serialPort.Open();
-			/*Thread.Sleep(20000);
-			Debug.Print("result = PASS\r\n");
-			Debug.Print("accuracy = 1.2\r\n");
-			Debug.Print("resultParameter1 = p1 return\r\n");
-			Debug.Print("resultParameter2 = p2 return\r\n");
-			Debug.Print("resultParameter3 = p3 return\r\n");
-			Debug.Print("resultParameter4 = p4 return\r\n");
-			Debug.Print("resultParameter5 = p5 return\r\n"); 
-			*/
+			serialPort1.Open();
 			while (true) {
-				//System.Threading.Thread.Sleep(100);
+				System.Threading.Thread.Sleep(100);
 			}	
 		}
 		

@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
-//using Samraksh.eMote.DotNow;
 
 namespace COM
 {
@@ -22,7 +21,7 @@ namespace COM
 				int numBytes = serialPort.BytesToRead;
 				if (numBytes > 100)
 					numBytes = 100;
-            	serialPort.Read(m_recvBuffer, 0, numBytes);				
+            	serialPort.Read(m_recvBuffer, 0, numBytes);
 				serialPort2.Write(m_recvBuffer, 0, numBytes);
 				serialPort2.Flush();
 			}
@@ -43,9 +42,7 @@ namespace COM
 				if (numBytes > 100)
 					numBytes = 100;
             	serialPort.Read(m_recvBuffer, 0, numBytes);
-				/*for (int i = 0; i<numBytes; i++){
-					m_recvBuffer[i] = (byte)(m_recvBuffer[i]+1);
-				}*/
+				
 				serialPort1.Write(m_recvBuffer, 0, numBytes);
 				serialPort1.Flush();
 			}
@@ -74,7 +71,7 @@ namespace COM
             serialPort2.Handshake = Handshake.None;
 			serialPort2.DataReceived += new SerialDataReceivedEventHandler(SerialPort2Handler);
 
-			serialPort1.Open();			
+			serialPort1.Open();
 			serialPort2.Open();
 
 			while (true) {
@@ -85,3 +82,4 @@ namespace COM
 		
    }
 }
+
