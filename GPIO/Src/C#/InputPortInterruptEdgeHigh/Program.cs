@@ -8,6 +8,8 @@ namespace TestSuite
 {
     public class Program
     {
+        static Port.InterruptMode interruptMode = Port.InterruptMode.InterruptEdgeHigh;
+
 		public static void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
         {
 			while (true){
@@ -40,7 +42,7 @@ namespace TestSuite
 	private static OutputPort testPort_PA0 = new OutputPort(GPIOPins.GPIO_PIN_PA0, true);
 	private static OutputPort testPort_PB8 = new OutputPort(GPIOPins.GPIO_PIN_PB8, true);
 	private static OutputPort testPort_PB9 = new OutputPort(GPIOPins.GPIO_PIN_PB9, true);
-	private static InterruptPort testPort_PB15 = new InterruptPort(GPIOPins.GPIO_PIN_PB15, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeHigh);
+	private static InterruptPort testPort_PB15 = new InterruptPort(GPIOPins.GPIO_PIN_PB15, false, Port.ResistorMode.Disabled, interruptMode);
 	
 #elif (HARDWARE_ADAPT)
 	//private static OutputPort testPort_55 = new OutputPort((Cpu.Pin)55, true);
@@ -55,9 +57,16 @@ namespace TestSuite
 	private static OutputPort testPort_PA8 = new OutputPort(GPIOPins.GPIO_PIN_PA8, true);
 	private static OutputPort testPort_PA9 = new OutputPort(GPIOPins.GPIO_PIN_PA9, true);
 
-#endif	
+#endif
         public static void Main()
         {
+            Cpu.PinValidInterruptMode validInterruptModes = Microsoft.SPOT.Hardware.HardwareProvider.HwProvider.GetSupportedInterruptModes(GPIOPins.GPIO_PIN_PB15);
+
+            if (((int)validInterruptModes & (1 << (int)interruptMode)) == 0)
+            {
+                throw new Exception("Invalid interrupt mode");
+            }
+
 			int testCnt = 0;
 			testPort_PB15.OnInterrupt += testPort_PB15_OnInterrupt;
 			testPort_PB15.EnableInterrupt();
