@@ -59,6 +59,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
     public class Program
     {
+        NetOpStatus status;
         // should give a pass fail after 19.5 minutes
         const int testCount = 2925;
         UInt16 myAddress;
@@ -261,8 +262,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 ping.Src = myAddress;
 
                 byte[] msg = ping.ToBytes();
-                int retVal = (int)myCSMA.Send(sender, msg, 0, (ushort)msg.Length);
-                if (retVal != 0)
+                status = myCSMA.Send(sender, msg, 0, (ushort)msg.Length);
+                if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());
                 }
@@ -285,8 +286,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
 
                 byte[] msg = ping.ToBytes();
-                int retVal = (int)myCSMA.Send((UInt16)Mac.Addresses.BROADCAST, msg, 0, (ushort)msg.Length);
-                if (retVal != 0)
+                status = myCSMA.Send((UInt16)Mac.Addresses.BROADCAST, msg, 0, (ushort)msg.Length);
+                if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());
                 }

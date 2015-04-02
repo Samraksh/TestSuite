@@ -59,6 +59,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
     public class Program
     {
+        NetOpStatus status;
         const int firstPos = 20;
         const int testCount = 150;
         UInt16 myAddress;
@@ -294,7 +295,11 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 ping.Src = myAddress;
 
                 byte[] msg = ping.ToBytes();
-                myCSMA.Send(sender, msg, 0, (ushort)msg.Length);
+                status = myCSMA.Send(sender, msg, 0, (ushort)msg.Length);
+                if (status != NetOpStatus.S_Success)
+                {
+                    Debug.Print("Failed to send: " + ping.MsgID.ToString());
+                }
             }
             catch (Exception e)
             {
@@ -314,7 +319,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
 
                 byte[] msg = ping.ToBytes();
-                myCSMA.Send((UInt16)Mac.Addresses.BROADCAST, msg, 0, (ushort)msg.Length);
+                status = myCSMA.Send((UInt16)Mac.Addresses.BROADCAST, msg, 0, (ushort)msg.Length);
+                if (status != NetOpStatus.S_Success)
+                {
+                    Debug.Print("Failed to send: " + ping.MsgID.ToString());
+                }
+
                 int char0 = (mySeqNo % 10) + (int)LCD.CHAR_0;
                 lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)char0);
             }
