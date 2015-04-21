@@ -18,11 +18,27 @@ namespace LogicAnalysis
         const float expectedFreq0 = 1.25f;
         const float expectedFreq1 = 1.667f;
         const float expectedFreq2 = 2.5f;
-        const float expectedFreq3 = 5f;
+        const float expectedFreq3 = 50f;
 
         const float accuracy = 0.01f;
 
         static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
+
+        const double expectedMinTime0 = 0.799;
+        const double expectedMinTime1 = 0.599;
+        const double expectedMinTime2 = 0.399;
+        const double expectedMinTime3 = 0.019f;
+
+        const double expectedMaxTime0 = 0.801;
+        const double expectedMaxTime1 = 0.601;
+        const double expectedMaxTime2 = 0.401;
+        const double expectedMaxTime3 = 0.021f;
+
+        const double expectedStdDeviationTime0 = 0;
+        const double expectedStdDeviationTime1 = 0;
+        const double expectedStdDeviationTime2 = 0;
+        const double expectedStdDeviationTime3 = 0;
+
         const int USE_EVERY_TRANSITION = 1;
         const int USE_RISING_TRANSITION = 2;
 
@@ -39,10 +55,10 @@ namespace LogicAnalysis
         static List<int> gap3 = new List<int>();
 
         // These values are to be used to skip a certain number of samples beyond the first before an analysis is made
-        const int skipSamples0 = 0;
-        const int skipSamples1 = 0;
-        const int skipSamples2 = 0;
-        const int skipSamples3 = 0;
+        const int skipSamples0 = 5;
+        const int skipSamples1 = 5;
+        const int skipSamples2 = 5;
+        const int skipSamples3 = 5;
 
         static void ReadInFile()
         {
@@ -65,6 +81,85 @@ namespace LogicAnalysis
                 if (listNumber > 4)
                     line3.Add(int.Parse(values[4]));
             }
+        }
+
+        static bool GetJitter(List<int> time, List<int> line, int startPoint, int stopPoint, ref double minTime, ref double maxTime, ref double stdDeviation)
+        {
+            bool returnValue = false;
+
+            // skipping first few transitions as they skew results
+            int samplePoint = startPoint;
+            int skipTransitions = 3;
+            int lastPoint = line[samplePoint];
+            
+            while ( (skipTransitions > 0) && (samplePoint < stopPoint) )
+            {
+                lastPoint = line[samplePoint];
+                samplePoint++;
+                // looking for transition from 0 to 1
+                if ((line[samplePoint] == 1) && (lastPoint == 0))
+                {
+                    skipTransitions--;
+                }
+                
+            }
+
+            minTime = double.MaxValue;
+            int totalTime = 0;
+            int transitionTime = 0;
+            int totalTransistions = 0;
+            lastPoint = line[samplePoint];
+            int lastTransitionTime = time[samplePoint];            
+            for (int i = samplePoint + 1; i < stopPoint; i++)
+            {
+                // looking for transition from 0 to 1
+                if ((line[i] == 1) && (lastPoint == 0))
+                {
+                    // found transition
+                    //System.Diagnostics.Debug.WriteLine("Found first point at " + i.ToString());
+                    transitionTime = time[i] - lastTransitionTime;
+                    totalTime += transitionTime;
+                    totalTransistions++;
+                    lastTransitionTime = time[i];
+                    if (transitionTime > maxTime)
+                        maxTime = transitionTime;
+                    if (transitionTime < minTime)
+                        minTime = transitionTime;
+                }
+                lastPoint = line[i];
+            }
+
+            float calcAverage = 0;
+            if ((totalTransistions != 0) && (totalTime != 0))
+                calcAverage = (totalTime / totalTransistions);
+            
+
+            totalTransistions = 0;
+            float varianceNumerator = 0;
+            lastTransitionTime = time[samplePoint];
+            for (int i = samplePoint + 1; i < stopPoint; i++)
+            {
+                // looking for transition from 0 to 1
+                if ((line[i] == 1) && (lastPoint == 0))
+                {
+                    transitionTime = time[i] - lastTransitionTime;
+                    lastTransitionTime = time[i];
+                    varianceNumerator += (transitionTime - calcAverage) * (transitionTime - calcAverage);
+                    totalTransistions++;
+                }
+                lastPoint = line[i];
+            }
+
+            
+            double variance = varianceNumerator / totalTransistions;
+            stdDeviation = (Math.Sqrt(variance));
+
+
+            maxTime = maxTime / sampleFreq;
+            minTime = minTime / sampleFreq;
+            stdDeviation = stdDeviation / sampleFreq;
+                       
+            return returnValue;
         }
 
         static float GetFrequency(List<int> time, List<int> line, int startPoint, int stopPoint)
@@ -205,14 +300,20 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 1)
                 {
-                    return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count);
+                    return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count);                    
                     System.Diagnostics.Debug.WriteLine("Frequency is line 0 " + return0.ToString());
-                    if ((return0 < expectedFreq0 * (1+accuracy)) && (return0 > expectedFreq0 * (1-accuracy)))
+                    double minTime = 0, maxTime = 0, stdDeviation = 0;
+                    GetJitter(listTime, line0, skipSamples0, line0.Count, ref minTime, ref maxTime, ref stdDeviation);
+                    System.Diagnostics.Debug.WriteLine("Line 0: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
+                    if ((return0 < expectedFreq0 * (1 + accuracy)) && (return0 > expectedFreq0 * (1 - accuracy)) && (minTime > expectedMinTime0) && (maxTime < expectedMaxTime0))
                     {
                         result0 = true;
-                    } else
+                    }
+                    else
                         result0 = false;
-                    returnStr0 = return0.ToString();
+                    returnStr0 = return0.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
+
+                    //GetJitter(listTime, line0, skipSamples0, line0.Count);
 
                     /*return0 = FindGap(listTime, line0, expectedGapSequence0, 0, line0.Count, USE_EVERY_TRANSITION);
                     if (return0 == 1)
@@ -234,13 +335,18 @@ namespace LogicAnalysis
                 {
                     return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 1 " + return1.ToString());
-                    if ((return1 < expectedFreq1 * (1+accuracy)) && (return1 > expectedFreq1 * (1-accuracy)))
+                    double minTime = 0, maxTime = 0, stdDeviation = 0;
+                    GetJitter(listTime, line1, skipSamples1, line1.Count, ref minTime, ref maxTime, ref stdDeviation);
+                    System.Diagnostics.Debug.WriteLine("Line 1: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
+                    if ((return1 < expectedFreq1 * (1 + accuracy)) && (return1 > expectedFreq1 * (1 - accuracy)) && (minTime > expectedMinTime1) && (maxTime < expectedMaxTime1))
                     {
                         result1 = true;
                     }
                     else
                         result1 = false;
-                    returnStr1 = return1.ToString();
+                    returnStr1 = return1.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
+
+                    //GetJitter(listTime, line1, skipSamples1, line1.Count);
                     /*return1 = FindGap(listTime, line1, expectedGapSequence0, 0, line1.Count);
                     if (return1 == 1)
                     {
@@ -261,25 +367,32 @@ namespace LogicAnalysis
                 {
                     return2 = GetFrequency(listTime, line2, skipSamples2, line2.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 2 " + return2.ToString());
-                    if ((return2 < expectedFreq2 * (1+accuracy)) && (return2 > expectedFreq2 * (1-accuracy) ))
+                    double minTime = 0, maxTime = 0, stdDeviation = 0;
+                    GetJitter(listTime, line2, skipSamples2, line2.Count, ref minTime, ref maxTime, ref stdDeviation);
+                    System.Diagnostics.Debug.WriteLine("Line 2: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
+                    if ((return2 < expectedFreq2 * (1 + accuracy)) && (return2 > expectedFreq2 * (1 - accuracy)) && (minTime > expectedMinTime2) && (maxTime < expectedMaxTime2))
                     {
                         result2 = true;
                     }
                     else
                         result2 = false;
-                    returnStr2 = return2.ToString();
+                    returnStr2 = return2.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
                 }
                 if (listNumber > 4)
                 {
                     return3 = GetFrequency(listTime, line3, skipSamples3, line3.Count);
-                    System.Diagnostics.Debug.WriteLine("Frequency is line 3 " + return3.ToString());
-                    if ((return3 < expectedFreq3 * (1+accuracy)) && (return3 > expectedFreq3 * (1-accuracy)))
+                    System.Diagnostics.Debug.WriteLine("Line 3: Frequency: " + return3.ToString());
+                    double minTime = 0, maxTime = 0, stdDeviation = 0;
+                    GetJitter(listTime, line3, skipSamples3, line3.Count, ref minTime, ref maxTime, ref stdDeviation);
+                    System.Diagnostics.Debug.WriteLine("Line 3: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
+                    if ((return3 < expectedFreq3 * (1 + accuracy)) && (return3 > expectedFreq3 * (1 - accuracy)) && (minTime > expectedMinTime3) && (maxTime < expectedMaxTime3))
                     {
                         result3 = true;
                     }
                     else
                         result3 = false;
-                    returnStr3 = return3.ToString();
+                    returnStr3 = return3.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
+                    
                 }
 
                 if ((result0 == false) || (result1 == false) || (result2 == false) || (result3 == false))
@@ -294,9 +407,15 @@ namespace LogicAnalysis
                 using (StreamWriter writer = new StreamWriter(fileOut,false))
                 {
                     if (testResult == true)
+                    {
                         writer.Write("result = PASS\r\n");
+                        System.Diagnostics.Debug.WriteLine("PASS");
+                    }
                     else
+                    {
                         writer.Write("result = FAIL\r\n");
+                        System.Diagnostics.Debug.WriteLine("FAIL");
+                    }
                     writer.Write("accuracy = 1\r\n");
                     writer.Write("resultParameter1 = " + returnStr0 + "\r\n");
                     writer.Write("resultParameter2 = " + returnStr1 + "\r\n");
@@ -304,6 +423,13 @@ namespace LogicAnalysis
                     writer.Write("resultParameter4 = " + returnStr3 + "\r\n");
                     writer.Write("resultParameter5 = null\r\n");
                     writer.Close();
+
+                    System.Diagnostics.Debug.WriteLine("resultParameter1 = " + returnStr0 + "\r\n");
+                    System.Diagnostics.Debug.WriteLine("resultParameter2 = " + returnStr1 + "\r\n");
+                    System.Diagnostics.Debug.WriteLine("resultParameter3 = " + returnStr2 + "\r\n");
+                    System.Diagnostics.Debug.WriteLine("resultParameter4 = " + returnStr3 + "\r\n");
+                    System.Diagnostics.Debug.WriteLine("resultParameter5 = null\r\n");
+
                 }
             }
             catch

@@ -38,3 +38,5 @@ D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0E\LogicAnalysis.exe
 D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0E\LogicAnalysis.pdb
 D:\Work\TestSuite\tools\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
 D:\Work\TestSuite\tools\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
+D:\Work\TestSuite\tools\LogicAnalysis.exe
+D:\Work\TestSuite\tools\LogicAnalysis.pdb

@@ -114,7 +114,7 @@ BOOL VirtualTimerTest::Level_0E()
 		if(!VirtTimer_SetTimer(2, 0, periodValue*1000, FALSE, FALSE, Timer_2_Handler))
 			return FALSE;*/
 		//periodValue = (i+2)%9;
-		if(!VirtTimer_SetTimer(3, 0, periodValue*100000, FALSE, FALSE, Timer_0_Handler))
+		if(!VirtTimer_SetTimer(3, 0, periodValue*10000, FALSE, FALSE, Timer_0_Handler))
 			return FALSE;
 		//periodValue = (i+1)%9;
 		if(!VirtTimer_SetTimer(4, 0, periodValue*200000, FALSE, FALSE, Timer_1_Handler))
