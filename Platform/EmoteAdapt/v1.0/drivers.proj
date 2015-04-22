@@ -21,8 +21,11 @@
     <MFSettingsFile>$(SPOCLIENT)\Solutions\SOC_ADAPT\SOC_ADAPT.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
-  
-  <Import Project="$(TESTSOURCE)\TestSuite\Platform\EmoteAdapt\v1.0\tools\targets\Microsoft.SPOT.System.Settings" />
+  <PropertyGroup>
+    <SamAppName>TINYCLR</SamAppName>
+  </PropertyGroup>
+  <Import Project="$(SPOCLIENT)\tools\targets\Microsoft.SPOT.System.Settings" />
+  <Import Project="$(SPOCLIENT)\tools\Targets\Microsoft.SPOT.Build.Targets" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <MultipleOutputSections>false</MultipleOutputSections>

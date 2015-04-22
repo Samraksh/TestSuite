@@ -17,6 +17,9 @@
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
+  <PropertyGroup>
+    <SamAppName>TINYCLR</SamAppName>
+  </PropertyGroup>
   <Import Project="$(TESTSOURCE)\TestSuite\tools\targets4.3\Microsoft.SPOT.System.Settings" />
   <PropertyGroup>
     <OutputType>Executable</OutputType>
