@@ -16,23 +16,23 @@ namespace LogicAnalysis
         const float sampleFreq = 4000000;
 
         const float expectedFreq0 = 7f;
-        const float expectedFreq1 = 2.5f;
-        const float expectedFreq2 = 0.48f;
+        const float expectedFreq1 = 0.48f;
+        const float expectedFreq2 = 2.5f;
         const float expectedFreq3 = 7f;
 
         const float accuracy = 0.01f;
 
         static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
 
-        const double expectedMinTime0 = 0.141;
-        const double expectedMinTime1 = 0.399;
-        const double expectedMinTime2 = 2.082;
-        const double expectedMinTime3 = 0.141;
+        const double expectedMinTime0 = 0.122;        
+        const double expectedMinTime1 = 2.063;
+        const double expectedMinTime2 = 0.380;
+        const double expectedMinTime3 = 0.122;
 
-        const double expectedMaxTime0 = 0.144;
-        const double expectedMaxTime1 = 0.401;
-        const double expectedMaxTime2 = 2.085;
-        const double expectedMaxTime3 = 0.144;
+        const double expectedMaxTime0 = 0.162;        
+        const double expectedMaxTime1 = 2.103;
+        const double expectedMaxTime2 = 0.420;
+        const double expectedMaxTime3 = 0.162;
 
         const double expectedStdDeviationTime0 = 0;
         const double expectedStdDeviationTime1 = 0;

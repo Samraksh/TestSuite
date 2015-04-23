@@ -44,6 +44,5 @@ D:\Work\TestSuite\Timer\Src\C#\user_timer_four\LogicAnalysis.exe
 D:\Work\TestSuite\Timer\Src\C#\user_timer_four\LogicAnalysis.pdb
 D:\Work\TestSuite\Timer\Src\C#\user_timer_one\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
 D:\Work\TestSuite\Timer\Src\C#\user_timer_one\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
-D:\Work\TestSuite\Timer\Src\C#\user_timer_one\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
 D:\Work\TestSuite\Timer\Src\C#\user_timer_one\LogicAnalysis.exe
 D:\Work\TestSuite\Timer\Src\C#\user_timer_one\LogicAnalysis.pdb

@@ -30,9 +30,9 @@ namespace LogicAnalysis
         const double expectedMinTime3 = 0.141;
 
         const double expectedMaxTime0 = 0.041;
-        const double expectedMaxTime1 = 0.401;
-        const double expectedMaxTime2 = 2.085;
-        const double expectedMaxTime3 = 0.144;
+        const double expectedMaxTime1 = 0.421;
+        const double expectedMaxTime2 = 2.105;
+        const double expectedMaxTime3 = 0.162;
 
         const double expectedStdDeviationTime0 = 0;
         const double expectedStdDeviationTime1 = 0;

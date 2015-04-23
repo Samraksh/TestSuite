@@ -22,7 +22,8 @@ namespace LogicAnalysis
 
         const float accuracy = 0.1f;
 
-        static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
+        static List<double> expectedGapSequence0 = new List<double>() { 0.03, 0.03, 0.03, 0.259 };
+        static List<double> expectedGapSequence1 = new List<double>() { 0.120, 0.229 };
         const int USE_EVERY_TRANSITION = 1;
         const int USE_RISING_TRANSITION = 2;
 
@@ -205,16 +206,16 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 1)
                 {
-                    return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count);
+                    /*return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 0 " + return0.ToString());
                     if ((return0 < expectedFreq0 * (1+accuracy)) && (return0 > expectedFreq0 * (1-accuracy)))
                     {
                         result0 = true;
                     } else
                         result0 = false;
-                    returnStr0 = return0.ToString();
+                    returnStr0 = return0.ToString();*/
 
-                    /*return0 = FindGap(listTime, line0, expectedGapSequence0, 0, line0.Count, USE_EVERY_TRANSITION);
+                    return0 = FindGap(listTime, line0, expectedGapSequence0, 0, line0.Count, USE_EVERY_TRANSITION);
                     if (return0 == 1)
                     {
                         System.Diagnostics.Debug.WriteLine("Found gap sequence for line 0");
@@ -228,11 +229,11 @@ namespace LogicAnalysis
                     for (int i = 0; i < expectedGapSequence0.Count; i++)
                     {
                         returnStr0 += expectedGapSequence0[i].ToString() + " ";
-                    }*/
+                    }
                 }
                 if (listNumber > 2)
                 {
-                    return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
+                    /*return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 1 " + return1.ToString());
                     if ((return1 < expectedFreq1 * (1+accuracy)) && (return1 > expectedFreq1 * (1-accuracy)))
                     {
@@ -240,8 +241,8 @@ namespace LogicAnalysis
                     }
                     else
                         result1 = false;
-                    returnStr1 = return1.ToString();
-                    /*return1 = FindGap(listTime, line1, expectedGapSequence0, 0, line1.Count);
+                    returnStr1 = return1.ToString();*/
+                    return1 = FindGap(listTime, line1, expectedGapSequence1, 0, line1.Count, USE_EVERY_TRANSITION);
                     if (return1 == 1)
                     {
                         System.Diagnostics.Debug.WriteLine("Found gap sequence for line 1");
@@ -252,10 +253,10 @@ namespace LogicAnalysis
                         System.Diagnostics.Debug.WriteLine("Failed to find gap sequence for line 1");
                         result1 = false;
                     }
-                    for (int i = 0; i < expectedGapSequence0.Count; i++)
+                    for (int i = 0; i < expectedGapSequence1.Count; i++)
                     {
-                        returnStr1 += expectedGapSequence0[i].ToString() + " ";
-                    }*/
+                        returnStr1 += expectedGapSequence1[i].ToString() + " ";
+                    }
                 }
                 if (listNumber > 3)
                 {
