@@ -1,13 +1,13 @@
 <TestSuite>
 	<Test Name='RealTimeTimer' Type='C# Adapt .NOW'>
 		<Description>
-			Real time timer 20 minute test
+			Real time timer 10 minute test
 		</Description>
 		<TestPath>
-			RealTimeTimer\Src\C#\RT_25min
+			RealTimeTimer\Src\C#\RT_10min
 		</TestPath>
 		<TestProjName>
-			RT_25min.csproj
+			RT_10min.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
