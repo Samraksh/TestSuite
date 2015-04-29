@@ -20,7 +20,7 @@ namespace LogicAnalysis
         const float expectedFreq2 = 0f;
         const float expectedFreq3 = 0f;
 
-        const float accuracy = 0.01f;
+        const float accuracy = 0.015f;
 
         static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
         const int USE_EVERY_TRANSITION = 1;

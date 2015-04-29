@@ -24,9 +24,9 @@ namespace LogicAnalysis
 
         static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
 
-        const double expectedMinTime0 = 0.7985f;
-        const double expectedMinTime1 = 0.5985f;
-        const double expectedMinTime2 = 0.3985f;
+        const double expectedMinTime0 = 0.7950f;
+        const double expectedMinTime1 = 0.5960f;
+        const double expectedMinTime2 = 0.3970f;
         const double expectedMinTime3 = 0.0185f;
 
         const double expectedMaxTime0 = 0.801f;
