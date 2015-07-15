@@ -125,7 +125,8 @@ BOOL DataStoreTest::TestReadWrite_Random_Record()
 
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
-	UINT16 rId = GenerateRandomNumber(recordCount);
+	//UINT16 rId = GenerateRandomNumber(recordCount);
+	UINT16 rId = 8;
 
 	LPVOID givenPtr = GetAddress(rId);
 
@@ -179,7 +180,8 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		hal_printf("SUCCESS: initialize data store \n");
 		return true;
 	}
 

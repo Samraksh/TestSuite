@@ -178,7 +178,7 @@ BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 			{
 				if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 				{
-					hal_printf("Success: write data to data store");
+					hal_printf("Success: write data to data store\n");
 					//DisplayStats(true, "Success: write data to data store", NULL, 0);
 				}
 				else
@@ -266,7 +266,7 @@ BOOL DataStoreTest::TestReadWrite_Persistence_Multiple_Seq_Records()
 					return false;
 				}
 
-				hal_printf("Success : Simple read write successful");
+				hal_printf("Success : Simple read write successful\n");
 				//DisplayStats(true, "Success : Simple read write successful", NULL, 0);
 			}
 			else
@@ -298,7 +298,7 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		hal_printf("SUCCESS: initialize data store");
+		hal_printf("SUCCESS: initialize data store\n");
 		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
 		return true;
 	}

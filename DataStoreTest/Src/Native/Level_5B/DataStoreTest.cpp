@@ -124,7 +124,8 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 		{
 			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 			{
-				DisplayStats(true, "Success: write data to data store", NULL, 0);
+				//DisplayStats(true, "Success: write data to data store", NULL, 0);
+				hal_printf("Success: write data to data store\n");
 			}
 			else
 			{
@@ -151,7 +152,8 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 
 			if(rID != index)
 			{
-				DisplayStats(true, "SUCCESS: Record successfully deleted", NULL, 0);
+				//DisplayStats(true, "SUCCESS: Record successfully deleted", NULL, 0);
+				hal_printf("SUCCESS: Record successfully deleted\n");
 			}
 			else
 			{
@@ -166,6 +168,7 @@ BOOL DataStoreTest::TestReadWrite_Delete_Multiple_Seq_Records()
 		}
 	}
 
+	DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
 	g_dataStoreObject.EraseAllBlocks();
 	return true;
 
@@ -181,7 +184,8 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		hal_printf("SUCCESS: initialize data store \n");
 		return true;
 	}
 

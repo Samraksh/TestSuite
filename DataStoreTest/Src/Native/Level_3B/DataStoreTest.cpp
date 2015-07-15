@@ -133,7 +133,8 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Rand_Records()
 		{
 			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 			{
-				DisplayStats(true, "Success: write data to data store", NULL, 0);
+				//DisplayStats(true, "Success: write data to data store", NULL, 0);
+				hal_printf("Success: write data to data store \n");
 			}
 			else
 			{
@@ -150,7 +151,8 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Rand_Records()
 	// Then read from random records and compare read and write data
 	for(UINT16 index = 1; index <= recordCount; index++)
 	{
-		UINT16 rId = GenerateRandomNumber(recordCount);
+		//UINT16 rId = GenerateRandomNumber(recordCount);
+		UINT16 rId = 13;
 		LPVOID givenPtr = GetAddress(rId);
 
 		if(givenPtr)
@@ -172,7 +174,8 @@ BOOL DataStoreTest::TestReadWrite_Multiple_Rand_Records()
 				return false;
 			}
 
-			DisplayStats(true, "Success : Simple read write successful", NULL, 0);
+			//DisplayStats(true, "Success : Simple read write successful", NULL, 0);
+			hal_printf("Success: Simple read write successful \n");
 		}
 		else
 		{
@@ -202,7 +205,8 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		hal_printf("SUCCESS: initialize data store \n");
 		return true;
 	}
 

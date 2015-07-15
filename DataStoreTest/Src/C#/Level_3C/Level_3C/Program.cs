@@ -201,7 +201,7 @@ namespace Samraksh.eMote.Tests
                     }
                     /*######################################################*/
 
-                    Debug.Print("Read Write successful");
+                    Debug.Print("Read Write successful - " + dataIndex.ToString());
                 }
 
                 DisplayStats(true, "Test Level_3C successfully completed", "", 0);
