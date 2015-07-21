@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_0H)' Type='C# .NOW'>
 		<Description>
 			Erase all pre-existing data.
 		</Description>

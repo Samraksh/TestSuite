@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_6C)' Type='C# .NOW'>
 		<Description>
 			Fill up entire flash with objects(int32), and read every nth object back (takes about an hour).
 		</Description>
@@ -7,7 +7,7 @@
 			DataStoreTest\Src\C#\Level_6C\Level_6C
 		</TestPath>
 		<TestProjName>
-			Level_6A.csproj
+			Level_6C.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

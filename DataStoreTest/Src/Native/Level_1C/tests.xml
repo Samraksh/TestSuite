@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='Native .NOW'>
+	<Test Name='DataStoreTest(Native_Level_1C)' Type='Native .NOW'>
 		<Description>
 			Native DataStoreTest Tests - fill up entire flash with 2 byte objects; read every 100th object until end of flash
 		</Description>
@@ -7,7 +7,7 @@
 			DataStoreTest\Src\Native\Level_1C
 		</TestPath>
 		<TestProjName>
-			DataStoreTest.proj
+			DataStoreTest_Level_1C.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

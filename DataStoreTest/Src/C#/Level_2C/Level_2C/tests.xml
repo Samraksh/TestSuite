@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_2C)' Type='C# .NOW'>
 		<Description>
 			Testing persistence. Write a Uint32 array of sequential data. Then get the same references and read back the data.
 		</Description>

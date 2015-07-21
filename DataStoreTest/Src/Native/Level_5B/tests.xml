@@ -1,14 +1,14 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='Native .NOW'>
+	<Test Name='DataStoreTest(Native_Level_5B)' Type='Native .NOW'>
 		<Description>
 			Native DataStoreTest Tests - keep writing to multiple (successive) records. Delete (successive) records and get those record IDs. 
 			(Create multiple records and write 100 sequential uint16 data types and read them back)
 		</Description>
 		<TestPath>
-			DataStoreTest\Src\Native\Level_5A
+			DataStoreTest\Src\Native\Level_5B
 		</TestPath>
 		<TestProjName>
-			DataStoreTest.proj
+			DataStoreTest_Level_5B.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

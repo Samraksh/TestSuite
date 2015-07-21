@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_0F)' Type='C# .NOW'>
 		<Description>
 			Write to a data, then read and again write to same data. Delete data once every "n" records. Repeat this for about 10000 times.
 		</Description>

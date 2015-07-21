@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_6A)' Type='C# .NOW'>
 		<Description>
 			Fill up entire flash with objects(byte), and read every nth object back.
 		</Description>

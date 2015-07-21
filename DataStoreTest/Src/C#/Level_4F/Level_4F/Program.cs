@@ -184,6 +184,12 @@ namespace Samraksh.eMote.Tests
 
                 DisplayStats(true, "Test Level_4F successfully completed", "", 0);
             }
+            catch (DataStoreInvalidReferenceException invRefEx)
+            {
+                Debug.Print(invRefEx.Message);
+                DisplayStats(false, "Test Level_4F failed", "", 0);
+                return;
+            }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);

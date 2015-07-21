@@ -36,7 +36,7 @@ namespace Samraksh.eMote.Tests
                 dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
             
                 experimentIndex = 100;
-                bufferSize = 1020;  //(1020*4(UINT32))+16(header size)=4096
+                bufferSize = 508;  //(1020*4(UINT32))+16(header size)=4096
                 rand = new Random();
                 //data = new Data[experimentIndex];
                 //offsetIndex = 128;
@@ -107,13 +107,23 @@ namespace Samraksh.eMote.Tests
                 Debug.Print("Reading data " + dataIndex.ToString());*/
                 if (dataRefArray[dataIndex-1].Read(readBuffer, 0, readBuffer.Length) != DataStoreReturnStatus.Success)
                 {
-                    if ((offset + dataIndex-1) > ObjectCount) {
-                        Debug.Print("Trying to access an object which is not present");
-                        return true;
-                    }
-                    else {
+                    errorCounter++;
+                    if (errorCounter > errorLimit)
+                    {
+                        Debug.Print("errorCounter: " + errorCounter.ToString());
                         DisplayStats(false, "Read not successful - test Level_6C failed", "", 0);
                         return false;
+                    }
+                    else
+                    {
+                        if ((offset + dataIndex-1) > ObjectCount) {
+                            Debug.Print("Trying to access an object which is not present");
+                            return true;
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                 }
 
@@ -121,8 +131,17 @@ namespace Samraksh.eMote.Tests
                 {
                     if (readBuffer[rwIndex] != writeBuffer[rwIndex])
                     {
-                        DisplayStats(false, "Read Write test failed - test Level_6C failed", "", 0);
-                        return false;
+                        errorCounter++;
+                        if (errorCounter > errorLimit)
+                        {
+                            Debug.Print("errorCounter: " + errorCounter.ToString());
+                            DisplayStats(false, "Read Write test failed - test Level_6C failed", "", 0);
+                            return false;
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                 }
 
@@ -154,6 +173,7 @@ namespace Samraksh.eMote.Tests
                         errorCounter++;
                         if (errorCounter > errorLimit)
                         {
+                            Debug.Print("errorCounter: " + errorCounter.ToString());
                             DisplayStats(false, "Data write failure - test Level_6C failed", "", 0);
                             return;
                         }
@@ -188,6 +208,7 @@ namespace Samraksh.eMote.Tests
                 errorCounter++;
                 if (errorCounter > errorLimit)
                 {
+                    Debug.Print("errorCounter: " + errorCounter.ToString());
                     DisplayStats(false, "Test Level_6C failed", "", 0);
                     return;
                 }

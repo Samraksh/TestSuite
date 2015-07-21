@@ -40,7 +40,7 @@ namespace Samraksh.eMote.Tests
                 dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
                 //dStore.InitDataStore(StorageType.NOR);
             
-                experimentIndex = 500;
+                experimentIndex = 10000;
                 size = 256;
                 rand = new Random();
                 //data = new Data[experimentIndex];
@@ -93,7 +93,7 @@ namespace Samraksh.eMote.Tests
                 for (; dataIndex < experimentIndex; ++dataIndex)
                 {
                     data = new DataReference(dStore, size, ReferenceDataType.BYTE);
-                    Debug.Print("Data created successfully");
+                    //Debug.Print("Data created successfully");
 
                     writePort.Write(true);
                     if (data.Write(writeBuffer, 0, writeBuffer.Length) != DataStoreReturnStatus.Success)
@@ -138,7 +138,7 @@ namespace Samraksh.eMote.Tests
                 offset = 0;
                 //int totalRecords = dStore.CountOfDataIds();
                 int totalRecords = experimentIndex;
-                int dataAllocationIndex = totalRecords > offsetIndex ? offsetIndex : totalRecords;
+                int dataAllocationIndex = (offsetIndex < totalRecords) ? offsetIndex : totalRecords;
 
                 dataRefArray = new DataReference[dataAllocationIndex + 5];
 
@@ -180,7 +180,7 @@ namespace Samraksh.eMote.Tests
                             }
                         }
 
-                        Debug.Print("Read Write successful");
+                        //Debug.Print("Read Write successful");
 
                         Array.Clear(readBuffer, 0, readBuffer.Length);
                         dataIndex++;
@@ -191,10 +191,17 @@ namespace Samraksh.eMote.Tests
                     offset += offsetIndex;
 
                     dataAllocationIndex = totalRecords - offset;
-                    dataAllocationIndex = dataAllocationIndex > offsetIndex ? offsetIndex : dataAllocationIndex;
+                    dataAllocationIndex = offsetIndex < dataAllocationIndex ? offsetIndex : dataAllocationIndex;
                 }
 
+                Debug.Print(DateTime.Now.ToString());
                 DisplayStats(true, "Test Level_4A successfully completed", "", 0);
+            }
+            catch (DataStoreInvalidReferenceException invRefEx)
+            {
+                Debug.Print(invRefEx.Message);
+                DisplayStats(false, "Test Level_4A failed", "", 0);
+                return;
             }
             catch (Exception ex)
             {
@@ -208,7 +215,9 @@ namespace Samraksh.eMote.Tests
 
         public static void Main()
         {
+            Debug.Print(DateTime.Now.ToString());
             DataStoreTest dtest = new DataStoreTest();
+            Debug.Print(DateTime.Now.ToString());
             Debug.Print("Starting test Level_4A");
             dtest.Level_4A();
         }

@@ -22,7 +22,7 @@ namespace Samraksh.eMote.Tests
         int offset = 0;
         int experimentIndex;
         int offsetIndex = 0;
-        int jumpValue = 100;
+        int jumpValue = 25;
         static UInt32 dataIndex = 0;
         //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
         int errorCounter = 0, errorLimit = 10;
@@ -101,9 +101,9 @@ namespace Samraksh.eMote.Tests
                         return false;
                     }
                 }
-                /*Debug.Print("ObjectCount is " + ObjectCount.ToString());
+                /*Debug.Print("ObjectCount is " + ObjectCount.ToString());*/
                 Debug.Print("offset is " + offset.ToString());
-                Debug.Print("offsetIndex is " + offsetIndex.ToString());
+                /*Debug.Print("offsetIndex is " + offsetIndex.ToString());
                 Debug.Print("Reading data " + dataIndex.ToString());*/
                 if (dataRefArray[dataIndex-1].Read(readBuffer, 0, readBuffer.Length) != DataStoreReturnStatus.Success)
                 {
