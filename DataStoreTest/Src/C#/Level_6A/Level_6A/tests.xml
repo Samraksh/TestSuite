@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='DataStoreTest(Level_6A)' Type='C# .NOW'>
+		<Description>
+			Fill up entire flash with objects(byte), and read every nth object back.
+		</Description>
+		<TestPath>
+			DataStoreTest\Src\C#\Level_6A\Level_6A
+		</TestPath>
+		<TestProjName>
+			Level_6A.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

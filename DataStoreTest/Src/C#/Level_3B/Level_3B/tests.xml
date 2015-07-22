@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_3B)' Type='C# .NOW'>
 		<Description>
 			Test overwrites. Write a UInt16 array of sequential data from offset zero till half of allocation. Then overwrite from a random offset (before half of allocation). 
 		</Description>

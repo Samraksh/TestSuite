@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_0B)' Type='C# .NOW'>
 		<Description>
 			Datastore read and write test from C#
 		</Description>

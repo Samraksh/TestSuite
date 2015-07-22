@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_1E)' Type='C# .NOW'>
 		<Description>
 			Write a UInt32 array of sequential data, and read from a random offset.
 		</Description>

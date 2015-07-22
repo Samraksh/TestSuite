@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='Native .NOW'>
+	<Test Name='DataStoreTest(Native_Level_6A)' Type='Native .NOW'>
 		<Description>
 			Native DataStoreTest Tests - Persistence test. Write to multiple (successive) records. Then hard reset the device. Build device index when system starts.
 			Use this information to read from (successive) records.  
@@ -8,7 +8,7 @@
 			DataStoreTest\Src\Native\Level_6A
 		</TestPath>
 		<TestProjName>
-			DataStoreTest.proj
+			DataStoreTest_Level_6A.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

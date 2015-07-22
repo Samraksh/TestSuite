@@ -189,7 +189,8 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		hal_printf("SUCCESS: initialize data store \n");
 		return true;
 	}
 

@@ -162,7 +162,8 @@ BOOL DataStoreTest::Read_And_Write()
 		{
 			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 			{
-				DisplayStats(true, "Success: write data to data store", NULL, 0);
+				//DisplayStats(true, "Success: write data to data store", NULL, 0);
+				hal_printf("Success: write data to data store \n");
 			}
 			else
 			{
@@ -202,7 +203,8 @@ BOOL DataStoreTest::Read_And_Write()
 				return false;
 			}
 
-			DisplayStats(true, "Success : Simple read write successful", NULL, 0);
+			//DisplayStats(true, "Success : Simple read write successful", NULL, 0);
+			hal_printf("Success: Simple read write successful \n");
 		}
 		else
 		{
@@ -233,22 +235,26 @@ BOOL DataStoreTest::TestReadWrite_Virtual_Records()
 	// Create sequential records
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
-	UINT32 dtime = GenerateRandomNumber(sleepTimeLimit);
+	//UINT32 dtime = GenerateRandomNumber(sleepTimeLimit);
+	UINT32 dtime = 1000;
 	//gHalTimerManagerObject.CreateTimer(1, 0, dtime, false, false, Timer_1_Handler);
 	if(!VirtTimer_SetTimer(3, 0, dtime, FALSE, FALSE, Timer_3_Handler))
 		return FALSE;
 
-	dtime = GenerateRandomNumber(sleepTimeLimit);
+	//dtime = GenerateRandomNumber(sleepTimeLimit);
+	dtime = 10000;
 	//gHalTimerManagerObject.CreateTimer(2, 0, dtime, false, false, Timer_2_Handler);
 	if(!VirtTimer_SetTimer(4, 0, dtime, FALSE, FALSE, Timer_4_Handler))
 		return FALSE;
 
-	dtime = GenerateRandomNumber(sleepTimeLimit);
+	//dtime = GenerateRandomNumber(sleepTimeLimit);
+	dtime = 15000;
 	//gHalTimerManagerObject.CreateTimer(3, 0, dtime, false, false, Timer_3_Handler);
 	if(!VirtTimer_SetTimer(5, 0, dtime, FALSE, FALSE, Timer_5_Handler))
 		return FALSE;
 
-	dtime = GenerateRandomNumber(sleepTimeLimit);
+	//dtime = GenerateRandomNumber(sleepTimeLimit);
+	dtime = 20000;
 	//gHalTimerManagerObject.CreateTimer(4, 0, dtime, false, false, Timer_4_Handler);
 	if(!VirtTimer_SetTimer(6, 0, dtime, FALSE, FALSE, Timer_6_Handler))
 		return FALSE;
@@ -275,7 +281,8 @@ BOOL DataStoreTest::test_initialization(void)
 	}
 	else
 	{
-		DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
+		hal_printf("SUCCESS: initialize data store \n");
 		return true;
 	}
 

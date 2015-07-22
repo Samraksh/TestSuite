@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='C# .NOW'>
+	<Test Name='DataStoreTest(Level_0E)' Type='C# .NOW'>
 		<Description>
 			Persistence test
 		</Description>

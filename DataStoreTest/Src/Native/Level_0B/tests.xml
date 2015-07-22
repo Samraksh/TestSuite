@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='DataStoreTest' Type='Native .NOW'>
+	<Test Name='DataStoreTest(Native_Level_0B)' Type='Native .NOW'>
 		<Description>
 			Native DataStoreTest Tests - Multiple writes and reads to a single record (Create a single record and write 100 sequential UINT8 data types and read them back)
 		</Description>
@@ -7,7 +7,7 @@
 			DataStoreTest\Src\Native\Level_0B
 		</TestPath>
 		<TestProjName>
-			DataStoreTest.proj
+			DataStoreTest_Level_0B.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

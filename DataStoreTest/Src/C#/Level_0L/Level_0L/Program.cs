@@ -12,7 +12,7 @@ namespace Samraksh.eMote.Tests
 
         DataStore dStore;
         Random rnd;
-        const double definedFlashSize = (125.0 * 131072.0) + 5000.0;     //Size of the flash is: 125 * 131072 = 16384000. Little more than actual flash size in order to check if exception is thrown.
+        //const double definedFlashSize = (125.0 * 131072.0) + 5000.0;     //Size of the flash is: 125 * 131072 = 16384000. Little more than actual flash size in order to check if exception is thrown.
         const uint bufferSize = 1024;
 
         byte[] writeBuffer = new byte[bufferSize];
@@ -20,7 +20,7 @@ namespace Samraksh.eMote.Tests
         int counter = 0;
         //Writing to the NOR flash can fail sometimes, but if retried it works. Below variables control how many times a write failure is accepted.
         int errorCounter = 0, errorLimit = 10;
-        double currentFlashSize = 0.0;
+        //double currentFlashSize = 0.0;
         
         public DataStoreTest()
         {
@@ -28,7 +28,7 @@ namespace Samraksh.eMote.Tests
             Debug.Print("Initializing datastore");
             dStore = DataStore.Instance(StorageType.NOR, eraseDataStore);
 
-            rnd = new Random();
+            rnd = new Random(813);
         }
 
         public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
@@ -62,10 +62,12 @@ namespace Samraksh.eMote.Tests
                     Debug.Print("Start time: " + System.DateTime.Now.ToString());
                 #endif
 
-                while (currentFlashSize < definedFlashSize)
+                int dStoreFreeSpace = dStore.FreeBytes;
+                //while (currentFlashSize < definedFlashSize)
+                while (dStoreFreeSpace > 0)
                 {
                     int dataAllocationSize = rnd.Next(range) + 1;    // Because random number ranges from 0 to range. I want dataAllocationSize to be from 1, so adding 1.
-                    currentFlashSize += dataAllocationSize;
+                    //currentFlashSize += dataAllocationSize;
 
                     DataReference data = new DataReference(dStore, dataAllocationSize, ReferenceDataType.BYTE);
                     
@@ -87,7 +89,9 @@ namespace Samraksh.eMote.Tests
                             continue;
                         }
                     }
+                    
                     Array.Clear(writeBuffer, 0, writeBuffer.Length);
+                    dStoreFreeSpace = dStore.FreeBytes;
                     counter++;
                     if (counter % 1000 == 0)
                     {
@@ -96,9 +100,13 @@ namespace Samraksh.eMote.Tests
                             Debug.Print("Counter: " + counter.ToString());
                         #endif
 
-                        double a = (currentFlashSize / definedFlashSize) * 100;
+                        //double a = (currentFlashSize / definedFlashSize) * 100;
+                        double usedBytes = (double)dStore.UsedBytes;
+                        double dstoreSize = (double)dStore.Size;
+                        double a = (usedBytes / dstoreSize) * 100;
                         //double percFilledUp = System.Math.Round(a);
-                        Debug.Print("currentFlashSize: " + currentFlashSize.ToString());
+                        //Debug.Print("currentFlashSize: " + currentFlashSize.ToString());
+                        Debug.Print("Flash free space: " + dStoreFreeSpace.ToString());
                         Debug.Print("% filled up: " + a.ToString());
                         //Debug.Print("% filled up: " + percFilledUp.ToString());
                     }
@@ -134,7 +142,13 @@ namespace Samraksh.eMote.Tests
 
         public static void Main()
         {
+            #if (__DEBUG__)
+                Debug.Print("Start time: " + System.DateTime.Now.ToString());
+            #endif
             DataStoreTest dtest = new DataStoreTest();
+            #if (__DEBUG__)
+                Debug.Print("Start time: " + System.DateTime.Now.ToString());
+            #endif
             dtest.Level_0L();
         }
     }
