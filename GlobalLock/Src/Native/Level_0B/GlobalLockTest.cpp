@@ -64,9 +64,10 @@ BOOL GlobalLockTest::Execute( int testLevel )
 			toggleGPIO();
 
 			CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
-			for(volatile UINT32 i = 0; i < 50000; i++ );
+			for(volatile UINT32 i = 0; i < 500000; i++ );
 			CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
 		}
+		::Events_WaitForEvents( 0, 100 );
 	}
 
 	return TRUE;

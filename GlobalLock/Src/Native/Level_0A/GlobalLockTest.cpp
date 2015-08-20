@@ -22,7 +22,7 @@ void Timer_4_Handler(void *arg)
 {
 	GLOBAL_LOCK(irq);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-	for(volatile UINT32 i = 0; i < 1000000; i++);
+	for(volatile UINT32 i = 0; i < 200000; i++);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 
 	ENABLE_INTERRUPTS();

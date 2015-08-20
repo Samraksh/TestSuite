@@ -20,19 +20,19 @@ namespace LogicAnalysis
         const float expectedFreq2 = 2.5f;
         const float expectedFreq3 = 50f;
 
-        const float accuracy = 0.01f;
+        const float accuracy = 0.1f;
 
         static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
 
-        const double expectedMinTime0 = 0.7950f;
-        const double expectedMinTime1 = 0.5960f;
-        const double expectedMinTime2 = 0.3970f;
-        const double expectedMinTime3 = 0.0185f;
+        const double expectedMinTime0 = 0.795f;
+        const double expectedMinTime1 = 0.596f;
+        const double expectedMinTime2 = 0.397f;
+        const double expectedMinTime3 = 0.018f;
 
-        const double expectedMaxTime0 = 0.801f;
-        const double expectedMaxTime1 = 0.601f;
-        const double expectedMaxTime2 = 0.401f;
-        const double expectedMaxTime3 = 0.021f;
+        const double expectedMaxTime0 = 1.201f;
+        const double expectedMaxTime1 = 1.001f;
+        const double expectedMaxTime2 = 0.601f;
+        const double expectedMaxTime3 = 0.221f;
 
         const double expectedStdDeviationTime0 = 0;
         const double expectedStdDeviationTime1 = 0;
@@ -310,7 +310,11 @@ namespace LogicAnalysis
                         result0 = true;
                     }
                     else
+                    {
                         result0 = false;
+                        System.Diagnostics.Debug.WriteLine("Line 0 failed");
+                        System.Diagnostics.Debug.WriteLine(return0.ToString() + " < " + (expectedFreq0 * (1 - accuracy)).ToString() + " " + return0.ToString() + " > " + (expectedFreq0 * (1 + accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime0.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime0.ToString());
+                    }
                     returnStr0 = return0.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
 
                     //GetJitter(listTime, line0, skipSamples0, line0.Count);
@@ -343,7 +347,11 @@ namespace LogicAnalysis
                         result1 = true;
                     }
                     else
+                    {
                         result1 = false;
+                        System.Diagnostics.Debug.WriteLine("Line 1 failed");
+                        System.Diagnostics.Debug.WriteLine(return1.ToString() + " < " + (expectedFreq1 * (1 + accuracy)).ToString() + " " + return1.ToString() + " > " + (expectedFreq1 * (1 - accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime1.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime1.ToString());
+                    }
                     returnStr1 = return1.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
 
                     //GetJitter(listTime, line1, skipSamples1, line1.Count);
@@ -375,7 +383,11 @@ namespace LogicAnalysis
                         result2 = true;
                     }
                     else
+                    {
                         result2 = false;
+                        System.Diagnostics.Debug.WriteLine("Line 2 failed");
+                        System.Diagnostics.Debug.WriteLine(return2.ToString() + " < " + (expectedFreq2 * (1 + accuracy)).ToString() + " " + return2.ToString() + " > " + (expectedFreq2 * (1 - accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime2.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime2.ToString());
+                    }
                     returnStr2 = return2.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
                 }
                 if (listNumber > 4)
@@ -390,7 +402,11 @@ namespace LogicAnalysis
                         result3 = true;
                     }
                     else
+                    {
                         result3 = false;
+                        System.Diagnostics.Debug.WriteLine("Line 3 failed");
+                        System.Diagnostics.Debug.WriteLine(return3.ToString() + " < " + (expectedFreq3 * (1 - accuracy)).ToString() + " " + return3.ToString() + " > " + (expectedFreq3 * (1 + accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime3.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime3.ToString());
+                    }
                     returnStr3 = return3.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
                     
 
