@@ -84,7 +84,7 @@ BOOL OMACTest::Initialize(){
 	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	Config.Network = 138;
 	Config.NeighborLivenessDelay = 20000;
-	myEventHandler.SetRecieveHandler(OMACTest_ReceiveHandler);
+	myEventHandler.SetReceiveHandler(OMACTest_ReceiveHandler);
 	myEventHandler.SetSendAckHandler(OMACTest_SendAckHandler);
 	VirtTimer_Initialize();
 
@@ -120,9 +120,9 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 	if (g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
 		UINT64 y = HAL_Time_CurrentTicks();
 		// TODO: Check if neighbor was registered(at least 2 packets were received)
-		UINT64 nbrTime = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NbrTime(Nbr2beFollowed, HAL_Time_CurrentTicks());
-		UINT64 NextEventTime = ( ( nbrTime/((UINT64) NEIGHBORCLOCKMONITORPERIOD) ) + 1) * ((UINT64)NEIGHBORCLOCKMONITORPERIOD);
-		UINT64 TicksTillNextEvent = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Nbr2LocalTime(Nbr2beFollowed, NextEventTime) - y;
+		UINT64 neighborTime = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NeighborTime(Nbr2beFollowed, HAL_Time_CurrentTicks());
+		UINT64 NextEventTime = ( ( neighborTime/( (UINT64) NEIGHBORCLOCKMONITORPERIOD) ) + 1 ) * ((UINT64)NEIGHBORCLOCKMONITORPERIOD);
+		UINT64 TicksTillNextEvent = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Neighbor2LocalTime(Nbr2beFollowed, NextEventTime) - y;
 		UINT32 MicSTillNextEvent = (UINT32) (HAL_Time_TicksToTime(TicksTillNextEvent));
 		UINT32 ProcessingLatency = (UINT32) (HAL_Time_TicksToTime( HAL_Time_CurrentTicks() - y));
 		rm = VirtTimer_Change(NeighborClockMonitor_TIMER, 0, MicSTillNextEvent + ProcessingLatency, USEONESHOTTIMER);
