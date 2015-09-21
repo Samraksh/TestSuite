@@ -6,6 +6,7 @@
 #include <..\DeviceCode\Include\Samraksh\DataStore\Datastore.h>
 #include <..\DeviceCode\Include\Samraksh\HAL_util.h>
 #include <..\DeviceCode\Include\Samraksh\VirtualTimer.h>
+#include <..\DeviceCode\pal\Samraksh\eMote_Time\eMote_Time.h>
 #include <cstdlib>
 #include "testMath.h"
 
@@ -32,14 +33,10 @@ public:
 
 	DataStoreTest ( int seedValue, int numberOfEvents );
 
+	static UINT8 testCompleteCounter_3, testCompleteCounter_4, testCompleteCounter_5, testCompleteCounter_6;
+
 
     BOOL     Execute( int testLevel );
-
-	BOOL 	 Level_0A();
-
-	BOOL     Level_0C();
-
-	BOOL 	 Level_1();
 
 	BOOL 	 test_initialization();
 	BOOL 	 TestReadWrite_Virtual_Records();
@@ -59,7 +56,10 @@ public:
 
 };
 
-
+UINT8 DataStoreTest::testCompleteCounter_3 = 0;
+UINT8 DataStoreTest::testCompleteCounter_4 = 0;
+UINT8 DataStoreTest::testCompleteCounter_5 = 0;
+UINT8 DataStoreTest::testCompleteCounter_6 = 0;
 
 
 

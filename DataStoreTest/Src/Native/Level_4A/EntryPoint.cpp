@@ -35,5 +35,14 @@ void ApplicationEntryPoint()
 
     } while(false); // run only once!
 
-    while(true);
+    while(true){
+    	::Events_WaitForEvents(0, 100);
+    	if(DataStoreTest::testCompleteCounter_3 == 1 && DataStoreTest::testCompleteCounter_4 == 1 && DataStoreTest::testCompleteCounter_5 == 1 &&
+    			DataStoreTest::testCompleteCounter_6 == 1)
+    	{
+    		hal_printf("result=PASS\n");
+			hal_printf("resultParameter1=DataStore test Level_4A completed successfully\n");
+			HAL_Time_Sleep_MicroSeconds(1000000);
+    	}
+    }
 }

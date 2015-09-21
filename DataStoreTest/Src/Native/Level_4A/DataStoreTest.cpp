@@ -8,6 +8,7 @@
 //---//
 
 extern Data_Store g_dataStoreObject;
+extern Time_Driver g_Time_Driver;
 //extern HALTimerManager gHalTimerManagerObject;
 
 UINT16 recordCount = 20;
@@ -37,14 +38,6 @@ BOOL DataStoreTest::DisplayStats(BOOL result, char* resultParameter1, char* resu
 	}
 
 	return true;
-}
-
-// This test only checks if the manufacture id can be read
-BOOL DataStoreTest::Level_0A()
-{
-
-	return true;
-
 }
 
 LPVOID DataStoreTest::CreateDataStoreRecords(int count)
@@ -83,7 +76,7 @@ LPVOID DataStoreTest::GetAddress(RECORD_ID rId)
 	if( (retVal = g_dataStoreObject.getAddress(rId)) != NULL )
 		return retVal;
 	else
-		return false;
+		return NULL;
 }
 
 BOOL DataStoreTest::GetRecordID()
@@ -92,7 +85,7 @@ BOOL DataStoreTest::GetRecordID()
 
 	LPVOID givenPtr = g_dataStoreObject.createRecord(1,256,0);
 
-	if(g_dataStoreObject.getRecordID(givenPtr) != NULL)
+	if(g_dataStoreObject.getRecordID(givenPtr) != 0)
 		return true;
 	else
 		return false;
@@ -100,40 +93,66 @@ BOOL DataStoreTest::GetRecordID()
 
 UINT16 DataStoreTest::GenerateRandomNumber(UINT16 upperBound)
 {
-	return ( (rand() % upperBound) + 1 );	// +1 because rand() can return a zero, which is not a valid record ID
+	INT64 currTime = g_Time_Driver.TimeNow();
+	return (currTime % upperBound + 1);
+	//return ( (rand() % upperBound) + 1 );	// +1 because rand() can return a zero, which is not a valid record ID
 }
 
 
 void Timer_3_Handler(void *arg)
 {
-	if(dataStoreTestObj.Read_And_Write())
-		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
-	else
-		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
+	if(dataStoreTestObj.testCompleteCounter_3 == 0){
+		if(dataStoreTestObj.Read_And_Write()){
+			dataStoreTestObj.testCompleteCounter_3++;
+			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
+			hal_printf("SUCCESS Timer_3_Handler: Simple read write successful\n");
+		}
+		else{
+			dataStoreTestObj.DisplayStats(false, (char*)"FAILURE Timer_3_Handler: Simple read write not successful", NULL, 0);
+		}
+	}
 }
 
 void Timer_4_Handler(void *arg)
 {
-	if(dataStoreTestObj.Read_And_Write())
-		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
-	else
-		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
+	if(dataStoreTestObj.testCompleteCounter_4 == 0){
+		if(dataStoreTestObj.Read_And_Write()){
+			dataStoreTestObj.testCompleteCounter_4++;
+			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
+			hal_printf("SUCCESS Timer_4_Handler: Simple read write successful\n");
+		}
+		else{
+			dataStoreTestObj.DisplayStats(false, (char*)"FAILURE Timer_4_Handler: Simple read write not successful", NULL, 0);
+		}
+	}
 }
 
 void Timer_5_Handler(void *arg)
 {
-	if(dataStoreTestObj.Read_And_Write())
-		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
-	else
-		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
+	if(dataStoreTestObj.testCompleteCounter_5 == 0){
+		if(dataStoreTestObj.Read_And_Write()){
+			dataStoreTestObj.testCompleteCounter_5++;
+			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
+			hal_printf("SUCCESS Timer_5_Handler: Simple read write successful\n");
+		}
+		else{
+			dataStoreTestObj.DisplayStats(false, (char*)"FAILURE Timer_5_Handler: Simple read write not successful", NULL, 0);
+		}
+	}
 }
 
 void Timer_6_Handler(void *arg)
 {
-	if(dataStoreTestObj.Read_And_Write())
-		dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
-	else
-		dataStoreTestObj.DisplayStats(false, "FAILURE : Simple read write not successful", NULL, 0);
+	if(dataStoreTestObj.testCompleteCounter_6 == 0){
+		if(dataStoreTestObj.Read_And_Write()){
+			dataStoreTestObj.testCompleteCounter_6++;
+			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
+			hal_printf("SUCCESS Timer_6_Handler: Simple read write successful\n");
+		}
+		else{
+			dataStoreTestObj.DisplayStats(false, (char*)"FAILURE Timer_6_Handler: Simple read write not successful", NULL, 0);
+		}
+	}
 }
 
 
@@ -163,17 +182,17 @@ BOOL DataStoreTest::Read_And_Write()
 			if( g_dataStoreObject.writeRawData(givenPtr, (void*)write_data, 0, test_limit) )
 			{
 				//DisplayStats(true, "Success: write data to data store", NULL, 0);
-				hal_printf("Success: write data to data store \n");
+				hal_printf("Success: write data to data store\n");
 			}
 			else
 			{
-				DisplayStats(false, "ERROR: Unable to write data to data store", NULL, 0);
+				DisplayStats(false, (char*)"ERROR: Unable to write data to data store", NULL, 0);
 				return false;
 			}
 		}
 		else
 		{
-			DisplayStats(false, "ERROR: No valid pointer to record in data store", NULL, 0);
+			DisplayStats(false, (char*)"ERROR: No valid pointer to record in data store", NULL, 0);
 			return false;
 		}
 	}
@@ -182,6 +201,7 @@ BOOL DataStoreTest::Read_And_Write()
 	for(UINT16 index = 1; index <= recordCount; index++)
 	{
 		UINT16 rId = GenerateRandomNumber(recordCount);
+		//UINT16 rId = recordCount;
 		LPVOID givenPtr = GetAddress(rId);
 
 		if(givenPtr)
@@ -192,23 +212,23 @@ BOOL DataStoreTest::Read_And_Write()
 				{
 					if(read_data[rwIndex] != write_data[rwIndex])
 					{
-						DisplayStats(false, "ERROR: Read data is not same as write data", NULL, 0);
+						DisplayStats(false, (char*)"ERROR: Read data is not same as write data", NULL, 0);
 						return false;
 					}
 				}
 			}
 			else
 			{
-				DisplayStats(false, "ERROR: Unable to read data from data store", NULL, 0);
+				DisplayStats(false, (char*)"ERROR: Unable to read data from data store", NULL, 0);
 				return false;
 			}
 
 			//DisplayStats(true, "Success : Simple read write successful", NULL, 0);
-			hal_printf("Success: Simple read write successful \n");
+			hal_printf("Success : Simple read write successful\n");
 		}
 		else
 		{
-			DisplayStats(false, "ERROR: No valid pointer to record in data store", NULL, 0);
+			DisplayStats(false, (char*)"ERROR: No valid pointer to record in data store", NULL, 0);
 			return false;
 		}
 
@@ -235,30 +255,25 @@ BOOL DataStoreTest::TestReadWrite_Virtual_Records()
 	// Create sequential records
 	LPVOID firstGivenPtr = CreateDataStoreRecords(recordCount);
 
-	//UINT32 dtime = GenerateRandomNumber(sleepTimeLimit);
-	UINT32 dtime = 1000;
-	//gHalTimerManagerObject.CreateTimer(1, 0, dtime, false, false, Timer_1_Handler);
+	UINT32 dtime = GenerateRandomNumber(sleepTimeLimit);
+	//UINT32 dtime = 30000;
 	if(!VirtTimer_SetTimer(3, 0, dtime, FALSE, FALSE, Timer_3_Handler))
 		return FALSE;
 
-	//dtime = GenerateRandomNumber(sleepTimeLimit);
-	dtime = 10000;
-	//gHalTimerManagerObject.CreateTimer(2, 0, dtime, false, false, Timer_2_Handler);
+	dtime = GenerateRandomNumber(sleepTimeLimit);
+	//dtime = 25000;
 	if(!VirtTimer_SetTimer(4, 0, dtime, FALSE, FALSE, Timer_4_Handler))
 		return FALSE;
 
-	//dtime = GenerateRandomNumber(sleepTimeLimit);
-	dtime = 15000;
-	//gHalTimerManagerObject.CreateTimer(3, 0, dtime, false, false, Timer_3_Handler);
+	dtime = GenerateRandomNumber(sleepTimeLimit);
+	//dtime = 20000;
 	if(!VirtTimer_SetTimer(5, 0, dtime, FALSE, FALSE, Timer_5_Handler))
 		return FALSE;
 
-	//dtime = GenerateRandomNumber(sleepTimeLimit);
-	dtime = 20000;
-	//gHalTimerManagerObject.CreateTimer(4, 0, dtime, false, false, Timer_4_Handler);
+	dtime = GenerateRandomNumber(sleepTimeLimit);
+	//dtime = 15000;
 	if(!VirtTimer_SetTimer(6, 0, dtime, FALSE, FALSE, Timer_6_Handler))
 		return FALSE;
-
 
 	g_dataStoreObject.EraseAllBlocks();
 
@@ -276,29 +291,16 @@ BOOL DataStoreTest::test_initialization(void)
 	int eraseDataStore = true;
 	if(g_dataStoreObject.init(eraseDataStore) != DS_Success)
 	{
-		DisplayStats(false, "ERROR: Could not initialize data store", NULL, 0);
+		DisplayStats(false, (char*)"ERROR: Could not initialize data store", NULL, 0);
 		return false;
 	}
 	else
 	{
 		//DisplayStats(true, "SUCCESS: initialize data store", NULL, 0);
-		hal_printf("SUCCESS: initialize data store \n");
+		hal_printf("SUCCESS: initialize data store\n");
 		return true;
 	}
-
 }
-
-BOOL DataStoreTest::Level_1()
-{
-	return true;
-}
-
-// Tests the buffer write and read interface
-BOOL DataStoreTest::Level_0C()
-{
-	return true;
-}
-
 
 
 BOOL DataStoreTest::Execute( int testLevel )
@@ -319,17 +321,8 @@ BOOL DataStoreTest::Execute( int testLevel )
 		case 3:
 			result = GetRecordID();
 			break;
-		case 4:
-			result = Level_0A();
-			break;
-		case 5:
-			result = Level_0C();
-			break;
-		case 6:
-			result = Level_1();
-			break;
 		default:
-			DisplayStats(false, "ERROR: Not a valid option", NULL, 0);
+			DisplayStats(false, (char*)"ERROR: Not a valid option", NULL, 0);
 			break;
 	}
 
