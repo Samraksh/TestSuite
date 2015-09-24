@@ -135,6 +135,7 @@ namespace LogicAnalysis
             
 
             totalTransistions = 0;
+            double avgDiffNum = 0;
             float varianceNumerator = 0;
             lastTransitionTime = time[samplePoint];
             for (int i = samplePoint + 1; i < stopPoint; i++)
@@ -144,6 +145,9 @@ namespace LogicAnalysis
                 {
                     transitionTime = time[i] - lastTransitionTime;
                     lastTransitionTime = time[i];
+
+                    avgDiffNum += ((double)(transitionTime / sampleFreq) - (double)0.04);
+                    System.Diagnostics.Debug.WriteLine((((double)(transitionTime / sampleFreq) - (double)0.04)).ToString());
                     varianceNumerator += (transitionTime - calcAverage) * (transitionTime - calcAverage);
                     totalTransistions++;
                 }
@@ -152,12 +156,17 @@ namespace LogicAnalysis
 
             
             double variance = varianceNumerator / totalTransistions;
+            double avgDiff = avgDiffNum / totalTransistions;
             stdDeviation = (Math.Sqrt(variance));
 
 
             maxTime = maxTime / sampleFreq;
             minTime = minTime / sampleFreq;
             stdDeviation = stdDeviation / sampleFreq;
+            System.Diagnostics.Debug.WriteLine("variance: " + (variance).ToString());
+            System.Diagnostics.Debug.WriteLine("avgDiff: " + (avgDiff).ToString());
+            System.Diagnostics.Debug.WriteLine("std deviation: " + stdDeviation.ToString());
+            System.Diagnostics.Debug.WriteLine("average transistion time: " + (calcAverage/sampleFreq).ToString());
                        
             return returnValue;
         }
