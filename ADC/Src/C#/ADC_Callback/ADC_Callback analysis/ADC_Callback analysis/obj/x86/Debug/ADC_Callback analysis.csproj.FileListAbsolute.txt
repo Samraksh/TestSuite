@@ -1,4 +1,0 @@
-D:\Work\TestSuite\ADC\Src\C#\ADC_Callback\ADC_Callback analysis\ADC_Callback analysis\bin\Debug\ADC_Callback.exe
-D:\Work\TestSuite\ADC\Src\C#\ADC_Callback\ADC_Callback analysis\ADC_Callback analysis\bin\Debug\ADC_Callback.pdb
-D:\Work\TestSuite\ADC\Src\C#\ADC_Callback\ADC_Callback analysis\ADC_Callback analysis\obj\x86\Debug\ADC_Callback.exe
-D:\Work\TestSuite\ADC\Src\C#\ADC_Callback\ADC_Callback analysis\ADC_Callback analysis\obj\x86\Debug\ADC_Callback.pdb
