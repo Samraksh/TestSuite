@@ -1,0 +1,35 @@
+<TestSuite>
+	<Test Name='RealTimeTimer' Type='C# Adapt .NOW'>
+		<Description>
+			Real time timer 10 minute test with sleep
+		</Description>
+		<TestPath>
+			RealTimeTimer\Src\C#\RT_10min_sleep\RT_10min_sleep
+		</TestPath>
+		<TestProjName>
+			RT_10min_sleep.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+	</Test>
+</TestSuite>

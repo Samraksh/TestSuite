@@ -1,4 +1,0 @@
-NumLine: 32;
-
-I2C_Clk: 7;
-I2C_Data: 8;

@@ -1,0 +1,6 @@
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\OutputPort\obj\Debug\OutputPort.csprojResolveAssemblyReference.cache
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\OutputPort\obj\Debug\TinyCLR_DebugReferences.cache
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\OutputPort\obj\Debug\OutputPort.Resources.resources
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\OutputPort\obj\Debug\OutputPort.csproj.GenerateResource.Cache
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\OutputPort\obj\Debug\OutputPort.Resources.tinyresources
+D:\Work\TestSuite\GPIO\Src\C#\OutputPort\OutputPort\obj\Debug\TinyResGen.cache
