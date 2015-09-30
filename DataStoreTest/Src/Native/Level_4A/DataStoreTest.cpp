@@ -101,9 +101,9 @@ UINT16 DataStoreTest::GenerateRandomNumber(UINT16 upperBound)
 
 void Timer_3_Handler(void *arg)
 {
-	if(dataStoreTestObj.testCompleteCounter_3 == 0){
+	if(DataStoreTest::testCompleteCounter_3 == 0){
 		if(dataStoreTestObj.Read_And_Write()){
-			dataStoreTestObj.testCompleteCounter_3++;
+			DataStoreTest::testCompleteCounter_3++;
 			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
 			hal_printf("SUCCESS Timer_3_Handler: Simple read write successful\n");
 		}
@@ -115,9 +115,9 @@ void Timer_3_Handler(void *arg)
 
 void Timer_4_Handler(void *arg)
 {
-	if(dataStoreTestObj.testCompleteCounter_4 == 0){
+	if(DataStoreTest::testCompleteCounter_4 == 0){
 		if(dataStoreTestObj.Read_And_Write()){
-			dataStoreTestObj.testCompleteCounter_4++;
+			DataStoreTest::testCompleteCounter_4++;
 			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
 			hal_printf("SUCCESS Timer_4_Handler: Simple read write successful\n");
 		}
@@ -129,9 +129,9 @@ void Timer_4_Handler(void *arg)
 
 void Timer_5_Handler(void *arg)
 {
-	if(dataStoreTestObj.testCompleteCounter_5 == 0){
+	if(DataStoreTest::testCompleteCounter_5 == 0){
 		if(dataStoreTestObj.Read_And_Write()){
-			dataStoreTestObj.testCompleteCounter_5++;
+			DataStoreTest::testCompleteCounter_5++;
 			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
 			hal_printf("SUCCESS Timer_5_Handler: Simple read write successful\n");
 		}
@@ -143,9 +143,9 @@ void Timer_5_Handler(void *arg)
 
 void Timer_6_Handler(void *arg)
 {
-	if(dataStoreTestObj.testCompleteCounter_6 == 0){
+	if(DataStoreTest::testCompleteCounter_6 == 0){
 		if(dataStoreTestObj.Read_And_Write()){
-			dataStoreTestObj.testCompleteCounter_6++;
+			DataStoreTest::testCompleteCounter_6++;
 			//dataStoreTestObj.DisplayStats(true, "SUCCESS : Simple read write successful", NULL, 0);
 			hal_printf("SUCCESS Timer_6_Handler: Simple read write successful\n");
 		}
@@ -280,6 +280,21 @@ BOOL DataStoreTest::TestReadWrite_Virtual_Records()
 	for (UINT16 j = 3; j < 7; j++)
 	{
 		VirtTimer_Start( j );
+	}
+	
+	while(true)
+	{
+		hal_printf("DataStoreTest::testCompleteCounter_3 %u\n", DataStoreTest::testCompleteCounter_3);
+		hal_printf("DataStoreTest::testCompleteCounter_4 %u\n", DataStoreTest::testCompleteCounter_4);
+		hal_printf("DataStoreTest::testCompleteCounter_5 %u\n", DataStoreTest::testCompleteCounter_5);
+		hal_printf("DataStoreTest::testCompleteCounter_6 %u\n", DataStoreTest::testCompleteCounter_6);
+		if(DataStoreTest::testCompleteCounter_3 == 1 && DataStoreTest::testCompleteCounter_4 == 1 && DataStoreTest::testCompleteCounter_5 == 1 &&
+    			DataStoreTest::testCompleteCounter_6 == 1)
+    	{
+    		hal_printf("result=PASS\n");
+			hal_printf("resultParameter1=DataStore test Level_4A completed successfully\n");
+			HAL_Time_Sleep_MicroSeconds(1000000);
+    	}
 	}
 
 	return true;
