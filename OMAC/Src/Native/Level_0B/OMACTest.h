@@ -6,10 +6,10 @@
 #define OMACTEST_H_
 
 #include <tinyhal.h>
-#include <Samraksh\Mac_decl.h>
+#include <Samraksh/Mac_decl.h>
 #include <Samraksh/MAC/OMAC/OMAC.h>
 #include <Samraksh/VirtualTimer.h>
-#include <Samraksh\Message.h>
+#include <Samraksh/Message.h>
 
 typedef struct  {
 	UINT16 MSGID;
