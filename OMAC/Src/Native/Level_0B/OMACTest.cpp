@@ -58,7 +58,7 @@ BOOL OMACTest::Initialize(){
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(32, 0, 2000, FALSE, FALSE, Timer_32_Handler); //1 sec Timer in micro seconds
+	VirtTimer_SetTimer(32, 0, 50000, FALSE, FALSE, Timer_32_Handler); //1 sec Timer in micro seconds
 	return TRUE;
 }
 
@@ -79,8 +79,15 @@ void OMACTest::Receive(UINT16 size){
 	CPU_GPIO_SetPinState((GPIO_PIN)30, FALSE);
 #endif
 	Message_15_4_t** tempPtr = g_send_buffer.GetOldestPtr();
-	hal_printf("OMACTest::Receive\n");
+	hal_printf("start OMACTest::Receive\n");
+	hal_printf("OMACTest src is %u\n", (*tempPtr)->GetHeader()->src);
 	hal_printf("OMACTest dest is %u\n", (*tempPtr)->GetHeader()->dest);
+	UINT8* payload = (*tempPtr)->GetPayload();
+	//hal_printf("OMACTest payload is %d\n", *payload);
+	for(int i = 1; i <= 2; i++){
+		hal_printf("OMACTest payload is %d\n", payload[i-1]);
+	}
+
 	/*Payload_t *rcvmsg = (Payload_t *) msg;
 	if(rcvmsg->MSGID != RcvCount){
 		//CPU_GPIO_SetPinState((GPIO_PIN) 0, TRUE);
@@ -90,6 +97,7 @@ void OMACTest::Receive(UINT16 size){
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
 #endif
+	hal_printf("end OMACTest::Receive\n");
 }
 
 void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
@@ -107,7 +115,11 @@ void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
 
 BOOL OMACTest::Send(){
 	msg.MSGID = SendCount;
-	msg.data[10] = 10;
+	//msg.data[10] = 10;
+	for(int i = 1; i <= 2; i++){
+		msg.data[i-1] = i;
+	}
+
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
