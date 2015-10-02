@@ -19,6 +19,7 @@ const UINT16 ONEMSEC = 1000;
 const UINT16 ONEUSEC = 1000;
 
 OMACTest g_OMACTest;
+extern NeighborTable g_NeighborTable;
 extern OMACScheduler g_omac_scheduler;
 extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
@@ -130,8 +131,11 @@ BOOL OMACTest::Send(){
 	for(int i = 1; i <= 10; i++){
 		msg.data[i-1] = i;
 	}
-	UINT16 Nbr2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
 
+	UINT16 Nbr2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
+	if (g_NeighborTable.GetNeighborPtr(dest) == NULL) {
+		return FALSE;
+	}
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
