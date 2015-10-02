@@ -48,7 +48,7 @@ BOOL OMACTest::Initialize(){
 	//MF_NODE_ID=10;	//Set address
 	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	Config.Network = 138;
-	Config.NeighborLivenessDelay = 20000;
+	Config.NeighborLivenessDelay = 900000;
 	myEventHandler.SetReceiveHandler(OMACTest_ReceiveHandler);
 	myEventHandler.SetSendAckHandler(OMACTest_SendAckHandler);
 	MacId = OMAC;
