@@ -15,8 +15,12 @@
 
 //#define DEBUG_OMACTest 1
 
+const UINT16 ONEMSEC = 1000;
+const UINT16 ONEUSEC = 1000;
+
 OMACTest g_OMACTest;
 extern OMACScheduler g_omac_scheduler;
+extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 extern Buffer_15_4_t g_send_buffer;
 
@@ -59,7 +63,7 @@ BOOL OMACTest::Initialize(){
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(32, 0, 5000000, FALSE, FALSE, Timer_32_Handler); //1 sec Timer in micro seconds
+	VirtTimer_SetTimer(32, 0, 10*ONEMSEC*ONEUSEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
 	return TRUE;
 }
 
@@ -67,9 +71,9 @@ BOOL OMACTest::StartTest(){
 	msg.MSGID = 0;
 	SendCount = 0;
 	RcvCount = 0;
-	while(1){
+	//while(1){
 		VirtTimer_Start(32);
-	}
+	//}
 
 	return TRUE;
 }
@@ -81,13 +85,19 @@ void OMACTest::Receive(UINT16 size){
 #endif
 	Message_15_4_t** tempPtr = g_send_buffer.GetOldestPtr();
 	hal_printf("start OMACTest::Receive\n");
-	hal_printf("OMACTest src is %u\n", (*tempPtr)->GetHeader()->src);
-	hal_printf("OMACTest dest is %u\n", (*tempPtr)->GetHeader()->dest);
-	UINT8* payload = (*tempPtr)->GetPayload();
-	//hal_printf("OMACTest payload is %d\n", *payload);
-	for(int i = 1; i <= 2; i++){
-		hal_printf("OMACTest payload is %d\n", payload[i-1]);
-	}
+	//if(g_OMAC.GetAddress() != (*tempPtr)->GetHeader()->src){
+		hal_printf("OMACTest src is %u\n", (*tempPtr)->GetHeader()->src);
+		hal_printf("OMACTest dest is %u\n", (*tempPtr)->GetHeader()->dest);
+		UINT8* payload = (*tempPtr)->GetPayload();
+		hal_printf("OMACTest payload is \n");
+		for(int i = 1; i <= 10; i++){
+			hal_printf(" %d\n", payload[i-1]);
+		}
+		hal_printf("\n");
+	//}
+	//else {
+		//hal_printf("OMACTest sender receiving its own msg??\n");
+	//}
 
 	/*Payload_t *rcvmsg = (Payload_t *) msg;
 	if(rcvmsg->MSGID != RcvCount){
@@ -117,7 +127,7 @@ void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
 BOOL OMACTest::Send(){
 	msg.MSGID = SendCount;
 	//msg.data[10] = 10;
-	for(int i = 1; i <= 2; i++){
+	for(int i = 1; i <= 10; i++){
 		msg.data[i-1] = i;
 	}
 	UINT16 Nbr2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
