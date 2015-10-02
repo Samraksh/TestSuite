@@ -59,7 +59,7 @@ BOOL OMACTest::Initialize(){
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(32, 0, 50000, FALSE, FALSE, Timer_32_Handler); //1 sec Timer in micro seconds
+	VirtTimer_SetTimer(32, 0, 5000000, FALSE, FALSE, Timer_32_Handler); //1 sec Timer in micro seconds
 	return TRUE;
 }
 
