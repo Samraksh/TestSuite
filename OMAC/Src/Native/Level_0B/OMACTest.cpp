@@ -133,7 +133,7 @@ BOOL OMACTest::Send(){
 	}
 
 	UINT16 Nbr2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
-	if (g_NeighborTable.GetNeighborPtr(dest) == NULL) {
+	if (g_NeighborTable.GetNeighborPtr(Nbr2beFollowed) == NULL) {
 		return FALSE;
 	}
 #ifdef DEBUG_OMACTest
