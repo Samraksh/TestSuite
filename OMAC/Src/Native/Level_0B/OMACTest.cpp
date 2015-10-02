@@ -15,13 +15,13 @@
 
 //#define DEBUG_OMACTest 1
 
-const UINT16 ONEMSEC = 1000;
-const UINT16 ONEUSEC = 1000;
+const UINT16 ONESEC_IN_MSEC = 1000;
+const UINT16 ONEMSEC_IN_USEC = 1000;
 
 OMACTest g_OMACTest;
 extern NeighborTable g_NeighborTable;
-extern OMACScheduler g_omac_scheduler;
 extern OMACType g_OMAC;
+extern OMACScheduler g_omac_scheduler;
 extern UINT16 MF_NODE_ID;
 extern Buffer_15_4_t g_send_buffer;
 
@@ -64,7 +64,7 @@ BOOL OMACTest::Initialize(){
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(32, 0, 10*ONEMSEC*ONEUSEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
+	VirtTimer_SetTimer(32, 0, 60*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
 	return TRUE;
 }
 
