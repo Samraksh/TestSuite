@@ -16,6 +16,7 @@
 //#define DEBUG_OMACTest 1
 
 OMACTest g_OMACTest;
+extern OMACScheduler g_omac_scheduler;
 extern UINT16 MF_NODE_ID;
 extern Buffer_15_4_t g_send_buffer;
 
@@ -119,14 +120,16 @@ BOOL OMACTest::Send(){
 	for(int i = 1; i <= 2; i++){
 		msg.data[i-1] = i;
 	}
+	UINT16 Nbr2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
 
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 #endif
-	Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
-	SendCount++;
+	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
+	bool ispcktScheduled = Mac_Send(MacId, Nbr2beFollowed, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
+	if (ispcktScheduled) {SendCount++;}
 }
 
 void OMACTest_Initialize(){
