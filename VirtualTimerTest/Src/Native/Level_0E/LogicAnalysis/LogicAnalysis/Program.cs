@@ -27,7 +27,7 @@ namespace LogicAnalysis
         const double expectedMinTime0 = 0.795f;
         const double expectedMinTime1 = 0.596f;
         const double expectedMinTime2 = 0.397f;
-        const double expectedMinTime3 = 0.018f;
+        const double expectedMinTime3 = 0.017f;
 
         const double expectedMaxTime0 = 1.201f;
         const double expectedMaxTime1 = 1.001f;
@@ -313,7 +313,7 @@ namespace LogicAnalysis
                     {
                         result0 = false;
                         System.Diagnostics.Debug.WriteLine("Line 0 failed");
-                        System.Diagnostics.Debug.WriteLine(return0.ToString() + " < " + (expectedFreq0 * (1 - accuracy)).ToString() + " " + return0.ToString() + " > " + (expectedFreq0 * (1 + accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime0.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime0.ToString());
+                        System.Diagnostics.Debug.WriteLine("freq: " + return0.ToString() + " min freq:" + (expectedFreq0 * (1 - accuracy)).ToString() + " max freq:" + (expectedFreq0 * (1 + accuracy)).ToString() + " minTime:" + minTime.ToString() + " exp minTime:" + expectedMinTime0.ToString() + " maxTime:" + maxTime.ToString() + " exp maxTime:" + expectedMaxTime0.ToString());
                     }
                     returnStr0 = return0.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
 
@@ -350,7 +350,7 @@ namespace LogicAnalysis
                     {
                         result1 = false;
                         System.Diagnostics.Debug.WriteLine("Line 1 failed");
-                        System.Diagnostics.Debug.WriteLine(return1.ToString() + " < " + (expectedFreq1 * (1 + accuracy)).ToString() + " " + return1.ToString() + " > " + (expectedFreq1 * (1 - accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime1.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime1.ToString());
+                        System.Diagnostics.Debug.WriteLine("freq: " + return1.ToString() + " min freq:" + (expectedFreq1 * (1 - accuracy)).ToString() + " max freq:" + (expectedFreq1 * (1 + accuracy)).ToString() + " minTime:" + minTime.ToString() + " exp minTime:" + expectedMinTime1.ToString() + " maxTime:" + maxTime.ToString() + " exp maxTime:" + expectedMaxTime1.ToString());
                     }
                     returnStr1 = return1.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
 
@@ -386,7 +386,7 @@ namespace LogicAnalysis
                     {
                         result2 = false;
                         System.Diagnostics.Debug.WriteLine("Line 2 failed");
-                        System.Diagnostics.Debug.WriteLine(return2.ToString() + " < " + (expectedFreq2 * (1 + accuracy)).ToString() + " " + return2.ToString() + " > " + (expectedFreq2 * (1 - accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime2.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime2.ToString());
+                        System.Diagnostics.Debug.WriteLine("freq: " + return2.ToString() + " min freq:" + (expectedFreq2 * (1 - accuracy)).ToString() + " max freq:" + (expectedFreq2 * (1 + accuracy)).ToString() + " minTime:" + minTime.ToString() + " exp minTime:" + expectedMinTime2.ToString() + " maxTime:" + maxTime.ToString() + " exp maxTime:" + expectedMaxTime2.ToString());
                     }
                     returnStr2 = return2.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
                 }
@@ -405,7 +405,7 @@ namespace LogicAnalysis
                     {
                         result3 = false;
                         System.Diagnostics.Debug.WriteLine("Line 3 failed");
-                        System.Diagnostics.Debug.WriteLine(return3.ToString() + " < " + (expectedFreq3 * (1 - accuracy)).ToString() + " " + return3.ToString() + " > " + (expectedFreq3 * (1 + accuracy)).ToString() + " " + minTime.ToString() + " > " + expectedMinTime3.ToString() + " " + maxTime.ToString() + " < " + expectedMaxTime3.ToString());
+                        System.Diagnostics.Debug.WriteLine("freq: " + return3.ToString() + " min freq:" + (expectedFreq3 * (1 - accuracy)).ToString() + " max freq:" + (expectedFreq3 * (1 + accuracy)).ToString() + " minTime:" + minTime.ToString() + " exp minTime:" + expectedMinTime3.ToString() + " maxTime:" + maxTime.ToString() + " exp maxTime:" + expectedMaxTime3.ToString());                        
                     }
                     returnStr3 = return3.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
                     
