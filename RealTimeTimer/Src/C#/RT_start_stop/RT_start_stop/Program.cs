@@ -73,7 +73,7 @@ namespace TestSuite
             {
 				while (true){}
                 //The 2nd parameter is in usec.
-                RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition, 0);
+                RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition);
                 RT_Timer.OnInterrupt += RT_EventHandler;
             }
             catch (Exception)

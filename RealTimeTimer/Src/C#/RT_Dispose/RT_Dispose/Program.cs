@@ -85,15 +85,15 @@ namespace TestSuite
 			try
             {
                 //The 2nd parameter is in usec.
-                RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition, 0);
+                RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition);
                 RT_Timer.OnInterrupt += RT_EventHandler1;
 
 				Thread.Sleep(10000);
-				Samraksh.eMote.RealTime.Timer.Dispose();
+				RT_Timer.Dispose();
 
 				Thread.Sleep(1000);
 
-				RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition*2, 0);
+				RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition*2);
                 RT_Timer.OnInterrupt += RT_EventHandler2;
             }
             catch (Exception)

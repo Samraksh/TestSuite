@@ -3,7 +3,6 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
 using ParameterClass;
-//using Samraksh.eMote.RealTime;
 using Samraksh.eMote.RealTime;
 using Samraksh.eMote.DotNow;
 
@@ -72,11 +71,11 @@ namespace TestSuite
 			try
             {
                 //The 2nd parameter is in usec.
-                RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition, 0);
+                RT_Timer = new Samraksh.eMote.RealTime.Timer(timeTransition);
                 RT_Timer.OnInterrupt += RT_EventHandler;
 
 				Thread.Sleep(5000);
-				Samraksh.eMote.RealTime.Timer.Change(0, ((uint)(timeTransition/3)) );
+				RT_Timer.Change(0, ((uint)(timeTransition/3)) );
             }
             catch (Exception)
             {

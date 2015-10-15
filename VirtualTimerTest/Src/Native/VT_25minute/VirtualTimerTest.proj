@@ -56,7 +56,7 @@
   <!--Import Project="$(SPOCLIENT)\Framework\Features\USB_Port.featureproj" Condition="'$(USB_PORT_FEATUREPROJ)'==''" /-->
   <!--Import Project="$(SPOCLIENT)\Framework\Features\Usb.featureproj" /-->
   <Import Project="$(SPOCLIENT)\Framework\Features\OneWire.featureproj" />
-  <Import Project="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Samraksh_eMote\Samraksh_eMote.featureproj" />
+  <Import Project="$(SPOCLIENT)\DeviceCode\pal\Samraksh\Samraksh_eMote\Samraksh_eMote.featureproj" />
   <Import Project="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.featureproj" />
   <Import Project="$(SPOCLIENT)\DeviceCode\pal\Samraksh\Samraksh_eMote_RealTime\Samraksh_eMote_RealTime.featureproj" />
   <Import Project="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Samraksh_eMote_Net\Samraksh_eMote_Net.featureproj" />
@@ -265,6 +265,10 @@
     <DriverLibs Include="Crypto_stub.$(LIB_EXT)" />
     <RequiredProjects Include="$(SPOCLIENT)\Crypto\stubs\dotNetMF.proj" />
   </ItemGroup>
+  <!-- ItemGroup>
+    <DriverLibs Include="Crypto.$(LIB_EXT)" />
+    <RequiredProjects Include="$(SPOCLIENT)\Crypto\dotNetMF.proj" />
+  </ItemGroup -->
   <ItemGroup>
     <PlatformIndependentLibs Include="Debugger_full.$(LIB_EXT)" />
     <RequiredProjects Include="$(SPOCLIENT)\CLR\Debugger\dotnetmf_full.proj" />
@@ -562,7 +566,7 @@
   <!--     - - - - - - - -               Samraksh's Extensions   - - - - - - - -                  -->
   <!-- 									Hardware Extension        								-->
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Samraksh_eMote\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\pal\Samraksh\Samraksh_eMote\dotNetMF.proj" />
     <DriverLibs Include="Samraksh_eMote.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
@@ -633,6 +637,11 @@
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\radio\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_radio_rf231.$(LIB_EXT)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_dirver_control.$(LIB_EXT)" />
   </ItemGroup>
   
   <!--                      	    Wireless Networking Stack ::End                      -->
