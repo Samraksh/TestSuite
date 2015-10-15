@@ -123,7 +123,7 @@ void OMACTest::Receive(UINT16 size){
 		hal_printf("OMACTest dest is %u\n", (*tempPtr)->GetHeader()->dest);
 		UINT8* payload = (*tempPtr)->GetPayload();
 		hal_printf("OMACTest payload is \n");
-		for(int i = 1; i <= 10; i++){
+		for(int i = 1; i <= payloadSize; i++){
 			hal_printf(" %d\n", payload[i-1]);
 		}
 		hal_printf("\n");
