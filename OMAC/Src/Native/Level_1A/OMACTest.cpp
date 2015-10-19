@@ -36,32 +36,7 @@ void Timer_32_Handler(void * arg){
 #endif
 	txCounter++;
 	g_OMACTest.Send();
-	UINT16 Neighbor2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
-	//UINT32 m_nextWakeupSlot = g_DataReceptionHandler.GetWakeupSlot();
-	UINT64 currentTicks = HAL_Time_CurrentTicks();
-
-	hal_printf("---------%u--------\n", txCounter);
-
-	hal_printf( "[LT: %llu NT: %llu]\n", currentTicks, g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NeighborTime(Neighbor2beFollowed, currentTicks) );
-	hal_printf("Node %d's nextWakeupSlot: %u\n", g_OMAC.GetAddress(), g_DataReceptionHandler.GetWakeupSlot());
-	hal_printf("Node %d's current slotNumber: %u\n", g_OMAC.GetAddress(), g_omac_scheduler.GetSlotNumber());
-
-	hal_printf("-----------------\n");
-
-	INT64 tmp_nbrGlobalTime = g_DataTransmissionHandler.GetNeighborGlobalTime();
-	//UINT32 m_nextTXTicks = g_DataTransmissionHandler.GetTxTicks();
-	//UINT32 m_nextTXCounter = g_DataTransmissionHandler.GetTxCounter();
-
-	if(tmp_nbrGlobalTime > 0){
-		hal_printf("Neighbor node %u's global time: %lld [NT should be equal to this]\n", Neighbor2beFollowed, tmp_nbrGlobalTime);
-	}
-	hal_printf("Neighbor node %u's wakeup slot: %u [should be equal to current slotNumber on other node]\n", Neighbor2beFollowed, g_DataTransmissionHandler.GetNeighborWakeupSlot());
-	//hal_printf("Neighbor node %u's next wakeup: %u [should be equal to current slotNumber on other node]\n", Neighbor2beFollowed, g_DataTransmissionHandler.GetNeighborNextWakeup());
-	hal_printf("Neighbor node %d's nextTXTicks: %llu [should be equal to LT on other node]\n", Neighbor2beFollowed, g_DataTransmissionHandler.GetTxTicks());
-	//hal_printf("Neighbor node %d's nextTXCounter: %u [should be equal to current slotNumber on other node]\n", Neighbor2beFollowed, g_DataTransmissionHandler.GetTxCounter());
-
-	hal_printf("\n");
-
+	hal_printf("---------%u--------\n\n", txCounter);
 
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
@@ -112,6 +87,23 @@ BOOL OMACTest::StartTest(){
 	return TRUE;
 }
 
+static bool MyStrCmp(char* str1, char* str2)
+{
+	bool retVal = false;
+	int i = 0;
+	while(str1[i] != '\0' && str2[i] != '\0')
+	{
+		if(str1[i] != str2[i]){
+			retVal = false;
+			break;
+		}
+		else {
+			retVal = true;
+		}
+		i++;
+	}
+	return retVal;
+}
 
 void OMACTest::Receive(void* tmpMsg, UINT16 size){
 #ifdef DEBUG_OMACTest
@@ -132,14 +124,58 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 		hal_printf(" %d\n", payload->data[i-1]);
 	}
 	hal_printf("msgContent: %s\n", payload->msgContent);
+	//char* tmpMsgContent = (char*)private_malloc(payloadSize);
+	//char* tmpMsgContent = msg.msgContent;
+	if(MyStrCmp(payload->msgContent, (char*)"PING")){
+		hal_printf("Inside ping\n");
+		msgId += 1;
+		msg.MSGID = msgId;
+		hal_printf("msgId inside ping is %d\n", msg.MSGID);
+		//tmpMsgContent = (char*)"PONG";
+		msg.msgContent = (char*)"PONG";
+	}
+	else if(MyStrCmp(payload->msgContent, (char*)"PONG")){
+		hal_printf("Inside pong\n");
+		msgId += 2;
+		msg.MSGID = msgId;
+		hal_printf("msgId inside pong is %d\n", msg.MSGID);
+		//tmpMsgContent = (char*)"PING";
+		msg.msgContent = (char*)"PING";
+	}
+	else {
+		hal_printf("something wrong\n");
+	}
 
+	hal_printf("\n");
+	//private_free(tmpMsgContent);
+
+	/*Message_15_4_t** tempPtr = g_send_buffer.GetOldestPtr();
+	hal_printf("start OMACTest::Receive\n");
+	//if(g_OMAC.GetAddress() != (*tempPtr)->GetHeader()->src){
+		hal_printf("OMACTest src is %u\n", (*tempPtr)->GetHeader()->src);
+		hal_printf("OMACTest dest is %u\n", (*tempPtr)->GetHeader()->dest);
+		UINT8* payload = (*tempPtr)->GetPayload();
+		hal_printf("OMACTest payload is \n");
+		for(int i = 1; i <= payloadSize; i++){
+			hal_printf(" %d\n", payload[i-1]);
+		}
+		hal_printf("\n");*/
+	//}
+	//else {
+		//hal_printf("OMACTest sender receiving its own msg??\n");
+	//}
+
+	/*Payload_t *rcvmsg = (Payload_t *) msg;
+	if(rcvmsg->MSGID != RcvCount){
+		//CPU_GPIO_SetPinState((GPIO_PIN) 0, TRUE);
+	}
+	RcvCount = rcvmsg->MSGID;*/
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
 #endif
 	hal_printf("end OMACTest::Receive\n");
 }
-
 
 void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
 #ifdef DEBUG_OMACTest
@@ -155,13 +191,18 @@ void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
 
 
 BOOL OMACTest::Send(){
+	static bool flag = false;
 	//msg.data[10] = 10;
 	for(int i = 1; i <= payloadSize; i++){
 		msg.data[i-1] = i;
 	}
-
-	msg.MSGID = SendCount;
-	msg.msgContent = (char*)"PING";
+	//char* tmpMsgContent = msg.msgContent;
+	if(!flag){
+		msg.MSGID = SendCount;
+		//tmpMsgContent = (char*)"PING";
+		msg.msgContent = (char*)"PING";
+		flag = true;
+	}
 
 	UINT16 Neighbor2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
 	if (g_NeighborTable.GetNeighborPtr(Neighbor2beFollowed) == NULL) {
@@ -176,7 +217,7 @@ BOOL OMACTest::Send(){
 	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
 	hal_printf("msgId before sending is %d\n", msg.MSGID);
 	bool ispcktScheduled = Mac_Send(MacId, Neighbor2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));
-	if (ispcktScheduled == 0) {SendCount++;}
+	//if (ispcktScheduled == 0) {SendCount++;}
 }
 
 void OMACTest_Initialize(){
