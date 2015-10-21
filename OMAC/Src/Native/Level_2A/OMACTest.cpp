@@ -260,7 +260,7 @@ BOOL OMACTest::Send_fan_in(){
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 #endif
 	hal_printf("Sending from node %d to node %d; msgID is %d\n", g_OMAC.GetAddress(), Neighbor2beFollowed, msg.MSGID);
-	ispcktScheduled = Mac_Send(MacId, Neighbor2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));
+	ispcktScheduled = Mac_Send(Neighbor2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));
 	if(!ispcktScheduled){
 		hal_printf("Send to neighbor node %d failed \n", Neighbor2beFollowed);
 	}
@@ -311,12 +311,12 @@ BOOL OMACTest::Send_fan_out(){
 #endif
 	hal_printf("msgId is %d\n", msg.MSGID);
 	hal_printf("Sending from node %d to node %d\n", g_OMAC.GetAddress(), Neighbor2beFollowed1);
-	ispcktScheduled = Mac_Send(MacId, Neighbor2beFollowed1, MFM_DATA, (void*) &msg, sizeof(Payload_t));
+	ispcktScheduled = Mac_Send(Neighbor2beFollowed1, MFM_DATA, (void*) &msg, sizeof(Payload_t));
 	if(!ispcktScheduled){
 		hal_printf("Send to neighbor node %d failed \n", Neighbor2beFollowed1);
 	}
 	hal_printf("Sending from node %d to node %d\n", g_OMAC.GetAddress(), Neighbor2beFollowed2);
-	ispcktScheduled = Mac_Send(MacId, Neighbor2beFollowed2, MFM_DATA, (void*) &msg, sizeof(Payload_t));
+	ispcktScheduled = Mac_Send(Neighbor2beFollowed2, MFM_DATA, (void*) &msg, sizeof(Payload_t));
 	if(!ispcktScheduled){
 		hal_printf("Send to neighbor node %d failed \n", Neighbor2beFollowed2);
 	}
