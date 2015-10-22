@@ -150,18 +150,27 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	if(MyStrCmp(payload->msgContent, (char*)"PING")){
 		if(payload->pongPayload.MSGID == 0){
 			pingPayload.pongPayload.MSGID = sendPongCount;
+			hal_printf("1. Sending a pong. msgId is %d\n", pingPayload.pongPayload.MSGID);
 			pingPayload.pongPayload.msgContent = (char*)"PONG";
 		}
+		//When a node gets a ping, check if its msgId is +1 of pong msgId.
+		//If yes, then it means that a pong reached the other node and that the other node
+		//is responding with a new ping.
 		if(payload->MSGID == sendPongCount+1){
-			sendPongCount++;
+			ASSERT(sendPongCount+1 == sendPingCount);
+			sendPongCount = sendPingCount;
 			pingPayload.pongPayload.MSGID = sendPongCount;
+			hal_printf("2. Sending a pong. msgId is %d\n", pingPayload.pongPayload.MSGID);
 			pingPayload.pongPayload.msgContent = (char*)"PONG";
 		}
 		pingPayload.MSGID = sendPingCount;
-		hal_printf("Sending a pong. msgId is %d\n", pingPayload.MSGID);
+		hal_printf("Sending a ping. msgId is %d\n", pingPayload.MSGID);
 		pingPayload.msgContent = (char*)"PING";
 	}
 
+	//When a node gets a pong, check if its msgId matches the current ping.
+	//If yes, then it means that the ping was reached.
+	//Increase the ping msgID.
 	if(MyStrCmp(payload->pongPayload.msgContent, (char*)"PONG")){
 		if(payload->pongPayload.MSGID == sendPingCount){
 			sendPingCount++;
@@ -207,7 +216,6 @@ BOOL OMACTest::Send(){
 
 	hal_printf("ping msgId before sending is %d\n", pingPayload.MSGID);
 	hal_printf("pong msgId before sending is %d\n", pingPayload.pongPayload.MSGID);
-	hal_printf("pong msgContent before sending is %s\n", pingPayload.pongPayload.msgContent);
 	bool ispcktScheduled = Mac_Send(Neighbor2beFollowed, MFM_DATA, (void*) &pingPayload, sizeof(Payload_t_ping));
 }
 
