@@ -14,19 +14,27 @@
 const char payloadSize = 5;
 
 typedef struct  {
-	UINT16 MSGID;
+	UINT32 MSGID;
+	char* msgContent;
+}Payload_t_pong;
+
+typedef struct  {
+	UINT32 MSGID;
 	UINT8 data[payloadSize];
 	char* msgContent;
-}Payload_t;
+	Payload_t_pong pongPayload;
+}Payload_t_ping;
+
 
 class OMACTest{
 public:
 	UINT8 MyAppID;
-	Payload_t msg;
+	Payload_t_ping pingPayload;
 	MacEventHandler myEventHandler;
 	MacConfig Config;
 	UINT8 MacId;
-	UINT16 SendCount;
+	static UINT32 sendPingCount;
+	static UINT32 sendPongCount;
 	UINT16 RcvCount;
 
 	BOOL Initialize();
@@ -39,6 +47,9 @@ public:
 //extern OMACTest g_OMACTest;
 
 void OMACTest_Initialize();
+
+UINT32 OMACTest::sendPingCount = 1;
+UINT32 OMACTest::sendPongCount = 1;
 
 #endif /* OMACTEST_H_ */
 
