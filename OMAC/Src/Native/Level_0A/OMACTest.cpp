@@ -11,8 +11,8 @@
 //extern VirtualTimer gVirtualTimerObject;
 //extern VirtualTimerMapper gVirtualTimerMapperObject;
 extern OMACTest gOMACTest;
-extern OMACSchedulerBora g_omac_scheduler;
-extern OMACTypeBora g_OMAC;
+extern OMACScheduler g_omac_scheduler;
+extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
 
@@ -28,7 +28,7 @@ extern UINT16 MF_NODE_ID;
 #define NEIGHBORCLOCKMONITORPERIOD 800000
 #define INITIALDELAY 100000
 
-void OMACTest_ReceiveHandler (UINT16 NumOfPendingPackets){
+void OMACTest_ReceiveHandler (void* msg, UINT16 NumOfPendingPackets){
 }
 
 void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){

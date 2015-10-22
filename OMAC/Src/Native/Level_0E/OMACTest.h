@@ -30,7 +30,7 @@ public:
 
 	BOOL Initialize();
 	BOOL StartTest();
-	void Receive(UINT16 size);
+	void Receive(void* msg, UINT16 size);
 	BOOL Send();
 	void SendAck(void *msg, UINT16 size, NetOpStatus status);
 };

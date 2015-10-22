@@ -175,7 +175,7 @@ BOOL OMACTest::Send(){
 #endif
 	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
 	hal_printf("msgId before sending is %d\n", msg.MSGID);
-	bool ispcktScheduled = Mac_Send(MacId, Neighbor2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));
+	bool ispcktScheduled = Mac_Send(Neighbor2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));
 	if (ispcktScheduled == 0) {SendCount++;}
 }
 

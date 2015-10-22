@@ -37,8 +37,8 @@ void Timer_32_Handler(void * arg){
 
 // Typedef defining the signature of the receive function
 //void ReceiveHandler (void *msg, UINT16 Size, UINT16 Src, BOOL Unicast, UINT8 RSSI, UINT8 LinkQuality){
-void OMACTest_ReceiveHandler (UINT16 size){
-	return g_OMACTest.Receive(size);
+void OMACTest_ReceiveHandler (void* msg, UINT16 size){
+	return g_OMACTest.Receive(msg, size);
 }
 
 void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
@@ -79,17 +79,17 @@ BOOL OMACTest::StartTest(){
 	return TRUE;
 }
 
-void OMACTest::Receive(UINT16 size){
+void OMACTest::Receive(void* tmpMsg, UINT16 size){
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN)30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN)30, FALSE);
 #endif
-	Message_15_4_t** tempPtr = g_send_buffer.GetOldestPtr();
+	Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
 	hal_printf("start OMACTest::Receive\n");
 	//if(g_OMAC.GetAddress() != (*tempPtr)->GetHeader()->src){
-		hal_printf("OMACTest src is %u\n", (*tempPtr)->GetHeader()->src);
-		hal_printf("OMACTest dest is %u\n", (*tempPtr)->GetHeader()->dest);
-		UINT8* payload = (*tempPtr)->GetPayload();
+		hal_printf("OMACTest src is %u\n", rcvdMsg->GetHeader()->src);
+		hal_printf("OMACTest dest is %u\n", rcvdMsg->GetHeader()->dest);
+		UINT8* payload = rcvdMsg->GetPayload();
 		hal_printf("OMACTest payload is \n");
 		for(int i = 1; i <= 10; i++){
 			hal_printf(" %d\n", payload[i-1]);
@@ -100,11 +100,6 @@ void OMACTest::Receive(UINT16 size){
 		//hal_printf("OMACTest sender receiving its own msg??\n");
 	//}
 
-	/*Payload_t *rcvmsg = (Payload_t *) msg;
-	if(rcvmsg->MSGID != RcvCount){
-		//CPU_GPIO_SetPinState((GPIO_PIN) 0, TRUE);
-	}
-	RcvCount = rcvmsg->MSGID;*/
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
@@ -142,7 +137,7 @@ BOOL OMACTest::Send(){
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 #endif
 	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
-	bool ispcktScheduled = Mac_Send(MacId, Nbr2beFollowed, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
+	bool ispcktScheduled = Mac_Send(Nbr2beFollowed, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
 	if (ispcktScheduled) {SendCount++;}
 }
 
