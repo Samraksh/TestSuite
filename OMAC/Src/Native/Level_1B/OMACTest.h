@@ -13,10 +13,16 @@
 
 const char payloadSize = 5;
 
-
 typedef struct  {
 	UINT32 MSGID;
 	char* msgContent;
+}Payload_t_pong;
+
+typedef struct  {
+	UINT32 MSGID;
+	UINT8 data[payloadSize];
+	char* msgContent;
+	Payload_t_pong pongPayload;
 }Payload_t_ping;
 
 
@@ -28,7 +34,7 @@ public:
 	MacConfig Config;
 	UINT8 MacId;
 	static UINT32 sendPingCount;
-	static UINT32 recvCount;
+	static UINT32 sendPongCount;
 	UINT16 RcvCount;
 
 	BOOL Initialize();
@@ -36,7 +42,6 @@ public:
 	void Receive(void* msg, UINT16 size);
 	BOOL Send();
 	void SendAck(void *msg, UINT16 size, NetOpStatus status);
-	void GetStatistics();
 };
 
 //extern OMACTest g_OMACTest;
@@ -44,7 +49,7 @@ public:
 void OMACTest_Initialize();
 
 UINT32 OMACTest::sendPingCount = 1;
-UINT32 OMACTest::recvCount = 0;
+UINT32 OMACTest::sendPongCount = 1;
 
 #endif /* OMACTEST_H_ */
 

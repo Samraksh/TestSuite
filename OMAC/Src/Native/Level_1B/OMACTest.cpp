@@ -22,24 +22,21 @@ OMACTest g_OMACTest;
 extern NeighborTable g_NeighborTable;
 extern OMACType g_OMAC;
 extern OMACScheduler g_omac_scheduler;
+extern UINT16 MF_NODE_ID;
+extern Buffer_15_4_t g_send_buffer;
+extern DataTransmissionHandler g_DataTransmissionHandler;
+extern DataReceptionHandler g_DataReceptionHandler;
 
-const UINT32 endOfTestCounter = 100;
-const UINT32 delayBetweenPackets = 5;	//in secs
+UINT32 txCounter = 0;
 
 
 void Timer_32_Handler(void * arg){
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
 #endif
+	txCounter++;
 	g_OMACTest.Send();
-	hal_printf("---------%u--------\n\n", g_OMACTest.sendPingCount);
-
-	if(g_OMACTest.sendPingCount == endOfTestCounter){
-		VirtTimer_Stop(32);
-		g_OMACTest.GetStatistics();
-	}
-
-	g_OMACTest.sendPingCount++;
+	hal_printf("---------%u--------\n\n", txCounter);
 
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
@@ -54,14 +51,6 @@ void OMACTest_ReceiveHandler (void *msg, UINT16 size){
 
 void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
 	g_OMACTest.SendAck(msg,size,status);
-}
-
-void OMACTest::GetStatistics()
-{
-	hal_printf("OMACTest Level_1A. I am node: %d\n", g_OMAC.GetAddress());
-	hal_printf("Total packets transmitted: %u\n", sendPingCount);
-	hal_printf("Total packets received: %u\n", recvCount);
-	hal_printf("percentage received: %d %\n", (recvCount/sendPingCount)*100);
 }
 
 BOOL OMACTest::Initialize(){
@@ -83,11 +72,19 @@ BOOL OMACTest::Initialize(){
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(32, 0, delayBetweenPackets*ONEMSEC_IN_USEC*ONESEC_IN_MSEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
+	VirtTimer_SetTimer(32, 0, 5*ONEMSEC_IN_USEC*ONESEC_IN_MSEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
 
 	//<start> Initialize payload
+	for(int i = 1; i <= payloadSize; i++){
+		pingPayload.data[i-1] = i;
+	}
 	pingPayload.MSGID = sendPingCount;
 	pingPayload.msgContent = (char*)"PING";
+
+	//pongPayload = (Payload_t_pong*)private_malloc(sizeof(Payload_t_pong));
+	//pingPayload.pongPayload = pongPayload;
+	pingPayload.pongPayload.MSGID = 0;
+	pingPayload.pongPayload.msgContent = (char*)"NULL";
 	//<end> Initialize payload
 
 	return TRUE;
@@ -102,6 +99,23 @@ BOOL OMACTest::StartTest(){
 	return TRUE;
 }
 
+static bool MyStrCmp(char* str1, char* str2)
+{
+	bool retVal = false;
+	int i = 0;
+	while(str1[i] != '\0' && str2[i] != '\0')
+	{
+		if(str1[i] != str2[i]){
+			retVal = false;
+			break;
+		}
+		else {
+			retVal = true;
+		}
+		i++;
+	}
+	return retVal;
+}
 
 void OMACTest::Receive(void* tmpMsg, UINT16 size){
 #ifdef DEBUG_OMACTest
@@ -109,17 +123,53 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	CPU_GPIO_SetPinState((GPIO_PIN)30, FALSE);
 #endif
 
-	hal_printf("OMACTest::Receive start. I am node: %d\n", g_OMAC.GetAddress());
-	recvCount++;
-	hal_printf("OMACTest::Receive recvCount is %d\n", recvCount);
+	hal_printf("start OMACTest::Receive. I am node: %d\n", g_OMAC.GetAddress());
 	Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
 	hal_printf("OMACTest src is %u\n", rcvdMsg->GetHeader()->src);
 	hal_printf("OMACTest dest is %u\n", rcvdMsg->GetHeader()->dest);
 
 	Payload_t_ping* payload = (Payload_t_ping*)rcvdMsg->GetPayload();
-	hal_printf("PING msgID: %d\n", payload->MSGID);
-	hal_printf("PING msgContent: %s\n", payload->msgContent);
+	UINT16 msgId = payload->MSGID;
+	hal_printf("PING msgID: %d\n", msgId);
+	/*hal_printf("PING payload is \n");
+	for(int i = 1; i <= payloadSize; i++){
+		hal_printf(" %d\n", payload->data[i-1]);
+	}
+	hal_printf("PING msgContent: %s\n", payload->msgContent);*/
 
+	hal_printf("PONG msgID: %d\n", payload->pongPayload.MSGID);
+	hal_printf("PONG msgContent: %s\n", payload->pongPayload.msgContent);
+
+	//When a node X sends a "PING", it is expecting to hear back a "PONG" with same msgID from node Y.
+	//Node X, on hearing a "PONG", checks if PONG msgID is same as PING msgID.
+	//	If yes, increments global static msgID and sends a new "PING".
+	//	If no, keeps sending old PING.
+	//
+	//When a node gets a ping, check if its msgId is +1 of pong msgId.
+	//If yes, then it means that a pong reached the other node and that the other node
+	//is responding with a new ping.
+	if(payload->MSGID == sendPongCount+1){
+		ASSERT(sendPongCount+1 == sendPingCount);
+		sendPongCount = sendPingCount;
+		pingPayload.pongPayload.MSGID = sendPongCount;
+		//hal_printf("2. Sending a PONG. msgId is %d\n", pingPayload.pongPayload.MSGID);
+		pingPayload.pongPayload.msgContent = (char*)"PONG";
+	}
+	//Continue to send a "PONG", until "PING" msgID from other node is +1 of current PONG.
+	//If yes, then send a new PONG
+	if(payload->pongPayload.MSGID == 0){
+		pingPayload.pongPayload.MSGID = sendPongCount;
+		hal_printf("1. Sending a PONG. msgId is %d\n", pingPayload.pongPayload.MSGID);
+		pingPayload.pongPayload.msgContent = (char*)"PONG";
+	}
+	//When a node gets a pong, check if its msgId matches the current ping.
+	//If yes, then it means that the ping reached.
+	//Increase the ping msgID.
+	else if(payload->pongPayload.MSGID == sendPingCount){
+		sendPingCount++;
+	}
+	hal_printf("current sendPingCount: %d\n", sendPingCount);
+	hal_printf("current sendPongCount: %d\n", sendPongCount);
 	pingPayload.MSGID = sendPingCount;
 	pingPayload.msgContent = (char*)"PING";
 
@@ -129,7 +179,7 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
 #endif
-	hal_printf("OMACTest::Receive end\n");
+	hal_printf("end OMACTest::Receive\n");
 }
 
 void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
@@ -160,6 +210,7 @@ BOOL OMACTest::Send(){
 #endif
 
 	hal_printf("ping msgId before sending is %d\n", pingPayload.MSGID);
+	hal_printf("pong msgId before sending is %d\n", pingPayload.pongPayload.MSGID);
 	bool ispcktScheduled = Mac_Send(Neighbor2beFollowed, MFM_DATA, (void*) &pingPayload, sizeof(Payload_t_ping));
 }
 
