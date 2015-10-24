@@ -29,6 +29,7 @@ public:
 	UINT8 MacId;
 	static UINT32 sendPingCount;
 	static UINT32 recvCount;
+	static UINT32 missedPingID;
 	UINT16 RcvCount;
 
 	BOOL Initialize();
@@ -45,6 +46,7 @@ void OMACTest_Initialize();
 
 UINT32 OMACTest::sendPingCount = 1;
 UINT32 OMACTest::recvCount = 0;
+UINT32 OMACTest::missedPingID = 1;
 
 #endif /* OMACTEST_H_ */
 
