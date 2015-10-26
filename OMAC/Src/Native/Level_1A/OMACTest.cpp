@@ -24,7 +24,7 @@ extern OMACType g_OMAC;
 extern OMACScheduler g_omac_scheduler;
 
 const UINT32 endOfTestCounter = 10000;
-const UINT32 dataSendStartingDelay = 10;	//in secs
+const UINT32 dataSendStartingDelay = 0;	//in secs
 const UINT32 delayBetweenPackets = 5;	//in secs
 
 
