@@ -27,8 +27,10 @@ const UINT32 endOfTestCounter = 10000;
 const UINT32 dataSendStartingDelay = 0;	//in secs
 const UINT32 delayBetweenPackets = 5;	//in secs
 
+#define OMACTEST_TIMER	32
 
-void Timer_32_Handler(void * arg){
+
+void Timer_OMACTEST_TIMER_Handler(void * arg){
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
 #endif
@@ -36,7 +38,7 @@ void Timer_32_Handler(void * arg){
 	hal_printf("---------%u--------\n\n", g_OMACTest.sendPingCount);
 
 	if(g_OMACTest.sendPingCount == endOfTestCounter){
-		VirtTimer_Stop(32);
+		VirtTimer_Stop(OMACTEST_TIMER);
 		g_OMACTest.GetStatistics();
 	}
 
@@ -86,7 +88,7 @@ BOOL OMACTest::Initialize(){
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(32, dataSendStartingDelay*ONEMSEC_IN_USEC*ONESEC_IN_MSEC, delayBetweenPackets*ONEMSEC_IN_USEC*ONESEC_IN_MSEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
+	VirtTimer_SetTimer(OMACTEST_TIMER, dataSendStartingDelay*ONEMSEC_IN_USEC*ONESEC_IN_MSEC, delayBetweenPackets*ONEMSEC_IN_USEC*ONESEC_IN_MSEC, FALSE, FALSE, Timer_OMACTEST_TIMER_Handler); //period (3rd argument) is in micro seconds
 
 	//<start> Initialize payload
 	pingPayload.MSGID = sendPingCount;
