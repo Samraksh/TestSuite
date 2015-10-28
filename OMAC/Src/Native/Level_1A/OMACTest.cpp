@@ -13,8 +13,6 @@
 //#include <Samraksh/HALTimer.h>
 #include "OMACTest.h"
 
-//#define DEBUG_OMACTest 1
-
 const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
 
@@ -157,7 +155,8 @@ void OMACTest::SendAck(void *tmpMsg, UINT16 size, NetOpStatus status){
 
 
 BOOL OMACTest::Send(){
-	UINT16 Neighbor2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
+	UINT16 Neighbor2beFollowed = g_OMAC.Neighbor2beFollowed;
+
 	if (g_NeighborTable.GetNeighborPtr(Neighbor2beFollowed) == NULL) {
 		return FALSE;
 	}
