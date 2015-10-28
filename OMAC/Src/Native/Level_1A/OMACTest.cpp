@@ -29,6 +29,13 @@ const UINT32 delayBetweenPackets = 5;	//in secs
 
 #define OMACTEST_TIMER	32
 
+UINT16 Neighbor2beFollowed;
+
+#define TXNODEID	3505
+#define RXNODEID	6846
+
+
+
 
 void Timer_OMACTEST_TIMER_Handler(void * arg){
 #ifdef DEBUG_OMACTest
@@ -95,6 +102,13 @@ BOOL OMACTest::Initialize(){
 	pingPayload.msgContent = (char*)"PING";
 	//<end> Initialize payload
 
+	if(g_OMAC.GetAddress() == RXNODEID) {
+		Neighbor2beFollowed = TXNODEID;
+	}
+	else {
+		Neighbor2beFollowed = RXNODEID;
+	}
+
 	return TRUE;
 }
 
@@ -159,8 +173,9 @@ void OMACTest::SendAck(void *tmpMsg, UINT16 size, NetOpStatus status){
 
 
 BOOL OMACTest::Send(){
-	UINT16 Neighbor2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
+	//UINT16 Neighbor2beFollowed = g_omac_scheduler.Neighbor2beFollowed;
 	if (g_NeighborTable.GetNeighborPtr(Neighbor2beFollowed) == NULL) {
+		hal_printf("Could not find neighbor :%d\n", Neighbor2beFollowed);
 		return FALSE;
 	}
 
