@@ -16,8 +16,8 @@ extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
 
-#define NEIGHBORCLOCKMONITORPIN 2 //2
-#define LOCALCLOCKMONITORPIN 25 //25
+#define NEIGHBORCLOCKMONITORPIN 31 //2
+#define LOCALCLOCKMONITORPIN 29 //25
 
 #define LocalClockMonitor_TIMER 32
 #define NeighborClockMonitor_TIMER 33
@@ -114,7 +114,7 @@ BOOL OMACTest::StartTest(){
 }
 
 BOOL OMACTest::ScheduleNextNeighborCLK(){
-	UINT16 Nbr2beFollowed = g_omac_scheduler.m_TimeSyncHandler.Neighbor2beFollowed;
+	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_Stop(NeighborClockMonitor_TIMER);
 	if (g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){

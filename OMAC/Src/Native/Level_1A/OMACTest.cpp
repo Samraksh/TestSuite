@@ -13,8 +13,6 @@
 //#include <Samraksh/HALTimer.h>
 #include "OMACTest.h"
 
-//#define DEBUG_OMACTest 1
-
 const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
 
@@ -33,8 +31,6 @@ UINT16 Neighbor2beFollowed;
 
 #define TXNODEID	3505
 #define RXNODEID	6846
-
-
 
 
 void Timer_OMACTEST_TIMER_Handler(void * arg){
