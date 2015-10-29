@@ -14,7 +14,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 {
     public class PingPayload
     {
-        public UInt16 pingMsgId;
+        public UInt32 pingMsgId;
         //public char[] pingMsgContent = new char[5];
 
         public PingPayload()
@@ -24,16 +24,13 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         public byte[] ToBytes()
         {
-            byte[] msg = new byte[2];
-            msg[0] = (byte)((pingMsgId >> 8) & 0xFF);
-            msg[1] = (byte)((pingMsgId) & 0xFF);
+            byte[] msg = new byte[4];
+            msg[0] = (byte)((pingMsgId >> 24) & 0xFF);
+            msg[1] = (byte)((pingMsgId >> 16) & 0xFF);
+            msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
+            msg[3] = (byte)((pingMsgId) & 0xFF);
             /*msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
             msg[3] = (byte)((pingMsgId) & 0xFF);*/
-
-            Debug.Print("msg[0] " + msg[0]);
-            Debug.Print("msg[1] " + msg[1]);
-            /*Debug.Print("msg[2] " + msg[2]);
-            Debug.Print("msg[3] " + msg[3]);*/
 
             /*msg[4] = (byte)(pingMsgContent[0]);
             msg[5] = (byte)(pingMsgContent[1]);
@@ -48,11 +45,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             try
             {
                 PingPayload pingPayload = new PingPayload();
-                Debug.Print("================================");
-                Debug.Print("msg[0] " + (msg[0]));
-                Debug.Print("msg[1] " + (msg[1]));
-                Debug.Print("msg[0] " + (UInt16)(msg[0] << 8));
-                Debug.Print("msg[1] " + (UInt16)(msg[1]));
+                //Debug.Print("================================");
                 /*Debug.Print("msg[2] " + (msg[2]));
                 Debug.Print("msg[3] " + (msg[3]));*/
                 /*Debug.Print("msg[4] " + (msg[4]));
@@ -63,11 +56,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
                 /*pingPayload.pingMsgId = (UInt32)(msg[3] << 24);
                 pingPayload.pingMsgId += (UInt32)(msg[2] << 16);*/
-                pingPayload.pingMsgId = (UInt16)(msg[0] << 8);
-                pingPayload.pingMsgId += (UInt16)(msg[1]);
+                pingPayload.pingMsgId = (UInt16)(msg[0] << 24);
+                pingPayload.pingMsgId += (UInt16)(msg[1] << 16);
+                pingPayload.pingMsgId += (UInt16)(msg[2] << 8);
+                pingPayload.pingMsgId += (UInt16)(msg[3]);
 
-                Debug.Print("pingPayload.pingMsgId " + pingPayload.pingMsgId);
-                Debug.Print("================================");
+                //Debug.Print("================================");
 
                 /*byte[] tmpMsg = new byte[5];
                 System.Array.Copy(msg, tmpMsg, 5);
@@ -109,7 +103,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         UInt16 myAddress;
         Timer sendTimer;
         NetOpStatus status;
-        static UInt16 msgCounter = 0;
+        static UInt32 msgCounter = 0;
         EmoteLCD lcd;
         
         PingPayload pingMsg = new PingPayload();
@@ -190,8 +184,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
             }
 
             byte[] rcvPayload = rcvMsg.GetMessage();
-            Debug.Print("rcvPayload[0] " + rcvPayload[0]);
-            Debug.Print("rcvPayload[1] " + rcvPayload[1]);
             PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
             if (pingPayload != null)
             {
