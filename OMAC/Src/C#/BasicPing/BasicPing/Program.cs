@@ -37,6 +37,45 @@ namespace Samraksh.eMote.Net.Mac.Ping
             msg[8] = (byte)(pingMsgContent[4]);
             return msg;
         }
+
+        public PingPayload FromBytesToPingPayload(byte[] msg)
+        {
+            PingPayload pingPayload = new PingPayload();
+            Debug.Print("================================");
+            Debug.Print("msg[0] " + (char)(msg[0]));
+            Debug.Print("msg[1] " + (char)(msg[1]));
+            Debug.Print("msg[2] " + (char)(msg[2]));
+            Debug.Print("msg[3] " + (char)(msg[3]));
+            Debug.Print("msg[4] " + (char)(msg[4]));
+
+            pingPayload.pingMsgId = (UInt32)(msg[8] << 24);
+            pingPayload.pingMsgId += (UInt32)(msg[7] << 16);
+            pingPayload.pingMsgId += (UInt32)(msg[6] << 8);
+            pingPayload.pingMsgId += (UInt32)(msg[5]);
+            
+            Debug.Print("================================");
+
+            /*byte[] tmpMsg = new byte[5];
+            System.Array.Copy(msg, tmpMsg, 5);
+
+            pingPayload.pingMsgContent = System.Text.Encoding.UTF8.GetChars(tmpMsg);
+            Debug.Print("pingMsgContent " + pingPayload.pingMsgContent.ToString());*/
+
+            pingPayload.pingMsgContent[0] = System.BitConverter.ToChar(msg, 0);
+            Debug.Print("pingPayload.pingMsgContent[0] " + pingPayload.pingMsgContent[0]);
+            Debug.Print("pingPayload.pingMsgContent[0] " + pingPayload.pingMsgContent[0].ToString());
+
+            pingPayload.pingMsgContent[1] = System.BitConverter.ToChar(msg, 1);
+            Debug.Print("pingPayload.pingMsgContent[1] " + pingPayload.pingMsgContent[1]);
+            Debug.Print("pingPayload.pingMsgContent[1] " + pingPayload.pingMsgContent[1].ToString());
+            /*pingPayload.pingMsgContent[0] = (char)msg[4];
+            pingPayload.pingMsgContent[1] = (char)msg[3];
+            pingPayload.pingMsgContent[2] = (char)msg[2];
+            pingPayload.pingMsgContent[3] = (char)msg[1];
+            pingPayload.pingMsgContent[4] = (char)msg[0];*/
+
+            return pingPayload;
+        }
     }
 
     public class PongPayload
@@ -114,7 +153,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         {
             Debug.Print("Starting timer...");
             TimerCallback timerCB = new TimerCallback(sendTimerCallback);
-            sendTimer = new Timer(timerCB, null, 0, 400);
+            sendTimer = new Timer(timerCB, null, 0, 5000);
             Debug.Print("Timer initialization done");
         }
 
@@ -127,7 +166,29 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //Handles received messages 
         public void Receive(UInt16 countOfPackets)
         {
+            Debug.Print("---------------------------");
+            if (myOMACObj.GetPendingPacketCount() == 0)
+            {
+                Debug.Print("no packets");
+                return;
+            }
 
+            Message rcvMsg = myOMACObj.GetNextPacket();
+            if (rcvMsg == null)
+            {
+                Debug.Print("null");
+                return;
+            }
+
+            byte[] rcvPayload = rcvMsg.GetMessage();
+            PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
+            Debug.Print("Received msgID " + pingPayload.pingMsgId.ToString());
+            Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
+
+            Debug.Print("Sending pong");
+            Debug.Print("---------------------------");
+            SendPong();
+            //HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
         }
 
         //Keeps track of change in neighborhood
@@ -150,6 +211,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 pingMsg.pingMsgId = msgCounter;
                 pingMsg.pingMsgContent = msgChar;
                 byte[] msg = pingMsg.ToBytes();
+
+                Debug.Print("Sending ping msgID " + msgCounter.ToString());
 
                 if (myAddress == neighbor1)
                 {
@@ -202,7 +265,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         public void SendPong()
         {
-            
+            Debug.Print("Inside SendPong");
         }
 
         public static void Main()
