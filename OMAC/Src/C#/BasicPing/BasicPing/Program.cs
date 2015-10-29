@@ -98,12 +98,14 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //Define nodes that are participating in ping-pong
         UInt16 neighbor1 = 3505;
         UInt16 neighbor2 = 6846;
-
+        
         //public variables
         UInt16 myAddress;
         Timer sendTimer;
         NetOpStatus status;
-        static UInt32 msgCounter = 0;
+        static UInt32 sendMsgCounter = 0;
+        static UInt32 recvMsgCounter = 1;
+        static UInt32 totalRecvCounter = 0;
         EmoteLCD lcd;
         
         PingPayload pingMsg = new PingPayload();
@@ -169,6 +171,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //Handles received messages 
         public void Receive(UInt16 countOfPackets)
         {
+            totalRecvCounter++;
             Debug.Print("---------------------------");
             if (myOMACObj.GetPendingPacketCount() == 0)
             {
@@ -183,11 +186,19 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 return;
             }
 
+            Debug.Print("totalRecvCounter is " + totalRecvCounter);
+
             byte[] rcvPayload = rcvMsg.GetMessage();
             PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
             if (pingPayload != null)
             {
                 Debug.Print("Received msgID " + pingPayload.pingMsgId);
+                while (recvMsgCounter < pingPayload.pingMsgId)
+                {
+                    Debug.Print("Missed msgID: " + recvMsgCounter);
+                    recvMsgCounter++;
+                }
+                recvMsgCounter = pingPayload.pingMsgId + 1;
                 //Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
             }
             else
@@ -215,11 +226,11 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 msgChar[3] = 'G';
                 msgChar[4] = '\0';
                 pingMsg.pingMsgContent = msgChar;*/
-                msgCounter++;
-                pingMsg.pingMsgId = msgCounter;
+                sendMsgCounter++;
+                pingMsg.pingMsgId = sendMsgCounter;
                 byte[] msg = pingMsg.ToBytes();
-                
-                Debug.Print("Sending ping msgID " + msgCounter.ToString());
+
+                Debug.Print("Sending ping msgID " + sendMsgCounter.ToString());
 
                 if (myAddress == neighbor1)
                 {
@@ -232,31 +243,31 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
                 if (status != NetOpStatus.S_Success)
                 {
-                    Debug.Print("Send failed. Ping msgID " + msgCounter.ToString());
+                    Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
                 }
 
-                if (msgCounter < 10) 
-                { 
-                    lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)msgCounter);
-                }
-                else if (msgCounter < 100)
+                if (sendMsgCounter < 10) 
                 {
-                    UInt16 tenthPlace = (UInt16)(msgCounter / 10);
-                    UInt16 unitPlace = (UInt16)(msgCounter % 10);
+                    lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
+                }
+                else if (sendMsgCounter < 100)
+                {
+                    UInt16 tenthPlace = (UInt16)(sendMsgCounter / 10);
+                    UInt16 unitPlace = (UInt16)(sendMsgCounter % 10);
                     lcd.Write(LCD.CHAR_S, LCD.CHAR_S, (LCD)tenthPlace, (LCD)unitPlace);
                 }
-                else if (msgCounter < 1000)
+                else if (sendMsgCounter < 1000)
                 {
-                    UInt16 hundredthPlace = (UInt16)(msgCounter / 100);
-                    UInt16 remainder = (UInt16)(msgCounter % 100);
+                    UInt16 hundredthPlace = (UInt16)(sendMsgCounter / 100);
+                    UInt16 remainder = (UInt16)(sendMsgCounter % 100);
                     UInt16 tenthPlace = (UInt16)(remainder / 10);
                     UInt16 unitPlace = (UInt16)(remainder % 10);
                     lcd.Write(LCD.CHAR_S, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
-                else if (msgCounter < 10000)
+                else if (sendMsgCounter < 10000)
                 {
-                    UInt16 thousandthPlace = (UInt16)(msgCounter / 1000);
-                    UInt16 remainder = (UInt16)(msgCounter % 1000);
+                    UInt16 thousandthPlace = (UInt16)(sendMsgCounter / 1000);
+                    UInt16 remainder = (UInt16)(sendMsgCounter % 1000);
                     UInt16 hundredthPlace = (UInt16)(remainder / 100);
                     remainder = (UInt16)(remainder % 100);
                     UInt16 tenthPlace = (UInt16)(remainder / 10);
