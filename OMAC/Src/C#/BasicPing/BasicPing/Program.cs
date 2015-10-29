@@ -40,52 +40,56 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         public PingPayload FromBytesToPingPayload(byte[] msg)
         {
-            PingPayload pingPayload = new PingPayload();
-            Debug.Print("================================");
-            Debug.Print("msg[0] " + (char)(msg[0]));
-            Debug.Print("msg[1] " + (char)(msg[1]));
-            Debug.Print("msg[2] " + (char)(msg[2]));
-            Debug.Print("msg[3] " + (char)(msg[3]));
-            Debug.Print("msg[4] " + (char)(msg[4]));
+            try
+            {
+                PingPayload pingPayload = new PingPayload();
+                Debug.Print("================================");
+                Debug.Print("msg[0] " + (msg[0]));
+                Debug.Print("msg[1] " + (msg[1]));
+                Debug.Print("msg[2] " + (msg[2]));
+                Debug.Print("msg[3] " + (msg[3]));
+                Debug.Print("msg[4] " + (msg[4]));
+                Debug.Print("msg[5] " + (msg[5]));
+                Debug.Print("msg[6] " + (msg[6]));
+                Debug.Print("msg[7] " + (msg[7]));
+                Debug.Print("msg[8] " + (msg[8]));
 
-            pingPayload.pingMsgId = (UInt32)(msg[8] << 24);
-            pingPayload.pingMsgId += (UInt32)(msg[7] << 16);
-            pingPayload.pingMsgId += (UInt32)(msg[6] << 8);
-            pingPayload.pingMsgId += (UInt32)(msg[5]);
-            
-            Debug.Print("================================");
+                pingPayload.pingMsgId = (UInt32)(msg[8] << 24);
+                pingPayload.pingMsgId += (UInt32)(msg[7] << 16);
+                pingPayload.pingMsgId += (UInt32)(msg[6] << 8);
+                pingPayload.pingMsgId += (UInt32)(msg[5]);
 
-            /*byte[] tmpMsg = new byte[5];
-            System.Array.Copy(msg, tmpMsg, 5);
+                Debug.Print("pingPayload.pingMsgId " + pingPayload.pingMsgId);
+                Debug.Print("pingPayload.pingMsgId " + pingPayload.pingMsgId.ToString());
+                Debug.Print("================================");
 
-            pingPayload.pingMsgContent = System.Text.Encoding.UTF8.GetChars(tmpMsg);
-            Debug.Print("pingMsgContent " + pingPayload.pingMsgContent.ToString());*/
+                /*byte[] tmpMsg = new byte[5];
+                System.Array.Copy(msg, tmpMsg, 5);
 
-            pingPayload.pingMsgContent[0] = System.BitConverter.ToChar(msg, 0);
-            Debug.Print("pingPayload.pingMsgContent[0] " + pingPayload.pingMsgContent[0]);
-            Debug.Print("pingPayload.pingMsgContent[0] " + pingPayload.pingMsgContent[0].ToString());
+                pingPayload.pingMsgContent = System.Text.Encoding.UTF8.GetChars(tmpMsg);
+                Debug.Print("pingMsgContent " + pingPayload.pingMsgContent.ToString());*/
 
-            pingPayload.pingMsgContent[1] = System.BitConverter.ToChar(msg, 1);
-            Debug.Print("pingPayload.pingMsgContent[1] " + pingPayload.pingMsgContent[1]);
-            Debug.Print("pingPayload.pingMsgContent[1] " + pingPayload.pingMsgContent[1].ToString());
-            /*pingPayload.pingMsgContent[0] = (char)msg[4];
-            pingPayload.pingMsgContent[1] = (char)msg[3];
-            pingPayload.pingMsgContent[2] = (char)msg[2];
-            pingPayload.pingMsgContent[3] = (char)msg[1];
-            pingPayload.pingMsgContent[4] = (char)msg[0];*/
+                /*pingPayload.pingMsgContent[0] = System.BitConverter.ToChar(msg, 0);
+                Debug.Print("pingPayload.pingMsgContent[0] " + pingPayload.pingMsgContent[0]);
+                Debug.Print("pingPayload.pingMsgContent[0] " + pingPayload.pingMsgContent[0].ToString());
 
-            return pingPayload;
-        }
-    }
+                pingPayload.pingMsgContent[1] = System.BitConverter.ToChar(msg, 1);
+                Debug.Print("pingPayload.pingMsgContent[1] " + pingPayload.pingMsgContent[1]);
+                Debug.Print("pingPayload.pingMsgContent[1] " + pingPayload.pingMsgContent[1].ToString());*/
 
-    public class PongPayload
-    {
-        public UInt32 pongMsgId;
-        public string pongMsgContent;
+                /*pingPayload.pingMsgContent[0] = (char)msg[4];
+                pingPayload.pingMsgContent[1] = (char)msg[3];
+                pingPayload.pingMsgContent[2] = (char)msg[2];
+                pingPayload.pingMsgContent[3] = (char)msg[1];
+                pingPayload.pingMsgContent[4] = (char)msg[0];*/
 
-        public PongPayload()
-        {
-
+                return pingPayload;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.ToString());
+                return null;
+            }
         }
     }
 
@@ -103,8 +107,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         EmoteLCD lcd;
         
         PingPayload pingMsg = new PingPayload();
-        PongPayload pongMsg = new PongPayload();
-
+        
         static Mac.OMAC myOMACObj;
         ReceiveCallBack myReceiveCB;
         NeighborhoodChangeCallBack myNeibhborhoodCB;
@@ -182,13 +185,17 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
             byte[] rcvPayload = rcvMsg.GetMessage();
             PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
-            Debug.Print("Received msgID " + pingPayload.pingMsgId.ToString());
-            Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
+            if (pingPayload != null)
+            {
+                Debug.Print("Received msgID " + pingPayload.pingMsgId.ToString());
+                Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
+            }
+            else
+            {
+                Debug.Print("Received a null msg");
+            }
 
-            Debug.Print("Sending pong");
             Debug.Print("---------------------------");
-            SendPong();
-            //HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
         }
 
         //Keeps track of change in neighborhood
@@ -261,11 +268,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
             {
                 Debug.Print("SendPing: " + ex.ToString());
             }
-        }
-
-        public void SendPong()
-        {
-            Debug.Print("Inside SendPong");
         }
 
         public static void Main()
