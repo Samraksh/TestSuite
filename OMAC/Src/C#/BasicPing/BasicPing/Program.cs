@@ -16,10 +16,15 @@ namespace Samraksh.eMote.Net.Mac.Ping
     {
         public UInt32 pingMsgId;
         //public char[] pingMsgContent = new char[5];
-
+        public string pingMsgContent = "PING";
+        
         public PingPayload()
         {
-
+            /*pingMsgContent[0] = 'P';
+            pingMsgContent[1] = 'I';
+            pingMsgContent[2] = 'N';
+            pingMsgContent[3] = 'G';
+            pingMsgContent[4] = '\0';*/
         }
 
         public byte[] ToBytes()
@@ -29,15 +34,24 @@ namespace Samraksh.eMote.Net.Mac.Ping
             msg[1] = (byte)((pingMsgId >> 16) & 0xFF);
             msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
             msg[3] = (byte)((pingMsgId) & 0xFF);
-            /*msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
-            msg[3] = (byte)((pingMsgId) & 0xFF);*/
 
-            /*msg[4] = (byte)(pingMsgContent[0]);
-            msg[5] = (byte)(pingMsgContent[1]);
-            msg[6] = (byte)(pingMsgContent[2]);
-            msg[7] = (byte)(pingMsgContent[3]);
-            msg[8] = (byte)(pingMsgContent[4]);*/
-            return msg;
+            //string str = new string(pingMsgContent);
+            byte[] msgContent = System.Text.Encoding.UTF8.GetBytes(pingMsgContent);
+
+            byte[] merged = new byte[msg.Length + msgContent.Length];
+            msg.CopyTo(merged, 0);
+            msgContent.CopyTo(merged, msg.Length);
+
+            Debug.Print("merged[0] " + (merged[0]));
+            Debug.Print("merged[1] " + (merged[1]));
+            Debug.Print("merged[2] " + (merged[2]));
+            Debug.Print("merged[3] " + (merged[3]));
+            Debug.Print("merged[4] " + (merged[4]));
+            Debug.Print("merged[5] " + (merged[5]));
+            Debug.Print("merged[6] " + (merged[6]));
+            Debug.Print("merged[7] " + (merged[7]));
+            
+            return merged;
         }
 
         public PingPayload FromBytesToPingPayload(byte[] msg)
@@ -45,23 +59,45 @@ namespace Samraksh.eMote.Net.Mac.Ping
             try
             {
                 PingPayload pingPayload = new PingPayload();
-                //Debug.Print("================================");
-                /*Debug.Print("msg[2] " + (msg[2]));
-                Debug.Print("msg[3] " + (msg[3]));*/
-                /*Debug.Print("msg[4] " + (msg[4]));
+                Debug.Print("================================");
+                /*Debug.Print("msg[0] " + (msg[0]));
+                Debug.Print("msg[1] " + (msg[1]));
+                Debug.Print("msg[2] " + (msg[2]));
+                Debug.Print("msg[3] " + (msg[3]));
+                Debug.Print("msg[4] " + (msg[4]));
                 Debug.Print("msg[5] " + (msg[5]));
                 Debug.Print("msg[6] " + (msg[6]));
-                Debug.Print("msg[7] " + (msg[7]));
-                Debug.Print("msg[8] " + (msg[8]));*/
-
-                /*pingPayload.pingMsgId = (UInt32)(msg[3] << 24);
-                pingPayload.pingMsgId += (UInt32)(msg[2] << 16);*/
+                Debug.Print("msg[7] " + (msg[7]));*/
+                
                 pingPayload.pingMsgId = (UInt16)(msg[0] << 24);
                 pingPayload.pingMsgId += (UInt16)(msg[1] << 16);
                 pingPayload.pingMsgId += (UInt16)(msg[2] << 8);
                 pingPayload.pingMsgId += (UInt16)(msg[3]);
 
-                //Debug.Print("================================");
+                byte[] msgContent = new byte[4];
+                msgContent[0] = msg[4];
+                msgContent[1] = msg[5];
+                msgContent[2] = msg[6];
+                msgContent[3] = msg[7];
+                char[] msgContentChar = System.Text.Encoding.UTF8.GetChars(msgContent);
+                /*Debug.Print("msgContentChar[0] " + (msgContentChar[0]));
+                Debug.Print("msgContentChar[1] " + (msgContentChar[1]));
+                Debug.Print("msgContentChar[2] " + (msgContentChar[2]));
+                Debug.Print("msgContentChar[3] " + (msgContentChar[3]));*/
+
+                pingPayload.pingMsgContent = new string(msgContentChar);
+                //msgContentChar.CopyTo(pingPayload.pingMsgContent, 0);
+                /*pingPayload.pingMsgContent[0] = msgContentChar[0];
+                pingPayload.pingMsgContent[1] = msgContentChar[1];
+                pingPayload.pingMsgContent[2] = msgContentChar[2];
+                pingPayload.pingMsgContent[3] = msgContentChar[3];*/
+                
+                /*Debug.Print("pingPayload.pingMsgContent[0] " + (pingPayload.pingMsgContent[0]));
+                Debug.Print("pingPayload.pingMsgContent[1] " + (pingPayload.pingMsgContent[1]));
+                Debug.Print("pingPayload.pingMsgContent[2] " + (pingPayload.pingMsgContent[2]));
+                Debug.Print("pingPayload.pingMsgContent[3] " + (pingPayload.pingMsgContent[3]));*/
+                
+                Debug.Print("================================");
 
                 /*byte[] tmpMsg = new byte[5];
                 System.Array.Copy(msg, tmpMsg, 5);
@@ -199,7 +235,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
                     recvMsgCounter++;
                 }
                 recvMsgCounter = pingPayload.pingMsgId + 1;
-                //Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
+                Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
             }
             else
             {
@@ -219,13 +255,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
         {
             try
             {
-                /*char[] msgChar = new char[5];
-                msgChar[0] = 'P';
-                msgChar[1] = 'I';
-                msgChar[2] = 'N';
-                msgChar[3] = 'G';
-                msgChar[4] = '\0';
-                pingMsg.pingMsgContent = msgChar;*/
                 sendMsgCounter++;
                 pingMsg.pingMsgId = sendMsgCounter;
                 byte[] msg = pingMsg.ToBytes();
