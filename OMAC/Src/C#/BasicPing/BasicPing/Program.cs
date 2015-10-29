@@ -14,8 +14,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
 {
     public class PingPayload
     {
-        public UInt32 pingMsgId;
-        public char[] pingMsgContent = new char[5];
+        public UInt16 pingMsgId;
+        //public char[] pingMsgContent = new char[5];
 
         public PingPayload()
         {
@@ -24,17 +24,22 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         public byte[] ToBytes()
         {
-            byte[] msg = new byte[9];
-            msg[0] = (byte)((pingMsgId >> 24) & 0xFF);
-            msg[1] = (byte)((pingMsgId >> 16) & 0xFF);
-            msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
-            msg[3] = (byte)((pingMsgId) & 0xFF);
+            byte[] msg = new byte[2];
+            msg[0] = (byte)((pingMsgId >> 8) & 0xFF);
+            msg[1] = (byte)((pingMsgId) & 0xFF);
+            /*msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
+            msg[3] = (byte)((pingMsgId) & 0xFF);*/
 
-            msg[4] = (byte)(pingMsgContent[0]);
+            Debug.Print("msg[0] " + msg[0]);
+            Debug.Print("msg[1] " + msg[1]);
+            /*Debug.Print("msg[2] " + msg[2]);
+            Debug.Print("msg[3] " + msg[3]);*/
+
+            /*msg[4] = (byte)(pingMsgContent[0]);
             msg[5] = (byte)(pingMsgContent[1]);
             msg[6] = (byte)(pingMsgContent[2]);
             msg[7] = (byte)(pingMsgContent[3]);
-            msg[8] = (byte)(pingMsgContent[4]);
+            msg[8] = (byte)(pingMsgContent[4]);*/
             return msg;
         }
 
@@ -46,21 +51,22 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 Debug.Print("================================");
                 Debug.Print("msg[0] " + (msg[0]));
                 Debug.Print("msg[1] " + (msg[1]));
-                Debug.Print("msg[2] " + (msg[2]));
-                Debug.Print("msg[3] " + (msg[3]));
-                Debug.Print("msg[4] " + (msg[4]));
+                Debug.Print("msg[0] " + (UInt16)(msg[0] << 8));
+                Debug.Print("msg[1] " + (UInt16)(msg[1]));
+                /*Debug.Print("msg[2] " + (msg[2]));
+                Debug.Print("msg[3] " + (msg[3]));*/
+                /*Debug.Print("msg[4] " + (msg[4]));
                 Debug.Print("msg[5] " + (msg[5]));
                 Debug.Print("msg[6] " + (msg[6]));
                 Debug.Print("msg[7] " + (msg[7]));
-                Debug.Print("msg[8] " + (msg[8]));
+                Debug.Print("msg[8] " + (msg[8]));*/
 
-                pingPayload.pingMsgId = (UInt32)(msg[8] << 24);
-                pingPayload.pingMsgId += (UInt32)(msg[7] << 16);
-                pingPayload.pingMsgId += (UInt32)(msg[6] << 8);
-                pingPayload.pingMsgId += (UInt32)(msg[5]);
+                /*pingPayload.pingMsgId = (UInt32)(msg[3] << 24);
+                pingPayload.pingMsgId += (UInt32)(msg[2] << 16);*/
+                pingPayload.pingMsgId = (UInt16)(msg[0] << 8);
+                pingPayload.pingMsgId += (UInt16)(msg[1]);
 
                 Debug.Print("pingPayload.pingMsgId " + pingPayload.pingMsgId);
-                Debug.Print("pingPayload.pingMsgId " + pingPayload.pingMsgId.ToString());
                 Debug.Print("================================");
 
                 /*byte[] tmpMsg = new byte[5];
@@ -103,7 +109,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         UInt16 myAddress;
         Timer sendTimer;
         NetOpStatus status;
-        static UInt32 msgCounter = 0;
+        static UInt16 msgCounter = 0;
         EmoteLCD lcd;
         
         PingPayload pingMsg = new PingPayload();
@@ -184,11 +190,13 @@ namespace Samraksh.eMote.Net.Mac.Ping
             }
 
             byte[] rcvPayload = rcvMsg.GetMessage();
+            Debug.Print("rcvPayload[0] " + rcvPayload[0]);
+            Debug.Print("rcvPayload[1] " + rcvPayload[1]);
             PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
             if (pingPayload != null)
             {
-                Debug.Print("Received msgID " + pingPayload.pingMsgId.ToString());
-                Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
+                Debug.Print("Received msgID " + pingPayload.pingMsgId);
+                //Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
             }
             else
             {
@@ -208,17 +216,17 @@ namespace Samraksh.eMote.Net.Mac.Ping
         {
             try
             {
-                msgCounter++;
-                char[] msgChar = new char[5];
+                /*char[] msgChar = new char[5];
                 msgChar[0] = 'P';
                 msgChar[1] = 'I';
                 msgChar[2] = 'N';
                 msgChar[3] = 'G';
                 msgChar[4] = '\0';
+                pingMsg.pingMsgContent = msgChar;*/
+                msgCounter++;
                 pingMsg.pingMsgId = msgCounter;
-                pingMsg.pingMsgContent = msgChar;
                 byte[] msg = pingMsg.ToBytes();
-
+                
                 Debug.Print("Sending ping msgID " + msgCounter.ToString());
 
                 if (myAddress == neighbor1)
@@ -241,26 +249,26 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 }
                 else if (msgCounter < 100)
                 {
-                    uint tenthPlace = msgCounter / 10;
-                    uint unitPlace = msgCounter % 10;
+                    UInt16 tenthPlace = (UInt16)(msgCounter / 10);
+                    UInt16 unitPlace = (UInt16)(msgCounter % 10);
                     lcd.Write(LCD.CHAR_S, LCD.CHAR_S, (LCD)tenthPlace, (LCD)unitPlace);
                 }
                 else if (msgCounter < 1000)
                 {
-                    uint hundredthPlace = msgCounter / 100;
-                    uint remainder = msgCounter % 100;
-                    uint tenthPlace = remainder / 10;
-                    uint unitPlace = remainder % 10;
+                    UInt16 hundredthPlace = (UInt16)(msgCounter / 100);
+                    UInt16 remainder = (UInt16)(msgCounter % 100);
+                    UInt16 tenthPlace = (UInt16)(remainder / 10);
+                    UInt16 unitPlace = (UInt16)(remainder % 10);
                     lcd.Write(LCD.CHAR_S, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
                 else if (msgCounter < 10000)
                 {
-                    uint thousandthPlace = msgCounter / 1000;
-                    uint remainder = msgCounter % 1000;
-                    uint hundredthPlace = remainder / 100;
-                    remainder = remainder % 100;
-                    uint tenthPlace = remainder / 10;
-                    uint unitPlace = remainder % 10;
+                    UInt16 thousandthPlace = (UInt16)(msgCounter / 1000);
+                    UInt16 remainder = (UInt16)(msgCounter % 1000);
+                    UInt16 hundredthPlace = (UInt16)(remainder / 100);
+                    remainder = (UInt16)(remainder % 100);
+                    UInt16 tenthPlace = (UInt16)(remainder / 10);
+                    UInt16 unitPlace = (UInt16)(remainder % 10);
                     lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
             }
