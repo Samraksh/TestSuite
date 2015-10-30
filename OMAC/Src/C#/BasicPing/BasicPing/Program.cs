@@ -78,11 +78,14 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
     public class Program
     {
+        UInt32 totalPingCount = 1000;
+        static UInt32 i = 0;
         //Define nodes that are participating in ping-pong
         UInt16 neighbor1 = 3505;
         UInt16 neighbor2 = 6846;
         
         //public variables
+        UInt16 dutyCyclePeriod = 5000;
         UInt16 myAddress;
         Timer sendTimer;
         NetOpStatus status;
@@ -136,12 +139,18 @@ namespace Samraksh.eMote.Net.Mac.Ping
             Debug.Print("My address is: " + myAddress.ToString());
         }
 
+        //Keeps track of change in neighborhood
+        public void NeighborChange(UInt16 countOfNeighbors)
+        {
+            Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+        }
+
         //Starts a timer 
         public void Start()
         {
             Debug.Print("Starting timer...");
             TimerCallback timerCB = new TimerCallback(sendTimerCallback);
-            sendTimer = new Timer(timerCB, null, 0, 5000);
+            sendTimer = new Timer(timerCB, null, 0, dutyCyclePeriod);
             Debug.Print("Timer initialization done");
         }
 
@@ -151,58 +160,11 @@ namespace Samraksh.eMote.Net.Mac.Ping
             SendPing();
         }
 
-        //Handles received messages 
-        public void Receive(UInt16 countOfPackets)
-        {
-            totalRecvCounter++;
-            Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount() == 0)
-            {
-                Debug.Print("no packets");
-                return;
-            }
-
-            Message rcvMsg = myOMACObj.GetNextPacket();
-            if (rcvMsg == null)
-            {
-                Debug.Print("null");
-                return;
-            }
-
-            Debug.Print("totalRecvCounter is " + totalRecvCounter);
-
-            byte[] rcvPayload = rcvMsg.GetMessage();
-            PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
-            if (pingPayload != null)
-            {
-                Debug.Print("Received msgID " + pingPayload.pingMsgId);
-                while (recvMsgCounter < pingPayload.pingMsgId)
-                {
-                    Debug.Print("Missed msgID: " + recvMsgCounter);
-                    recvMsgCounter++;
-                }
-                recvMsgCounter = pingPayload.pingMsgId + 1;
-                Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
-            }
-            else
-            {
-                Debug.Print("Received a null msg");
-            }
-
-            Debug.Print("---------------------------");
-        }
-
-        //Keeps track of change in neighborhood
-        public void NeighborChange(UInt16 countOfNeighbors)
-        {
-            Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
-        }
-
         public void SendPing()
         {
             try
             {
-                sendMsgCounter++;
+                sendMsgCounter++; i++;
                 pingMsg.pingMsgId = sendMsgCounter;
                 byte[] msg = pingMsg.ToBytes();
 
@@ -250,11 +212,68 @@ namespace Samraksh.eMote.Net.Mac.Ping
                     UInt16 unitPlace = (UInt16)(remainder % 10);
                     lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
+                
+                if (i == totalPingCount)
+                {
+                    ShowStatistics();
+                }
             }
             catch (Exception ex)
             {
                 Debug.Print("SendPing: " + ex.ToString());
             }
+        }
+
+        //Handles received messages 
+        public void Receive(UInt16 countOfPackets)
+        {
+            totalRecvCounter++;
+            Debug.Print("---------------------------");
+            if (myOMACObj.GetPendingPacketCount() == 0)
+            {
+                Debug.Print("no packets");
+                return;
+            }
+
+            Message rcvMsg = myOMACObj.GetNextPacket();
+            if (rcvMsg == null)
+            {
+                Debug.Print("null");
+                return;
+            }
+
+            Debug.Print("totalRecvCounter is " + totalRecvCounter);
+
+            byte[] rcvPayload = rcvMsg.GetMessage();
+            PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
+            if (pingPayload != null)
+            {
+                Debug.Print("Received msgID " + pingPayload.pingMsgId);
+                while (recvMsgCounter < pingPayload.pingMsgId)
+                {
+                    Debug.Print("Missed msgID: " + recvMsgCounter);
+                    recvMsgCounter++;
+                }
+                recvMsgCounter = pingPayload.pingMsgId + 1;
+                Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
+            }
+            else
+            {
+                Debug.Print("Received a null msg");
+            }
+
+            Debug.Print("---------------------------");
+        }
+
+        //Show statistics
+        void ShowStatistics()
+        {
+            Debug.Print("==============STATS================");
+            Debug.Print("total msgs sent " + sendMsgCounter);
+            Debug.Print("total msgs received " + totalRecvCounter);
+            //Debug.Print("percentage received " + (totalRecvCounter / sendMsgCounter) * 100);
+            Debug.Print("==================================");
+            Thread.Sleep(Timeout.Infinite);
         }
 
         public static void Main()
