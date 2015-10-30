@@ -11,6 +11,11 @@
 
 #define OMACTEST_TIMER	32
 
+#define PING_PONG_TIMER_PIN (GPIO_PIN)120
+#define PING_PONG_SEND_PIN (GPIO_PIN)120
+#define PING_PONG_SEND_ACK_PIN (GPIO_PIN)120
+#define PING_PONG_RX_PIN (GPIO_PIN)120
+
 OMACTest g_OMACTest;
 
 extern NeighborTable g_NeighborTable;
@@ -28,7 +33,7 @@ UINT16 neighborList[MAX_NEIGHBORS];		//table to store neighbor's MAC address
 
 void Timer_OMACTEST_TIMER_Handler(void * arg){
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
+	CPU_GPIO_SetPinState(PING_PONG_TIMER_PIN, TRUE);
 #endif
 	g_OMACTest.Send();
 
@@ -38,7 +43,7 @@ void Timer_OMACTEST_TIMER_Handler(void * arg){
 	}
 
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
+	CPU_GPIO_SetPinState(PING_PONG_TIMER_PIN, FALSE);
 #endif
 }
 
@@ -62,11 +67,10 @@ BOOL OMACTest::Initialize(){
 
 	VirtTimer_Initialize();
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 29, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 30, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 31, FALSE);
+	CPU_GPIO_EnableOutputPin(PING_PONG_SEND_PIN, FALSE);
+	CPU_GPIO_EnableOutputPin(PING_PONG_TIMER_PIN, FALSE);
+	CPU_GPIO_EnableOutputPin(PING_PONG_RX_PIN, FALSE);
+	CPU_GPIO_EnableOutputPin(PING_PONG_SEND_ACK_PIN, FALSE);
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
@@ -87,9 +91,9 @@ BOOL OMACTest::StartTest(){
 
 BOOL OMACTest::Send(){
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+	CPU_GPIO_SetPinState(PING_PONG_SEND_PIN, TRUE);
+	CPU_GPIO_SetPinState(PING_PONG_SEND_PIN, FALSE);
+	CPU_GPIO_SetPinState(PING_PONG_SEND_PIN, TRUE);
 #endif
 
 	Mac_GetNeighborList(neighborList);
@@ -111,8 +115,8 @@ BOOL OMACTest::Send(){
 
 void OMACTest::SendAck(void *tmpMsg, UINT16 size, NetOpStatus status){
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 31, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 31, FALSE);
+	CPU_GPIO_SetPinState(PING_PONG_SEND_ACK_PIN, TRUE);
+	CPU_GPIO_SetPinState(PING_PONG_SEND_ACK_PIN, FALSE);
 #endif
 	Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
 	Payload_t_ping* payload = (Payload_t_ping*)rcvdMsg->GetPayload();
@@ -128,8 +132,8 @@ void OMACTest::SendAck(void *tmpMsg, UINT16 size, NetOpStatus status){
 
 void OMACTest::Receive(void* tmpMsg, UINT16 size){
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN)30, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN)30, FALSE);
+	CPU_GPIO_SetPinState(PING_PONG_RX_PIN, TRUE);
+	CPU_GPIO_SetPinState(PING_PONG_RX_PIN, FALSE);
 #endif
 
 	hal_printf("OMACTest::Receive start. I am node: %d\n", g_OMAC.GetAddress());
@@ -153,8 +157,8 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	hal_printf("\n");
 
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
+	CPU_GPIO_SetPinState(PING_PONG_RX_PIN, TRUE);
+	CPU_GPIO_SetPinState(PING_PONG_RX_PIN, FALSE);
 #endif
 }
 

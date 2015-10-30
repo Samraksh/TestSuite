@@ -13,7 +13,11 @@
 //#include <Samraksh/HALTimer.h>
 #include "OMACTest.h"
 
-//#define DEBUG_OMACTest 1
+#define DEBUG_OMACTest 1
+#define OMACTEST_Timer (GPIO_PIN)120//29
+#define OMACTEST_Rx (GPIO_PIN)120//30
+#define OMACTEST_Tx (GPIO_PIN)120//24
+#define OMACTEST_TxAck (GPIO_PIN)120//31
 
 const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
@@ -27,11 +31,11 @@ extern Buffer_15_4_t g_send_buffer;
 
 void Timer_32_Handler(void * arg){
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, TRUE);
+	CPU_GPIO_SetPinState(OMACTEST_Timer, TRUE);
 #endif
 	g_OMACTest.Send();
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
+	CPU_GPIO_SetPinState(OMACTEST_Timer, FALSE);
 #endif
 }
 
@@ -56,15 +60,14 @@ BOOL OMACTest::Initialize(){
 
 	VirtTimer_Initialize();
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 29, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 30, FALSE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 31, FALSE);
+	CPU_GPIO_EnableOutputPin(OMACTEST_Tx, FALSE);
+	CPU_GPIO_EnableOutputPin(OMACTEST_Timer, FALSE);
+	CPU_GPIO_EnableOutputPin(OMACTEST_Rx, FALSE);
+	CPU_GPIO_EnableOutputPin(OMACTEST_TxAck, FALSE);
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(32, 0, 60*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
+	VirtTimer_SetTimer(32, 0, 10*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
 	return TRUE;
 }
 
@@ -81,8 +84,8 @@ BOOL OMACTest::StartTest(){
 
 void OMACTest::Receive(void* tmpMsg, UINT16 size){
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN)30, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN)30, FALSE);
+	CPU_GPIO_SetPinState(OMACTEST_Rx, TRUE);
+	CPU_GPIO_SetPinState(OMACTEST_Rx, FALSE);
 #endif
 	Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
 	hal_printf("start OMACTest::Receive\n");
@@ -101,16 +104,16 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	//}
 
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
+	CPU_GPIO_SetPinState(OMACTEST_Rx, TRUE);
+	CPU_GPIO_SetPinState(OMACTEST_Rx, FALSE);
 #endif
 	hal_printf("end OMACTest::Receive\n");
 }
 
 void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 31, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 31, FALSE);
+	CPU_GPIO_SetPinState(OMACTEST_TxAck, TRUE);
+	CPU_GPIO_SetPinState(OMACTEST_TxAck, FALSE);
 #endif
 	if(status == NO_Success){
 
@@ -132,9 +135,9 @@ BOOL OMACTest::Send(){
 		return FALSE;
 	}
 #ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
+	CPU_GPIO_SetPinState(OMACTEST_Tx, TRUE);
+	CPU_GPIO_SetPinState(OMACTEST_Tx, FALSE);
+	CPU_GPIO_SetPinState(OMACTEST_Tx, TRUE);
 #endif
 	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
 	bool ispcktScheduled = Mac_Send(Nbr2beFollowed, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
