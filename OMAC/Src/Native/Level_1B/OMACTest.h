@@ -35,13 +35,14 @@ public:
 	UINT8 MacId;
 	static UINT32 sendPingCount;
 	static UINT32 sendPongCount;
-	UINT16 RcvCount;
+	static UINT32 recvCount;
 
 	BOOL Initialize();
 	BOOL StartTest();
 	void Receive(void* msg, UINT16 size);
 	BOOL Send();
 	void SendAck(void *msg, UINT16 size, NetOpStatus status);
+	void GetStatistics();
 };
 
 //extern OMACTest g_OMACTest;
@@ -50,6 +51,7 @@ void OMACTest_Initialize();
 
 UINT32 OMACTest::sendPingCount = 1;
 UINT32 OMACTest::sendPongCount = 1;
+UINT32 OMACTest::recvCount = 0;
 
 #endif /* OMACTEST_H_ */
 

@@ -36,5 +36,7 @@ void ApplicationEntryPoint()
 
     } while(false); // run only once!
 
-    while(true);
+    while(true){
+    	::Events_WaitForEvents(0, 100);
+    }
 }
