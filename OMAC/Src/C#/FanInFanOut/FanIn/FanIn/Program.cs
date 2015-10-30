@@ -86,11 +86,12 @@ namespace Samraksh.eMote.Net.Mac.FanIn
         //public variables
         //UInt32 totalPingCount = 1000;
         const UInt16 MAX_NEIGHBORS = 12;
+        const UInt32 endOfTest = 150;
 
         System.Collections.Hashtable neighborHashtable = new System.Collections.Hashtable();
         
         UInt16 myAddress;
-        static UInt32 recvMsgCounter = 0;
+        //static UInt32 recvMsgCounter = 1;
         static UInt32 totalRecvCounter = 0;
         EmoteLCD lcd;
 
@@ -185,15 +186,15 @@ namespace Samraksh.eMote.Net.Mac.FanIn
                     neighborHashtable[rcvMsg.Src] = nbrTableInfo;
                     //neighborHashtable.Add(rcvMsg.Src, nbrTableInfo);
                 }
-                nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvMsg.Src];
-                //while (recvMsgCounter < pingPayload.pingMsgId)
-                recvMsgCounter = nbrTableInfo.recvCount + 1;
-                while (recvMsgCounter < nbrTableInfo.recvCount)
+                Debug.Print("recvCount from node " + rcvMsg.Src + " is " + nbrTableInfo.recvCount);
+                //nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvMsg.Src];
+                
+                /*while (recvMsgCounter < nbrTableInfo.recvCount)
                 {
                     Debug.Print("Missed msgID: " + recvMsgCounter);
                     recvMsgCounter++;
                 }
-                //recvMsgCounter = pingPayload.pingMsgId + 1;
+                recvMsgCounter = pingPayload.pingMsgId + 1;*/
                 Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
             }
             else
@@ -202,13 +203,22 @@ namespace Samraksh.eMote.Net.Mac.FanIn
             }
 
             Debug.Print("---------------------------");
+            if (totalRecvCounter == endOfTest)
+            {
+                ShowStatistics();
+            }
         }
 
         //Show statistics
         void ShowStatistics()
         {
             Debug.Print("==============STATS================");
-            Debug.Print("total msgs received " + totalRecvCounter);
+            foreach (UInt32 nbr in neighborHashtable)
+            {
+                NeighborTableInfo nbrTableInfo = (NeighborTableInfo)neighborHashtable[nbr];
+                Debug.Print("Node: " + nbr + "; Total msgs received is " + nbrTableInfo.recvCount);
+            }
+            Debug.Print("Total msgs received is " + totalRecvCounter);
             Debug.Print("==================================");
             Thread.Sleep(Timeout.Infinite);
         }
