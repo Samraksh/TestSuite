@@ -78,14 +78,11 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
     public class Program
     {
-        UInt32 totalPingCount = 1000;
-        static UInt32 i = 0;
-        //Define nodes that are participating in ping-pong
-        UInt16 neighbor1 = 3505;
-        UInt16 neighbor2 = 6846;
-        
         //public variables
+        UInt32 totalPingCount = 1000;
+        const UInt16 MAX_NEIGHBORS = 12;
         UInt16 dutyCyclePeriod = 5000;
+        bool startSend = false;
         UInt16 myAddress;
         Timer sendTimer;
         NetOpStatus status;
@@ -164,26 +161,32 @@ namespace Samraksh.eMote.Net.Mac.Ping
         {
             try
             {
-                sendMsgCounter++; i++;
-                pingMsg.pingMsgId = sendMsgCounter;
-                byte[] msg = pingMsg.ToBytes();
-
-                Debug.Print("Sending ping msgID " + sendMsgCounter.ToString());
-
-                if (myAddress == neighbor1)
+                bool sendFlag = false;
+                UInt16[] neighborList = myOMACObj.GetNeighborList();
+                
+                for (int j = 0; j < MAX_NEIGHBORS; j++)
                 {
-                    status = myOMACObj.Send(neighbor2, msg, 0, (ushort)msg.Length);
-                }
-                else
-                {
-                    status = myOMACObj.Send(neighbor1, msg, 0, (ushort)msg.Length);
-                }
+                    if (neighborList[j] != 0)
+                    {
+                        //Debug.Print("count of neighbors " + neighborList.Length);
+                        startSend = true; sendFlag = true;
+                        sendMsgCounter++;
+                        pingMsg.pingMsgId = sendMsgCounter;
+                        byte[] msg = pingMsg.ToBytes();
+                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
 
-                if (status != NetOpStatus.S_Success)
-                {
-                    Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
+                        status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        if (status != NetOpStatus.S_Success)
+                        {
+                            Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
+                        }
+                    }
                 }
-
+                if (sendFlag == false && startSend == true)
+                {
+                    Debug.Print("Ping failed. All neighbors dropped out");
+                }
+                
                 if (sendMsgCounter < 10) 
                 {
                     lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
@@ -212,8 +215,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
                     UInt16 unitPlace = (UInt16)(remainder % 10);
                     lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
-                
-                if (i == totalPingCount)
+
+                if (sendMsgCounter == totalPingCount)
                 {
                     ShowStatistics();
                 }

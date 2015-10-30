@@ -68,7 +68,7 @@ public:
 
 void OMACTest_Initialize();
 
-UINT32 OMACTest::sendPingCount = 1;
+UINT32 OMACTest::sendPingCount = 0;
 UINT32 OMACTest::recvCount = 0;
 UINT32 OMACTest::missedPingID = 1;
 
