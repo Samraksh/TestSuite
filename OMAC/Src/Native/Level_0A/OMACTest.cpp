@@ -17,7 +17,7 @@ extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
 
 #define NEIGHBORCLOCKMONITORPIN 31 //2
-#define LOCALCLOCKMONITORPIN 29 //25
+#define LOCALCLOCKMONITORPIN 22 //25
 
 #define LocalClockMonitor_TIMER 32
 #define NeighborClockMonitor_TIMER 33
