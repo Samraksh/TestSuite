@@ -9,26 +9,21 @@
 //#include <Samraksh/HALTimer.h>
 #include "OMACTest.h"
 
-const UINT16 ONESEC_IN_MSEC = 1000;
-const UINT16 ONEMSEC_IN_USEC = 1000;
+#define OMACTEST_TIMER	32
 
 OMACTest g_OMACTest;
+
 extern NeighborTable g_NeighborTable;
 extern OMACType g_OMAC;
 extern OMACScheduler g_omac_scheduler;
 
+const UINT16 ONESEC_IN_MSEC = 1000;
+const UINT16 ONEMSEC_IN_USEC = 1000;
 const UINT32 endOfTestCounter = 10000;
 const UINT32 dataSendStartingDelay = 0;	//in secs
 const UINT32 delayBetweenPackets = 5;	//in secs
 
-//const UINT8 MAX_NEIGHBORS = 12;
 UINT16 neighborList[MAX_NEIGHBORS];		//table to store neighbor's MAC address
-
-#define OMACTEST_TIMER	32
-
-/*UINT16 Neighbor2beFollowed;
-#define TXNODEID	3505
-#define RXNODEID	6846*/
 
 
 void Timer_OMACTEST_TIMER_Handler(void * arg){
@@ -40,10 +35,7 @@ void Timer_OMACTEST_TIMER_Handler(void * arg){
 	if(g_OMACTest.sendPingCount == endOfTestCounter){
 		VirtTimer_Stop(OMACTEST_TIMER);
 		g_OMACTest.GetStatistics();
-		//private_free(neighborList);
 	}
-
-	//g_OMACTest.sendPingCount++;
 
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 29, FALSE);
@@ -61,7 +53,6 @@ void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
 }
 
 BOOL OMACTest::Initialize(){
-	//MF_NODE_ID=10;	//Set address
 	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	Config.Network = 138;
 	Config.NeighborLivenessDelay = 900000;
@@ -86,14 +77,6 @@ BOOL OMACTest::Initialize(){
 	pingPayload.msgContent = (char*)"PING";
 	//<end> Initialize payload
 
-	//neighborList = (UINT16*)private_malloc(sizeof(UINT16) * MAX_NEIGHBORS);
-	/*if(g_OMAC.GetAddress() == RXNODEID) {
-		Neighbor2beFollowed = TXNODEID;
-	}
-	else {
-		Neighbor2beFollowed = RXNODEID;
-	}*/
-
 	return TRUE;
 }
 
@@ -103,12 +86,6 @@ BOOL OMACTest::StartTest(){
 }
 
 BOOL OMACTest::Send(){
-	//UINT16 Neighbor2beFollowed = g_omac_scheduler.Neighbor2beFollowed;
-	/*if (g_NeighborTable.GetNeighborPtr(Neighbor2beFollowed) == NULL) {
-		hal_printf("Could not find neighbor :%d\n", Neighbor2beFollowed);
-		return FALSE;
-	}*/
-
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 24, FALSE);
@@ -179,7 +156,6 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, TRUE);
 	CPU_GPIO_SetPinState((GPIO_PIN) 30, FALSE);
 #endif
-	//hal_printf("OMACTest::Receive end\n");
 }
 
 void OMACTest::GetStatistics()
@@ -188,7 +164,7 @@ void OMACTest::GetStatistics()
 	hal_printf("OMACTest Level_1A. I am node: %d\n", g_OMAC.GetAddress());
 	hal_printf("Total packets transmitted: %u\n", sendPingCount);
 	hal_printf("Total packets received: %u\n", recvCount);
-	//hal_printf("percentage received: %f %\n", (recvCount/sendPingCount)*100);
+	//hal_printf("percentage received: %f \n", (recvCount/sendPingCount)*100);
 	hal_printf("===========================\n");
 }
 
