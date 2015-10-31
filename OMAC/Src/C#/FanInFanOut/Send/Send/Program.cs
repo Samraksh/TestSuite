@@ -10,13 +10,8 @@ using Samraksh.eMote.DotNow;
 //  1a. Registers a function that tracks change in neighbor (NeighborChange) and a function to handle messages that are received.
 //2. Pings are sent at pre-determined intervals.
 //3. Pongs are sent back for received messages.
-namespace Samraksh.eMote.Net.Mac.FanIn
+namespace Samraksh.eMote.Net.Mac.Send
 {
-    public class NeighborTableInfo
-    {
-        public UInt32 recvCount;
-    }
-
     public class PingPayload
     {
         public UInt32 pingMsgId;
@@ -84,18 +79,20 @@ namespace Samraksh.eMote.Net.Mac.FanIn
     public class Program
     {
         //public variables
-        //UInt32 totalPingCount = 1000;
+        UInt32 totalPingCount = 1000;
         const UInt16 MAX_NEIGHBORS = 12;
-        const UInt32 endOfTest = 150;
-
-        System.Collections.Hashtable neighborHashtable = new System.Collections.Hashtable();
-        
+        UInt16 dutyCyclePeriod = 5000;
+        bool startSend = false;
         UInt16 myAddress;
+        Timer sendTimer;
+        NetOpStatus status;
+        static UInt32 sendMsgCounter = 1;
         //static UInt32 recvMsgCounter = 1;
-        static UInt32 totalRecvCounter = 0;
+        //static UInt32 totalRecvCounter = 0;
         EmoteLCD lcd;
 
         PingPayload pingMsg = new PingPayload();
+
         static Mac.OMAC myOMACObj;
         ReceiveCallBack myReceiveCB;
         NeighborhoodChangeCallBack myNeibhborhoodCB;
@@ -136,7 +133,7 @@ namespace Samraksh.eMote.Net.Mac.FanIn
 
             Debug.Print("OMAC init done");
             myAddress = myOMACObj.GetAddress();
-            Debug.Print("My address is: " + myAddress.ToString() + ". I am in FanIn mode");
+            Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
         }
 
         //Keeps track of change in neighborhood
@@ -145,10 +142,99 @@ namespace Samraksh.eMote.Net.Mac.FanIn
             Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
+        //Starts a timer 
+        public void Start()
+        {
+            Debug.Print("Starting timer...");
+            TimerCallback timerCB = new TimerCallback(sendTimerCallback);
+            sendTimer = new Timer(timerCB, null, 0, dutyCyclePeriod);
+            Debug.Print("Timer initialization done");
+        }
+
+        //Calls ping at regular intervals
+        void sendTimerCallback(Object obj)
+        {
+            SendPing();
+        }
+
+        public void SendPing()
+        {
+            try
+            {
+                bool sendFlag = false;
+                UInt16[] neighborList = myOMACObj.GetNeighborList();
+
+                for (int j = 0; j < MAX_NEIGHBORS; j++)
+                {
+                    if (neighborList[j] != 0)
+                    {
+                        //Debug.Print("count of neighbors " + neighborList.Length);
+                        startSend = true; sendFlag = true;
+                        pingMsg.pingMsgId = sendMsgCounter;
+                        byte[] msg = pingMsg.ToBytes();
+                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+
+                        status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        if (status != NetOpStatus.S_Success)
+                        {
+                            Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
+                        }
+                    }
+                }
+                if (sendFlag == false && startSend == true)
+                {
+                    Debug.Print("Ping failed. All neighbors dropped out");
+                }
+                //Increment msgCounter only if there is a send
+                if (sendFlag == true)
+                {
+                    sendMsgCounter++;
+                }
+
+                if (sendMsgCounter < 10)
+                {
+                    lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
+                }
+                else if (sendMsgCounter < 100)
+                {
+                    UInt16 tenthPlace = (UInt16)(sendMsgCounter / 10);
+                    UInt16 unitPlace = (UInt16)(sendMsgCounter % 10);
+                    lcd.Write(LCD.CHAR_S, LCD.CHAR_S, (LCD)tenthPlace, (LCD)unitPlace);
+                }
+                else if (sendMsgCounter < 1000)
+                {
+                    UInt16 hundredthPlace = (UInt16)(sendMsgCounter / 100);
+                    UInt16 remainder = (UInt16)(sendMsgCounter % 100);
+                    UInt16 tenthPlace = (UInt16)(remainder / 10);
+                    UInt16 unitPlace = (UInt16)(remainder % 10);
+                    lcd.Write(LCD.CHAR_S, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+                }
+                else if (sendMsgCounter < 10000)
+                {
+                    UInt16 thousandthPlace = (UInt16)(sendMsgCounter / 1000);
+                    UInt16 remainder = (UInt16)(sendMsgCounter % 1000);
+                    UInt16 hundredthPlace = (UInt16)(remainder / 100);
+                    remainder = (UInt16)(remainder % 100);
+                    UInt16 tenthPlace = (UInt16)(remainder / 10);
+                    UInt16 unitPlace = (UInt16)(remainder % 10);
+                    lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+                }
+
+                if (sendMsgCounter == totalPingCount)
+                {
+                    ShowStatistics();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("SendPing: " + ex.ToString());
+            }
+        }
+
         //Handles received messages 
         public void Receive(UInt16 countOfPackets)
         {
-            totalRecvCounter++;
+            /*totalRecvCounter++;
             Debug.Print("---------------------------");
             if (myOMACObj.GetPendingPacketCount() == 0)
             {
@@ -169,32 +255,13 @@ namespace Samraksh.eMote.Net.Mac.FanIn
             PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
             if (pingPayload != null)
             {
-                Debug.Print("Received msgID " + pingPayload.pingMsgId + " from SRC " + rcvMsg.Src);
-                NeighborTableInfo nbrTableInfo;
-                //If hashtable already contains an entry for the source, extract it, increment recvCount and store it back
-                if (neighborHashtable.Contains(rcvMsg.Src))
-                {
-                    nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvMsg.Src];
-                    nbrTableInfo.recvCount++;
-                    neighborHashtable[rcvMsg.Src] = nbrTableInfo;
-                }
-                //If hashtable does not have an entry, create a new instance and store it
-                else
-                {
-                    nbrTableInfo = new NeighborTableInfo();
-                    nbrTableInfo.recvCount = 1;
-                    neighborHashtable[rcvMsg.Src] = nbrTableInfo;
-                    //neighborHashtable.Add(rcvMsg.Src, nbrTableInfo);
-                }
-                Debug.Print("recvCount from node " + rcvMsg.Src + " is " + nbrTableInfo.recvCount);
-                //nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvMsg.Src];
-                
-                /*while (recvMsgCounter < nbrTableInfo.recvCount)
+                Debug.Print("Received msgID " + pingPayload.pingMsgId);
+                while (recvMsgCounter < pingPayload.pingMsgId)
                 {
                     Debug.Print("Missed msgID: " + recvMsgCounter);
                     recvMsgCounter++;
                 }
-                recvMsgCounter = pingPayload.pingMsgId + 1;*/
+                recvMsgCounter = pingPayload.pingMsgId + 1;
                 Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
             }
             else
@@ -202,23 +269,14 @@ namespace Samraksh.eMote.Net.Mac.FanIn
                 Debug.Print("Received a null msg");
             }
 
-            Debug.Print("---------------------------");
-            if (totalRecvCounter == endOfTest)
-            {
-                ShowStatistics();
-            }
+            Debug.Print("---------------------------");*/
         }
 
         //Show statistics
         void ShowStatistics()
         {
             Debug.Print("==============STATS================");
-            foreach (UInt32 nbr in neighborHashtable)
-            {
-                NeighborTableInfo nbrTableInfo = (NeighborTableInfo)neighborHashtable[nbr];
-                Debug.Print("Node: " + nbr + "; Total msgs received is " + nbrTableInfo.recvCount);
-            }
-            Debug.Print("Total msgs received is " + totalRecvCounter);
+            Debug.Print("total msgs sent " + sendMsgCounter);
             Debug.Print("==================================");
             Thread.Sleep(Timeout.Infinite);
         }
@@ -227,6 +285,7 @@ namespace Samraksh.eMote.Net.Mac.FanIn
         {
             Program p = new Program();
             p.Initialize();
+            p.Start();
             Thread.Sleep(Timeout.Infinite);
         }
     }

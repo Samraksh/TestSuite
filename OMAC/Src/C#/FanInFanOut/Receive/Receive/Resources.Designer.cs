@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FanIn
+namespace Receive
 {
     internal class Resources
     {
@@ -19,7 +19,7 @@ namespace FanIn
             {
                 if ((Resources.manager == null))
                 {
-                    Resources.manager = new System.Resources.ResourceManager("FanIn.Resources", typeof(Resources).Assembly);
+                    Resources.manager = new System.Resources.ResourceManager("Receive.Resources", typeof(Resources).Assembly);
                 }
                 return Resources.manager;
             }

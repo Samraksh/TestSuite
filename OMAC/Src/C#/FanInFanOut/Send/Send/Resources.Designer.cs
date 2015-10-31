@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FanOut
+namespace Send
 {
     internal class Resources
     {
@@ -19,7 +19,7 @@ namespace FanOut
             {
                 if ((Resources.manager == null))
                 {
-                    Resources.manager = new System.Resources.ResourceManager("FanOut.Resources", typeof(Resources).Assembly);
+                    Resources.manager = new System.Resources.ResourceManager("Send.Resources", typeof(Resources).Assembly);
                 }
                 return Resources.manager;
             }
