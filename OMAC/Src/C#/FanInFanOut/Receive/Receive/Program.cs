@@ -82,6 +82,14 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 Debug.Print(((UInt32)(msg[1] << 16)).ToString());
                 Debug.Print(((UInt32)(msg[2] << 8)).ToString());
                 Debug.Print(((UInt32)(msg[3])).ToString());
+                Debug.Print(msg[0].ToString());
+                Debug.Print(msg[1].ToString());
+                Debug.Print(msg[2].ToString());
+                Debug.Print(msg[3].ToString());
+                Debug.Print(msg[4].ToString());
+                Debug.Print(msg[5].ToString());
+                Debug.Print(msg[6].ToString());
+                Debug.Print(msg[7].ToString());
                 return null;
             }
         }
@@ -227,6 +235,14 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 Debug.Print(((UInt32)(rcvPayload[1] << 16)).ToString());
                 Debug.Print(((UInt32)(rcvPayload[2] << 8)).ToString());
                 Debug.Print(((UInt32)(rcvPayload[3])).ToString());
+                Debug.Print(rcvPayload[0].ToString());
+                Debug.Print(rcvPayload[1].ToString());
+                Debug.Print(rcvPayload[2].ToString());
+                Debug.Print(rcvPayload[3].ToString());
+                Debug.Print(rcvPayload[4].ToString());
+                Debug.Print(rcvPayload[5].ToString());
+                Debug.Print(rcvPayload[6].ToString());
+                Debug.Print(rcvPayload[7].ToString());
                 Debug.Print("---------------------------");
             }
         }
@@ -252,7 +268,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             }
             Debug.Print("Total msgs received from all nodes is " + totalRecvCounter);
             Debug.Print("==================================");
-            Thread.Sleep(Timeout.Infinite);
+            //Thread.Sleep(Timeout.Infinite);
         }
 
         public static void Main()
