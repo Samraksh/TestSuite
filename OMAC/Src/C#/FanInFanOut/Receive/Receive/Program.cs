@@ -265,6 +265,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 {
                     Debug.Print(obj.ToString() + " ,");
                 }
+                nbrTableInfo.AL.Clear();
             }
             Debug.Print("Total msgs received from all nodes is " + totalRecvCounter);
             Debug.Print("==================================");
