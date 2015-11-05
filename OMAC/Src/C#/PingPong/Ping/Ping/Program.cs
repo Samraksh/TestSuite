@@ -175,18 +175,22 @@ namespace Samraksh.eMote.Net.Mac.Ping
         private static readonly AutoResetEvent canPongProceed = new AutoResetEvent(false);    
 
         //public variables
-        UInt32 totalPingCount = 1000;
+        UInt32 totalPingCount = 200;
         UInt16 dutyCyclePeriod = 20000;
+        UInt16 countDownTimerDueValue = 5000;
+        UInt16 countDownTimerDueTime;
         UInt16[] neighborList;
         const UInt16 MAX_NEIGHBORS = 12;
         
         bool startSend = false;
         UInt16 myAddress;
-        //Timer sendTimer;
+        Timer pongNotReceivedTimer;
         NetOpStatus status;
         static UInt32 sendMsgCounter = 0;
+        static UInt32 totalSendMsgCounter = 0;
         //static UInt32 pongIdCounter = 0;
         //static UInt32 recvMsgCounter = 1;
+        //static int badMsgCounter = 0;
         static UInt32 totalRecvCounter = 0;
         EmoteLCD lcd;
 
@@ -202,6 +206,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         public void Initialize()
         {
+            countDownTimerDueTime = (UInt16)(dutyCyclePeriod + countDownTimerDueValue);
             //Init LCD
             lcd = new EmoteLCD();
             lcd.Initialize();
@@ -245,19 +250,21 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //Starts a timer 
         public void Start()
         {
-            /*Debug.Print("Starting timer...");
-            TimerCallback timerCB = new TimerCallback(sendTimerCallback);
-            sendTimer = new Timer(timerCB, null, 0, dutyCyclePeriod);
-            Debug.Print("Timer initialization done");*/
-            Debug.Print("Starting to send ping");
+            Debug.Print("Starting timer...");
+            TimerCallback timerCB = new TimerCallback(pongNotReceivedTimerCallback);
+            pongNotReceivedTimer = new Timer(timerCB, null, countDownTimerDueTime, countDownTimerDueTime);
+            Debug.Print("Timer initialization done");
+            Debug.Print("Starting SendPing");
             SendPing();
         }
 
         //Calls ping at regular intervals
-        /*void sendTimerCallback(Object obj)
+        void pongNotReceivedTimerCallback(Object obj)
         {
+            Debug.Print("Timer countdown reached");
+            sendMsgCounter--;
             SendPing();
-        }*/
+        }
 
         public void SendPing()
         {
@@ -286,39 +293,49 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 try
                 {
                     canPingProceed.WaitOne();
-                    //Debug.Print("Sending ping");
+
                     bool sendFlag = false;
                     neighborList = myOMACObj.GetNeighborList();
+                    
+                    //Set the timer to go off after countDownTimerDueTime before starting to send ping
+                    Debug.Print("Resetting timer in SendPing");
+                    pongNotReceivedTimer.Change(countDownTimerDueTime, countDownTimerDueTime);
+
                     Thread.Sleep(dutyCyclePeriod);
+
+                    sendMsgCounter++; totalSendMsgCounter++;
+                    Debug.Print("Total msgs sent: " + totalSendMsgCounter);
 
                     for (int j = 0; j < MAX_NEIGHBORS; j++)
                     {
                         if (neighborList[j] != 0)
                         {
-                            //Debug.Print("count of neighbors " + neighborList.Length);
                             startSend = true; sendFlag = true;
-                            sendMsgCounter++;
                             pingMsg.pingMsgId = sendMsgCounter;
                             pingMsg.pingSenderAddress = myAddress;
                             byte[] msg = pingMsg.ToBytes();
                             Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                            //Debug.Print("Sending to neighbor " + 31436 + " ping msgID " + sendMsgCounter);
 
                             status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                            //status = myOMACObj.Send(31436, msg, 0, (ushort)msg.Length);
                             if (status != NetOpStatus.S_Success)
                             {
                                 Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
                             }
-                            canPingProceed.Reset();
-                            canPongProceed.Set();
                         }
                     }
                     if (sendFlag == false && startSend == true)
                     {
                         Debug.Print("Ping failed. All neighbors dropped out");
+                        pongNotReceivedTimer.Change(Timeout.Infinite, Timeout.Infinite);
                         //Stop both ping and pong
                         //canPingProceed.Reset();
                         //canPongProceed.Reset();
                     }
+
+                    canPingProceed.Reset();
+                    canPongProceed.Set();
 
                     if (sendMsgCounter < 10)
                     {
@@ -360,6 +377,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
         public void Receive(UInt16 countOfPackets)
         {
             canPongProceed.WaitOne();
+
+            //Change timer countdown as soon a packet is received. This effectively tells ping that 
+            //a pong has been received and that a ping need not be sent.
+            Debug.Print("Resetting timer in Receive");
+            pongNotReceivedTimer.Change(countDownTimerDueTime, countDownTimerDueTime);
+
             if (myOMACObj.GetPendingPacketCount() == 0)
             {
                 Debug.Print("no packets");
@@ -418,28 +441,50 @@ namespace Samraksh.eMote.Net.Mac.Ping
                             canPongProceed.Reset();
                             canPingProceed.Reset();
                         }
-                        else
+                        /*else
                         {
                             canPongProceed.Reset();
                             canPingProceed.Set();
-                        }
+                        }*/
                     }
                     else
                     {
-                        Debug.Print("Invalid msg content. Trying again. ");
+                        Debug.Print("Invalid msg content. Sending ping again");
                         sendMsgCounter--;
-                        canPongProceed.Reset();
-                        canPingProceed.Set();
+                        //canPongProceed.Reset();
+                        //canPingProceed.Set();
                     }
+                    canPongProceed.Reset();
+                    canPingProceed.Set();
                 }
                 else
                 {
                     Debug.Print("Ignoring pong from sender " + pongPayload.pongSenderAddress + " with msgId " + pongPayload.pongMsgId);
+                    /*badMsgCounter++;
+                    if (badMsgCounter > 2)
+                    {
+                        Debug.Print("Sending ping again");
+                        badMsgCounter = 0;
+                        sendMsgCounter--;
+                        canPongProceed.Reset();
+                        canPingProceed.Set();
+                    }
+                    else
+                    {
+                        Debug.Print("Listening again");
+                        canPongProceed.Set();
+                        canPingProceed.Reset();
+                    }*/
+
+                    Debug.Print("Sending ping again");
+                    sendMsgCounter--;
+                    canPongProceed.Reset();
+                    canPingProceed.Set();
                 }
             }
             else
             {
-                Debug.Print("Received a null msg. Trying again. ");
+                Debug.Print("Received a null msg. Sending ping again");
                 sendMsgCounter--;
                 canPongProceed.Reset();
                 canPingProceed.Set();
@@ -450,7 +495,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
         void ShowStatistics()
         {
             Debug.Print("==============STATS================");
-            Debug.Print("total msgs sent " + sendMsgCounter);
+            Debug.Print("msg count sent " + sendMsgCounter);
+            Debug.Print("total msgs sent " + totalSendMsgCounter);
             Debug.Print("total msgs received " + totalRecvCounter);
             //Debug.Print("percentage received " + (totalRecvCounter / sendMsgCounter) * 100);
             Debug.Print("==================================");
