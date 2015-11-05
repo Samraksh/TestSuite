@@ -100,7 +100,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //public variables
         //UInt32 totalPingCount = 1000;
         const UInt16 MAX_NEIGHBORS = 12;
-        const UInt32 endOfTest = 75;
+        const UInt32 endOfTest = 100;
 
         Hashtable neighborHashtable = new Hashtable();
         

@@ -81,7 +81,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //public variables
         UInt32 totalPingCount = 1000;
         const UInt16 MAX_NEIGHBORS = 12;
-        UInt16 dutyCyclePeriod = 5000;
+        UInt16 dutyCyclePeriod = 20000;
         bool startSend = false;
         UInt16 myAddress;
         Timer sendTimer;
