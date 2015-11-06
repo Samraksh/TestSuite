@@ -174,26 +174,23 @@ namespace Samraksh.eMote.Net.Mac.Ping
         private static readonly AutoResetEvent canPingProceed = new AutoResetEvent(true);
         private static readonly AutoResetEvent canPongProceed = new AutoResetEvent(false);    
 
-        //public variables
-        UInt32 totalPingCount = 200;
+        const UInt16 MAX_NEIGHBORS = 12;
+        NetOpStatus status;
+        Timer pongNotReceivedTimer;
+        EmoteLCD lcd;
+
+        UInt16[] neighborList;
+        bool startSend = false;
+        UInt16 myAddress;
         UInt16 dutyCyclePeriod = 20000;
         UInt16 countDownTimerDueValue = 10000;
         UInt16 countDownTimerDueTime;
-        UInt16[] neighborList;
-        const UInt16 MAX_NEIGHBORS = 12;
-        
-        bool startSend = false;
-        UInt16 myAddress;
-        Timer pongNotReceivedTimer;
-        NetOpStatus status;
+        UInt32 totalPingCount = 200;
+                
         static UInt32 sendMsgCounter = 0;
         static UInt32 totalSendMsgCounter = 0;
-        //static UInt32 pongIdCounter = 0;
-        //static UInt32 recvMsgCounter = 1;
-        //static int badMsgCounter = 0;
         static UInt32 totalRecvCounter = 0;
-        EmoteLCD lcd;
-
+        
         PingPayload pingMsg = new PingPayload();
         PongPayload pongMsg = new PongPayload();
 
@@ -262,6 +259,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         void pongNotReceivedTimerCallback(Object obj)
         {
             Debug.Print("Timer countdown reached");
+            //Send previous message
             sendMsgCounter--;
             SendPing();
         }
@@ -316,10 +314,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
                             pingMsg.pingSenderAddress = myAddress;
                             byte[] msg = pingMsg.ToBytes();
                             Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-                            //Debug.Print("Sending to neighbor " + 31436 + " ping msgID " + sendMsgCounter);
-
+                            
                             status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
-                            //status = myOMACObj.Send(31436, msg, 0, (ushort)msg.Length);
                             if (status != NetOpStatus.S_Success)
                             {
                                 Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
@@ -335,7 +331,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
                         //canPongProceed.Reset();
                     }
 
-                    //Debug.Print("enabling pong and disabling ping");
                     canPingProceed.Reset();
                     canPongProceed.Set();
 
@@ -408,12 +403,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
                     Debug.Print("---------------------------");
                     Debug.Print("totalRecvCounter is " + totalRecvCounter);
                     Debug.Print("Received msgID " + pongPayload.pongMsgId);
-                    /*while (recvMsgCounter < pongPayload.pongMsgId)
-                    {
-                        Debug.Print("Missed msgID: " + recvMsgCounter);
-                        recvMsgCounter++;
-                    }
-                    recvMsgCounter = pongPayload.pongMsgId + 1;*/
                     Debug.Print("Received msgContent " + pongPayload.pongMsgContent.ToString());
                     Debug.Print("Received address " + pongPayload.pongSenderAddress.ToString());
                     Debug.Print("---------------------------");
@@ -421,66 +410,29 @@ namespace Samraksh.eMote.Net.Mac.Ping
                     bool result = pongPayload.pongMsgContent.Equals("PONG");
                     if (result)
                     {
-                        /*for (int j = 0; j < MAX_NEIGHBORS; j++)
-                        {
-                            if (neighborList[j] != 0)
-                            {
-                                pongIdCounter++;
-                                pongMsg.pongMsgId = pongIdCounter;
-                                byte[] msg = pongMsg.ToBytes();
-                                Debug.Print("Sending to neighbor " + neighborList[j] + " pong msgID " + pongIdCounter);
-
-                                status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
-                                if (status != NetOpStatus.S_Success)
-                                {
-                                    Debug.Print("Send failed. Pong msgID " + pongIdCounter.ToString());
-                                }
-                            }
-                        }*/
                         if (totalRecvCounter == totalPingCount)
                         {
                             ShowStatistics();
+                            //Disable ping and pong
                             canPongProceed.Reset();
                             canPingProceed.Reset();
                         }
-                        /*else
-                        {
-                            canPongProceed.Reset();
-                            canPingProceed.Set();
-                        }*/
                     }
                     else
                     {
                         Debug.Print("Invalid msg content. Sending ping again");
                         sendMsgCounter--;
-                        //canPongProceed.Reset();
-                        //canPingProceed.Set();
                     }
-                    //Debug.Print("enabling ping and disabling pong");
+                    //Enable ping and disable pong
                     canPongProceed.Reset();
                     canPingProceed.Set();
                 }
                 else
                 {
                     Debug.Print("Ignoring pong from sender " + pongPayload.pongSenderAddress + " with msgId " + pongPayload.pongMsgId);
-                    /*badMsgCounter++;
-                    if (badMsgCounter > 2)
-                    {
-                        Debug.Print("Sending ping again");
-                        badMsgCounter = 0;
-                        sendMsgCounter--;
-                        canPongProceed.Reset();
-                        canPingProceed.Set();
-                    }
-                    else
-                    {
-                        Debug.Print("Listening again");
-                        canPongProceed.Set();
-                        canPingProceed.Reset();
-                    }*/
-
                     Debug.Print("Sending ping again");
                     sendMsgCounter--;
+                    //Enable ping and disable pong
                     canPongProceed.Reset();
                     canPingProceed.Set();
                 }
@@ -489,6 +441,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             {
                 Debug.Print("Received a null msg. Sending ping again");
                 sendMsgCounter--;
+                //Enable ping and disable pong
                 canPongProceed.Reset();
                 canPingProceed.Set();
             }
@@ -501,7 +454,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
             Debug.Print("msg count sent " + sendMsgCounter);
             Debug.Print("total msgs sent " + totalSendMsgCounter);
             Debug.Print("total msgs received " + totalRecvCounter);
-            //Debug.Print("percentage received " + (totalRecvCounter / sendMsgCounter) * 100);
             Debug.Print("==================================");
             Thread.Sleep(Timeout.Infinite);
         }

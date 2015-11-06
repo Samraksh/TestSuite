@@ -97,18 +97,14 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
     public class Program
     {
-        //public variables
-        //UInt32 totalPingCount = 1000;
         const UInt16 MAX_NEIGHBORS = 12;
         const UInt32 endOfTest = 100;
-
         Hashtable neighborHashtable = new Hashtable();
-        
-        UInt16 myAddress;
-        //static UInt32 recvMsgCounter = 1;
-        static UInt32 totalRecvCounter = 0;
         EmoteLCD lcd;
 
+        UInt16 myAddress;
+        static UInt32 totalRecvCounter = 0;
+        
         PingPayload pingMsg = new PingPayload();
         static Mac.OMAC myOMACObj;
         ReceiveCallBack myReceiveCB;
@@ -207,14 +203,6 @@ namespace Samraksh.eMote.Net.Mac.Receive
                         //neighborHashtable.Add(rcvMsg.Src, nbrTableInfo);
                     }
                     Debug.Print("recvCount from node " + rcvMsg.Src + " is " + nbrTableInfo.recvCount);
-                    //nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvMsg.Src];
-
-                    /*while (recvMsgCounter < nbrTableInfo.recvCount)
-                    {
-                        Debug.Print("Missed msgID: " + recvMsgCounter);
-                        recvMsgCounter++;
-                    }
-                    recvMsgCounter = pingPayload.pingMsgId + 1;*/
                     Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
                     Debug.Print("---------------------------");
                 }

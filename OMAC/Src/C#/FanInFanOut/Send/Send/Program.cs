@@ -78,19 +78,17 @@ namespace Samraksh.eMote.Net.Mac.Send
 
     public class Program
     {
-        //public variables
-        UInt32 totalPingCount = 101;
+        const UInt32 totalPingCount = 101;
         const UInt16 MAX_NEIGHBORS = 12;
         int dutyCyclePeriod = 60000;
+
         bool startSend = false;
         UInt16 myAddress;
         Timer sendTimer;
         NetOpStatus status;
-        static UInt32 sendMsgCounter = 1;
-        //static UInt32 recvMsgCounter = 1;
-        //static UInt32 totalRecvCounter = 0;
         EmoteLCD lcd;
-
+        static UInt32 sendMsgCounter = 1;
+        
         PingPayload pingMsg = new PingPayload();
 
         static Mac.OMAC myOMACObj;
@@ -235,42 +233,7 @@ namespace Samraksh.eMote.Net.Mac.Send
         //Handles received messages 
         public void Receive(UInt16 countOfPackets)
         {
-            /*totalRecvCounter++;
-            Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount() == 0)
-            {
-                Debug.Print("no packets");
-                return;
-            }
-
-            Message rcvMsg = myOMACObj.GetNextPacket();
-            if (rcvMsg == null)
-            {
-                Debug.Print("null");
-                return;
-            }
-
-            Debug.Print("totalRecvCounter is " + totalRecvCounter);
-
-            byte[] rcvPayload = rcvMsg.GetMessage();
-            PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
-            if (pingPayload != null)
-            {
-                Debug.Print("Received msgID " + pingPayload.pingMsgId);
-                while (recvMsgCounter < pingPayload.pingMsgId)
-                {
-                    Debug.Print("Missed msgID: " + recvMsgCounter);
-                    recvMsgCounter++;
-                }
-                recvMsgCounter = pingPayload.pingMsgId + 1;
-                Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
-            }
-            else
-            {
-                Debug.Print("Received a null msg");
-            }
-
-            Debug.Print("---------------------------");*/
+            
         }
 
         //Show statistics
