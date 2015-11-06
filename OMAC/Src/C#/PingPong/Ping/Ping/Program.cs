@@ -177,7 +177,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //public variables
         UInt32 totalPingCount = 200;
         UInt16 dutyCyclePeriod = 20000;
-        UInt16 countDownTimerDueValue = 5000;
+        UInt16 countDownTimerDueValue = 10000;
         UInt16 countDownTimerDueTime;
         UInt16[] neighborList;
         const UInt16 MAX_NEIGHBORS = 12;
@@ -286,6 +286,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
             canPingProceed.Set();
             canPongProceed.Reset();
+            
             //After getting list of neighbors, start sending them pings, until totalPingCount is reached
             //Send a ping only when a pong is received
             while (sendMsgCounter < totalPingCount)
@@ -334,10 +335,11 @@ namespace Samraksh.eMote.Net.Mac.Ping
                         //canPongProceed.Reset();
                     }
 
+                    //Debug.Print("enabling pong and disabling ping");
                     canPingProceed.Reset();
                     canPongProceed.Set();
 
-                    if (sendMsgCounter < 10)
+                    /*if (sendMsgCounter < 10)
                     {
                         lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
                     }
@@ -364,7 +366,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
                         UInt16 tenthPlace = (UInt16)(remainder / 10);
                         UInt16 unitPlace = (UInt16)(remainder % 10);
                         lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
-                    }
+                    }*/
                 }
                 catch (Exception ex)
                 {
@@ -380,8 +382,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
             //Change timer countdown as soon a packet is received. This effectively tells ping that 
             //a pong has been received and that a ping need not be sent.
-            Debug.Print("Resetting timer in Receive");
-            pongNotReceivedTimer.Change(countDownTimerDueTime, countDownTimerDueTime);
+            /*Debug.Print("Resetting timer in Receive");
+            pongNotReceivedTimer.Change(countDownTimerDueTime, countDownTimerDueTime);*/
 
             if (myOMACObj.GetPendingPacketCount() == 0)
             {
@@ -454,6 +456,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
                         //canPongProceed.Reset();
                         //canPingProceed.Set();
                     }
+                    //Debug.Print("enabling ping and disabling pong");
                     canPongProceed.Reset();
                     canPingProceed.Set();
                 }

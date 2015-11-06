@@ -432,6 +432,7 @@ namespace Samraksh.eMote.Net.Mac.Pong
             pongMsg.pongSenderAddress = myAddress;
             pongMsg.pongReceiverAddress = pingPayload.pingSenderAddress;
             byte[] msg = pongMsg.ToBytes();
+
             Debug.Print("Sending to neighbor " + pingPayload.pingSenderAddress + " pong msgID " + pingPayload.pingMsgId);
 
             status = myOMACObj.Send(pingPayload.pingSenderAddress, msg, 0, (ushort)msg.Length);

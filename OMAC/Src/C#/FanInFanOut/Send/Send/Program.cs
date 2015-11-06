@@ -79,9 +79,9 @@ namespace Samraksh.eMote.Net.Mac.Send
     public class Program
     {
         //public variables
-        UInt32 totalPingCount = 1000;
+        UInt32 totalPingCount = 101;
         const UInt16 MAX_NEIGHBORS = 12;
-        int dutyCyclePeriod = 300000;
+        int dutyCyclePeriod = 60000;
         bool startSend = false;
         UInt16 myAddress;
         Timer sendTimer;
@@ -222,6 +222,7 @@ namespace Samraksh.eMote.Net.Mac.Send
 
                 if (sendMsgCounter == totalPingCount)
                 {
+                    sendMsgCounter--;
                     ShowStatistics();
                 }
             }
