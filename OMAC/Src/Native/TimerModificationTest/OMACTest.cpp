@@ -21,6 +21,8 @@
 
 void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
 	//Toggle Pin State for monitoring with Logic Analyzer
+	VirtualTimerReturnMessage rm;
+	rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, 5000000, USEONESHOTTIMER);
 	CPU_GPIO_SetPinState((GPIO_PIN) LOCALCLOCKMONITORPIN, TRUE);
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
 	CPU_GPIO_SetPinState((GPIO_PIN) LOCALCLOCKMONITORPIN, FALSE);
@@ -71,6 +73,9 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 		period2Remaining = currentSlotNum % m_period2;
 		period1Remaining = ((period1Remaining < period2Remaining) ? (period1Remaining ) : (period2Remaining ));
 		UINT32 MicSTillNextEvent = period1Remaining * 16 * 1000;
+		if(MicSTillNextEvent > (m_period1*16000)){
+			ASSERT_SP(0);
+		}
 		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, MicSTillNextEvent, USEONESHOTTIMER);
 		ASSERT_SP(rm == TimerSupported);
 		return TRUE;
