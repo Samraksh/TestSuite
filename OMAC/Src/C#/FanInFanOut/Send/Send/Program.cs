@@ -10,16 +10,16 @@ using Samraksh.eMote.DotNow;
 //  1a. Registers a function that tracks change in neighbor (NeighborChange) and a function to handle messages that are received.
 //2. Pings are sent at pre-determined intervals.
 //3. Pongs are sent back for received messages.
-namespace Samraksh.eMote.Net.Mac.Ping
+namespace Samraksh.eMote.Net.Mac.Send
 {
     public class PingPayload
     {
         public UInt32 pingMsgId;
         public string pingMsgContent = "PING";
-        
+
         public PingPayload()
         {
-            
+
         }
 
         public byte[] ToBytes()
@@ -37,7 +37,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             byte[] merged = new byte[msg.Length + msgContent.Length];
             msg.CopyTo(merged, 0);
             msgContent.CopyTo(merged, msg.Length);
-            
+
             return merged;
         }
 
@@ -46,7 +46,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             try
             {
                 PingPayload pingPayload = new PingPayload();
-                
+
                 //Convert byte array to an integer
                 pingPayload.pingMsgId = (UInt32)(msg[0] << 24);
                 pingPayload.pingMsgId += (UInt32)(msg[1] << 16);
@@ -78,28 +78,26 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
     public class Program
     {
-        //public variables
-        UInt32 totalPingCount = 1000;
+        const UInt32 totalPingCount = 101;
         const UInt16 MAX_NEIGHBORS = 12;
-        UInt16 dutyCyclePeriod = 20000;
+        int dutyCyclePeriod = 60000;
+
         bool startSend = false;
         UInt16 myAddress;
         Timer sendTimer;
         NetOpStatus status;
-        static UInt32 sendMsgCounter = 0;
-        static UInt32 recvMsgCounter = 1;
-        static UInt32 totalRecvCounter = 0;
         EmoteLCD lcd;
+        static UInt32 sendMsgCounter = 1;
         
         PingPayload pingMsg = new PingPayload();
-        
+
         static Mac.OMAC myOMACObj;
         ReceiveCallBack myReceiveCB;
         NeighborhoodChangeCallBack myNeibhborhoodCB;
 
         Mac.MacConfiguration myMacConfig = new MacConfiguration();
         Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
-                
+
         public void Initialize()
         {
             //Init LCD
@@ -126,14 +124,14 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
                 myOMACObj = OMAC.Instance;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.Print(e.ToString());
             }
 
             Debug.Print("OMAC init done");
             myAddress = myOMACObj.GetAddress();
-            Debug.Print("My address is: " + myAddress.ToString());
+            Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
         }
 
         //Keeps track of change in neighborhood
@@ -163,14 +161,13 @@ namespace Samraksh.eMote.Net.Mac.Ping
             {
                 bool sendFlag = false;
                 UInt16[] neighborList = myOMACObj.GetNeighborList();
-                
+
                 for (int j = 0; j < MAX_NEIGHBORS; j++)
                 {
                     if (neighborList[j] != 0)
                     {
                         //Debug.Print("count of neighbors " + neighborList.Length);
                         startSend = true; sendFlag = true;
-                        sendMsgCounter++;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] msg = pingMsg.ToBytes();
                         Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
@@ -186,8 +183,13 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 {
                     Debug.Print("Ping failed. All neighbors dropped out");
                 }
-                
-                if (sendMsgCounter < 10) 
+                //Increment msgCounter only if there is a send
+                if (sendFlag == true)
+                {
+                    sendMsgCounter++;
+                }
+
+                if (sendMsgCounter < 10)
                 {
                     lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
                 }
@@ -218,6 +220,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
                 if (sendMsgCounter == totalPingCount)
                 {
+                    sendMsgCounter--;
                     ShowStatistics();
                 }
             }
@@ -230,42 +233,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //Handles received messages 
         public void Receive(UInt16 countOfPackets)
         {
-            totalRecvCounter++;
-            Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount() == 0)
-            {
-                Debug.Print("no packets");
-                return;
-            }
-
-            Message rcvMsg = myOMACObj.GetNextPacket();
-            if (rcvMsg == null)
-            {
-                Debug.Print("null");
-                return;
-            }
-
-            Debug.Print("totalRecvCounter is " + totalRecvCounter);
-
-            byte[] rcvPayload = rcvMsg.GetMessage();
-            PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
-            if (pingPayload != null)
-            {
-                Debug.Print("Received msgID " + pingPayload.pingMsgId);
-                while (recvMsgCounter < pingPayload.pingMsgId)
-                {
-                    Debug.Print("Missed msgID: " + recvMsgCounter);
-                    recvMsgCounter++;
-                }
-                recvMsgCounter = pingPayload.pingMsgId + 1;
-                Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
-            }
-            else
-            {
-                Debug.Print("Received a null msg");
-            }
-
-            Debug.Print("---------------------------");
+            
         }
 
         //Show statistics
@@ -273,8 +241,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
         {
             Debug.Print("==============STATS================");
             Debug.Print("total msgs sent " + sendMsgCounter);
-            Debug.Print("total msgs received " + totalRecvCounter);
-            //Debug.Print("percentage received " + (totalRecvCounter / sendMsgCounter) * 100);
             Debug.Print("==================================");
             Thread.Sleep(Timeout.Infinite);
         }

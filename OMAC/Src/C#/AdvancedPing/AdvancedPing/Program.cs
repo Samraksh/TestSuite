@@ -54,6 +54,7 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
         const UInt16 MAX_NEIGHBORS = 12;
         UInt16 dutyCyclePeriod = 5000;
 
+        static UInt32 totalRecvCounter = 0;
         bool startSend = false;
         NetOpStatus status;
         const int firstPos = 10;    //First position in rxBuffer from which verification is made to see if a msg reached
@@ -279,6 +280,8 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
                 //{
                     //Debug.Print("MSG: " + msg[0].ToString() + " " + msg[1].ToString() + " " + msg[2].ToString() + " " + msg[3].ToString() + " " + msg[4].ToString() + " " + msg[5].ToString());
                     Debug.Print("========================================");
+                    totalRecvCounter++;
+                    Debug.Print("totalRecvCounter is " + totalRecvCounter);
                     PingMsg rcvMsg = new PingMsg(msg, size);
 
                     if (rcvMsg.Response)

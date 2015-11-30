@@ -85,7 +85,7 @@ BOOL OMACTest::Initialize(){
 }
 
 BOOL OMACTest::StartTest(){
-	VirtTimer_Start(32);
+	VirtTimer_Start(OMACTEST_TIMER);
 	return TRUE;
 }
 

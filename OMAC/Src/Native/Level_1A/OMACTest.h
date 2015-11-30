@@ -28,7 +28,6 @@ public:
 	static UINT32 sendPingCount;
 	static UINT32 recvCount;
 	static UINT32 missedPingID;
-	UINT16 RcvCount;
 
 	BOOL Initialize();
 	BOOL StartTest();
