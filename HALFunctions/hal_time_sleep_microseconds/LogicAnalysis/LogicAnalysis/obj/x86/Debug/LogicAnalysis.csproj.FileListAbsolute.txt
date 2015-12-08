@@ -36,6 +36,10 @@ D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0E\LogicAnalysis\LogicAnalys
 D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0E\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
 D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0E\LogicAnalysis.exe
 D:\Work\TestSuite\VirtualTimerTest\Src\Native\Level_0E\LogicAnalysis.pdb
+D:\Work\TestSuite\tools\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
+D:\Work\TestSuite\tools\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
+D:\Work\TestSuite\tools\LogicAnalysis.exe
+D:\Work\TestSuite\tools\LogicAnalysis.pdb
 D:\Work\TestSuite\HALFunctions\hal_time_sleep_microseconds\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
 D:\Work\TestSuite\HALFunctions\hal_time_sleep_microseconds\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
 D:\Work\TestSuite\HALFunctions\hal_time_sleep_microseconds\LogicAnalysis.exe
