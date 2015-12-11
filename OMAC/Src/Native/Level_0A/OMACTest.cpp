@@ -117,7 +117,7 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_Stop(NeighborClockMonitor_TIMER);
-	if (g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
+	if (g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 4 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
 		UINT64 y = HAL_Time_CurrentTicks();
 		// TODO: Check if neighbor was registered(at least 2 packets were received)
 		UINT64 neighborTime = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NeighborTime(Nbr2beFollowed, HAL_Time_CurrentTicks());
@@ -125,7 +125,21 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 		UINT64 TicksTillNextEvent = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Neighbor2LocalTime(Nbr2beFollowed, NextEventTime) - y;
 		UINT32 MicSTillNextEvent = (UINT32) (HAL_Time_TicksToTime(TicksTillNextEvent));
 		UINT32 ProcessingLatency = (UINT32) (HAL_Time_TicksToTime( HAL_Time_CurrentTicks() - y));
-		rm = VirtTimer_Change(NeighborClockMonitor_TIMER, 0, MicSTillNextEvent + ProcessingLatency, USEONESHOTTIMER);
+		MicSTillNextEvent = MicSTillNextEvent + ProcessingLatency;
+		if ( MicSTillNextEvent > 100000){
+			MicSTillNextEvent = 40000000;
+		}
+		else if(MicSTillNextEvent < 10000){
+			NextEventTime = NextEventTime + NEIGHBORCLOCKMONITORPERIOD;
+			TicksTillNextEvent = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Neighbor2LocalTime(Nbr2beFollowed, NextEventTime) - y;
+			MicSTillNextEvent = (UINT32) (HAL_Time_TicksToTime(TicksTillNextEvent));
+			ProcessingLatency = (UINT32) (HAL_Time_TicksToTime( HAL_Time_CurrentTicks() - y));
+			MicSTillNextEvent = MicSTillNextEvent + ProcessingLatency;
+
+			if( (MicSTillNextEvent > 100000) ) MicSTillNextEvent = 50000000;
+			if( (MicSTillNextEvent < 10000) ) MicSTillNextEvent = 60000000;
+		}
+		rm = VirtTimer_Change(NeighborClockMonitor_TIMER, 0, MicSTillNextEvent, USEONESHOTTIMER);
 		rm = VirtTimer_Start(NeighborClockMonitor_TIMER);
 		IsNeighborCLKScheduled = true;
 		return TRUE;

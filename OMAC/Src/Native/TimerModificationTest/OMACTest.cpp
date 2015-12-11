@@ -10,8 +10,6 @@
 #define NEIGHBORCLOCKMONITORPIN 31 //2
 #define LOCALCLOCKMONITORPIN 22 //25
 
-#define LocalClockMonitor_TIMER1 32
-#define NeighborClockMonitor_TIMER1 33
 
 #define USEONESHOTTIMER FALSE
 
@@ -22,9 +20,13 @@
 void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
 	//Toggle Pin State for monitoring with Logic Analyzer
 	VirtualTimerReturnMessage rm;
-	rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, 10000000, USEONESHOTTIMER);
+	//rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, 10000000, USEONESHOTTIMER);
 	CPU_GPIO_SetPinState((GPIO_PIN) LOCALCLOCKMONITORPIN, TRUE);
+	rm = VirtTimer_Stop(LocalClockMonitor_TIMER1);
+	ASSERT_SP(rm == TimerSupported);
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
+	rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
+	ASSERT_SP(rm == TimerSupported);
 	CPU_GPIO_SetPinState((GPIO_PIN) LOCALCLOCKMONITORPIN, FALSE);
 }
 
@@ -48,7 +50,7 @@ BOOL OMACTest::Initialize(){
 
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD, USEONESHOTTIMER, FALSE, CMaxTSLocalClockMonitorTimerHandler);
-	//ASSERT_SP(rm == TimerSupported);
+	ASSERT_SP(rm == TimerSupported);
 
 	return TRUE;
 }
@@ -59,6 +61,7 @@ BOOL OMACTest::StartTest(){
 	UINT64 LocalClockMonitorFrameNum = y /( (UINT64) NEIGHBORCLOCKMONITORPERIOD );
 	ScheduleNextLocalCLK();
 	rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
+	ASSERT_SP(rm == TimerSupported);
 	return TRUE;
 }
 
@@ -80,10 +83,11 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 			MicSTillNextEvent = 5000000;
 		}
 		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, MicSTillNextEvent, USEONESHOTTIMER);
-		//ASSERT_SP(rm == TimerSupported);
-		if (rm != TimerSupported){
-			MicSTillNextEvent = 3000000;
-		}
+		ASSERT_SP(rm == TimerSupported);
+
+//		rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
+//		ASSERT_SP(rm == TimerSupported);
+
 		return TRUE;
 
 }
