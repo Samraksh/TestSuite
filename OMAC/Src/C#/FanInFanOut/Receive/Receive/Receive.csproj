@@ -28,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <!--Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" /-->
   <Import Project="$(SPOCLIENT)\tools\Targets\Microsoft.SPOT.CSharp.Targets" />
   <PropertyGroup>
     <MMP_PE_NoBitmapCompression>true</MMP_PE_NoBitmapCompression>
@@ -49,7 +50,7 @@
     </Reference>
     <Reference Include="Samraksh_eMote_DotNow, Version=4.3.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SPOCLIENT)\Samraksh\Interops\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow\bin\Release\Samraksh_eMote_DotNow.dll</HintPath>
+      <HintPath>$(SPOCLIENT)\Samraksh\Executables\Release\4.3.2.0\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow.dll</HintPath>
     </Reference>
     <Reference Include="Samraksh_eMote_Net">
       <HintPath>$(SPOCLIENT)\Samraksh\Interops\Samraksh_eMote_Net\Samraksh_eMote_Net\bin\Release\Samraksh_eMote_Net.dll</HintPath>

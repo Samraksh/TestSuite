@@ -49,7 +49,7 @@
     </Reference>
     <Reference Include="Samraksh_eMote_DotNow, Version=4.3.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\MF\MicroFrameworkPK_v4_3\Samraksh\Interops\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow\bin\Release\Samraksh_eMote_DotNow.dll</HintPath>
+      <HintPath>$(SPOCLIENT)\Samraksh\Interops\Samraksh_eMote_DotNow\Samraksh_eMote_DotNow\bin\Release\Samraksh_eMote_DotNow.dll</HintPath>
     </Reference>
     <Reference Include="Samraksh_eMote_Net">
       <HintPath>$(SPOCLIENT)\Samraksh\Interops\Samraksh_eMote_Net\Samraksh_eMote_Net\bin\Release\Samraksh_eMote_Net.dll</HintPath>
