@@ -84,7 +84,6 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 	rm = VirtTimer_Stop(NeighborClockMonitor_TIMER1);
 	//ASSERT_SP(rm == TimerSupported);
 
-
 	//Toggle Pin State for monitoring with Logic Analyzer
 	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
 	if(g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
@@ -142,8 +141,8 @@ BOOL OMACTest::Initialize(){
 
 BOOL OMACTest::StartTest(){
 	VirtualTimerReturnMessage rm;
-	msg.MSGID = 0;
-	SendCount = 0;
+	msg.MSGID = 1;
+	SendCount = 1;
 	RcvCount = 0;
 
 	rm = VirtTimer_Start(32);
@@ -165,13 +164,13 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	hal_printf("start OMACTest::Receive\n");
 	hal_printf("OMACTest src is %u\n", rcvdMsg->GetHeader()->src);
 	hal_printf("OMACTest dest is %u\n", rcvdMsg->GetHeader()->dest);
-	UINT8* payload = rcvdMsg->GetPayload();
+	Payload_t* payload = (Payload_t*)rcvdMsg->GetPayload();
+	hal_printf("OMACTest msgID is: %u\n", payload->MSGID);
 	hal_printf("OMACTest payload is \n");
-	for(int i = 1; i <= 10; i++){
-		hal_printf(" %d\n", payload[i-1]);
+	for(int i = 1; i <= 5; i++){
+		hal_printf(" %d\n", payload->data[i-1]);
 	}
 	hal_printf("\n");
-
 
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(OMACTEST_Rx, TRUE);
@@ -180,23 +179,10 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	hal_printf("end OMACTest::Receive\n");
 }
 
-void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
-#ifdef DEBUG_OMACTest
-	CPU_GPIO_SetPinState(OMACTEST_TxAck, TRUE);
-	CPU_GPIO_SetPinState(OMACTEST_TxAck, FALSE);
-#endif
-	if(status == NO_Success){
-
-	}else {
-
-	}
-}
-
 
 BOOL OMACTest::Send(){
 	msg.MSGID = SendCount;
-	//msg.data[10] = 10;
-	for(int i = 1; i <= 10; i++){
+	for(int i = 1; i <= 5; i++){
 		msg.data[i-1] = i;
 	}
 
@@ -210,8 +196,21 @@ BOOL OMACTest::Send(){
 	CPU_GPIO_SetPinState(OMACTEST_Tx, TRUE);
 #endif
 	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
-	bool ispcktScheduled = Mac_Send(Nbr2beFollowed, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
-	if (ispcktScheduled) {SendCount++;}
+	bool ispcktScheduled = Mac_Send(Nbr2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));
+	//if (ispcktScheduled) {SendCount++;}
+	SendCount++;
+}
+
+void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
+#ifdef DEBUG_OMACTest
+	CPU_GPIO_SetPinState(OMACTEST_TxAck, TRUE);
+	CPU_GPIO_SetPinState(OMACTEST_TxAck, FALSE);
+#endif
+	if(status == NO_Success){
+
+	}else {
+
+	}
 }
 
 BOOL OMACTest::ScheduleNextNeighborCLK(){
