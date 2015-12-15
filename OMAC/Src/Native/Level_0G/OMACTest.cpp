@@ -148,6 +148,7 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 			y = HAL_Time_CurrentTicks();
 			neighborTime = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NeighborTime(Nbr2beFollowed, y);
 			//neighborTime = y;
+			NeighborClockMonitorFrameNum =  neighborTime / ((UINT64)NEIGHBORCLOCKMONITORPERIOD);
 			while(NextEventTime <= neighborTime){
 				NeighborClockMonitorFrameNum = NeighborClockMonitorFrameNum + 1;
 				NextEventTime = ( NeighborClockMonitorFrameNum ) * ((UINT64)NEIGHBORCLOCKMONITORPERIOD);
