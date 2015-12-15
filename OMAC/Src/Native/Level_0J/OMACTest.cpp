@@ -132,9 +132,9 @@ BOOL OMACTest::Initialize(){
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(32, 0, 10*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
 	ASSERT(rm == TimerSupported);
-	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD, USEONESHOTTIMER, FALSE, CMaxTSLocalClockMonitorTimerHandler);
+	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, 100*ONESEC_IN_MSEC, USEONESHOTTIMER, FALSE, CMaxTSLocalClockMonitorTimerHandler);
 	ASSERT(rm == TimerSupported);
-	rm = VirtTimer_SetTimer(NeighborClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD, USEONESHOTTIMER, FALSE, CMaxTSNeighborClockMonitorTimerHandler);
+	rm = VirtTimer_SetTimer(NeighborClockMonitor_TIMER1, 0, 100*ONESEC_IN_MSEC, USEONESHOTTIMER, FALSE, CMaxTSNeighborClockMonitorTimerHandler);
 	ASSERT(rm == TimerSupported);
 	return TRUE;
 }
@@ -223,7 +223,7 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 		UINT64 TicksTillNextEvent;
 
 		//y = HAL_Time_CurrentTicks();
-		while (LocalFireUpTime <= y || TicksTillNextEvent <= 40000){
+		while (LocalFireUpTime <= y || TicksTillNextEvent <= MINEVENTTIM){
 			y = HAL_Time_CurrentTicks();
 			neighborTime = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NeighborTime(Nbr2beFollowed, y);
 			//neighborTime = y;

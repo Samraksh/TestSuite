@@ -23,8 +23,7 @@ public:
 	MacEventHandler myEventHandler;
 	MacConfig Config;
 	UINT8 MacId;
-	UINT16 SendCount;
-	UINT16 RcvCount;
+	UINT16 SendCount, receiveCount;
 
 	BOOL Initialize();
 	BOOL StartTest();
