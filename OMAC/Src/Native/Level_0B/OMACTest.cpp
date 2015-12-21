@@ -114,7 +114,7 @@ void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
 	CPU_GPIO_SetPinState(OMACTEST_TxAck, TRUE);
 	CPU_GPIO_SetPinState(OMACTEST_TxAck, FALSE);
 #endif
-	if(status == NO_Success){
+	if(status == NetworkOperations_Success){
 
 	}else {
 
