@@ -8,6 +8,7 @@
 #include <tinyhal.h>
 #include <Samraksh/VirtualTimer.h>
 #include <Samraksh/Message.h>
+#include <pal/COM/Wireless/MAC/CSMAMAC/csmaMAC.h>
 #include <Targets/Native/STM32F10x/DeviceCode/drivers/radio/RF231/RF231.h>
 //#include <MicroFrameworkPK_v4_3/DeviceCode/Include/Samraksh/Radio_decl.h>
 
@@ -24,6 +25,10 @@ public:
 	UINT8 radioName;
 	bool initialPacketReceived;
 	Message_15_4_t msg_carrier;
+	UINT8 MyAppID;
+	MacConfig Config;
+	UINT8 MacId;
+	MacEventHandler myEventHandler;
 
 	RadioEventHandler_t Radio_Event_Handler;
 	BOOL Initialize();

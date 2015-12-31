@@ -32,11 +32,21 @@ void Test_0A_Timer_Handler(void * arg){
 }
 
 void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
+	hal_printf("msg received. Receive\n");
 	return g_RadioTestReceive.Receive(msg, size);
 }
 
 void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
 	//g_RadioTestReceive.SendAck(msg,size,status);
+}
+
+void CSMAMACTest_ReceiveHandler(void* msg, UINT16 size){
+	hal_printf("msg received\n");
+	g_RadioTestReceive.Receive(msg, size);
+}
+
+void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+	//hal_printf("msg sent\n");
 }
 
 /*
@@ -87,16 +97,28 @@ Message_15_4_t RadioTestReceive::CreatePacket()
 	header->destpan |= 0;
 	header->src = CPU_Radio_GetAddress(this->radioName);
 
+	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
+	msg.MSGID = 1;
+	for(int i = 1; i <= PAYLOAD_SIZE; i++){
+		msg.data[i-1] = i;
+	}
+	*data_msg = msg;
+
 	return msg_carrier;
 }
 
 void RadioTestReceive::SendPacket()
 {
-	CPU_Radio_Send(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength());
+	Message_15_4_t txMsg;
+	Message_15_4_t* txMsgPtr = &txMsg;
+	txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
 }
 
 BOOL RadioTestReceive::StartTest()
 {
+	while(true){
+		SendPacket();
+	}
 	return TRUE;
 }
 
@@ -107,18 +129,31 @@ BOOL RadioTestReceive::Initialize()
 
 	initialPacketReceived = false;
 	radioName = RF231RADIO;
-	DeviceStatus status;
+	/*DeviceStatus status;
 	Radio_Event_Handler.SetReceiveHandler(RadioTest_ReceiveHandler);
 	if((status = CPU_Radio_Initialize(&Radio_Event_Handler, this->radioName, 1, 1)) != DS_Success){
+		SOFT_BREAKPOINT();
 		return status;
 	}
+	if((status = CPU_Radio_TurnOnRx(this->radioName)) != DS_Success) {
+		SOFT_BREAKPOINT();
+		return status;
+	}*/
 
-	msg_carrier = CreatePacket();
+	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
+	Config.Network = 138;
+	Config.NeighborLivenessDelay = 900000;
+	myEventHandler.SetReceiveHandler(CSMAMACTest_ReceiveHandler);
+	myEventHandler.SetSendAckHandler(CSMAMACTest_SendAckHandler);
+	MacId = CSMAMAC;
+	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
 	VirtTimer_Initialize();
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(TEST_0A_TIMER, 0, TIMER_PERIOD*ONEMSEC_IN_USEC, FALSE, FALSE, Test_0A_Timer_Handler);
 	ASSERT(rm == TimerSupported);
+
+	msg_carrier = CreatePacket();
 
 	return TRUE;
 }

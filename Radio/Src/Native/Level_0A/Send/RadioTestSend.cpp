@@ -18,11 +18,13 @@ const UINT16 ONEMSEC_IN_USEC = 1000;
 
 RadioTestSend g_RadioTestSend;
 //extern Time_Driver g_Time_Driver;
+//extern OMACType g_OMAC;
+Buffer_15_4_t g_send_buffer;
 
 #define DEBUG_RadioTest 1
 #define TEST_0A_TIMER1	10
 #define TEST_0A_TIMER2	11
-#define TIMER2_PERIOD 	0.5*ONESEC_IN_MSEC
+#define TIMER2_PERIOD 	1*ONESEC_IN_MSEC
 #define Test_0A_Timer_Pin 1 //2
 
 
@@ -36,7 +38,7 @@ void Test_0A_Timer1_Handler(void * arg){
 		if(returnVal != DS_Success){
 			hal_printf("Could not put radio in Rx mode\n");
 		}*/
-		HAL_Time_Sleep_MicroSeconds(500);
+		HAL_Time_Sleep_MicroSeconds(5000);
 		//g_Time_Driver.Sleep_uSec(500);
 		//for(int i = 0; i < 10000; i++);
 	}
@@ -51,7 +53,7 @@ void Test_0A_Timer2_Handler(void * arg){
 		toggle = true;
 		for(int i = 0; i < 200; i++){
 			g_RadioTestSend.SendPacket();
-			HAL_Time_Sleep_MicroSeconds(500);
+			//HAL_Time_Sleep_MicroSeconds(500);
 		}
 	}
 	else{
@@ -66,6 +68,14 @@ void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
 
 void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
 	//g_RadioTestSend.SendAck(msg,size,status);
+}
+
+void CSMAMACTest_ReceiveHandler(void* msg, UINT16 size){
+	hal_printf("msg received\n");
+}
+
+void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+	//hal_printf("msg sent\n");
 }
 
 /*
@@ -93,12 +103,29 @@ Message_15_4_t RadioTestSend::CreatePacket()
 	header->destpan |= 0;
 	header->src = CPU_Radio_GetAddress(this->radioName);
 
+	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
+	msg.MSGID = 1;
+	for(int i = 1; i <= PAYLOAD_SIZE; i++){
+		msg.data[i-1] = i;
+	}
+	*data_msg = msg;
+
 	return msg_carrier;
 }
 
 void RadioTestSend::SendPacket()
 {
-	Message_15_4_t* returnMsg = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
+	Message_15_4_t txMsg;
+	Message_15_4_t* txMsgPtr = &txMsg;
+	Message_15_4_t** tempPtr = g_send_buffer.GetOldestPtr();
+	Message_15_4_t* msgPtr = *tempPtr;
+	memset(txMsgPtr, 0, msgPtr->GetMessageSize());
+	memcpy(txMsgPtr, msgPtr, msgPtr->GetMessageSize());
+
+	//txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, txMsgPtr, (txMsgPtr->GetHeader())->GetLength(), HAL_Time_CurrentTicks());
+	txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
+	/*UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
+	Mac_Send(Nbr2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));*/
 }
 
 /*
@@ -120,7 +147,7 @@ BOOL RadioTestSend::Initialize()
 
 	initialPacketReceived = false;
 	radioName = RF231RADIO;
-	DeviceStatus status;
+	/*DeviceStatus status;
 	Radio_Event_Handler.SetReceiveHandler(RadioTest_ReceiveHandler);
 	if((status = CPU_Radio_Initialize(&Radio_Event_Handler, this->radioName, 1, 1)) != DS_Success){
 		SOFT_BREAKPOINT();
@@ -129,9 +156,15 @@ BOOL RadioTestSend::Initialize()
 	if((status = CPU_Radio_TurnOnRx(this->radioName)) != DS_Success) {
 		SOFT_BREAKPOINT();
 		return status;
-	}
+	}*/
 
-	msg_carrier = CreatePacket();
+	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
+	Config.Network = 138;
+	Config.NeighborLivenessDelay = 900000;
+	myEventHandler.SetReceiveHandler(CSMAMACTest_ReceiveHandler);
+	myEventHandler.SetSendAckHandler(CSMAMACTest_SendAckHandler);
+	MacId = CSMAMAC;
+	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
 	VirtTimer_Initialize();
 	VirtualTimerReturnMessage rm;
@@ -139,6 +172,12 @@ BOOL RadioTestSend::Initialize()
 	ASSERT(rm == TimerSupported);
 	rm = VirtTimer_SetTimer(TEST_0A_TIMER2, 0, TIMER2_PERIOD*ONEMSEC_IN_USEC, FALSE, FALSE, Test_0A_Timer2_Handler);
 	ASSERT(rm == TimerSupported);
+
+	g_send_buffer.Initialize();
+	msg_carrier = CreatePacket();
+	if(!g_send_buffer.Store((void *) &msg_carrier, (msg_carrier.GetHeader())->GetLength())){
+		return FALSE;
+	}
 
 	return TRUE;
 }
