@@ -25,3 +25,5 @@ D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCAReceiver\CheckCCAReceiver\obj
 D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCAReceiver\CheckCCAReceiver\obj\Debug\le\CheckCCAReceiver.pdbx
 D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCAReceiver\CheckCCAReceiver\obj\Debug\CheckCCAReceiver.exe
 D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCAReceiver\CheckCCAReceiver\obj\Debug\CheckCCAReceiver.pdb
+D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCAReceiver\CheckCCAReceiver\obj\Debug\CheckCCAReceiver.csprojResolveAssemblyReference.cache
+D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCAReceiver\CheckCCAReceiver\obj\Debug\TinyCLR_DebugReferences.cache

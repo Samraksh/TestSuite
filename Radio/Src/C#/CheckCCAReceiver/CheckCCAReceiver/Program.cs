@@ -211,7 +211,8 @@ namespace Samraksh.DotNow.PingPong {
                 }
                 if (result)
                 {
-                    Debug.Print("CCA: " + result.ToString());
+                    //Debug.Print("CCA: " + result.ToString());
+                    Debug.Print("******* CCA: TRUE *******");
                 }
                 //Thread.Sleep(1);
             }

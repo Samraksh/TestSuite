@@ -25,3 +25,5 @@ D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCASender\CheckCCASender\obj\Deb
 D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCASender\CheckCCASender\obj\Debug\le\CheckCCASender.pdbx
 D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCASender\CheckCCASender\obj\Debug\CheckCCASender.exe
 D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCASender\CheckCCASender\obj\Debug\CheckCCASender.pdb
+D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCASender\CheckCCASender\obj\Debug\CheckCCASender.csprojResolveAssemblyReference.cache
+D:\AnanthAtSamraksh\TestSuite\Radio\Src\C#\CheckCCASender\CheckCCASender\obj\Debug\TinyCLR_DebugReferences.cache

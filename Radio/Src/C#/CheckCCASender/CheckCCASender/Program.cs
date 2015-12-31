@@ -36,6 +36,8 @@ namespace Samraksh.DotNow.PingPong {
         const string Header = "PingPong";
 
         const string Payload = "This is a long string repeated many times over";
+        //static byte[] Payload = new byte[1000];
+        //static byte[] merged = new byte[Header.Length + Payload.Length];
 
         // The current value
         static int _currVal;
@@ -59,6 +61,8 @@ namespace Samraksh.DotNow.PingPong {
         const int sendInterval = 500;
 
         static bool toggle = true;
+
+        static int counter = 0;
         
         /// <summary>
         /// Main program. Set things up and then go to sleep forever.
@@ -86,6 +90,11 @@ namespace Samraksh.DotNow.PingPong {
             //StartOneshotTimer(ref _noResponseDelayTimer, NoResponseDelayTimerCallback, NoResponseInterval);
 
             _sendTimer = new Timer(SendTimerCallback, null, sendInterval, sendInterval);
+
+            /*for (int i = 0; i < Payload.Length; i++)
+            {
+                Payload[i] = (byte)i;
+            }*/
 
             // Everything is set up. Go to sleep forever, pending events
             Thread.Sleep(Timeout.Infinite);
@@ -149,10 +158,9 @@ namespace Samraksh.DotNow.PingPong {
             if (toggle)
             {
                 toggle = false;
-                Debug.Print("Transmitting");
                 // Pick a value randomly
                 _currVal = (new Random()).Next(99);  // We're choosing a fairly small value to avoid runover on the LCD display (since it only has 4 positions)
-                //Below for loop takes 470ms to complete
+                //Below for loop takes 480ms (450 times Header, payload and number transmitted) to complete
                 for (int i = 0; i < 450; i++)
                 {
                     if (i == 0)
@@ -160,6 +168,8 @@ namespace Samraksh.DotNow.PingPong {
                         Debug.Print("Sending message " + _currVal);
                     }
                     // Send the current value now
+                    //Each send takes about 18 usec (56 bytes - payload (46) + header (8) + number (2))
+                    //There is a gap of about 1 ms between each send
                     RadioSend(_currVal.ToString().Trim());
                     //Thread.Sleep(1);
                 }
@@ -183,6 +193,11 @@ namespace Samraksh.DotNow.PingPong {
         /// <param name="toSend">String to be sent</param>
         static void RadioSend(string toSend) {
             byte[] toSendByte = System.Text.Encoding.UTF8.GetBytes(Header + toSend + Payload);
+            if (counter == 0)
+            {
+                counter++;
+                Debug.Print("send length " + toSendByte.Length.ToString());
+            }
             _csmaRadio.Send(Addresses.BROADCAST, toSendByte);
         }
 
