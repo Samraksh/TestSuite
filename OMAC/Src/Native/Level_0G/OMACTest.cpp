@@ -16,8 +16,7 @@ extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
 
-#define NEIGHBORCLOCKMONITORPIN 25 // 120 //31 //2
-#define LOCALCLOCKMONITORPIN 24 //120 //22 //25
+
 #define MINEVENTTIM 1000
 
 #define USEONESHOTTIMER FALSE
@@ -40,11 +39,11 @@ void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
 
 	//Toggle Pin State for monitoring with Logic Analyzer
 	if(gOMACTest.LocalClkPINState){
-		CPU_GPIO_SetPinState((GPIO_PIN) LOCALCLOCKMONITORPIN, false);
+		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, false);
 		gOMACTest.LocalClkPINState = false;
 	}
 	else {
-		CPU_GPIO_SetPinState((GPIO_PIN) LOCALCLOCKMONITORPIN, true);
+		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, true);
 		gOMACTest.LocalClkPINState = true;
 	}
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
@@ -64,11 +63,11 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
 	if(g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
 		if(gOMACTest.NeighborClkPINState){
-			CPU_GPIO_SetPinState((GPIO_PIN) NEIGHBORCLOCKMONITORPIN, false);
+			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, false);
 			gOMACTest.NeighborClkPINState = false;
 		}
 		else {
-			CPU_GPIO_SetPinState((GPIO_PIN) NEIGHBORCLOCKMONITORPIN, true);
+			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, true);
 			gOMACTest.NeighborClkPINState = true;
 		}
 	}
@@ -86,10 +85,10 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 
 BOOL OMACTest::Initialize(){
 
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) NEIGHBORCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) LOCALCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) NEIGHBORCLOCKMONITORPIN, FALSE);
-	CPU_GPIO_SetPinState((GPIO_PIN) LOCALCLOCKMONITORPIN, FALSE);
+	CPU_GPIO_EnableOutputPin(NEIGHBORCLOCKMONITORPIN, TRUE);
+	CPU_GPIO_EnableOutputPin(LOCALCLOCKMONITORPIN, TRUE);
+	CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, FALSE);
+	CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, FALSE);
 	LocalClkPINState = true;
 	NeighborClkPINState = true;
 
