@@ -64,10 +64,12 @@ void Test_0A_Timer2_Handler(void * arg){
 }
 
 void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
+	hal_printf("RadioTest_SendAckHandler msg received\n");
 	return g_RadioTestSend.Receive(msg, size);
 }
 
 void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+	hal_printf("RadioTest_SendAckHandler msg sent\n");
 	//g_RadioTestSend.SendAck(msg,size,status);
 }
 
@@ -82,8 +84,6 @@ void CSMAMACTest_ReceiveHandler(void* msg, UINT16 size){
 void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
 	//hal_printf("msg sent\n");
 }
-
-
 
 /*
  * As soon as a response is received from another node, start the 2nd timer
@@ -131,7 +131,7 @@ void RadioTestSend::SendPacket()
 
 	//txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, txMsgPtr, (txMsgPtr->GetHeader())->GetLength(), HAL_Time_CurrentTicks());
 	CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin, TRUE);
-	grf231Radio.Send_TimeStamped(&msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
+	(Message_15_4_t*)grf231Radio.Send_TimeStamped(&msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
 	CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin, FALSE);
 	//txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
 	/*UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
@@ -162,7 +162,7 @@ BOOL RadioTestSend::Initialize()
 	Radio_Event_Handler.SetSendAckHandler(RadioTest_SendAckHandler);
 	//Radio_Event_Handler.SetReceiveHandler(RadioTest_ReceiveHandler);
 	status = grf231Radio.Initialize(&Radio_Event_Handler, this->radioName, 1);
-	grf231Radio.TurnOnRx();
+	//grf231Radio.TurnOnRx();
 	/*if((status = CPU_Radio_Initialize(&Radio_Event_Handler, this->radioName, 1, 1)) != DS_Success){
 		SOFT_BREAKPOINT();
 		return status;
@@ -172,18 +172,18 @@ BOOL RadioTestSend::Initialize()
 		return status;
 	}*/
 
-	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
+	/*MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	Config.Network = 138;
 	Config.NeighborLivenessDelay = 900000;
 	//myEventHandler.SetReceiveHandler(CSMAMACTest_ReceiveHandler);
 	myEventHandler.SetSendAckHandler(CSMAMACTest_SendAckHandler);
 	MacId = CSMAMAC;
-	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
+	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);*/
 
 	//Weird! VirtTimer_Initialize is needed to run this test in master branch, but not needed while running in OMAC_Master_Final branch
-	//VirtTimer_Initialize();
+	VirtTimer_Initialize();
 	VirtualTimerReturnMessage rm;
-	rm = VirtTimer_SetTimer(TEST_0A_TIMER1, 0, 5000, FALSE, FALSE, Test_0A_Timer1_Handler);
+	rm = VirtTimer_SetTimer(TEST_0A_TIMER1, 0, 1000000, FALSE, FALSE, Test_0A_Timer1_Handler);
 	ASSERT(rm == TimerSupported);
 	////rm = VirtTimer_SetTimer(TEST_0A_TIMER2, 0, TIMER2_PERIOD*ONEMSEC_IN_USEC, FALSE, FALSE, Test_0A_Timer2_Handler);
 	////ASSERT(rm == TimerSupported);

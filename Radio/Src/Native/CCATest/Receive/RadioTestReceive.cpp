@@ -36,11 +36,12 @@ void Test_0A_Timer_Handler(void * arg){
 }
 
 void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
-	hal_printf("msg received. Receive\n");
+	hal_printf("RadioTest_ReceiveHandler msg received\n");
 	//return g_RadioTestReceive.Receive(msg, size);
 }
 
 void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+	hal_printf("RadioTest_SendAckHandler msg sent\n");
 	//g_RadioTestReceive.SendAck(msg,size,status);
 }
 
@@ -62,19 +63,14 @@ void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
  */
 void RadioTestReceive::VerifyCCA()
 {
-	/*DeviceStatus status;
-	if((status = CPU_Radio_TurnOnRx(this->radioName)) != DS_Success) {
-		SOFT_BREAKPOINT();
-	}*/
-	//DeviceStatus DS = CPU_Radio_ClearChannelAssesment(this->radioName);
 	DeviceStatus DS = grf231Radio.ClearChannelAssesment();
-	CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin_30, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin_31, TRUE);
 	if(DS == DS_Fail){
+		CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin_31, TRUE);
 		CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin_31, FALSE);
 		//hal_printf("Channel is active!\n");
 	}
 	else if(DS == DS_Success){
+		CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin_30, TRUE);
 		CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin_30, FALSE);
 		//hal_printf("CCA failed\n");
 	}
@@ -106,7 +102,7 @@ Message_15_4_t RadioTestReceive::CreatePacket()
 	header->dsn = 97;
 	header->destpan = (34 << 8);
 	header->destpan |= 0;
-	header->src = CPU_Radio_GetAddress(this->radioName);
+	//header->src = CPU_Radio_GetAddress(this->radioName);
 
 	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
 	msg.MSGID = 1;
@@ -149,7 +145,7 @@ BOOL RadioTestReceive::Initialize()
 	DeviceStatus status;
 	Radio_Event_Handler.SetRadioInterruptHandler(RadioTest_InterruptHandler);
 	Radio_Event_Handler.SetSendAckHandler(RadioTest_SendAckHandler);
-	//Radio_Event_Handler.SetReceiveHandler(RadioTest_ReceiveHandler);
+	Radio_Event_Handler.SetReceiveHandler(RadioTest_ReceiveHandler);
 	status = grf231Radio.Initialize(&Radio_Event_Handler, this->radioName, 1);
 	grf231Radio.TurnOnRx();
 	/*if((status = CPU_Radio_Initialize(&Radio_Event_Handler, this->radioName, 1, 1)) != DS_Success){
@@ -161,21 +157,22 @@ BOOL RadioTestReceive::Initialize()
 		return status;
 	}*/
 
-	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
+	/*MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	Config.Network = 138;
 	Config.NeighborLivenessDelay = 900000;
 	//myEventHandler.SetReceiveHandler(CSMAMACTest_ReceiveHandler);
 	myEventHandler.SetSendAckHandler(CSMAMACTest_SendAckHandler);
 	MacId = CSMAMAC;
-	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
+	Config.RadioID = 0;
+	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);*/
 
 	//Weird! VirtTimer_Initialize is needed to run this test in master branch, but not needed while running in OMAC_Master_Final branch
-	//VirtTimer_Initialize();
+	VirtTimer_Initialize();
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(TEST_0A_TIMER, 0, 500, TRUE, FALSE, Test_0A_Timer_Handler);
 	ASSERT(rm == TimerSupported);
 
-	msg_carrier = CreatePacket();
+	//msg_carrier = CreatePacket();
 
 	return TRUE;
 }
