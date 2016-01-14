@@ -15,8 +15,8 @@ namespace LogicAnalysis
         const string fileOut = @"testTemp\results.txt";
         const float sampleFreq = 4000000;
 
-        const float expectedFreq0 = 25f;
-        const float expectedFreq1 = 0f;
+        const float expectedFreq0 = 100f;
+        const float expectedFreq1 = 25f;
         const float expectedFreq2 = 0f;
         const float expectedFreq3 = 0f;
 
