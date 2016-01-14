@@ -36,8 +36,8 @@ void Test_0A_Timer_Handler(void * arg){
 }
 
 void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
-	hal_printf("RadioTest_ReceiveHandler; msg received\n");
-	//return g_RadioTestReceive.Receive(msg, size);
+	//hal_printf("RadioTest_ReceiveHandler; msg received\n");
+	return g_RadioTestReceive.Receive(msg, size);
 }
 
 void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
@@ -45,7 +45,7 @@ void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
 }
 
 BOOL RadioTest_InterruptHandler(RadioInterrupt Interrupt, void *param){
-	hal_printf("RadioTest_InterruptHandler\n");
+	//hal_printf("RadioTest_InterruptHandler\n");
 }
 
 /*
@@ -71,8 +71,10 @@ void RadioTestReceive::VerifyCCA()
  */
 void* RadioTestReceive::Receive(void* tmpMsg, UINT16 size)
 {
-	/*Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
-	if(!initialPacketReceived){
+	Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
+	Payload_t* data_msg = (Payload_t*)rcvdMsg->GetPayload();
+	hal_printf("Received msgID: %d\n\n", data_msg->MSGID);
+	/*if(!initialPacketReceived){
 		initialPacketReceived = true;
 		SendPacket();
 		VirtualTimerReturnMessage rm;
@@ -92,7 +94,8 @@ Message_15_4_t RadioTestReceive::CreatePacket()
 	header->dsn = 97;
 	header->destpan = (34 << 8);
 	header->destpan |= 0;
-	//header->src = CPU_Radio_GetAddress(this->radioName);
+	header->src = CPU_Radio_GetAddress(this->radioName);
+	header->dest = 3505;
 
 	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
 	msg.MSGID = 1;

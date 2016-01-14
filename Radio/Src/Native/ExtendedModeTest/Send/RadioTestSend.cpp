@@ -23,8 +23,8 @@ extern RF231Radio grf231Radio;
 #define DEBUG_RadioTest 1
 #define TEST_0A_TIMER1	10
 #define TEST_0A_TIMER2	11
-#define TIMER1_PERIOD 	ONESEC_IN_MSEC
-#define TIMER2_PERIOD 	100
+#define TIMER1_PERIOD 	5*ONESEC_IN_MSEC
+#define TIMER2_PERIOD 	1000
 #define Test_0A_Timer_Pin (GPIO_PIN)31 //2
 
 
@@ -41,7 +41,7 @@ void Test_0A_Timer2_Handler(void * arg){
 }
 
 void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
-	hal_printf("RadioTest_ReceiveHandler; msg received\n");
+	hal_printf("RadioTest_ReceiveHandler; ACK received\n");
 
 	//If h/w ack is received, stop timer2 and increment msgID
 	VirtTimer_Stop(TEST_0A_TIMER2);
@@ -50,7 +50,7 @@ void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
 }
 
 void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
-	hal_printf("RadioTest_SendAckHandler; msg sent\n");
+	hal_printf("RadioTest_SendAckHandler; msg sent\n\n");
 }
 
 BOOL RadioTest_InterruptHandler(RadioInterrupt Interrupt, void *param){
@@ -74,12 +74,19 @@ void RadioTestSend::CreatePacket()
 	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
 
 	header->length = sizeof(Payload_t) + sizeof(IEEE802_15_4_Header_t);
-	header->fcf = (65 << 8);
-	header->fcf |= 136;
+	//header->fcf = (65 << 8); //(16640)
+	//header->fcf |= 136; //(16776)
+	//header->fcf = 9254;
+	header->fcf = 9253;
 	header->dsn = 97;
-	header->destpan = (34 << 8);
-	header->destpan |= 0;
+	//header->destpan = (34 << 8);
+	//header->destpan |= 0;
+	//header->destpan = 8704;
+	header->destpan = 65535;
 	header->src = CPU_Radio_GetAddress(this->radioName);
+	header->dest = 6846;
+	header->network = 138;
+	//header->dest = 0xFFFF;
 }
 
 void RadioTestSend::SendPacket()
