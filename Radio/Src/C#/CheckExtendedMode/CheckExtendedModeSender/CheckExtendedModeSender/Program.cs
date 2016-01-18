@@ -58,7 +58,7 @@ namespace Samraksh.DotNow.PingPong {
 
         static Timer _sendTimer;
         static readonly TimerCallback SendTimerCallback = RadioSendHelper;
-        const int sendInterval = 500;
+        const int sendInterval = 2000;
 
         static bool toggle = true;
 
@@ -120,6 +120,8 @@ namespace Samraksh.DotNow.PingPong {
             }
 
             Debug.Print("Sender got back a msg");
+            //toggle = true;
+            //_sendTimer.Change(sendInterval, Timeout.Infinite);
             // Check if message is for us
             /*var msgByte = packet.GetMessage();
             var msgChar = System.Text.Encoding.UTF8.GetChars(msgByte);
@@ -162,8 +164,11 @@ namespace Samraksh.DotNow.PingPong {
                 toggle = false;
                 // Pick a value randomly
                 _currVal = (new Random()).Next(99);  // We're choosing a fairly small value to avoid runover on the LCD display (since it only has 4 positions)
+                Debug.Print("Sending message " + _currVal);
+                RadioSend(_currVal.ToString().Trim());
+                //_sendTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 //Below for loop takes 480ms (450 times Header, payload and number transmitted) to complete
-                for (int i = 0; i < 450; i++)
+                /*for (int i = 0; i < 450; i++)
                 {
                     if (i == 0)
                     {
@@ -174,7 +179,7 @@ namespace Samraksh.DotNow.PingPong {
                     //There is a gap of about 1 ms between each send
                     RadioSend(_currVal.ToString().Trim());
                     //Thread.Sleep(1);
-                }
+                }*/
                 /*var startTime = System.DateTime.Now;
                 RadioSend(_currVal.ToString().Trim());
                 var endTime = System.DateTime.Now;

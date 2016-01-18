@@ -72,6 +72,9 @@ void RadioTestReceive::VerifyCCA()
 void* RadioTestReceive::Receive(void* tmpMsg, UINT16 size)
 {
 	Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
+	IEEE802_15_4_Header_t *header = (IEEE802_15_4_Header_t*)rcvdMsg->GetHeader();
+	hal_printf("Received fcf: %d\n\n", header->fcf);
+	hal_printf("Received dsn: %d\n\n", header->dsn);
 	Payload_t* data_msg = (Payload_t*)rcvdMsg->GetPayload();
 	hal_printf("Received msgID: %d\n\n", data_msg->MSGID);
 	/*if(!initialPacketReceived){
@@ -85,7 +88,7 @@ void* RadioTestReceive::Receive(void* tmpMsg, UINT16 size)
 
 Message_15_4_t RadioTestReceive::CreatePacket()
 {
-	Message_15_4_t msg_carrier;
+	/*Message_15_4_t msg_carrier;
 	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
 
 	header->length = sizeof(Payload_t) + sizeof(IEEE802_15_4_Header_t);
@@ -104,14 +107,14 @@ Message_15_4_t RadioTestReceive::CreatePacket()
 	}
 	*data_msg = msg;
 
-	return msg_carrier;
+	return msg_carrier;*/
 }
 
 void RadioTestReceive::SendPacket()
 {
-	Message_15_4_t txMsg;
+	/*Message_15_4_t txMsg;
 	Message_15_4_t* txMsgPtr = &txMsg;
-	txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
+	txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());*/
 }
 
 BOOL RadioTestReceive::StartTest()
