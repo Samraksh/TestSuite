@@ -22,17 +22,18 @@ namespace TestSuite
 		static Samraksh.eMote.RealTime.Timer RT_Timer;
 
 		static System.Threading.Timer sendTimer;
-		static bool pinState = false;
+		static bool pinState1 = false;
+		static bool pinState2 = false;
 
 		static void sendTimerCallback(Object o)
         {			
             try
             {	
-				testPort_PIN2.Write(pinState);
-				if (pinState == false)
-					pinState = true;
+				testPort_PIN2.Write(pinState1);
+				if (pinState1 == false)
+					pinState1 = true;
 				else 
-					pinState = false;
+					pinState1 = false;
             }
             catch (Exception e)
             {
@@ -50,12 +51,12 @@ namespace TestSuite
 
 		private static void RT_TimerCallback(uint data1, uint data2, DateTime time)
         {
-			if (pinState == false)
-				pinState = true;
+			if (pinState2 == false)
+				pinState2 = true;
 			else 
-				pinState = false;
+				pinState2 = false;
 
-            testPort_PIN1.Write(pinState);
+            testPort_PIN1.Write(pinState2);
         } 
 
         static NativeEventHandler RT_EventHandler = new NativeEventHandler(RT_TimerCallback);        

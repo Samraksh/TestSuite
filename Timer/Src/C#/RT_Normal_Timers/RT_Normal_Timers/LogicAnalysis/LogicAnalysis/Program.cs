@@ -15,22 +15,22 @@ namespace LogicAnalysis
         const string fileOut = @"testTemp\results.txt";
         const float sampleFreq = 4000000;
 
-        const float expectedFreq0 = 100f;
+        const float expectedFreq0 = 25f;
         const float expectedFreq1 = 25f;
         const float expectedFreq2 = 0f;
         const float expectedFreq3 = 0f;
 
-        const float accuracy = 0.01f;
+        const float accuracy = 0.2f;
 
-        static List<double> expectedGapSequence0 = new List<double>() { 0.020, 0.070, 0.020, 0.070 };
+        static List<double> expectedGapSequence1 = new List<double>() { 0.010, 0.010, 0.010, 1.010, 0.010 };
 
-        const double expectedMinTime0 = 0.02;
-        const double expectedMinTime1 = 0.399;
+        const double expectedMinTime0 = 0.01;
+        const double expectedMinTime1 = 0.01;
         const double expectedMinTime2 = 2.082;
         const double expectedMinTime3 = 0.141;
 
-        const double expectedMaxTime0 = 0.06;
-        const double expectedMaxTime1 = 0.421;
+        const double expectedMaxTime0 = 0.08;
+        const double expectedMaxTime1 = 0.8;
         const double expectedMaxTime2 = 2.105;
         const double expectedMaxTime3 = 0.162;
 
@@ -55,8 +55,8 @@ namespace LogicAnalysis
         static List<int> gap3 = new List<int>();
 
         // These values are to be used to skip a certain number of samples beyond the first before an analysis is made
-        const int skipSamples0 = 5;
-        const int skipSamples1 = 5;
+        const int skipSamples0 = 50;
+        const int skipSamples1 = 500;
         const int skipSamples2 = 5;
         const int skipSamples3 = 5;
 
@@ -245,7 +245,7 @@ namespace LogicAnalysis
                 {
                     // found transition
                     gapTime = (time[i] - lastTransitionTime) / sampleFreq;
-                    System.Diagnostics.Debug.WriteLine("Gap: " + gapTime.ToString());
+                    //System.Diagnostics.Debug.WriteLine("Gap: " + gapTime.ToString());
                     // now processing gaps to see if they match expectedGaps
                     if (foundNotEg1 == false)
                     {
@@ -291,6 +291,7 @@ namespace LogicAnalysis
             {
                 ReadInFile();
                 System.Diagnostics.Debug.WriteLine("Read in " + listTime.Count.ToString() + " from file " + fileName);
+                System.Diagnostics.Debug.WriteLine("listNumber " + listNumber.ToString());
                 if (listNumber <= 1)
                 {
                     result0 = false;
@@ -312,7 +313,7 @@ namespace LogicAnalysis
                     else
                         result0 = false;
                     returnStr0 = return0.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
-
+                    
                     //GetJitter(listTime, line0, skipSamples0, line0.Count);
 
                     /*return0 = FindGap(listTime, line0, expectedGapSequence0, 0, line0.Count, USE_EVERY_TRANSITION);
@@ -333,7 +334,7 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 2)
                 {
-                    return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
+                    /*return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
                     System.Diagnostics.Debug.WriteLine("Frequency is line 1 " + return1.ToString());
                     double minTime = 0, maxTime = 0, stdDeviation = 0;
                     GetJitter(listTime, line1, skipSamples1, line1.Count, ref minTime, ref maxTime, ref stdDeviation);
@@ -345,9 +346,9 @@ namespace LogicAnalysis
                     else
                         result1 = false;
                     returnStr1 = return1.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
-
+                    */
                     //GetJitter(listTime, line1, skipSamples1, line1.Count);
-                    /*return1 = FindGap(listTime, line1, expectedGapSequence0, 0, line1.Count);
+                    return1 = FindGap(listTime, line1, expectedGapSequence1, 0, line1.Count, USE_EVERY_TRANSITION);
                     if (return1 == 1)
                     {
                         System.Diagnostics.Debug.WriteLine("Found gap sequence for line 1");
@@ -358,10 +359,10 @@ namespace LogicAnalysis
                         System.Diagnostics.Debug.WriteLine("Failed to find gap sequence for line 1");
                         result1 = false;
                     }
-                    for (int i = 0; i < expectedGapSequence0.Count; i++)
+                    for (int i = 0; i < expectedGapSequence1.Count; i++)
                     {
-                        returnStr1 += expectedGapSequence0[i].ToString() + " ";
-                    }*/
+                        returnStr1 += expectedGapSequence1[i].ToString() + " ";
+                    }
                 }
                 if (listNumber > 3)
                 {
