@@ -13,6 +13,7 @@ using System;
 using System.Reflection;
 using System.Threading;
 using Microsoft.SPOT;
+using Microsoft.SPOT.Hardware;
 
 using Samraksh.eMote.Net;
 using Samraksh.eMote.Net.Mac;
@@ -56,13 +57,21 @@ namespace Samraksh.DotNow.PingPong {
         static Timer _noResponseDelayTimer;
         static readonly TimerCallback NoResponseDelayTimerCallback = noResponseDelay_Timeout;
 
-        static Timer _sendTimer;
+        static Timer _sendTimer, _retryTimer;
         static readonly TimerCallback SendTimerCallback = RadioSendHelper;
-        const int sendInterval = 2000;
+        static readonly TimerCallback RetryTimerCallback = RetrySendHelper;
+        const int sendInterval = 3000;
+        const int retryInterval = 5;
 
-        static bool toggle = true;
+        //static bool toggle = true;
 
         static int counter = 0;
+
+        static Int32 currentTry = 0;
+        const Int32 retryLimit = 2;
+
+        private static OutputPort testPort_PB8 = new OutputPort(GPIOPins.GPIO_PIN_PB8, true);
+        private static OutputPort testPort_PA1 = new OutputPort(GPIOPins.GPIO_PIN_PA1, true);
         
         /// <summary>
         /// Main program. Set things up and then go to sleep forever.
@@ -90,6 +99,7 @@ namespace Samraksh.DotNow.PingPong {
             //StartOneshotTimer(ref _noResponseDelayTimer, NoResponseDelayTimerCallback, NoResponseInterval);
 
             _sendTimer = new Timer(SendTimerCallback, null, sendInterval, sendInterval);
+            _retryTimer = new Timer(RetryTimerCallback, null, Timeout.Infinite, Timeout.Infinite);
 
             /*for (int i = 0; i < Payload.Length; i++)
             {
@@ -108,7 +118,14 @@ namespace Samraksh.DotNow.PingPong {
             //
             // Check to be sure it's a message we're interested in
             //
-
+            testPort_PA1.Write(true);
+            testPort_PA1.Write(false);
+            
+            //Stop the 1-shot timer
+            _retryTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            //Received an ack for previous msg, send a new one
+            currentTry = 0;
+            Debug.Print("Sender got back a msg");
             // Check if there's at least one packet
             if (csma.GetPendingPacketCount() < 1) {
                 return;
@@ -118,8 +135,7 @@ namespace Samraksh.DotNow.PingPong {
             if (packet == null) {
                 return;
             }
-
-            Debug.Print("Sender got back a msg");
+            
             //toggle = true;
             //_sendTimer.Change(sendInterval, Timeout.Infinite);
             // Check if message is for us
@@ -158,14 +174,34 @@ namespace Samraksh.DotNow.PingPong {
             //StartOneshotTimer(ref _replyTimer, ReplyTimerCallback, SendInterval);
         }
 
+        static void RetrySendHelper(object obj)
+        {
+            currentTry++;
+        }
+
         static void RadioSendHelper(object obj){
-            if (toggle)
+            if (currentTry == 0 || currentTry >= retryLimit)
             {
-                toggle = false;
                 // Pick a value randomly
                 _currVal = (new Random()).Next(99);  // We're choosing a fairly small value to avoid runover on the LCD display (since it only has 4 positions)
-                Debug.Print("Sending message " + _currVal);
+                //Debug.Print("_currVal is " + _currVal);
+                if (currentTry >= retryLimit)
+                {
+                    currentTry = 0;
+                }
+            }
+
+            //if (toggle)
+            if(currentTry < retryLimit)
+            {
+                //toggle = false;
+                Debug.Print("Sending message " + _currVal + "; Attempt " + currentTry);
+                testPort_PB8.Write(true);
                 RadioSend(_currVal.ToString().Trim());
+                testPort_PB8.Write(false);
+                //Start the 1-shot timer that will be stopped if there is a hardware ack
+                _retryTimer.Change(retryInterval, Timeout.Infinite);
+
                 //_sendTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 //Below for loop takes 480ms (450 times Header, payload and number transmitted) to complete
                 /*for (int i = 0; i < 450; i++)
@@ -185,12 +221,12 @@ namespace Samraksh.DotNow.PingPong {
                 var endTime = System.DateTime.Now;
                 Debug.Print("Elapsed time " + (endTime - startTime));*/
             }
-            else
+            /*else
             {
                 toggle = true;
-                Debug.Print("Going quiet");
+                //Debug.Print("Going quiet");
                 //_sendTimer.Change(sendInterval, Timeout.Infinite);
-            }
+            }*/
         }
 
         /// <summary>
@@ -203,7 +239,7 @@ namespace Samraksh.DotNow.PingPong {
             if (counter == 0)
             {
                 counter++;
-                Debug.Print("send length " + toSendByte.Length.ToString());
+                //Debug.Print("send length " + toSendByte.Length.ToString());
             }
             _csmaRadio.Send(Addresses.BROADCAST, toSendByte);
         }

@@ -118,6 +118,8 @@ namespace Samraksh.DotNow.PingPong {
             if (packet == null) {
                 return;
             }
+
+            Debug.Print("Sender got back a msg");
             // Check if message is for us
             /*var msgByte = packet.GetMessage();
             var msgChar = System.Text.Encoding.UTF8.GetChars(msgByte);

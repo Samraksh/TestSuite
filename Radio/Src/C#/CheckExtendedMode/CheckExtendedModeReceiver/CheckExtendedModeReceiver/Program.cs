@@ -52,17 +52,17 @@ namespace Samraksh.DotNow.PingPong {
         static Timer _noResponseDelayTimer;
         static readonly TimerCallback NoResponseDelayTimerCallback = noResponseDelay_Timeout;
 
-        static Timer _receiveTimer;
+        //static Timer _receiveTimer;
         static readonly TimerCallback ReceiveTimerCallback = RadioReceiveHelper;
         const int receiveInterval = 500;
 
         // Set up for callback to user method to handle incoming packets
         public delegate void RadioReceivedData(CSMA csma);
-        public MacConfiguration macConfig;
-        public RadioReceivedData _radioReceivedData;
-        public CSMA _csma;
-        public Radio_802_15_4_Base radioBase;
-        static int counter = 0;
+        public static MacConfiguration macConfig;
+        public static RadioReceivedData _radioReceivedData;
+        public static CSMA _csma;
+        public static Radio_802_15_4_Base radioBase;
+        //static int counter = 0;
         public static Program p = new Program();
         
         /// <summary>
@@ -87,7 +87,8 @@ namespace Samraksh.DotNow.PingPong {
             //  The last argument is the method to call when a message is received
             _csmaRadio = new SimpleCsmaRadio(140, TxPowerValue.Power_0Point7dBm, RadioReceive);
 
-            p.Initialize();
+            //p.Initialize();
+            Initialize();
             
             // Send the current value now
             //RadioSend(_currVal.ToString().Trim());
@@ -101,7 +102,7 @@ namespace Samraksh.DotNow.PingPong {
             Thread.Sleep(Timeout.Infinite);
         }
 
-        public void Initialize()
+        public static void Initialize()
         {
             macConfig = new MacConfiguration();
             macConfig.NeighborLivenessDelay = 100;
@@ -125,7 +126,7 @@ namespace Samraksh.DotNow.PingPong {
         {
         }
 
-        private void Receive(UInt16 numberOfPackets)
+        private static void Receive(UInt16 numberOfPackets)
         {
             // If the user doesn't want to be notified of received messages, return
             if (_radioReceivedData == null)

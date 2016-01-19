@@ -95,7 +95,7 @@ namespace Samraksh.DotNow.PingPong {
             // Start a one-shot timer that resets itself whenever it expires
             //StartOneshotTimer(ref _noResponseDelayTimer, NoResponseDelayTimerCallback, NoResponseInterval);
 
-            _receiveTimer = new Timer(ReceiveTimerCallback, null, receiveInterval-10, receiveInterval);
+            _receiveTimer = new Timer(ReceiveTimerCallback, null, receiveInterval-10, Timeout.Infinite);
             
             // Everything is set up. Go to sleep forever, pending events
             Thread.Sleep(Timeout.Infinite);
@@ -133,7 +133,7 @@ namespace Samraksh.DotNow.PingPong {
             // Send the CSMA object to the user.
             // No need to send numberOfPackets; that's available as CSMA.GetPendingPacketCount
             //Debug.Print("Calling RadioReceive");
-            _receiveTimer.Change(0, receiveInterval);
+            ////_receiveTimer.Change(0, receiveInterval);
             //_radioReceivedData(_csma);
         }
 
@@ -194,18 +194,27 @@ namespace Samraksh.DotNow.PingPong {
         static void RadioReceiveHelper(object obj)
         {
             Debug.Print("Calling RadioReceive1");
-            p.RadioReceive1();
+            //while (true)
+            //{
+                p.RadioReceive1();
+            //}
         }
 
         public void RadioReceive1()
         {
-            radioBase = _csma.GetRadio();
-            Debug.Print("Checking CCA");
-            for (int i = 0; i < receiveInterval - 10; i++)
+            if (counter == 0)
             {
-                counter++;
-                bool result = _csmaRadio.CCA(radioBase);
-                if (!result && (counter % 100 == 0))
+                radioBase = _csma.GetRadio();
+            }
+            ////Debug.Print("Checking CCA");
+            ////for (int i = 0; i < receiveInterval - 10; i++)
+            ////{
+                ////counter++;
+                while (true)
+                {
+                    bool result = _csmaRadio.CCA(radioBase);
+                }
+                /*if (!result && (counter % 100 == 0))
                 {
                     Debug.Print("CCA: " + result.ToString());
                 }
@@ -213,10 +222,10 @@ namespace Samraksh.DotNow.PingPong {
                 {
                     //Debug.Print("CCA: " + result.ToString());
                     Debug.Print("******* CCA: TRUE *******");
-                }
+                }*/
                 //Thread.Sleep(1);
-            }
-            counter = 0;
+            ////}
+            ////counter = 0;
         }
 
         /// <summary>
