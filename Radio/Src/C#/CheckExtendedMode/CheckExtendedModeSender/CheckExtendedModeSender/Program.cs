@@ -164,7 +164,7 @@ namespace Samraksh.DotNow.PingPong {
                 toggle = false;
                 // Pick a value randomly
                 _currVal = (new Random()).Next(99);  // We're choosing a fairly small value to avoid runover on the LCD display (since it only has 4 positions)
-                Debug.Print("Sending message " + _currVal);
+                //Debug.Print("Sending message " + _currVal);
                 RadioSend(_currVal.ToString().Trim());
                 //_sendTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 //Below for loop takes 480ms (450 times Header, payload and number transmitted) to complete
@@ -188,7 +188,7 @@ namespace Samraksh.DotNow.PingPong {
             else
             {
                 toggle = true;
-                Debug.Print("Going quiet");
+                //Debug.Print("Going quiet");
                 //_sendTimer.Change(sendInterval, Timeout.Infinite);
             }
         }
@@ -214,7 +214,7 @@ namespace Samraksh.DotNow.PingPong {
         /// <param name="obj">Ignored</param>
         static void reply_Timeout(object obj) {
             RadioSend(_currVal.ToString().Trim());
-            Debug.Print("Sending message " + _currVal);
+            //Debug.Print("Sending message " + _currVal);
         }
 
         /// <summary>
