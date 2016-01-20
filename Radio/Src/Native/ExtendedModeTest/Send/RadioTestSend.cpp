@@ -118,8 +118,8 @@ void RadioTestSend::CreatePacket()
 	}
 	*data_msg = msg;
 
-	IEEE802_15_4_Footer* footer = msg_carrier.GetFooter();
-	footer->FCS = 0xAAAA;
+	/*IEEE802_15_4_Footer* footer = msg_carrier.GetFooter();
+	footer->FCS = 0xAAAA;*/
 	//header->fcf = 9253;
 	//header->dsn = 97;
 	//header->destpan = (34 << 8);
