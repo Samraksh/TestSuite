@@ -28,6 +28,7 @@ public:
 	UINT8 MyAppID;
 	MacConfig Config;
 	UINT8 MacId;
+	UINT16 myAddress;
 	MacEventHandler myEventHandler;
 
 	RadioEventHandler_t Radio_Event_Handler;

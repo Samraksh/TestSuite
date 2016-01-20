@@ -141,7 +141,8 @@ void RadioTestSend::SendPacket()
 	*data_msg = msg;
 
 	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
-	header->dsn = seqNumber;
+	finalSeqNumber += seqNumber;
+	header->dsn = finalSeqNumber;
 	seqNumber++;
 
 	CPU_GPIO_SetPinState((GPIO_PIN) Transmission_Pin, TRUE);
@@ -175,6 +176,9 @@ BOOL RadioTestSend::Initialize()
 	CPU_GPIO_SetPinState((GPIO_PIN) ACK_Pin, FALSE);
 
 	//initialPacketReceived = false;
+	myAddress = 3505;
+	finalSeqNumber = myAddress ^ 0xAA;
+	finalSeqNumber += ((myAddress >> 8) ^ 0x55);
 	radioName = RF231RADIO;
 	DeviceStatus status;
 	Radio_Event_Handler.SetRadioInterruptHandler(RadioTest_InterruptHandler);

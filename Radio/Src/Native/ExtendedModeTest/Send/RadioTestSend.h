@@ -27,6 +27,8 @@ public:
 	UINT32 msgID;
 	UINT8 currentTry;
 	UINT8 retryLimit;
+	UINT16 myAddress;
+	UINT8 finalSeqNumber;
 
 	RadioEventHandler_t Radio_Event_Handler;
 	/*bool initialPacketReceived;

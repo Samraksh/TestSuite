@@ -134,6 +134,7 @@ BOOL RadioTestReceive::Initialize()
 	CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin_31, FALSE);
 
 	initialPacketReceived = false;
+	myAddress = 6846;
 	radioName = RF231RADIO;
 	DeviceStatus status;
 	Radio_Event_Handler.SetRadioInterruptHandler(RadioTest_InterruptHandler);
