@@ -73,8 +73,8 @@ void* RadioTestReceive::Receive(void* tmpMsg, UINT16 size)
 {
 	Message_15_4_t* rcvdMsg = (Message_15_4_t*)tmpMsg;
 	IEEE802_15_4_Header_t *header = (IEEE802_15_4_Header_t*)rcvdMsg->GetHeader();
-	hal_printf("Received fcf: %d\n\n", header->fcf);
-	hal_printf("Received dsn: %d\n\n", header->dsn);
+	hal_printf("Received fcf: %d\n", header->fcf);
+	hal_printf("Received dsn: %d\n", header->dsn);
 	Payload_t* data_msg = (Payload_t*)rcvdMsg->GetPayload();
 	hal_printf("Received msgID: %d\n\n", data_msg->MSGID);
 	/*if(!initialPacketReceived){

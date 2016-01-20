@@ -25,6 +25,8 @@ public:
 	Message_15_4_t msg_carrier;
 	UINT8 radioName;
 	UINT32 msgID;
+	UINT8 currentTry;
+	UINT8 retryLimit;
 
 	RadioEventHandler_t Radio_Event_Handler;
 	/*bool initialPacketReceived;
