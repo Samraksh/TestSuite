@@ -122,7 +122,7 @@ namespace Samraksh.DotNow.PingPong {
 
         private static void NeighborChange(UInt16 numberOfNeighbors)
         {
-			Debug.Print("NeighborChange " + numberOfNeighbors.ToString());
+			//Debug.Print("NeighborChange " + numberOfNeighbors.ToString());
         }
 
         private void Receive(UInt16 numberOfPackets)

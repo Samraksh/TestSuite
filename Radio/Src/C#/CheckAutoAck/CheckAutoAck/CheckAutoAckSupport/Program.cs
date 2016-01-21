@@ -194,7 +194,7 @@ namespace Samraksh.DotNow.PingPong {
                 counter++;
                 Debug.Print("send length " + toSendByte.Length.ToString());
             }
-			Debug.Print(toSend);
+			Debug.Print("app send:" + toSend);
             _csmaRadio.Send(Addresses.BROADCAST, toSendByte);
         }
 
