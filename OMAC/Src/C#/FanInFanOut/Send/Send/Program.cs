@@ -78,9 +78,10 @@ namespace Samraksh.eMote.Net.Mac.Send
 
     public class Program
     {
-        const UInt32 totalPingCount = 101;
+        const UInt32 totalPingCount = 10001;
         const UInt16 MAX_NEIGHBORS = 12;
-        int dutyCyclePeriod = 60000;
+        const int initialDelayInMsecs = 30000;
+        int dutyCyclePeriod = 20000;
 
         bool startSend = false;
         UInt16 myAddress;
@@ -143,6 +144,8 @@ namespace Samraksh.eMote.Net.Mac.Send
         //Starts a timer 
         public void Start()
         {
+            Debug.Print("Waiting to start test");
+            Thread.Sleep(initialDelayInMsecs);
             Debug.Print("Starting timer...");
             TimerCallback timerCB = new TimerCallback(sendTimerCallback);
             sendTimer = new Timer(timerCB, null, 0, dutyCyclePeriod);
@@ -160,25 +163,26 @@ namespace Samraksh.eMote.Net.Mac.Send
             try
             {
                 bool sendFlag = false;
-                UInt16[] neighborList = myOMACObj.GetNeighborList();
+                //UInt16[] neighborList = myOMACObj.GetNeighborList();
 
-                for (int j = 0; j < MAX_NEIGHBORS; j++)
-                {
-                    if (neighborList[j] != 0)
-                    {
+                //for (int j = 0; j < MAX_NEIGHBORS; j++)
+                //{
+                    //if (neighborList[j] != 0)
+                    //{
                         //Debug.Print("count of neighbors " + neighborList.Length);
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] msg = pingMsg.ToBytes();
-                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-
-                        status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        //Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                        //status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter);
+                        status = myOMACObj.Send(6846, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
                         }
-                    }
-                }
+                    //}
+                //}
                 if (sendFlag == false && startSend == true)
                 {
                     Debug.Print("Ping failed. All neighbors dropped out");
