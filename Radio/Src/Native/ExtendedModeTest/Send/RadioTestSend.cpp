@@ -28,7 +28,6 @@ extern RF231Radio grf231Radio;
 #define Transmission_Pin (GPIO_PIN)31 //2
 #define ACK_Pin (GPIO_PIN)1 //2
 
-
 /*
  * Keep sending a packet every x amount of time until a response is received
  */
@@ -66,7 +65,7 @@ void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
 }
 
 void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
-	//hal_printf("RadioTest_SendAckHandler; msg sent\n\n");
+	hal_printf("RadioTest_SendAckHandler; msg sent; status: %d\n\n", status);
 }
 
 BOOL RadioTest_InterruptHandler(RadioInterrupt Interrupt, void *param){
@@ -99,17 +98,20 @@ void RadioTestSend::CreatePacket()
 	//header->fcf = 9254;
 	//header->destpan = (34 << 8);
 	//header->destpan |= 0;
-	header->fcf = 26150;
+	//header->frameLength = 17;
+	header->fcf = 0x8861;
 	header->dsn = 0;
-	header->srcpan = 0x0001;
-	header->destpan = 0x0001;
+	//header->srcpan = 0x0;
 	header->src = CPU_Radio_GetAddress(this->radioName);
-	if(CPU_Radio_GetAddress(this->radioName) == 6846){
+	/*if(CPU_Radio_GetAddress(this->radioName) == 6846){
 		header->dest = 0x0DB1;
 	}
 	else{
 		header->dest = 0x1ABE;
-	}
+	}*/
+	//header->dest = 6846;
+	header->destpan = 0x0000;
+	header->dest = 0x1ABD;
 
 	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
 	msg.MSGID = msgID;
@@ -117,6 +119,22 @@ void RadioTestSend::CreatePacket()
 		msg.data[i-1] = i;
 	}
 	*data_msg = msg;
+
+	/*udp_header.srcPort = 17754;
+	udp_header.destPort = 17754;
+	udp_header.checkSum = 0;
+	udp_header.length = sizeof(ZEP_Header)+sizeof(IEEE802_15_4_Header_t);
+	memcpy(udp_header.payload, &(zepHeader), sizeof(ZEP_Header));
+	memcpy(udp_header.payload+sizeof(ZEP_Header), msg_carrier.GetHeader(), sizeof(IEEE802_15_4_Header_t));
+
+	zepHeader.hf_zep_channel_id = 0;
+	zepHeader.hf_zep_version = 1;
+	zepHeader.hf_zep_device_id = 1;
+	zepHeader.hf_zep_lqi = 0;
+	zepHeader.hf_zep_lqi_mode = 0;
+	//zepHeader.hf_zep_reserved_field = 0;
+	zepHeader.hf_zep_ieee_length = sizeof(IEEE802_15_4_Header_t);*/
+
 
 	/*IEEE802_15_4_Footer* footer = msg_carrier.GetFooter();
 	footer->FCS = 0xAAAA;*/
@@ -145,9 +163,27 @@ void RadioTestSend::SendPacket()
 	header->dsn = finalSeqNumber;
 	seqNumber++;
 
+	/*UINT8 msgBuffer[sizeof(IEEE802_15_4_Header_t)+sizeof(Payload_t)-1];
+	//FCF
+	msgBuffer[0] = 0x61; msgBuffer[1] = 0x88;
+	//Seq number
+	msgBuffer[2] = 0x01;
+	//DestPan
+	msgBuffer[3] = 0x00; msgBuffer[4] = 0x00;
+	//Dest
+	msgBuffer[5] = 0xBE; msgBuffer[6] = 0x1A;
+	//Src
+	msgBuffer[7] = 0xBA; msgBuffer[8] = 0x7B;
+	//Msg payload
+	msgBuffer[9] = 0x01; msgBuffer[10] = 0x00;
+	msgBuffer[11] = 0x01; msgBuffer[12] = 0x02; msgBuffer[13] = 0x03; msgBuffer[14] = 0x04; msgBuffer[15] = 0x05; msgBuffer[16] = 0x00;*/
+	//memcpy(msgBuffer, &msg_carrier, sizeof(IEEE802_15_4_Header_t)+sizeof(Payload_t));
+
 	CPU_GPIO_SetPinState((GPIO_PIN) Transmission_Pin, TRUE);
 	//(Message_15_4_t*)grf231Radio.Send_TimeStamped(&msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
-	(Message_15_4_t*)grf231Radio.Send_TimeStamped(&msg_carrier, 112, HAL_Time_CurrentTicks());
+	(Message_15_4_t*)grf231Radio.Send_TimeStamped(&msg_carrier, sizeof(IEEE802_15_4_Header_t)+sizeof(Payload_t), HAL_Time_CurrentTicks());
+	//(Message_15_4_t*)grf231Radio.Send_TimeStamped(msgBuffer, sizeof(IEEE802_15_4_Header_t)+sizeof(Payload_t)-1, HAL_Time_CurrentTicks());
+	//(Message_15_4_t*)grf231Radio.Send_TimeStamped(&udp_header, 112, HAL_Time_CurrentTicks());
 	//(Message_15_4_t*)grf231Radio.Send(&msg_carrier, 70);
 	CPU_GPIO_SetPinState((GPIO_PIN) Transmission_Pin, FALSE);
 
