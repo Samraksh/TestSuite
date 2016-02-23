@@ -112,7 +112,7 @@ namespace Samraksh.eMote.Net.Mac.Send
             myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);
 
             myMacConfig.radioConfig = myRadioConfig;
-            myMacConfig.NeighborLivenessDelay = 180;
+            myMacConfig.NeighborLivenessDelay = 60;
             myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
 
             Debug.Print("Configuring OMAC...");
@@ -179,8 +179,14 @@ namespace Samraksh.eMote.Net.Mac.Send
                         status = myOMACObj.Send(6846, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
-                            Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
+                            Debug.Print("Send to " + 6846 + " failed. Ping msgID " + sendMsgCounter.ToString());
                         }
+                        /*Debug.Print("Sending to neighbor " + 26809 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
+                        status = myOMACObj.Send(26809, msg, 0, (ushort)msg.Length);
+                        if (status != NetOpStatus.S_Success)
+                        {
+                            Debug.Print("Send to " + 26809 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                        }*/
                     //}
                 //}
                 if (sendFlag == false && startSend == true)

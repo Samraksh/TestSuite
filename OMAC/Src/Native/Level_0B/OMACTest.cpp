@@ -19,7 +19,8 @@
 #define OMACTEST_Tx (GPIO_PIN)120//24
 #define OMACTEST_TxAck (GPIO_PIN)120//31
 
-#define TEST_0B_TIMER	4
+#define TEST_0B_TIMER	10
+#define TIMER_PERIOD 	10
 
 const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
@@ -31,11 +32,13 @@ extern OMACScheduler g_omac_scheduler;
 extern UINT16 MF_NODE_ID;
 extern Buffer_15_4_t g_send_buffer;
 
-void Timer_32_Handler(void * arg){
+void Timer_Test_0B_Handler(void * arg){
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(OMACTEST_Timer, TRUE);
 #endif
-	g_OMACTest.Send();
+	if(g_OMAC.GetAddress() == 3505)
+		g_OMACTest.Send();
+
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(OMACTEST_Timer, FALSE);
 #endif
@@ -68,7 +71,7 @@ BOOL OMACTest::Initialize(){
 #endif
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
 
-	VirtTimer_SetTimer(TEST_0B_TIMER, 0, 10*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_32_Handler); //period (3rd argument) is in micro seconds
+	VirtTimer_SetTimer(TEST_0B_TIMER, 0, TIMER_PERIOD*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_Test_0B_Handler); //period (3rd argument) is in micro seconds
 	return TRUE;
 }
 
