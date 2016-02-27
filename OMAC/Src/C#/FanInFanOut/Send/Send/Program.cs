@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
@@ -99,6 +101,10 @@ namespace Samraksh.eMote.Net.Mac.Send
         Mac.MacConfiguration myMacConfig = new MacConfiguration();
         Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
 
+        private System.IO.Ports.SerialPort _serialPort;
+        private readonly byte[] _byteBuffer = new byte[10];
+        private static readonly AutoResetEvent GoSemaphore = new AutoResetEvent(false);
+
         public void Initialize()
         {
             //Init LCD
@@ -112,7 +118,7 @@ namespace Samraksh.eMote.Net.Mac.Send
             myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);
 
             myMacConfig.radioConfig = myRadioConfig;
-            myMacConfig.NeighborLivenessDelay = 60;
+            myMacConfig.NeighborLivenessDelay = 180;
             myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
 
             Debug.Print("Configuring OMAC...");
@@ -133,6 +139,43 @@ namespace Samraksh.eMote.Net.Mac.Send
             Debug.Print("OMAC init done");
             myAddress = myOMACObj.GetAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
+
+            //SerialMethod();
+        }
+
+        public void SerialMethod()
+        {
+            _serialPort = new SerialPort("COM2")
+            {
+                BaudRate = 115200,
+                Parity = System.IO.Ports.Parity.None,
+                DataBits = 8,
+                StopBits = StopBits.One,
+                Handshake = Handshake.None,
+            };
+            _serialPort.DataReceived += DataReceived;
+            _serialPort.Open();
+        }
+
+        /// <summary>
+        /// Receive incoming bytes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            while (_serialPort.BytesToRead > 0)
+            {
+                var bytesRead = _serialPort.Read(_byteBuffer, 0, System.Math.Max(_serialPort.BytesToRead, _byteBuffer.Length));
+                //Debug.Print("BytesToRead: " + _serialPort.BytesToRead + ", bytesRead: " + bytesRead);
+                // _bytePacket.Add processes the incoming bytes and calls the user callback when a delimeter is found
+                //_bytePacket.Add(_byteBuffer, bytesRead);
+                if (string.Equals(_byteBuffer,"GO"))
+                {
+                    Debug.Print("Received GO");
+                    GoSemaphore.Set();
+                }
+            }
         }
 
         //Keeps track of change in neighborhood
@@ -145,6 +188,8 @@ namespace Samraksh.eMote.Net.Mac.Send
         public void Start()
         {
             Debug.Print("Waiting to start test");
+            //GoSemaphore.WaitOne();
+            //Debug.Print("GO...");
             Thread.Sleep(initialDelayInMsecs);
             Debug.Print("Starting timer...");
             TimerCallback timerCB = new TimerCallback(sendTimerCallback);

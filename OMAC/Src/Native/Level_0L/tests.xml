@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_0L)' Type='Native .NOW'>
 		<Description>
 			Native OMAC test to measure randomness of the PRNG
 		</Description>

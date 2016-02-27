@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_1A)' Type='Native .NOW'>
 		<Description>
 			Native OMAC test - simple ping-pong test
 		</Description>

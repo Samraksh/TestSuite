@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_0M)' Type='Native .NOW'>
 		<Description>
 			Native OMAC test to verify if CCA works
 		</Description>

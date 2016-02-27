@@ -1,13 +1,14 @@
 <TestSuite>
-	<Test Name='OMACTest(OMACFanIn)' Type='C# .NOW'>
+	<!--Please do not change the test name below. It is used by test rig to start all nodes involved in fan-out at the same time-->
+	<Test Name='OMACTest(Send-Fan_Out)' Type='C# .NOW'>
 		<Description>
-			Fan-In test
+			OMAC send test(fan-out) - primary device will be a sender, rest receivers
 		</Description>
 		<TestPath>
-			OMAC\Src\C#\OMACFanIn
+			OMAC\Src\C#\FanInFanOut\Send\Send
 		</TestPath>
 		<TestProjName>
-			CheckAutoAck.csproj
+			Send.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,7 +33,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			load support projects: OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport\tests.xml OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport2\tests.xml
+			load support projects: OMAC\Src\C#\FanInFanOut\Receive\Receive\tests1.xml OMAC\Src\C#\FanInFanOut\Receive\Receive\tests2.xml
 		</TestSupporting>
 		<TestJTAGHarness>
 		</TestJTAGHarness>

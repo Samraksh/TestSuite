@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest(Level_1B)' Type='Native .NOW'>
+	<Test Name='OMACTest(AdvancedPing)' Type='C# .NOW'>
 		<Description>
-			Native OMAC test - ping-pong test
+			OMAC AdvancedPing test
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_1B
+			OMAC\Src\C#\FanInFanOut\AdvancedPing\AdvancedPing
 		</TestPath>
 		<TestProjName>
-			OMACTest.proj
+			AdvancedPing.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

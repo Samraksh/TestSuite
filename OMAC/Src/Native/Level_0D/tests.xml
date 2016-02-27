@@ -1,7 +1,7 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_0D)' Type='Native .NOW'>
 		<Description>
-			Native OMAC test - to determine when a node says a neighbor is going to wake up and when the neighbor actually wakes up
+			Native OMAC test - to determine when a node indicates a neighbor is going to wake up and when the neighbor actually wakes up
 		</Description>
 		<TestPath>
 			OMAC\Src\Native\Level_0D

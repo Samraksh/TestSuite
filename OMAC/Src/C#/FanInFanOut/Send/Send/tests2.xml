@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest(Level_1B)' Type='Native .NOW'>
+	<Test Name='OMACTest(Send)' Type='C# .NOW'>
 		<Description>
-			Native OMAC test - ping-pong test
+			OMAC send test
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_1B
+			OMAC\Src\C#\FanInFanOut\Send\Send
 		</TestPath>
 		<TestProjName>
-			OMACTest.proj
+			Send.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,5 +31,14 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
+		<TestSupporting>
+			support project 2
+		</TestSupporting>
+		<TestJTAGHarness>
+		</TestJTAGHarness>
+		<TestPowerAutomateSelected>
+		</TestPowerAutomateSelected>
+		<TestBuild>
+		</TestBuild>
 	</Test>
 </TestSuite>
