@@ -19,17 +19,14 @@
 #define OMACTEST_Tx (GPIO_PIN)120//24
 #define OMACTEST_TxAck (GPIO_PIN)120//31
 
-#define TEST_0B_TIMER	4
+
 
 const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
 
 OMACTest g_OMACTest;
-extern NeighborTable g_NeighborTable;
 extern OMACType g_OMAC;
-extern OMACScheduler g_omac_scheduler;
 extern UINT16 MF_NODE_ID;
-extern Buffer_15_4_t g_send_buffer;
 
 void Timer_32_Handler(void * arg){
 #ifdef DEBUG_OMACTest
@@ -130,7 +127,7 @@ BOOL OMACTest::Send(){
 	}
 
 	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
-	if (g_NeighborTable.GetNeighborPtr(Nbr2beFollowed) == NULL) {
+	if (g_OMAC.m_NeighborTable.GetNeighborPtr(Nbr2beFollowed) == NULL) {
 		return FALSE;
 	}
 #ifdef DEBUG_OMACTest
