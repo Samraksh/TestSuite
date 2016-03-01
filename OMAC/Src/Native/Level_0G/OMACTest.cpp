@@ -11,7 +11,6 @@
 //extern VirtualTimer gVirtualTimerObject;
 //extern VirtualTimerMapper gVirtualTimerMapperObject;
 extern OMACTest gOMACTest;
-extern OMACScheduler g_omac_scheduler;
 extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
@@ -22,13 +21,13 @@ extern UINT16 MF_NODE_ID;
 #define USEONESHOTTIMER FALSE
 
 //NEIGHBORCLOCKMONITORPERIOD in ticks
-#define NEIGHBORCLOCKMONITORPERIOD 800000
+#define NEIGHBORCLOCKMONITORPERIOD 200000
 #define INITIALDELAY 100000
 
 void OMACTest_ReceiveHandler (void* msg, UINT16 NumOfPendingPackets){
 }
 
-void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
 }
 
 void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
@@ -61,7 +60,7 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 
 	//Toggle Pin State for monitoring with Logic Analyzer
 	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
-	if(g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
+	if(g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
 		if(gOMACTest.NeighborClkPINState){
 			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, false);
 			gOMACTest.NeighborClkPINState = false;
@@ -106,9 +105,9 @@ BOOL OMACTest::Initialize(){
 	Mac_Initialize(&myEventHandler,MacId, MyAppID, Config.RadioID, (void*) &Config);
 
 	VirtualTimerReturnMessage rm;
-	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD, USEONESHOTTIMER, FALSE, CMaxTSLocalClockMonitorTimerHandler);
+	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD, USEONESHOTTIMER, FALSE, CMaxTSLocalClockMonitorTimerHandler, 4);
 	ASSERT_SP(rm == TimerSupported);
-	rm = VirtTimer_SetTimer(NeighborClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD, USEONESHOTTIMER, FALSE, CMaxTSNeighborClockMonitorTimerHandler);
+	rm = VirtTimer_SetTimer(NeighborClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD, USEONESHOTTIMER, FALSE, CMaxTSNeighborClockMonitorTimerHandler, 4);
 	assert(rm == TimerSupported);
 
 
@@ -118,7 +117,7 @@ BOOL OMACTest::Initialize(){
 BOOL OMACTest::StartTest(){
 	VirtualTimerReturnMessage rm;
 
-	UINT64 y = HAL_Time_CurrentTicks();
+	UINT64 y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
 	UINT64 LocalClockMonitorFrameNum = y /( (UINT64) NEIGHBORCLOCKMONITORPERIOD );
 
 	ScheduleNextLocalCLK();
@@ -136,29 +135,29 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
 	VirtualTimerReturnMessage rm;
 
-	if (g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
+	if (g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
 		UINT64 NextEventTime = 0, neighborTime = 0, y = 0;
 		UINT64 LocalFireUpTime = 0;
 		UINT64 TicksTillNextEvent;
 
 
-		//y = HAL_Time_CurrentTicks();
+		//y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
 		while (LocalFireUpTime <= y || TicksTillNextEvent <= 40000){
-			y = HAL_Time_CurrentTicks();
-			neighborTime = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NeighborTime(Nbr2beFollowed, y);
+			y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
+			neighborTime = g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.Local2NeighborTime(Nbr2beFollowed, y);
 			//neighborTime = y;
 			NeighborClockMonitorFrameNum =  neighborTime / ((UINT64)NEIGHBORCLOCKMONITORPERIOD);
 			while(NextEventTime <= neighborTime){
 				NeighborClockMonitorFrameNum = NeighborClockMonitorFrameNum + 1;
 				NextEventTime = ( NeighborClockMonitorFrameNum ) * ((UINT64)NEIGHBORCLOCKMONITORPERIOD);
 			}
-			LocalFireUpTime = g_omac_scheduler.m_TimeSyncHandler.m_globalTime.Neighbor2LocalTime(Nbr2beFollowed, NextEventTime);
+			LocalFireUpTime = g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.Neighbor2LocalTime(Nbr2beFollowed, NextEventTime);
 			//LocalFireUpTime = NextEventTime;
 			TicksTillNextEvent = LocalFireUpTime - y;
 		}
 		UINT32 MicSTillNextEvent = (UINT32) (HAL_Time_TicksToTime(TicksTillNextEvent));
-		UINT32 ProcessingLatency = (UINT32) (HAL_Time_TicksToTime( HAL_Time_CurrentTicks() - y));
-		rm = VirtTimer_Change(NeighborClockMonitor_TIMER1, 0, MicSTillNextEvent + ProcessingLatency, USEONESHOTTIMER);
+		UINT32 ProcessingLatency = (UINT32) (HAL_Time_TicksToTime( g_OMAC.m_Clock.GetCurrentTimeinTicks() - y));
+		rm = VirtTimer_Change(NeighborClockMonitor_TIMER1, 0, MicSTillNextEvent + ProcessingLatency, USEONESHOTTIMER, 4);
 		ASSERT_SP(rm == TimerSupported);
 		return TRUE;
 	}
@@ -171,7 +170,7 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 
 BOOL OMACTest::ScheduleNextLocalCLK(){
 		VirtualTimerReturnMessage rm;
-		UINT64 y = HAL_Time_CurrentTicks();
+		UINT64 y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
 		UINT64 NextEventTime = 0;
 		UINT64 TicksTillNextEvent = 0;
 		while(NextEventTime <= y || TicksTillNextEvent <= MINEVENTTIM ){
@@ -181,7 +180,7 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 		}
 
 		UINT32 MicSTillNextEvent = (UINT32) (HAL_Time_TicksToTime(TicksTillNextEvent)) ;
-		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, MicSTillNextEvent, USEONESHOTTIMER);
+		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, MicSTillNextEvent, USEONESHOTTIMER, 4);
 		ASSERT_SP(rm == TimerSupported);
 
 
