@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
@@ -78,9 +80,10 @@ namespace Samraksh.eMote.Net.Mac.Send
 
     public class Program
     {
-        const UInt32 totalPingCount = 101;
+        const UInt32 totalPingCount = 10001;
         const UInt16 MAX_NEIGHBORS = 12;
-        int dutyCyclePeriod = 60000;
+        const int initialDelayInMsecs = 30000;
+        int dutyCyclePeriod = 20000;
 
         bool startSend = false;
         UInt16 myAddress;
@@ -97,6 +100,10 @@ namespace Samraksh.eMote.Net.Mac.Send
 
         Mac.MacConfiguration myMacConfig = new MacConfiguration();
         Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+
+        private System.IO.Ports.SerialPort _serialPort;
+        private readonly byte[] _byteBuffer = new byte[10];
+        private static readonly AutoResetEvent GoSemaphore = new AutoResetEvent(false);
 
         public void Initialize()
         {
@@ -132,6 +139,43 @@ namespace Samraksh.eMote.Net.Mac.Send
             Debug.Print("OMAC init done");
             myAddress = myOMACObj.GetAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
+
+            //SerialMethod();
+        }
+
+        public void SerialMethod()
+        {
+            _serialPort = new SerialPort("COM2")
+            {
+                BaudRate = 115200,
+                Parity = System.IO.Ports.Parity.None,
+                DataBits = 8,
+                StopBits = StopBits.One,
+                Handshake = Handshake.None,
+            };
+            _serialPort.DataReceived += DataReceived;
+            _serialPort.Open();
+        }
+
+        /// <summary>
+        /// Receive incoming bytes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            while (_serialPort.BytesToRead > 0)
+            {
+                var bytesRead = _serialPort.Read(_byteBuffer, 0, System.Math.Max(_serialPort.BytesToRead, _byteBuffer.Length));
+                //Debug.Print("BytesToRead: " + _serialPort.BytesToRead + ", bytesRead: " + bytesRead);
+                // _bytePacket.Add processes the incoming bytes and calls the user callback when a delimeter is found
+                //_bytePacket.Add(_byteBuffer, bytesRead);
+                if (string.Equals(_byteBuffer,"GO"))
+                {
+                    Debug.Print("Received GO");
+                    GoSemaphore.Set();
+                }
+            }
         }
 
         //Keeps track of change in neighborhood
@@ -143,6 +187,10 @@ namespace Samraksh.eMote.Net.Mac.Send
         //Starts a timer 
         public void Start()
         {
+            Debug.Print("Waiting to start test");
+            //GoSemaphore.WaitOne();
+            //Debug.Print("GO...");
+            Thread.Sleep(initialDelayInMsecs);
             Debug.Print("Starting timer...");
             TimerCallback timerCB = new TimerCallback(sendTimerCallback);
             sendTimer = new Timer(timerCB, null, 0, dutyCyclePeriod);
@@ -160,25 +208,32 @@ namespace Samraksh.eMote.Net.Mac.Send
             try
             {
                 bool sendFlag = false;
-                UInt16[] neighborList = myOMACObj.GetNeighborList();
+                //UInt16[] neighborList = myOMACObj.GetNeighborList();
 
-                for (int j = 0; j < MAX_NEIGHBORS; j++)
-                {
-                    if (neighborList[j] != 0)
-                    {
+                //for (int j = 0; j < MAX_NEIGHBORS; j++)
+                //{
+                    //if (neighborList[j] != 0)
+                    //{
                         //Debug.Print("count of neighbors " + neighborList.Length);
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] msg = pingMsg.ToBytes();
-                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-
-                        status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        //Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                        //status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
+                        status = myOMACObj.Send(6846, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
-                            Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
+                            Debug.Print("Send to " + 6846 + " failed. Ping msgID " + sendMsgCounter.ToString());
                         }
-                    }
-                }
+                        /*Debug.Print("Sending to neighbor " + 26809 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
+                        status = myOMACObj.Send(26809, msg, 0, (ushort)msg.Length);
+                        if (status != NetOpStatus.S_Success)
+                        {
+                            Debug.Print("Send to " + 26809 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                        }*/
+                    //}
+                //}
                 if (sendFlag == false && startSend == true)
                 {
                     Debug.Print("Ping failed. All neighbors dropped out");

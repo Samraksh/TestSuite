@@ -82,7 +82,7 @@ void OMACTest::VerifyCCA(){
 			hal_printf("*****CCA busy*****\n");
 		}
 		else if(DS == DS_Fail){
-			//hal_printf("CCA failed\n");
+			hal_printf("CCA failed\n");
 		}
 		else{
 			hal_printf("Unknown status\n");

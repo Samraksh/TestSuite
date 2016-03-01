@@ -1,10 +1,10 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_0H)' Type='Native .NOW'>
 		<Description>
 			Native OMAC test
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_0B
+			OMAC\Src\Native\Level_0H
 		</TestPath>
 		<TestProjName>
 			OMACTest.proj

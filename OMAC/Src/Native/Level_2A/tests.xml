@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_2A)' Type='Native .NOW'>
 		<Description>
 			Native OMAC test - fan-in fan-out
 		</Description>

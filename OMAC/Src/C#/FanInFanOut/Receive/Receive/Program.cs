@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
@@ -99,9 +101,10 @@ namespace Samraksh.eMote.Net.Mac.Receive
     {
         const UInt16 MAX_NEIGHBORS = 12;
         const UInt32 endOfTest = 100;
+        const int initialDelayInMsecs = 30000;
         Hashtable neighborHashtable = new Hashtable();
         EmoteLCD lcd;
-
+        
         UInt16 myAddress;
         static UInt32 totalRecvCounter = 0;
         
@@ -112,6 +115,10 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
         Mac.MacConfiguration myMacConfig = new MacConfiguration();
         Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+
+        private System.IO.Ports.SerialPort _serialPort;
+        private readonly byte[] _byteBuffer = new byte[10];
+        private static readonly AutoResetEvent GoSemaphore = new AutoResetEvent(false);
 
         public void Initialize()
         {
@@ -147,6 +154,43 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Debug.Print("OMAC init done");
             myAddress = myOMACObj.GetAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Receive mode");
+
+            //SerialMethod();
+        }
+
+        public void SerialMethod()
+        {
+            _serialPort = new SerialPort("COM2")
+            {
+                BaudRate = 115200,
+                Parity = System.IO.Ports.Parity.None,
+                DataBits = 8,
+                StopBits = StopBits.One,
+                Handshake = Handshake.None,
+            };
+            _serialPort.DataReceived += DataReceived;
+            _serialPort.Open();
+        }
+
+        /// <summary>
+        /// Receive incoming bytes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            while (_serialPort.BytesToRead > 0)
+            {
+                var bytesRead = _serialPort.Read(_byteBuffer, 0, System.Math.Max(_serialPort.BytesToRead, _byteBuffer.Length));
+                //Debug.Print("BytesToRead: " + _serialPort.BytesToRead + ", bytesRead: " + bytesRead);
+                // _bytePacket.Add processes the incoming bytes and calls the user callback when a delimeter is found
+                //_bytePacket.Add(_byteBuffer, bytesRead);
+                if (string.Equals(_byteBuffer, "GO"))
+                {
+                    Debug.Print("Received GO");
+                    GoSemaphore.Set();
+                }
+            }
         }
 
         //Keeps track of change in neighborhood
@@ -155,12 +199,20 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
+        public void Start()
+        {
+            Debug.Print("Waiting to start test");
+            GoSemaphore.WaitOne();
+            Debug.Print("GO...");
+            Thread.Sleep(initialDelayInMsecs);
+        }
+
         //Handles received messages 
         public void Receive(UInt16 countOfPackets)
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount() == 0)
+            if (myOMACObj.GetPendingPacketCount_Receive() == 0)
             {
                 Debug.Print("no packets");
                 return;
@@ -264,6 +316,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         {
             Program p = new Program();
             p.Initialize();
+            //p.Start();
             Thread.Sleep(Timeout.Infinite);
         }
     }

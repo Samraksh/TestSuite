@@ -48,7 +48,8 @@
     <Reference Include="Microsoft.SPOT.Native">
       <HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Native.dll</HintPath>
     </Reference>
-    <Reference Include="Samraksh_eMote_Net">
+    <Reference Include="Samraksh_eMote_Net, Version=4.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\MF\MicroFrameworkPK_v4_3\Samraksh\Interops\Samraksh_eMote_Net\Samraksh_eMote_Net\bin\Release\Samraksh_eMote_Net.dll</HintPath>
     </Reference>
   </ItemGroup>

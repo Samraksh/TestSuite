@@ -1,0 +1,44 @@
+<TestSuite>
+	<Test Name='OMACTest(Send)' Type='C# .NOW'>
+		<Description>
+			OMAC send test
+		</Description>
+		<TestPath>
+			OMAC\Src\C#\FanInFanOut\Send\Send
+		</TestPath>
+		<TestProjName>
+			Send.csproj
+		</TestProjName>
+		<TesterName>
+		</TesterName>
+		<TestLocation>
+		</TestLocation>
+		<TestMFVersionNum>
+		</TestMFVersionNum>
+		<TestGitOption>			
+		</TestGitOption>
+		<TestGitBranch>
+		</TestGitBranch>
+		<TestUsePrecompiledBinary>
+		</TestUsePrecompiledBinary>
+		<TestHardware>
+		</TestHardware>
+		<TestSolution>
+		</TestSolution>
+		<TestMemoryType>
+		</TestMemoryType>
+		<TestSolutionType>
+		</TestSolutionType>
+		<TestGCCVersion>
+		</TestGCCVersion>
+		<TestSupporting>
+			support project 1
+		</TestSupporting>
+		<TestJTAGHarness>
+		</TestJTAGHarness>
+		<TestPowerAutomateSelected>
+		</TestPowerAutomateSelected>
+		<TestBuild>
+		</TestBuild>
+	</Test>
+</TestSuite>
