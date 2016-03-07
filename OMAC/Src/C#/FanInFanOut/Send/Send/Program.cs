@@ -6,6 +6,8 @@ using Microsoft.SPOT.Hardware;
 using System.Threading;
 
 using Samraksh.eMote.Net;
+using Samraksh.eMote.Net.Mac;
+using Samraksh.eMote.Net.Radio;
 using Samraksh.eMote.DotNow;
 
 //1. This program initializes OMAC as the MAC protocol.
@@ -82,8 +84,8 @@ namespace Samraksh.eMote.Net.Mac.Send
     {
         const UInt32 totalPingCount = 10001;
         const UInt16 MAX_NEIGHBORS = 12;
-        const int initialDelayInMsecs = 30000;
-        int dutyCyclePeriod = 20000;
+        const int initialDelayInMsecs = 20000;
+        int dutyCyclePeriod = 10000;
 
         bool startSend = false;
         UInt16 myAddress;
@@ -91,15 +93,14 @@ namespace Samraksh.eMote.Net.Mac.Send
         NetOpStatus status;
         EmoteLCD lcd;
         static UInt32 sendMsgCounter = 1;
-        
+
         PingPayload pingMsg = new PingPayload();
+        OMAC myOMACObj;
+                
+        //ReceiveCallBack myReceiveCB;
+        //NeighborhoodChangeCallBack myNeibhborhoodCB;
 
-        static Mac.OMAC myOMACObj;
-        ReceiveCallBack myReceiveCB;
-        NeighborhoodChangeCallBack myNeibhborhoodCB;
-
-        Mac.MacConfiguration myMacConfig = new MacConfiguration();
-        Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
 
         private System.IO.Ports.SerialPort _serialPort;
         private readonly byte[] _byteBuffer = new byte[10];
@@ -113,11 +114,17 @@ namespace Samraksh.eMote.Net.Mac.Send
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
             //Set OMAC parameters
-            myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
-            myRadioConfig.SetChannel(Radio.Channels.Channel_26);
-            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);
+            Debug.Print("Initializing radio");
+            Radio_802_15_4 Radio_OMAC_OnBoard = new Radio_802_15_4();
+            Radio_OMAC_OnBoard.TxPowerValue = TxPowerValue.Power_3dBm;
+            Radio_OMAC_OnBoard.Channel = Channel.Channel_26;
+            Radio_OMAC_OnBoard.RadioType = RadioType.ONBOARDRF231RADIO;
+            Radio_OMAC_OnBoard.OnReceiveCallback = Receive;
+            Radio_OMAC_OnBoard.OnNeighborChangeCallback = NeighborChange;
 
-            myMacConfig.radioConfig = myRadioConfig;
+            //myMacConfig.MACRadioConfig = myRadioConfig;
+            Debug.Print("Initializing mac configuration");
+            MACConfiguration myMacConfig = new MACConfiguration();
             myMacConfig.NeighborLivenessDelay = 180;
             myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
 
@@ -125,11 +132,15 @@ namespace Samraksh.eMote.Net.Mac.Send
 
             try
             {
+                //Radio_OMAC_OnBoard = new Radio_802_15_4(RadioUser.OMAC, RadioType.ONBOARDRF231RADIO);
                 //configure OMAC
-                myReceiveCB = Receive;
-                myNeibhborhoodCB = NeighborChange;
-                OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
-                myOMACObj = OMAC.Instance;
+                myOMACObj = new OMAC(myMacConfig);
+                                                                                                
+                //configure OMAC
+                //myReceiveCB = Receive;
+                //myNeibhborhoodCB = NeighborChange;
+                //OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
+                //myOMACObj = OMAC.Instance;
             }
             catch (Exception e)
             {
@@ -137,7 +148,8 @@ namespace Samraksh.eMote.Net.Mac.Send
             }
 
             Debug.Print("OMAC init done");
-            myAddress = myOMACObj.GetAddress();
+            //myAddress = myOMACObj.MACRadioObj.GetRadioAddress();
+            myAddress = Radio_OMAC_OnBoard.GetRadioAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
 
             //SerialMethod();
@@ -217,11 +229,11 @@ namespace Samraksh.eMote.Net.Mac.Send
                         //Debug.Print("count of neighbors " + neighborList.Length);
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
-                        byte[] msg = pingMsg.ToBytes();
+                        byte[] payload = pingMsg.ToBytes();
                         //Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
                         //status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
-                        Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
-                        status = myOMACObj.Send(6846, msg, 0, (ushort)msg.Length);
+                        Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
+                        status = myOMACObj.Send(6846, (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send to " + 6846 + " failed. Ping msgID " + sendMsgCounter.ToString());
