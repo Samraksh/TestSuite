@@ -4,6 +4,8 @@ using Microsoft.SPOT.Hardware;
 using System.Threading;
 
 using Samraksh.eMote.Net;
+using Samraksh.eMote.Net.MAC;
+using Samraksh.eMote.Net.Radio;
 using Samraksh.eMote.DotNow;
 
 namespace Samraksh.eMote.Net.Mac.Ping
@@ -76,11 +78,11 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //Radio.RadioConfiguration radioConfig = new Radio.RadioConfiguration();
         //int myRadioID;
 
-        static Mac.CSMA myCSMA;
-        ReceiveCallBack myReceiveCB;
-        NeighborhoodChangeCallBack myNeighborCB;
+        CSMA myCSMA;
+        //ReceiveCallBack myReceiveCB;
+        //NeighborhoodChangeCallBack myNeighborCB;
 
-        Mac.MacConfiguration macConfig = new MacConfiguration();
+        MACConfiguration macConfig = new MACConfiguration();
 
         void Initialize()
         {
@@ -90,16 +92,25 @@ namespace Samraksh.eMote.Net.Mac.Ping
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_N, LCD.CHAR_I, LCD.CHAR_7);
 
+            Debug.Print("Initializing mac configuration");
             macConfig.NeighborLivenessDelay = 180;
             macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
+
+            Debug.Print("2.Initializing radio");
+            macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
+            macConfig.MACRadioConfig.Channel = Channel.Channel_26;
+            macConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
+            macConfig.MACRadioConfig.OnReceiveCallback = Receive;
+            macConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
 
             Debug.Print("Configuring:  CSMA...");
             try
             {
-                myReceiveCB = Receive;
+                myCSMA = new CSMA(macConfig);
+                /*myReceiveCB = Receive;
                 myNeighborCB = NeighborChange;
                 CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
-                myCSMA = CSMA.Instance;
+                myCSMA = CSMA.Instance;*/
             }
             catch (Exception e)
             {
@@ -113,8 +124,9 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
 			try
             {
-                CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
-                myCSMA = CSMA.Instance;
+                myCSMA = new CSMA(macConfig);
+                /*CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
+                myCSMA = CSMA.Instance;*/
             }
             catch (Exception e)
             {
@@ -122,7 +134,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             }
 			Debug.Print("2nd CSMA Init done.");
 
-            myAddress = myCSMA.GetAddress();
+            myAddress = myCSMA.GetRadioAddress();
             Debug.Print("My default address is :  " + myAddress.ToString());
 
             /*myCSMA.SetAddress(52);
@@ -208,22 +220,22 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void Receive(UInt16 noOfPackets)
         {
-            if (myCSMA.GetPendingPacketCount() == 0)
+            if (myCSMA.GetPendingPacketCount_Receive() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
             //while (myCSMA.GetPendingPacketCount() > 0) {
-            Message rcvMsg = myCSMA.GetNextPacket();
-            if (rcvMsg == null)
+            Packet rcvPacket = myCSMA.GetNextPacket();
+            if (rcvPacket == null)
             {
                 Debug.Print("null");
                 return;
             }
 
-            byte[] rcvPayload = rcvMsg.GetMessage();
-            HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
+            byte[] rcvPayload = rcvPacket.Payload;
+            HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.IsUnicast, rcvPacket.RSSI, rcvPacket.LQI);
             //}
             /*try{
             // Check if there's at least one packet
@@ -232,14 +244,14 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 return;
             }
 				
-            Message rcvMsg = myCSMA.GetNextPacket();
-            if (rcvMsg == null) {
+            Message rcvPacket = myCSMA.GetNextPacket();
+            if (rcvPacket == null) {
                 Debug.Print("null");
                 return;
             }
 			
-            byte[] rcvPayload = rcvMsg.GetMessage();
-            HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
+            byte[] rcvPayload = rcvPacket.GetMessage();
+            HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.Unicast, rcvPacket.RSSI, rcvPacket.LQI);
             }
              catch (Exception e)
             {
@@ -310,7 +322,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 ping.Src = myAddress;
 
                 byte[] msg = ping.ToBytes();
-                status = myCSMA.Send(sender, msg, 0, (ushort)msg.Length);
+                status = myCSMA.Send(sender, (byte)PayloadType.MFM_DATA, msg, 0, (ushort)msg.Length);
                 if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());
@@ -334,7 +346,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
 
                 byte[] msg = ping.ToBytes();
-                status = myCSMA.Send((UInt16)Mac.Addresses.BROADCAST, msg, 0, (ushort)msg.Length);
+                status = myCSMA.Send((UInt16)AddressType.BROADCAST, (byte)PayloadType.MFM_DATA, msg, 0, (ushort)msg.Length);
                 if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());

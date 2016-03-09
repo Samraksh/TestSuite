@@ -80,8 +80,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //int myRadioID;
 
         CSMA myCSMA;
-        ReceiveCallBack myReceiveCB;
-        NeighborhoodChangeCallBack myNeighborCB;
+        //ReceiveCallBack myReceiveCB;
+        //NeighborhoodChangeCallBack myNeighborCB;
 
         MACConfiguration macConfig = new MACConfiguration();
 
