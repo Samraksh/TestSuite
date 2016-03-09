@@ -11,6 +11,7 @@
  */
 
 #include "OMACTest.h"
+#include <TinyCLR_Runtime.h>
 
 #define DEBUG_OMACTest 1
 
@@ -18,10 +19,11 @@ const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
 
 OMACTest g_OMACTest;
+CLR_RT_Random rand1;
 extern OMACType g_OMAC;
 extern OMACScheduler g_omac_scheduler;
 
-#define TEST_0L_TIMER	8
+#define TEST_0L_TIMER	10
 #define TIMER_PERIOD 	1*ONESEC_IN_MSEC
 
 #define Test_0L_Timer_Pin 1 //2
@@ -49,7 +51,9 @@ void OMACTest::GenerateRandVal(){
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(Test_0L_Timer_Pin, TRUE);
 #endif
-	UINT16 randVal = g_omac_scheduler.m_seedGenerator.RandWithMask(&nextSeed, mask);
+	//UINT16 randVal = g_omac_scheduler.m_seedGenerator.RandWithMask(&nextSeed, mask);
+	int randVal1 = rand1.Next();
+	UINT16 randVal = randVal1 & 0xFFFF;
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(Test_0L_Timer_Pin, FALSE);
 #endif
@@ -69,6 +73,8 @@ BOOL OMACTest::Initialize(){
 
 	mask = 137 * 29 * (g_OMAC.GetAddress() + 1);
 	nextSeed = 119 * 119 * (g_OMAC.GetAddress() + 1); // The initial seed
+	//rand1.Initialize();
+	rand1.Initialize(nextSeed);
 
 	VirtTimer_Initialize();
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
