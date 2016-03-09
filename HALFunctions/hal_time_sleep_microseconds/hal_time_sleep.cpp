@@ -19,12 +19,16 @@ BOOL haltimesleepTest::Execute( int testLevel )
 	CPU_GPIO_EnableOutputPin(24,TRUE);
 	CPU_GPIO_SetPinState(24, TRUE);
 
-	int usThreadSleep = (int)( (1/(float)frequency)/2 * 1000000);
+	//int usThreadSleep = (int)( (1/(float)frequency)/2 * 1000000);
 	while (true){
 		CPU_GPIO_SetPinState( 24, TRUE);
-		HAL_Time_Sleep_MicroSeconds(usThreadSleep);
+		HAL_Time_Sleep_MicroSeconds(5);
 		CPU_GPIO_SetPinState( 24, FALSE);
-		HAL_Time_Sleep_MicroSeconds(usThreadSleep);
+		HAL_Time_Sleep_MicroSeconds(22);
+		CPU_GPIO_SetPinState( 24, TRUE);
+		HAL_Time_Sleep_MicroSeconds(265);
+		CPU_GPIO_SetPinState( 24, FALSE);
+		HAL_Time_Sleep_MicroSeconds(2420);
 	}
 	return TRUE;
 } //Execute

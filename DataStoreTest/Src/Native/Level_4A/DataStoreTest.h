@@ -33,7 +33,8 @@ public:
 
 	DataStoreTest ( int seedValue, int numberOfEvents );
 
-	static UINT8 testCompleteCounter_3, testCompleteCounter_4, testCompleteCounter_5, testCompleteCounter_6;
+	static UINT8 testCompleteCounter_3; static UINT8 testCompleteCounter_4; 
+	static UINT8 testCompleteCounter_5; static UINT8 testCompleteCounter_6;
 
 
     BOOL     Execute( int testLevel );

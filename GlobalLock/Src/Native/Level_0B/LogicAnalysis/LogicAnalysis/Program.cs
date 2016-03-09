@@ -22,9 +22,9 @@ namespace LogicAnalysis
 
         const float accuracy = 0.1f;
 
-        static List<double> expectedGapSequence0 = new List<double>() { 0.1145, 0.1 };
-        static List<double> expectedGapSequence1 = new List<double>() { 0.2145, 0.2145 };
-        static List<double> expectedGapSequence2 = new List<double>() { 0.1244, 0.03, 0.03, 0.03 };
+        static List<double> expectedGapSequence0 = new List<double>() { 0.0936, 0.1 };
+        static List<double> expectedGapSequence1 = new List<double>() { 0.1936, 0.1936 };
+        static List<double> expectedGapSequence2 = new List<double>() { 0.104, 0.03, 0.03, 0.03 };
         const int USE_EVERY_TRANSITION = 1;
         const int USE_RISING_TRANSITION = 2;
 

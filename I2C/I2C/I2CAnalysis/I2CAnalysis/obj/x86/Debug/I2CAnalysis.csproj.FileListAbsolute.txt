@@ -1,0 +1,6 @@
+D:\Work\TestSuite\I2C\I2C\I2CAnalysis.exe.config
+D:\Work\TestSuite\I2C\I2C\I2CAnalysis\I2CAnalysis\obj\x86\Debug\I2CAnalysis.exe
+D:\Work\TestSuite\I2C\I2C\I2CAnalysis\I2CAnalysis\obj\x86\Debug\I2CAnalysis.pdb
+D:\Work\TestSuite\I2C\I2C\I2CAnalysis.exe
+D:\Work\TestSuite\I2C\I2C\I2CAnalysis.pdb
+D:\Work\TestSuite\I2C\I2C\I2CAnalysis\I2CAnalysis\obj\x86\Debug\I2CAnalysis.csprojResolveAssemblyReference.cache
