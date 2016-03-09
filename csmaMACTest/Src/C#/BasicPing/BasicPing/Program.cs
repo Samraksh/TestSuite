@@ -248,6 +248,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void HandleMessage(byte[] msg, UInt16 size, UInt16 src, bool unicast, byte rssi, byte lqi)
         {
+            //Debug.Print("HandleMessage; size is " + size);
             try
             {
                 /*if (unicast)
@@ -331,6 +332,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
 
                 byte[] payload = ping.ToBytes();
+                //Debug.Print("Send_Ping sending " + ping.MsgID.ToString());
                 status = myCSMA.Send((UInt16)MAC.AddressType.BROADCAST, (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
                 if (status != NetOpStatus.S_Success)
                 {

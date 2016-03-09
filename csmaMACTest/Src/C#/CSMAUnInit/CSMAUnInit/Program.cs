@@ -96,7 +96,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             macConfig.NeighborLivenessDelay = 180;
             macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
 
-            Debug.Print("2.Initializing radio");
+            Debug.Print("Initializing radio");
             macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             macConfig.MACRadioConfig.Channel = Channel.Channel_26;
             macConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
