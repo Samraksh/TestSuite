@@ -5,6 +5,8 @@ using System.Threading;
 using System.Collections;
 
 using Samraksh.eMote.Net;
+using Samraksh.eMote.Net.MAC;
+using Samraksh.eMote.Net.Radio;
 using Samraksh.eMote.DotNow;
 
 //1. This program initializes OMAC as the MAC protocol.
@@ -106,12 +108,12 @@ namespace Samraksh.eMote.Net.Mac.Receive
         static UInt32 totalRecvCounter = 0;
         
         PingPayload pingMsg = new PingPayload();
-        static Mac.OMAC myOMACObj;
-        ReceiveCallBack myReceiveCB;
-        NeighborhoodChangeCallBack myNeibhborhoodCB;
+        OMAC myOMACObj;
+        //ReceiveCallBack myReceiveCB;
+        //NeighborhoodChangeCallBack myNeibhborhoodCB;
 
-        Mac.MacConfiguration myMacConfig = new MacConfiguration();
-        Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+        MACConfiguration myMacConfig = new MACConfiguration();
+        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
 
         public void Initialize()
         {
@@ -121,23 +123,32 @@ namespace Samraksh.eMote.Net.Mac.Receive
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
             //Set OMAC parameters
-            myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
+            /*myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
             myRadioConfig.SetChannel(Radio.Channels.Channel_26);
-            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);
+            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);*/
 
-            myMacConfig.radioConfig = myRadioConfig;
+            //myMacConfig.radioConfig = myRadioConfig;
+            Debug.Print("Initializing mac configuration");
             myMacConfig.NeighborLivenessDelay = 180;
             myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
+
+            Debug.Print("Initializing radio");
+            myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
+            myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
+            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
+            myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
+            myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
 
             Debug.Print("Configuring OMAC...");
 
             try
             {
                 //configure OMAC
-                myReceiveCB = Receive;
+                myOMACObj = new OMAC(myMacConfig);
+                /*myReceiveCB = Receive;
                 myNeibhborhoodCB = NeighborChange;
                 OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
-                myOMACObj = OMAC.Instance;
+                myOMACObj = OMAC.Instance;*/
             }
             catch (Exception e)
             {
@@ -145,7 +156,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             }
 
             Debug.Print("OMAC init done");
-            myAddress = myOMACObj.GetAddress();
+            myAddress = myOMACObj.GetRadioAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Receive mode");
         }
 
@@ -160,14 +171,14 @@ namespace Samraksh.eMote.Net.Mac.Receive
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount() == 0)
+            if (myOMACObj.GetPendingPacketCount_Receive() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
-            Message rcvMsg = myOMACObj.GetNextPacket();
-            if (rcvMsg == null)
+            Packet rcvPacket = myOMACObj.GetNextPacket();
+            if (rcvPacket == null)
             {
                 Debug.Print("null");
                 return;
@@ -175,21 +186,21 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
             Debug.Print("totalRecvCounter is " + totalRecvCounter);
 
-            byte[] rcvPayload = rcvMsg.GetMessage();
+            byte[] rcvPayload = rcvPacket.Payload;
             if (rcvPayload != null)
             {
                 PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
                 if (pingPayload != null)
                 {
-                    Debug.Print("Received msgID " + pingPayload.pingMsgId + " from SRC " + rcvMsg.Src);
+                    Debug.Print("Received msgID " + pingPayload.pingMsgId + " from SRC " + rcvPacket.Src);
                     NeighborTableInfo nbrTableInfo;
                     //If hashtable already contains an entry for the source, extract it, increment recvCount and store it back
-                    if (neighborHashtable.Contains(rcvMsg.Src))
+                    if (neighborHashtable.Contains(rcvPacket.Src))
                     {
-                        nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvMsg.Src];
+                        nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvPacket.Src];
                         nbrTableInfo.recvCount++;
                         nbrTableInfo.AL.Add(pingPayload.pingMsgId);
-                        neighborHashtable[rcvMsg.Src] = nbrTableInfo;
+                        neighborHashtable[rcvPacket.Src] = nbrTableInfo;
                     }
                     //If hashtable does not have an entry, create a new instance and store it
                     else
@@ -199,10 +210,10 @@ namespace Samraksh.eMote.Net.Mac.Receive
                         ArrayList AL = new ArrayList();
                         AL.Add(pingPayload.pingMsgId);
                         nbrTableInfo.AL = AL;
-                        neighborHashtable[rcvMsg.Src] = nbrTableInfo;
-                        //neighborHashtable.Add(rcvMsg.Src, nbrTableInfo);
+                        neighborHashtable[rcvPacket.Src] = nbrTableInfo;
+                        //neighborHashtable.Add(rcvPacket.Src, nbrTableInfo);
                     }
-                    Debug.Print("recvCount from node " + rcvMsg.Src + " is " + nbrTableInfo.recvCount);
+                    Debug.Print("recvCount from node " + rcvPacket.Src + " is " + nbrTableInfo.recvCount);
                     Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
                     Debug.Print("---------------------------");
                 }

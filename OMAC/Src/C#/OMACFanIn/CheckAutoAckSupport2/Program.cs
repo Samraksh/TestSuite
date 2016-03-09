@@ -4,6 +4,8 @@ using Microsoft.SPOT.Hardware;
 using System.Threading;
 
 using Samraksh.eMote.Net;
+using Samraksh.eMote.Net.MAC;
+using Samraksh.eMote.Net.Radio;
 using Samraksh.eMote.DotNow;
 
 //1. This program initializes OMAC as the MAC protocol.
@@ -92,12 +94,12 @@ namespace Samraksh.eMote.Net.Mac.Send
         
         PingPayload pingMsg = new PingPayload();
 
-        static Mac.OMAC myOMACObj;
-        ReceiveCallBack myReceiveCB;
-        NeighborhoodChangeCallBack myNeibhborhoodCB;
+        OMAC myOMACObj;
+        //ReceiveCallBack myReceiveCB;
+        //NeighborhoodChangeCallBack myNeibhborhoodCB;
 
-        Mac.MacConfiguration myMacConfig = new MacConfiguration();
-        Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+        MACConfiguration myMacConfig = new MACConfiguration();
+        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
 
         public void Initialize()
         {
@@ -107,23 +109,32 @@ namespace Samraksh.eMote.Net.Mac.Send
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
             //Set OMAC parameters
-            myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
+            /*myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
             myRadioConfig.SetChannel(Radio.Channels.Channel_26);
-            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);
+            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);*/
 
-            myMacConfig.radioConfig = myRadioConfig;
+            //myMacConfig.radioConfig = myRadioConfig;
+            Debug.Print("Initializing mac configuration");
             myMacConfig.NeighborLivenessDelay = 180;
             myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
+
+            Debug.Print("Initializing radio");
+            myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
+            myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
+            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
+            myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
+            myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
 
             Debug.Print("Configuring OMAC...");
 
             try
             {
                 //configure OMAC
-                myReceiveCB = Receive;
+                myOMACObj = new OMAC(myMacConfig);
+                /*myReceiveCB = Receive;
                 myNeibhborhoodCB = NeighborChange;
                 OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
-                myOMACObj = OMAC.Instance;
+                myOMACObj = OMAC.Instance;*/
             }
             catch (Exception e)
             {
@@ -131,7 +142,7 @@ namespace Samraksh.eMote.Net.Mac.Send
             }
 
             Debug.Print("OMAC init done");
-            myAddress = myOMACObj.GetAddress();
+            myAddress = myOMACObj.GetRadioAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
         }
 
@@ -175,8 +186,8 @@ namespace Samraksh.eMote.Net.Mac.Send
                         byte[] msg = pingMsg.ToBytes();
                         //Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
                         //status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
-                        Debug.Print("Sending to neighbor " + 1470 + " ping msgID " + sendMsgCounter);
-                        status = myOMACObj.Send(1470, msg, 0, (ushort)msg.Length);
+                        Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter);
+                        status = myOMACObj.Send(6846, (byte)PayloadType.MFM_DATA, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());

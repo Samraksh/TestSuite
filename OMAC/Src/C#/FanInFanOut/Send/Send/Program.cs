@@ -6,7 +6,7 @@ using Microsoft.SPOT.Hardware;
 using System.Threading;
 
 using Samraksh.eMote.Net;
-using Samraksh.eMote.Net.Mac;
+using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
 using Samraksh.eMote.DotNow;
 

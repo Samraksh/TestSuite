@@ -4,6 +4,8 @@ using Microsoft.SPOT.Hardware;
 using System.Threading;
 
 using Samraksh.eMote.Net;
+using Samraksh.eMote.Net.MAC;
+using Samraksh.eMote.Net.Radio;
 using Samraksh.eMote.DotNow;
 
 namespace Samraksh.eMote.Net.Mac.AdvancedPing
@@ -73,11 +75,11 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
         //Radio.RadioConfiguration radioConfig = new Radio.RadioConfiguration();
         //int myRadioID;
 
-        static Mac.OMAC myOMACObj;
+        OMAC myOMACObj;
         ReceiveCallBack myReceiveCB;
         NeighborhoodChangeCallBack myNeighborCB;
 
-        Mac.MacConfiguration macConfig = new MacConfiguration();
+        MACConfiguration macConfig = new MACConfiguration();
 
         void Initialize()
         {
@@ -87,16 +89,25 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_N, LCD.CHAR_I, LCD.CHAR_7);
 
+            Debug.Print("Initializing mac configuration");
             macConfig.NeighborLivenessDelay = 180;
             macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
+
+            Debug.Print("2.Initializing radio");
+            macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
+            macConfig.MACRadioConfig.Channel = Channel.Channel_26;
+            macConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
+            macConfig.MACRadioConfig.OnReceiveCallback = Receive;
+            macConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
 
             Debug.Print("Configuring:  OMAC...");
             try
             {
-                myReceiveCB = Receive;
+                myOMACObj = new OMAC(macConfig);
+                /*myReceiveCB = Receive;
                 myNeighborCB = NeighborChange;
                 OMAC.Configure(macConfig, myReceiveCB, myNeighborCB);
-                myOMACObj = OMAC.Instance;
+                myOMACObj = OMAC.Instance;*/
             }
             catch (Exception e)
             {
@@ -104,7 +115,7 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
             }
 
             Debug.Print("OMAC Init done.");
-            myAddress = myOMACObj.GetAddress();
+            myAddress = myOMACObj.GetRadioAddress();
             Debug.Print("My default address is :  " + myAddress.ToString());
         }
 
@@ -206,7 +217,7 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
                             ping.MsgID = mySeqNo++;
                             ping.Src = myAddress;
                             byte[] msg = ping.ToBytes();
-                            status = myOMACObj.Send(neighborList[i], msg, 0, (ushort)msg.Length);
+                            status = myOMACObj.Send(neighborList[i], (byte)PayloadType.MFM_DATA, msg, 0, (ushort)msg.Length);
                             if (status != NetOpStatus.S_Success)
                             {
                                 Debug.Print("Failed to send: " + ping.MsgID.ToString());
@@ -242,24 +253,24 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
         //Handles the received messages by passing control over to HandleMessage
         void Receive(UInt16 noOfPackets)
         {
-            if (myOMACObj.GetPendingPacketCount() == 0)
+            if (myOMACObj.GetPendingPacketCount_Receive() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
             //while (myOMACObj.GetPendingPacketCount() > 0) {
-            Message rcvMsg = myOMACObj.GetNextPacket();
-            if (rcvMsg == null)
+            Packet rcvPacket = myOMACObj.GetNextPacket();
+            if (rcvPacket == null)
             {
                 Debug.Print("null");
                 return;
             }
 
             //Debug.Print("Received a msg from " + rcvMsg.Src + " of size " + rcvMsg.Size);
-            byte[] rcvPayload = rcvMsg.GetMessage();
-            
-            HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
+            byte[] rcvPayload = rcvPacket.Payload;
+
+            HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.IsUnicast, rcvPacket.RSSI, rcvPacket.LQI);
         }
 
         //Parses received msg and send a pong in response to the ping
@@ -328,7 +339,7 @@ namespace Samraksh.eMote.Net.Mac.AdvancedPing
                 ping.Src = myAddress;
 
                 byte[] msg = ping.ToBytes();
-                status = myOMACObj.Send(sender, msg, 0, (ushort)msg.Length);
+                status = myOMACObj.Send(sender, (byte)PayloadType.MFM_DATA, msg, 0, (ushort)msg.Length);
                 if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());
