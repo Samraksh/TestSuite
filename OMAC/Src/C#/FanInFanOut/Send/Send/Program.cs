@@ -245,8 +245,13 @@ namespace Samraksh.eMote.Net.Mac.Send
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] payload = pingMsg.ToBytes();
-                        //Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-                        //status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+
+                        /*Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                        status = myOMACObj.Send(neighborList[j], (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
+                        if (status != NetOpStatus.S_Success)
+                        {
+                            Debug.Print("Send to " + neighborList[j] + " failed. Ping msgID " + sendMsgCounter.ToString());
+                        }*/
                         Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
                         status = myOMACObj.Send(6846, (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
                         if (status != NetOpStatus.S_Success)

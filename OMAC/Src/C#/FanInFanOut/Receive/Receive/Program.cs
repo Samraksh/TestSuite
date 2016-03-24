@@ -104,6 +104,8 @@ namespace Samraksh.eMote.Net.Mac.Receive
         const UInt16 MAX_NEIGHBORS = 12;
         const UInt32 endOfTest = 100;
         const int initialDelayInMsecs = 30000;
+        const int TIMEBASE = 8000000; // in all power modes, 8 MHz is the timebase
+        const int TIMEBASE_MS = TIMEBASE / 1000; // to get answer in milli-seconds
         Hashtable neighborHashtable = new Hashtable();
         EmoteLCD lcd;
         
@@ -113,7 +115,13 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //PingPayload pingPayload;
         PingPayload pingMsg = new PingPayload();
         OMAC myOMACObj;
-        
+
+        Parameters p = new Parameters();
+        static long testStartTicks;
+        static long testEndTicks;
+        //static DateTime testStartTime;
+        //static DateTime testEndTime;
+                
         //ReceiveCallBack myReceiveCB;
         //NeighborhoodChangeCallBack myNeibhborhoodCB;
 
@@ -159,7 +167,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 //Radio_OMAC_OnBoard = new Radio_802_15_4(RadioUser.OMAC, RadioType.ONBOARDRF231RADIO);
                 //configure OMAC
                 myOMACObj = new OMAC(myMacConfig);
-
+                
                 /*Debug.Print("3.Initializing radio");
                 myOMACObj.MACRadioObj.TxPowerValue = TxPowerValue.Power_3dBm;
                 myOMACObj.MACRadioObj.Channel = Channel.Channel_26;
@@ -183,6 +191,9 @@ namespace Samraksh.eMote.Net.Mac.Receive
             myAddress = myOMACObj.GetRadioAddress();
             //myAddress = myOMACObj.MACRadioObj.GetRadioAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Receive mode");
+
+            testStartTicks = DateTime.Now.Ticks;
+            //testStartTime = DateTime.Now;
 
             //SerialMethod();
         }
@@ -244,14 +255,16 @@ namespace Samraksh.eMote.Net.Mac.Receive
             if (myOMACObj.GetPendingPacketCount_Receive() == 0)
             {
                 Debug.Print("no packets");
-                return;
+                //return;
+                goto end;
             }
 
             Packet rcvPacket = myOMACObj.GetNextPacket();
             if (rcvPacket == null)
             {
                 Debug.Print("null");
-                return;
+                //return;
+                goto end;
             }
 
             Debug.Print("totalRecvCounter is " + totalRecvCounter);
@@ -291,11 +304,6 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 {
                     Debug.Print("pingPayload is null");
                 }
-
-                if (totalRecvCounter % endOfTest == 0)
-                {
-                    ShowStatistics();
-                }
             }
             else
             {
@@ -314,6 +322,27 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 Debug.Print(rcvPayload[7].ToString());
                 Debug.Print("---------------------------");
             }
+end:
+            testEndTicks = DateTime.Now.Ticks;
+            //testEndTime = DateTime.Now;
+            //TimeSpan diff = testEndTime.Subtract(testStartTime);
+            //There is no diff.TotalMilliseconds
+            long duration = testEndTicks - testStartTicks;
+            duration = duration / TIMEBASE_MS;
+            Debug.Print("Duration: " + duration + " ;" + p.testTimeout);
+            if (duration > p.testTimeout)
+            {
+                Debug.Print("Test timed out");
+                TestTimeout();
+            }
+            else
+            {
+                if (totalRecvCounter % endOfTest == 0)
+                {
+                    ShowStatistics();
+                }
+            }
+            return;
         }
 
         //Show statistics
@@ -339,6 +368,46 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Debug.Print("Total msgs received from all nodes is " + totalRecvCounter);
             Debug.Print("==================================");
             //Thread.Sleep(Timeout.Infinite);
+        }
+
+        public void TestTimeout()
+        {
+            bool testStatusIndicator = true;
+            ICollection keyCollection = neighborHashtable.Keys;
+            foreach (ushort nbr in keyCollection)
+            {
+                NeighborTableInfo nbrTableInfo = (NeighborTableInfo)neighborHashtable[nbr];
+                UInt32 lastMsgID = (UInt32)nbrTableInfo.AL[nbrTableInfo.AL.Count-1];
+                if (nbrTableInfo.recvCount != lastMsgID)
+                {
+                    testStatusIndicator = false;
+                    string str = "Test fan-in failed for nbr: " + nbr;
+                    DisplayStats(testStatusIndicator, str, null, 0);
+                }
+            }
+            DisplayStats(testStatusIndicator, "Test fan-in successfully completed", null, 0);
+        }
+
+        public void DisplayStats(bool result, string resultParameter1, string resultParameter2, int accuracy)
+        {
+            while (true)
+            {
+                Thread.Sleep(1000);
+                if (result)
+                {
+                    Debug.Print("result=PASS\n");
+                }
+                else
+                {
+                    Debug.Print("result=FAIL\n");
+                }
+                Debug.Print("accuracy=" + accuracy.ToString());
+                Debug.Print("resultParameter1=" + resultParameter1);
+                Debug.Print("resultParameter2=" + resultParameter2);
+                Debug.Print("resultParameter3=null");
+                Debug.Print("resultParameter4=null");
+                Debug.Print("resultParameter5=null");
+            }
         }
 
         public static void Main()
