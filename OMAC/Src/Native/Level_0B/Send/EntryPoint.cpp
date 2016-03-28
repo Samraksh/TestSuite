@@ -7,7 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-#include "OMACTest.h"
+#include "OMACTestSend.h"
 
 
 void Keep_Linker_Happy() {

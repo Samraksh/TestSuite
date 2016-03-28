@@ -6,7 +6,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
     {
         // required TestRig parameters	
         // parameters used to gather data
-        //3 mins is 0.05; 30 mins is 0.5;
+        // 3 mins is 0.05; 30 mins is 0.5;
         public int testTimeout = 1800000;    //0.5*60*60*1000 (30 mins in ms)
         public string useLogic = "none";
         public double sampleTimeMs = 15000;

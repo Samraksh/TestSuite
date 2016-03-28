@@ -381,7 +381,7 @@ end:
                 if (nbrTableInfo.recvCount != lastMsgID)
                 {
                     testStatusIndicator = false;
-                    string str = "Test fan-in failed for nbr: " + nbr;
+                    string str = "Test fan-in failed for nbr: " + nbr + ". Receive count = " + nbrTableInfo.recvCount + "; Last msgID = " + lastMsgID;
                     DisplayStats(testStatusIndicator, str, null, 0);
                 }
             }

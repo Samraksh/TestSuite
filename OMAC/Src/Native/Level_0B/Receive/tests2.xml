@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='RadioTest' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_0B-Receive)' Type='Native .NOW'>
 		<Description>
-			Native radio test to verify if CCA works 
+			Native OMAC test - send and receive test
 		</Description>
 		<TestPath>
-			Radio\Src\Native\Level_0A\Send
+			OMAC\Src\Native\Level_0B\Receive
 		</TestPath>
 		<TestProjName>
-			RadioTest.proj
+			OMACTestReceive.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,5 +31,14 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
+		<TestSupporting>
+			support project 2
+		</TestSupporting>
+		<TestJTAGHarness>
+		</TestJTAGHarness>
+		<TestPowerAutomateSelected>
+		</TestPowerAutomateSelected>
+		<TestBuild>
+		</TestBuild>
 	</Test>
 </TestSuite>

@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='RadioTest' Type='Native .NOW'>
+	<Test Name='RadioTestReceive' Type='Native .NOW'>
 		<Description>
-			Native radio test to verify if CCA works 
+			Native radio test to verify if HW ACK works - primary device will be a receiver, rest senders
 		</Description>
 		<TestPath>
-			Radio\Src\Native\Level_0A\Send
+			Radio\Src\Native\ExtendedModeTest\Receive
 		</TestPath>
 		<TestProjName>
-			RadioTest.proj
+			RadioTestReceive.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,5 +31,14 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
+		<TestSupporting>
+			load support projects: Radio\Src\Native\ExtendedModeTest\Send\tests1.xml Radio\Src\Native\ExtendedModeTest\Send\tests2.xml
+		</TestSupporting>
+		<TestJTAGHarness>
+		</TestJTAGHarness>
+		<TestPowerAutomateSelected>
+		</TestPowerAutomateSelected>
+		<TestBuild>
+		</TestBuild>
 	</Test>
 </TestSuite>

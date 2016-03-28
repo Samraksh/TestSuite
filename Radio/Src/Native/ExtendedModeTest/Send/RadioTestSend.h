@@ -8,27 +8,30 @@
 #include <tinyhal.h>
 #include <Samraksh/VirtualTimer.h>
 #include <Samraksh/Message.h>
-#include <pal/COM/Wireless/MAC/CSMAMAC/csmaMAC.h>
+#include <../DeviceCode/Include/Samraksh/MAC/CSMAMAC/csmaMAC.h>
 #include <Targets/Native/STM32F10x/DeviceCode/drivers/radio/RF231/RF231.h>
 
 
 #define PAYLOAD_SIZE	5
+#define FCF_WORD_VALUE 0x8861 //34913
+#define SRC_PAN_ID	0xAAAA
+#define DEST_PAN_ID	0x5555
 
 typedef struct  {
 	UINT16 MSGID;
 	UINT8 data[PAYLOAD_SIZE];
 }Payload_t;
 
-typedef struct UDP_Header
+/*typedef struct UDP_Header
 {
 	UINT16 srcPort;
 	UINT16 destPort;
 	UINT16 length;
 	UINT16 checkSum;
 	UINT8 payload[50];
-}UDP_Header_t;
+}UDP_Header_t;*/
 
-typedef struct ZEP_Header
+/*typedef struct ZEP_Header
 {
 	UINT8 hf_zep_version = -1;
 	UINT8 hf_zep_channel_id = -1;
@@ -40,14 +43,14 @@ typedef struct ZEP_Header
 	//UINT8 hf_zep_seqno = -1;
 	//UINT32 hf_zep_timestamp = -1;
 	//UINT8 hf_zep_type = -1;
-}ZEP_Header_t;
+}ZEP_Header_t;*/
 
 class RadioTestSend	{
 public:
 	Payload_t msg;
 	Message_15_4_t msg_carrier;
-	ZEP_Header_t zepHeader;
-	UDP_Header_t udp_header;
+	//ZEP_Header_t zepHeader;
+	//UDP_Header_t udp_header;
 	UINT8 radioName;
 	UINT32 msgID;
 	UINT8 currentTry;
@@ -68,7 +71,7 @@ public:
 	void CreatePacket();
 	void* Receive(void* msg, UINT16 size);
 	BOOL Send();
-	void SendAck(void *msg, UINT16 size, NetOpStatus status);
+	void SendAck(void *msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus);
 };
 
 //extern RadioTest g_RadioTest;

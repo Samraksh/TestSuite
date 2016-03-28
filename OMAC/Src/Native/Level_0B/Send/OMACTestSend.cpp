@@ -11,7 +11,7 @@
  */
 
 //#include <Samraksh/HALTimer.h>
-#include "OMACTest.h"
+#include "OMACTestSend.h"
 
 #define DEBUG_OMACTest 1
 #define OMACTEST_Timer (GPIO_PIN)120//29
@@ -19,8 +19,9 @@
 #define OMACTEST_Tx (GPIO_PIN)120//24
 #define OMACTEST_TxAck (GPIO_PIN)120//31
 
-
-#define TIMER_PERIOD 	10
+#define TEST_0B_TIMER 15
+#define TIMER_PERIOD 	20
+#define INITIAL_WAIT_PERIOD	20
 
 const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
@@ -33,7 +34,7 @@ void Timer_Test_0B_Handler(void * arg){
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(OMACTEST_Timer, TRUE);
 #endif
-	if(g_OMAC.GetAddress() == 3505)
+	if(g_OMAC.GetRadioAddress() != 6846)
 		g_OMACTest.Send();
 
 #ifdef DEBUG_OMACTest
@@ -44,20 +45,20 @@ void Timer_Test_0B_Handler(void * arg){
 // Typedef defining the signature of the receive function
 //void ReceiveHandler (void *msg, UINT16 Size, UINT16 Src, BOOL Unicast, UINT8 RSSI, UINT8 LinkQuality){
 void OMACTest_ReceiveHandler (void* msg, UINT16 size){
-	return g_OMACTest.Receive(msg, size);
+	//return g_OMACTest.Receive(msg, size);
 }
 
-void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
-	g_OMACTest.SendAck(msg,size,status);
+void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
+	g_OMACTest.SendAck(msg, size, status, radioAckStatus);
 }
 
 BOOL OMACTest::Initialize(){
 	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
-	Config.Network = 138;
+	//Config.Network = 138;
 	Config.NeighborLivenessDelay = 900000;
 	myEventHandler.SetReceiveHandler(OMACTest_ReceiveHandler);
 	myEventHandler.SetSendAckHandler(OMACTest_SendAckHandler);
-	MacId = OMAC;
+	MACId = OMAC;
 
 	VirtTimer_Initialize();
 #ifdef DEBUG_OMACTest
@@ -66,9 +67,11 @@ BOOL OMACTest::Initialize(){
 	CPU_GPIO_EnableOutputPin(OMACTEST_Rx, FALSE);
 	CPU_GPIO_EnableOutputPin(OMACTEST_TxAck, FALSE);
 #endif
-	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);
+	MAC_Initialize(&myEventHandler, MACId, MyAppID, RF231RADIO, (void*) &Config);
 
-	VirtTimer_SetTimer(TEST_0B_TIMER, 0, TIMER_PERIOD*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_Test_0B_Handler); //period (3rd argument) is in micro seconds
+	VirtTimer_SetTimer(TEST_0B_TIMER, INITIAL_WAIT_PERIOD, TIMER_PERIOD*ONESEC_IN_MSEC*ONEMSEC_IN_USEC, FALSE, FALSE, Timer_Test_0B_Handler); //period (3rd argument) is in micro seconds
+
+	hal_printf("My address is: %d; I am in send mode\n", g_OMAC.GetRadioAddress());
 	return TRUE;
 }
 
@@ -109,7 +112,7 @@ void OMACTest::Receive(void* tmpMsg, UINT16 size){
 	hal_printf("end OMACTest::Receive\n");
 }
 
-void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status){
+void OMACTest::SendAck(void *msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(OMACTEST_TxAck, TRUE);
 	CPU_GPIO_SetPinState(OMACTEST_TxAck, FALSE);
@@ -129,10 +132,10 @@ BOOL OMACTest::Send(){
 		msg.data[i-1] = i;
 	}
 
-	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
+	/*UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
 	if (g_OMAC.m_NeighborTable.GetNeighborPtr(Nbr2beFollowed) == NULL) {
 		return FALSE;
-	}
+	}*/
 #ifdef DEBUG_OMACTest
 	CPU_GPIO_SetPinState(OMACTEST_Tx, TRUE);
 	CPU_GPIO_SetPinState(OMACTEST_Tx, FALSE);
@@ -140,7 +143,7 @@ BOOL OMACTest::Send(){
 #endif
 	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
 	hal_printf("Sending msgID: %u\n", SendCount);
-	bool ispcktScheduled = Mac_Send(Nbr2beFollowed, MFM_DATA, (void*) &msg, sizeof(Payload_t));
+	bool ispcktScheduled = MAC_Send(6846, MFM_DATA, (void*) &msg, sizeof(Payload_t));
 	//if (ispcktScheduled) {SendCount++;}
 	SendCount++;
 }

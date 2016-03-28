@@ -23,7 +23,7 @@ extern RF231Radio grf231Radio;
 #define DEBUG_RadioTest 1
 #define TEST_0A_TIMER1	10
 #define TEST_0A_TIMER2	11
-#define TIMER1_PERIOD 	5*ONESEC_IN_MSEC
+#define TIMER1_PERIOD 	10*ONESEC_IN_MSEC
 #define TIMER2_PERIOD 	7
 #define Transmission_Pin (GPIO_PIN)31 //2
 #define ACK_Pin (GPIO_PIN)1 //2
@@ -64,8 +64,17 @@ void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
 	return g_RadioTestSend.Receive(msg, size);
 }
 
-void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
-	hal_printf("RadioTest_SendAckHandler; msg sent; status: %d\n\n", status);
+void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
+	hal_printf("RadioTest_SendAckHandler; msg sent; status: %d\n", status);
+	if(radioAckStatus == TRAC_STATUS_SUCCESS || radioAckStatus == TRAC_STATUS_SUCCESS_DATA_PENDING){
+		hal_printf("RadioTest_SendAckHandler; ACK received; radioAckStatus: %d\n\n", radioAckStatus);
+	}
+	else if(radioAckStatus == TRAC_STATUS_NO_ACK || radioAckStatus == TRAC_STATUS_FAIL_TO_SEND){
+		hal_printf("RadioTest_SendAckHandler; NO ACK received; radioAckStatus: %d\n\n", radioAckStatus);
+	}
+	else{
+		hal_printf("RadioTest_SendAckHandler; radioAckStatus: %d\n\n", radioAckStatus);
+	}
 }
 
 BOOL RadioTest_InterruptHandler(RadioInterrupt Interrupt, void *param){
@@ -90,6 +99,8 @@ void* RadioTestSend::Receive(void* tmpMsg, UINT16 size)
 
 void RadioTestSend::CreatePacket()
 {
+	static UINT8 seqNumber = 0;
+	UINT8 finalSeqNumber = 0;
 	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
 
 	//header->length = sizeof(Payload_t) + sizeof(IEEE802_15_4_Header_t);
@@ -99,10 +110,16 @@ void RadioTestSend::CreatePacket()
 	//header->destpan = (34 << 8);
 	//header->destpan |= 0;
 	//header->frameLength = 17;
-	header->fcf = 0x8861;
-	header->dsn = 0;
+	header->fcf.fcfWordValue = FCF_WORD_VALUE;
+	finalSeqNumber = myAddress ^ 0xAA;
+	finalSeqNumber += ((myAddress >> 8) ^ 0x55);
+	finalSeqNumber += seqNumber;
+	if(finalSeqNumber == OMAC_DISCO_SEQ_NUMBER){
+		finalSeqNumber += 1;
+	}
+	header->dsn = finalSeqNumber;
 	//header->srcpan = 0x0;
-	header->src = CPU_Radio_GetAddress(this->radioName);
+	header->src = myAddress;
 	/*if(CPU_Radio_GetAddress(this->radioName) == 6846){
 		header->dest = 0x0DB1;
 	}
@@ -110,8 +127,8 @@ void RadioTestSend::CreatePacket()
 		header->dest = 0x1ABE;
 	}*/
 	//header->dest = 6846;
-	header->destpan = 0x0000;
-	header->dest = 0x1ABD;
+	header->destpan = DEST_PAN_ID;
+	header->dest = 6846;
 
 	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
 	msg.MSGID = msgID;
@@ -119,6 +136,7 @@ void RadioTestSend::CreatePacket()
 		msg.data[i-1] = i;
 	}
 	*data_msg = msg;
+	seqNumber++;
 
 	/*udp_header.srcPort = 17754;
 	udp_header.destPort = 17754;
@@ -154,13 +172,25 @@ void RadioTestSend::SendPacket()
 {
 	static UINT8 seqNumber = 0;
 
+	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
+	header->fcf.fcfWordValue = FCF_WORD_VALUE;
+	finalSeqNumber = myAddress ^ 0xAA;
+	finalSeqNumber += ((myAddress >> 8) ^ 0x55);
+	finalSeqNumber += seqNumber;
+	if(finalSeqNumber == OMAC_DISCO_SEQ_NUMBER){
+		finalSeqNumber += 1;
+	}
+	header->dsn = finalSeqNumber;
+	header->src = myAddress;
+	header->destpan = DEST_PAN_ID;
+	header->dest = 6846;
+
 	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
 	msg.MSGID = msgID;
+	for(int i = 1; i <= PAYLOAD_SIZE; i++){
+		msg.data[i-1] = i;
+	}
 	*data_msg = msg;
-
-	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
-	finalSeqNumber += seqNumber;
-	header->dsn = finalSeqNumber;
 	seqNumber++;
 
 	/*UINT8 msgBuffer[sizeof(IEEE802_15_4_Header_t)+sizeof(Payload_t)-1];
@@ -212,7 +242,6 @@ BOOL RadioTestSend::Initialize()
 	CPU_GPIO_SetPinState((GPIO_PIN) ACK_Pin, FALSE);
 
 	//initialPacketReceived = false;
-	myAddress = 3505;
 	finalSeqNumber = myAddress ^ 0xAA;
 	finalSeqNumber += ((myAddress >> 8) ^ 0x55);
 	radioName = RF231RADIO;
@@ -221,15 +250,18 @@ BOOL RadioTestSend::Initialize()
 	Radio_Event_Handler.SetSendAckHandler(RadioTest_SendAckHandler);
 	Radio_Event_Handler.SetReceiveHandler(RadioTest_ReceiveHandler);
 	status = grf231Radio.Initialize(&Radio_Event_Handler, this->radioName, 1);
+	myAddress = grf231Radio.GetAddress();
 	grf231Radio.TurnOnRx();
 
+	hal_printf("My address is: %d; I am in send mode\n", myAddress);
+
 	//Weird! VirtTimer_Initialize is needed to run this test in master branch, but not needed while running in OMAC_Master_Final branch
-	VirtTimer_Initialize();
+	//VirtTimer_Initialize();
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(TEST_0A_TIMER1, 0, TIMER1_PERIOD*ONEMSEC_IN_USEC, FALSE, FALSE, Test_0A_Timer1_Handler);
 	ASSERT(rm == TimerSupported);
-	rm = VirtTimer_SetTimer(TEST_0A_TIMER2, 0, TIMER2_PERIOD*ONEMSEC_IN_USEC, TRUE, FALSE, Test_0A_Timer2_Handler);
-	ASSERT(rm == TimerSupported);
+	/*rm = VirtTimer_SetTimer(TEST_0A_TIMER2, 0, TIMER2_PERIOD*ONEMSEC_IN_USEC, TRUE, FALSE, Test_0A_Timer2_Handler);
+	ASSERT(rm == TimerSupported);*/
 
 	msgID = 0;
 	retryLimit = 2;

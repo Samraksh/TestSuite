@@ -40,7 +40,7 @@ void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
 	//return g_RadioTestReceive.Receive(msg, size);
 }
 
-void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
 	hal_printf("RadioTest_SendAckHandler msg sent\n");
 	//g_RadioTestReceive.SendAck(msg,size,status);
 }
@@ -54,7 +54,7 @@ void CSMAMACTest_ReceiveHandler(void* msg, UINT16 size){
 	g_RadioTestReceive.Receive(msg, size);
 }
 
-void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
 	//hal_printf("msg sent\n");
 }
 
@@ -96,12 +96,12 @@ Message_15_4_t RadioTestReceive::CreatePacket()
 	Message_15_4_t msg_carrier;
 	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
 
-	header->length = sizeof(Payload_t) + sizeof(IEEE802_15_4_Header_t);
+	/*header->length = sizeof(Payload_t) + sizeof(IEEE802_15_4_Header_t);
 	header->fcf = (65 << 8);
 	header->fcf |= 136;
 	header->dsn = 97;
 	header->destpan = (34 << 8);
-	header->destpan |= 0;
+	header->destpan |= 0;*/
 	//header->src = CPU_Radio_GetAddress(this->radioName);
 
 	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
@@ -118,7 +118,7 @@ void RadioTestReceive::SendPacket()
 {
 	Message_15_4_t txMsg;
 	Message_15_4_t* txMsgPtr = &txMsg;
-	txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
+	txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->length, HAL_Time_CurrentTicks());
 }
 
 BOOL RadioTestReceive::StartTest()
@@ -167,7 +167,7 @@ BOOL RadioTestReceive::Initialize()
 	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);*/
 
 	//Weird! VirtTimer_Initialize is needed to run this test in master branch, but not needed while running in OMAC_Master_Final branch
-	VirtTimer_Initialize();
+	//VirtTimer_Initialize();
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(TEST_0A_TIMER, 0, 500, TRUE, FALSE, Test_0A_Timer_Handler);
 	ASSERT(rm == TimerSupported);

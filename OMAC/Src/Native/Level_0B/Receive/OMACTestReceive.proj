@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-	 <AssemblyName>OMACTest</AssemblyName>
+	 <AssemblyName>OMACTestReceive</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
     <Description>
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\OMAC\Src\Native\Level_0B</Directory>
+    <Directory>TestSuite\OMAC\Src\Native\Level_0B\Receive</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0B\OMACTest.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0B\Receive\OMACTestReceive.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
@@ -27,12 +27,12 @@
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0B\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0B\Receive\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
  	<Compile Include="EntryPoint.cpp" />
-    <Compile Include="OMACTest.cpp" />
+    <Compile Include="OMACTestReceive.cpp" />
     <!--<Compile Include="test.c" />
 	<Compile Include="signalr.c" />
 	<Compile Include="syscalls.c" />
@@ -305,10 +305,10 @@
     <DriverLibs Include="Ink_pal_stubs.$(LIB_EXT)" />
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Pal\Ink\stubs\dotNetMF.proj" />
   </ItemGroup>
-  <ItemGroup>
+  <!--ItemGroup>
     <DriverLibs Include="ARM9_mmu.$(LIB_EXT)" />
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Cores\arm\Processors\ARM9\MMU\dotNetMF.proj" />
-  </ItemGroup>
+  </ItemGroup-->
   <ItemGroup>
     <DriverLibs Include="lcd_hal_stubs.$(LIB_EXT)" />
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Drivers\Display\stubs\dotNetMF.proj" />
@@ -432,10 +432,15 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Timer\netmf_rtc\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_rtc.$(LIB_EXT)" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Timer\Timer16Bit\dotNetMF.proj" />
     <DriverLibs Include="Timer16Bit.$(LIB_EXT)" />
+</ItemGroup>-->
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\Timer\Timer16Bit\Timer16BitStubs\dotNetMF.proj" />
+	<DriverLibs Include="Timer16Bit.$(LIB_EXT)" />
   </ItemGroup>
+  
   
   
   
@@ -570,7 +575,7 @@
   <!--     - - - - - - - -               Samraksh's Extensions   - - - - - - - -                  -->
   <!-- 									Hardware Extension        								-->
   <ItemGroup>
-    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\Samraksh_eMote\dotNetMF.proj" />
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\pal\Samraksh\Samraksh_eMote\dotNetMF.proj" />
     <DriverLibs Include="Samraksh_eMote.$(LIB_EXT)" />
   </ItemGroup>
   <ItemGroup>
@@ -627,20 +632,33 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\COM\Wireless\MAC\CSMAMAC\dotNetMF.proj" />
     <DriverLibs Include="csma_pal.$(LIB_EXT)" />
   </ItemGroup>
-  
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\COM\Wireless\MAC\OMAC\dotNetMF.proj" />
     <DriverLibs Include="omac_pal.$(LIB_EXT)" />
   </ItemGroup>
-  
   <!--<ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\COM\Wireless\Routing\MACTest\dotNetMF.proj" />
     <DriverLibs Include="mactest_pal.$(LIB_EXT)" />
   </ItemGroup>
   -->
+  <!--<ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\COM\Wireless\MAC\TimeSyncTest\dotNetMF.proj" />
+    <DriverLibs Include="simpletimesync_pal.$(LIB_EXT)" />
+  </ItemGroup>
+  -->
   <ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\radio\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_radio_rf231.$(LIB_EXT)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\dotNetMF.proj" />
+    <DriverLibs Include="STM32F10x_driver_control.$(LIB_EXT)" />
+  </ItemGroup>
+
+<ItemGroup>
+    <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\PAL\Samraksh\Algorithms\dotNetMF.proj" />
+    <DriverLibs Include="Algorithm_pal.$(LIB_EXT)" />
   </ItemGroup>
   
   <!--                      	    Wireless Networking Stack ::End                      -->

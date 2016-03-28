@@ -68,7 +68,7 @@ void* RadioTest_ReceiveHandler (void* msg, UINT16 size){
 	return g_RadioTestSend.Receive(msg, size);
 }
 
-void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+void RadioTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
 	hal_printf("RadioTest_SendAckHandler msg sent\n");
 	//g_RadioTestSend.SendAck(msg,size,status);
 }
@@ -81,7 +81,7 @@ void CSMAMACTest_ReceiveHandler(void* msg, UINT16 size){
 	hal_printf("msg received\n");
 }
 
-void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status){
+void CSMAMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 radioAckStatus){
 	//hal_printf("msg sent\n");
 }
 
@@ -102,13 +102,13 @@ Message_15_4_t RadioTestSend::CreatePacket()
 	Message_15_4_t msg_carrier;
 	IEEE802_15_4_Header_t *header = msg_carrier.GetHeader();
 
-	header->length = sizeof(Payload_t) + sizeof(IEEE802_15_4_Header_t);
+	/*header->length = sizeof(Payload_t) + sizeof(IEEE802_15_4_Header_t);
 	header->fcf = (65 << 8);
 	header->fcf |= 136;
 	header->dsn = 97;
 	header->destpan = (34 << 8);
 	header->destpan |= 0;
-	header->src = CPU_Radio_GetAddress(this->radioName);
+	header->src = CPU_Radio_GetAddress(this->radioName);*/
 
 	Payload_t* data_msg = (Payload_t*)msg_carrier.GetPayload();
 	msg.MSGID = 1;
@@ -131,7 +131,7 @@ void RadioTestSend::SendPacket()
 
 	//txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, txMsgPtr, (txMsgPtr->GetHeader())->GetLength(), HAL_Time_CurrentTicks());
 	CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin, TRUE);
-	(Message_15_4_t*)grf231Radio.Send_TimeStamped(&msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
+	(Message_15_4_t*)grf231Radio.Send_TimeStamped(&msg_carrier, (msg_carrier.GetHeader())->length, HAL_Time_CurrentTicks());
 	CPU_GPIO_SetPinState((GPIO_PIN) Test_0A_Timer_Pin, FALSE);
 	//txMsgPtr = (Message_15_4_t *) CPU_Radio_Send_TimeStamped(this->radioName, &msg_carrier, (msg_carrier.GetHeader())->GetLength(), HAL_Time_CurrentTicks());
 	/*UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
@@ -177,11 +177,11 @@ BOOL RadioTestSend::Initialize()
 	Config.NeighborLivenessDelay = 900000;
 	//myEventHandler.SetReceiveHandler(CSMAMACTest_ReceiveHandler);
 	myEventHandler.SetSendAckHandler(CSMAMACTest_SendAckHandler);
-	MacId = CSMAMAC;
-	Mac_Initialize(&myEventHandler, MacId, MyAppID, Config.RadioID, (void*) &Config);*/
+	MACId = CSMAMAC;
+	Mac_Initialize(&myEventHandler, MACId, MyAppID, Config.RadioID, (void*) &Config);*/
 
 	//Weird! VirtTimer_Initialize is needed to run this test in master branch, but not needed while running in OMAC_Master_Final branch
-	VirtTimer_Initialize();
+	//VirtTimer_Initialize();
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(TEST_0A_TIMER1, 0, 1000000, FALSE, FALSE, Test_0A_Timer1_Handler);
 	ASSERT(rm == TimerSupported);

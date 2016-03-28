@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest(Level_0A)' Type='Native .NOW'>
+	<Test Name='RadioTestSend' Type='Native .NOW'>
 		<Description>
-			Native OMAC test
+			Native radio test to verify if HW ACK works
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_0A
+			Radio\Src\Native\ExtendedModeTest\Send
 		</TestPath>
 		<TestProjName>
-			OMACTest.proj
+			RadioTestSend.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,5 +31,14 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
+		<TestSupporting>
+			support project 2
+		</TestSupporting>
+		<TestJTAGHarness>
+		</TestJTAGHarness>
+		<TestPowerAutomateSelected>
+		</TestPowerAutomateSelected>
+		<TestBuild>
+		</TestBuild>
 	</Test>
 </TestSuite>

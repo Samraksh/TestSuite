@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='RadioTest' Type='Native .NOW'>
+	<Test Name='RadioTestSend' Type='Native .NOW'>
 		<Description>
-			Native radio test to verify if CCA works 
+			Native radio test to verify if HW ACK works
 		</Description>
 		<TestPath>
-			Radio\Src\Native\Level_0A\Send
+			Radio\Src\Native\ExtendedModeTest\Send
 		</TestPath>
 		<TestProjName>
-			RadioTest.proj
+			RadioTestSend.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,5 +31,14 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
+		<TestSupporting>
+			support project 1
+		</TestSupporting>
+		<TestJTAGHarness>
+		</TestJTAGHarness>
+		<TestPowerAutomateSelected>
+		</TestPowerAutomateSelected>
+		<TestBuild>
+		</TestBuild>
 	</Test>
 </TestSuite>

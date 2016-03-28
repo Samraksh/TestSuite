@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest(Level_0B)' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_0B-Receive)' Type='Native .NOW'>
 		<Description>
-			Native OMAC test
+			Native OMAC receive test(fan-in) - primary device will be a receiver, rest senders
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_0B
+			OMAC\Src\Native\Level_0B\Receive
 		</TestPath>
 		<TestProjName>
-			OMACTest.proj
+			OMACTestReceive.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -31,5 +31,14 @@
 		</TestSolutionType>
 		<TestGCCVersion>
 		</TestGCCVersion>
+		<TestSupporting>
+			load support projects: OMAC\Src\Native\Level_0B\Send\tests1.xml OMAC\Src\Native\Level_0B\Send\tests2.xml
+		</TestSupporting>
+		<TestJTAGHarness>
+		</TestJTAGHarness>
+		<TestPowerAutomateSelected>
+		</TestPowerAutomateSelected>
+		<TestBuild>
+		</TestBuild>
 	</Test>
 </TestSuite>
