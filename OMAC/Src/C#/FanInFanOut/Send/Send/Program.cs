@@ -235,37 +235,37 @@ namespace Samraksh.eMote.Net.Mac.Send
             try
             {
                 bool sendFlag = false;
-                //UInt16[] neighborList = myOMACObj.GetNeighborList();
+                UInt16[] neighborList = myOMACObj.GetNeighborList();
 
-                //for (int j = 0; j < MAX_NEIGHBORS; j++)
-                //{
-                    //if (neighborList[j] != 0)
-                    //{
+                for (int j = 0; j < MAX_NEIGHBORS; j++)
+                {
+                    if (neighborList[j] != 0)
+                    {
                         //Debug.Print("count of neighbors " + neighborList.Length);
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] payload = pingMsg.ToBytes();
 
-                        /*Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
                         status = myOMACObj.Send(neighborList[j], (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send to " + neighborList[j] + " failed. Ping msgID " + sendMsgCounter.ToString());
-                        }*/
-                        Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
+                        }
+                        /*Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
                         status = myOMACObj.Send(6846, (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send to " + 6846 + " failed. Ping msgID " + sendMsgCounter.ToString());
-                        }
+                        }*/
                         /*Debug.Print("Sending to neighbor " + 26809 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
                         status = myOMACObj.Send(26809, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send to " + 26809 + " failed. Ping msgID " + sendMsgCounter.ToString());
                         }*/
-                    //}
-                //}
+                    }
+                }
                 if (sendFlag == false && startSend == true)
                 {
                     Debug.Print("Ping failed. All neighbors dropped out");

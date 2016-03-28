@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='RadioTestReceive' Type='Native .NOW'>
 		<Description>
-			Native radio test to verify if HW ACK works - primary device will be a receiver, rest senders
+			**CHANGE SENDER ADDRESS**-Native radio test to verify if HW ACK works - primary device will be a receiver, rest senders
 		</Description>
 		<TestPath>
 			Radio\Src\Native\ExtendedModeTest\Receive

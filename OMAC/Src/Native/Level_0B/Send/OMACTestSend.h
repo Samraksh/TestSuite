@@ -12,6 +12,8 @@
 #include <Samraksh/VirtualTimer.h>
 #include <Samraksh/Message.h>
 
+#define MAX_NEIGHBORS	12
+
 typedef struct  {
 	UINT16 MSGID;
 	UINT8 data[5];
@@ -31,6 +33,7 @@ public:
 	MACConfig Config;
 	UINT8 MACId;
 	UINT16 SendCount, receiveCount;
+	UINT16 neighborList[MAX_NEIGHBORS];
 
 	BOOL Initialize();
 	BOOL StartTest();

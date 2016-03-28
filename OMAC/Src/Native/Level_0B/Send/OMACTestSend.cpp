@@ -142,8 +142,15 @@ BOOL OMACTest::Send(){
 	CPU_GPIO_SetPinState(OMACTEST_Tx, TRUE);
 #endif
 	//Mac_Send(MacId, MAC_BROADCAST_ADDRESS, MFM_DATA, (void*) &msg.data, sizeof(Payload_t));
-	hal_printf("Sending msgID: %u\n", SendCount);
-	bool ispcktScheduled = MAC_Send(6846, MFM_DATA, (void*) &msg, sizeof(Payload_t));
+	MAC_GetNeighborList(neighborList);
+	for(int i = 0; i < MAX_NEIGHBORS; i++){
+		if(neighborList[i] != 0){
+			hal_printf("Sending msgID: %u to node: %d\n", SendCount, neighborList[i]);
+			MAC_Send(neighborList[i], MFM_DATA, (void*) &msg, sizeof(Payload_t));
+		}
+	}
+	//hal_printf("Sending msgID: %u to node: %d\n", SendCount, 6846);
+	//bool ispcktScheduled = MAC_Send(6846, MFM_DATA, (void*) &msg, sizeof(Payload_t));
 	//if (ispcktScheduled) {SendCount++;}
 	SendCount++;
 }
