@@ -9,7 +9,7 @@ using System.Collections;
 using Samraksh.eMote.Net;
 using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
-using Samraksh.eMote.DotNow;
+//using Samraksh.eMote.DotNow;
 
 //1. This program initializes OMAC as the MAC protocol.
 //  1a. Registers a function that tracks change in neighbor (NeighborChange) and a function to handle messages that are received.
@@ -107,7 +107,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         const int TIMEBASE = 8000000; // in all power modes, 8 MHz is the timebase
         const int TIMEBASE_MS = TIMEBASE / 1000; // to get answer in milli-seconds
         Hashtable neighborHashtable = new Hashtable();
-        EmoteLCD lcd;
+        //EmoteLCD lcd;
         
         UInt16 myAddress;
         static UInt32 totalRecvCounter = 0;
@@ -115,6 +115,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //PingPayload pingPayload;
         PingPayload pingMsg = new PingPayload();
         OMAC myOMACObj;
+        MACPipe macPipe;
 
         Parameters p = new Parameters();
         static long testStartTicks;
@@ -134,9 +135,9 @@ namespace Samraksh.eMote.Net.Mac.Receive
         public void Initialize()
         {
             //Init LCD
-            lcd = new EmoteLCD();
-            lcd.Initialize();
-            lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
+            //lcd = new EmoteLCD();
+            //lcd.Initialize();
+            //lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
             //myMacConfig.MACRadioConfig = myRadioConfig;
             //Set OMAC parameters
@@ -148,17 +149,20 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Radio_OMAC_OnBoard.OnReceiveCallback = Receive;
             Radio_OMAC_OnBoard.OnNeighborChangeCallback = NeighborChange;*/
 
-            Debug.Print("Initializing mac configuration");
+            /*Debug.Print("Initializing mac configuration");
             MACConfiguration myMacConfig = new MACConfiguration();
             myMacConfig.NeighborLivenessDelay = 180;
             myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
+            myMacConfig.payloadType = PayloadType.MFM_Data;*/
 
             Debug.Print("2.Initializing radio");
-            myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
+            RadioConfiguration radioConfiguration = new RadioConfiguration();
+            /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
-            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
-            myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
+            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;*/
+            //myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
+            //myMacConfig.MACRadioConfig.OnReceiveCallBackEverythingElse = ReceiveEverythingElse;
+            //myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
 
             Debug.Print("Configuring OMAC...");
 
@@ -166,7 +170,12 @@ namespace Samraksh.eMote.Net.Mac.Receive
             {
                 //Radio_OMAC_OnBoard = new Radio_802_15_4(RadioUser.OMAC, RadioType.ONBOARDRF231RADIO);
                 //configure OMAC
-                myOMACObj = new OMAC(myMacConfig);
+                myOMACObj = new OMAC(radioConfiguration);
+                myOMACObj.OnReceive += Receive;
+                myOMACObj.OnNeighborChange += NeighborChange;
+                
+                macPipe = new MACPipe(myOMACObj, PayloadType.Default);
+                macPipe.OnReceive += ReceiveEverythingElse;
                 
                 /*Debug.Print("3.Initializing radio");
                 myOMACObj.MACRadioObj.TxPowerValue = TxPowerValue.Power_3dBm;
@@ -188,7 +197,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
             Debug.Print("OMAC init done");
             //myAddress = Radio_OMAC_OnBoard.GetRadioAddress();
-            myAddress = myOMACObj.GetRadioAddress();
+            myAddress = myOMACObj.MACRadioObj.RadioAddress;
             //myAddress = myOMACObj.MACRadioObj.GetRadioAddress();
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Receive mode");
 
@@ -234,9 +243,9 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }*/
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(UInt16 countOfNeighbors)
+        public void NeighborChange(MACBase macBase, DateTime time)
         {
-            Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
         public void Start()
@@ -247,8 +256,14 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Thread.Sleep(initialDelayInMsecs);
         }
 
+        public void ReceiveEverythingElse(MACBase macBaseObj, PayloadType payloadType, DateTime time)
+        {
+            Debug.Print("Received mac type " + macBaseObj.GetMACType().ToString());
+            //Debug.Print("Received payload type " + macBaseObj.MACConfig.payloadType);
+        }
+
         //Handles received messages 
-        public void Receive(UInt16 countOfPackets)
+        public void Receive(MACBase macBaseObj, DateTime time)
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
