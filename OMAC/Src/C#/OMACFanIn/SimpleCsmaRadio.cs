@@ -28,29 +28,30 @@ namespace Samraksh.DotNow.PingPong {
 		/// <param name="txPowerValue">Power level</param>
 		/// <param name="radioReceivedData">Method to call when data received. Can be null if user does not want to be notified of received messages</param>
 		public SimpleCsmaRadio(byte ccaSensetime, TxPowerValue txPowerValue, RadioReceivedData radioReceivedData) {
-			var macConfig = new MACConfiguration {
+			/*var macConfig = new MACConfiguration {
 				NeighborLivenessDelay = 100, // Neighbor timeout. Neighbor changes are ignored but we still have to specify a value
 				CCASenseTime = ccaSensetime
-			};
+			};*/
 
-            macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
+            /*macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             macConfig.MACRadioConfig.Channel = Channel.Channel_26;
             macConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
             macConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            macConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
+            macConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;*/
 
             //MacConfiguration macConfig = new MacConfiguration();
             //macConfig.NeighborLivenessDelay = 100;
 
 			//macConfig.radioConfig.SetTxPower(txPowerValue); // This is probably optional
             _radioReceivedData = radioReceivedData;
+            RadioConfiguration radioConfiguration = new RadioConfiguration();
 
             //Radio_802_15_4_Base.Configure(macConfig.radioConfig);
             ////Radio_802_15_4_Base.Config = new RadioConfiguration(macConfig.radioConfig);
             ////radioBase = new Radio_802_15_4_Base();
             
 			try {
-                _csma = new CSMA(macConfig);
+                _csma = new CSMA(radioConfiguration);
 				//MACBase.Configure(macConfig, Receive, NeighborChange); // Set up MAC base with the MAC configuration, receive callback and neighbor change callback (which does nothing)
 				//_csma = CSMA.Instance;
 			}
@@ -58,7 +59,7 @@ namespace Samraksh.DotNow.PingPong {
 				Debug.Print("CSMA configuration error " + e);
 			}
 
-            Debug.Print("CSMA address is :  " + _csma.GetRadioAddress().ToString());
+            Debug.Print("CSMA address is :  " + _csma.MACRadioObj.RadioAddress.ToString());
 		}
 
 		/// <summary>
@@ -68,7 +69,7 @@ namespace Samraksh.DotNow.PingPong {
 		/// <param name="message">Message to be sent, as a byte array</param>
 		public void Send(AddressType address, byte[] message) {
 			Debug.Print("sending: " + message.ToString());
-            _csma.Send((ushort)address, (byte)PayloadType.MFM_DATA, message, 0, (ushort)message.Length);
+            _csma.Send((ushort)address, PayloadType.MFM_Data, message, 0, (ushort)message.Length);
 		}
 
         public bool CCA(Radio_802_15_4_Base radioBase)
