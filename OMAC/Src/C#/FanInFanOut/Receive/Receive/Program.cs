@@ -101,7 +101,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
     public class Program
     {
-        const UInt16 MAX_NEIGHBORS = 12;
+        //const UInt16 MAX_NEIGHBORS = 12;
         const UInt32 endOfTest = 100;
         const int initialDelayInMsecs = 30000;
         const int TIMEBASE = 8000000; // in all power modes, 8 MHz is the timebase
@@ -110,7 +110,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //EmoteLCD lcd;
         
         UInt16 myAddress;
-        static UInt32 totalRecvCounter = 0;
+        static UInt32 totalRecvCounter = 0, totalRecvCounterAllElse = 0;
 
         //PingPayload pingPayload;
         PingPayload pingMsg = new PingPayload();
@@ -156,7 +156,8 @@ namespace Samraksh.eMote.Net.Mac.Receive
             myMacConfig.payloadType = PayloadType.MFM_Data;*/
 
             Debug.Print("2.Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
+            RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
+            //RadioConfiguration radioConfiguration = new RadioConfiguration();
             /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
             myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;*/
@@ -258,8 +259,83 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
         public void ReceiveEverythingElse(MACBase macBaseObj, PayloadType payloadType, DateTime time)
         {
-            Debug.Print("Received mac type " + macBaseObj.GetMACType().ToString());
+            totalRecvCounterAllElse++;
+            Debug.Print("---------------------------");
+            if (myOMACObj.PendingReceivePacketCount() == 0)
+            {
+                Debug.Print("no packets");
+                //return;
+                goto endReceiveEverythingElse;
+            }
+
+            Packet rcvPacket = myOMACObj.NextPacket();
+            if (rcvPacket == null)
+            {
+                Debug.Print("null");
+                //return;
+                goto endReceiveEverythingElse;
+            }
+            Debug.Print("Received mac type " + macBaseObj.macType.ToString());
+            Debug.Print("Received payload type " + payloadType);
+            Debug.Print("totalRecvCounterAllElse is " + totalRecvCounterAllElse);
+
+            byte[] rcvPayload = rcvPacket.Payload;
+            if (rcvPayload != null && payloadType == rcvPacket.payloadType)
+            {
+                pingMsg = pingMsg.FromBytesToPingPayload(rcvPayload);
+                if (pingMsg != null)
+                {
+                    Debug.Print("Received msgID " + pingMsg.pingMsgId + " from SRC " + rcvPacket.Src);
+                    /*NeighborTableInfo nbrTableInfo;
+                    //If hashtable already contains an entry for the source, extract it, increment recvCount and store it back
+                    if (neighborHashtable.Contains(rcvPacket.Src))
+                    {
+                        nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvPacket.Src];
+                        nbrTableInfo.recvCount++;
+                        nbrTableInfo.AL.Add(pingMsg.pingMsgId);
+                        neighborHashtable[rcvPacket.Src] = nbrTableInfo;
+                    }
+                    //If hashtable does not have an entry, create a new instance and store it
+                    else
+                    {
+                        nbrTableInfo = new NeighborTableInfo();
+                        nbrTableInfo.recvCount = 1;
+                        ArrayList AL = new ArrayList();
+                        AL.Add(pingMsg.pingMsgId);
+                        nbrTableInfo.AL = AL;
+                        neighborHashtable[rcvPacket.Src] = nbrTableInfo;
+                        //neighborHashtable.Add(rcvMsg.Src, nbrTableInfo);
+                    }*/
+                    //Debug.Print("recvCount from node " + rcvPacket.Src + " is " + nbrTableInfo.recvCount);
+                    Debug.Print("Received msgContent " + pingMsg.pingMsgContent.ToString());
+                    Debug.Print("---------------------------");
+                }
+                else
+                {
+                    Debug.Print("pingPayload is null");
+                }
+            }
+            else
+            {
+                Debug.Print("Received a null msg");
+                Debug.Print(((UInt32)(rcvPayload[0] << 24)).ToString());
+                Debug.Print(((UInt32)(rcvPayload[1] << 16)).ToString());
+                Debug.Print(((UInt32)(rcvPayload[2] << 8)).ToString());
+                Debug.Print(((UInt32)(rcvPayload[3])).ToString());
+                Debug.Print(rcvPayload[0].ToString());
+                Debug.Print(rcvPayload[1].ToString());
+                Debug.Print(rcvPayload[2].ToString());
+                Debug.Print(rcvPayload[3].ToString());
+                Debug.Print(rcvPayload[4].ToString());
+                Debug.Print(rcvPayload[5].ToString());
+                Debug.Print(rcvPayload[6].ToString());
+                Debug.Print(rcvPayload[7].ToString());
+                Debug.Print("---------------------------");
+            }
             //Debug.Print("Received payload type " + macBaseObj.MACConfig.payloadType);
+
+endReceiveEverythingElse:
+            return;
         }
 
         //Handles received messages 
@@ -267,19 +343,19 @@ namespace Samraksh.eMote.Net.Mac.Receive
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount_Receive() == 0)
+            if (myOMACObj.PendingReceivePacketCount() == 0)
             {
                 Debug.Print("no packets");
                 //return;
-                goto end;
+                goto endReceive;
             }
 
-            Packet rcvPacket = myOMACObj.GetNextPacket();
+            Packet rcvPacket = myOMACObj.NextPacket();
             if (rcvPacket == null)
             {
                 Debug.Print("null");
                 //return;
-                goto end;
+                goto endReceive;
             }
 
             Debug.Print("totalRecvCounter is " + totalRecvCounter);
@@ -337,7 +413,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 Debug.Print(rcvPayload[7].ToString());
                 Debug.Print("---------------------------");
             }
-end:
+endReceive:
             testEndTicks = DateTime.Now.Ticks;
             //testEndTime = DateTime.Now;
             //TimeSpan diff = testEndTime.Subtract(testStartTime);

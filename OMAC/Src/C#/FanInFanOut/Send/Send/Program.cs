@@ -83,7 +83,7 @@ namespace Samraksh.eMote.Net.Mac.Send
     public class Program
     {
         const UInt32 totalPingCount = 10001;
-        const UInt16 MAX_NEIGHBORS = 12;
+        //const UInt16 MAX_NEIGHBORS = 12;
         const int initialDelayInMsecs = 30000;
         int dutyCyclePeriod = 20000;
 
@@ -130,7 +130,8 @@ namespace Samraksh.eMote.Net.Mac.Send
             myMacConfig.payloadType = PayloadType.MFM_Data;*/
 
             Debug.Print("2.Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
+            RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
+            //RadioConfiguration radioConfiguration = new RadioConfiguration();
             /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
             myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;*/
@@ -239,35 +240,39 @@ namespace Samraksh.eMote.Net.Mac.Send
             try
             {
                 bool sendFlag = false;
-                UInt16[] neighborList = myOMACObj.GetNeighborList();
+                UInt16[] neighborList = new UInt16[myOMACObj.NeighborListSize];
+                DeviceStatus dsStatus = myOMACObj.NeighborList(neighborList);
 
-                for (int j = 0; j < MAX_NEIGHBORS; j++)
+                if (dsStatus == DeviceStatus.Success)
                 {
-                    if (neighborList[j] != 0)
+                    for (int j = 0; j < myOMACObj.NeighborListSize; j++)
                     {
-                        //Debug.Print("count of neighbors " + neighborList.Length);
-                        startSend = true; sendFlag = true;
-                        pingMsg.pingMsgId = sendMsgCounter;
-                        byte[] payload = pingMsg.ToBytes();
+                        if (neighborList[j] != 0)
+                        {
+                            //Debug.Print("count of neighbors " + neighborList.Length);
+                            startSend = true; sendFlag = true;
+                            pingMsg.pingMsgId = sendMsgCounter;
+                            byte[] payload = pingMsg.ToBytes();
 
-                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-                        status = myOMACObj.Send(neighborList[j], payload, 0, (ushort)payload.Length);
-                        if (status != NetOpStatus.S_Success)
-                        {
-                            Debug.Print("Send to " + neighborList[j] + " failed. Ping msgID " + sendMsgCounter.ToString());
+                            Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                            status = myOMACObj.Send(neighborList[j], PayloadType.Default, payload, 0, (ushort)payload.Length, (uint)DateTime.Now.Ticks);
+                            if (status != NetOpStatus.S_Success)
+                            {
+                                Debug.Print("Send to " + neighborList[j] + " failed. Ping msgID " + sendMsgCounter.ToString());
+                            }
+                            /*Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
+                            status = myOMACObj.Send(6846, (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
+                            if (status != NetOpStatus.S_Success)
+                            {
+                                Debug.Print("Send to " + 6846 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                            }*/
+                            /*Debug.Print("Sending to neighbor " + 26809 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
+                            status = myOMACObj.Send(26809, msg, 0, (ushort)msg.Length);
+                            if (status != NetOpStatus.S_Success)
+                            {
+                                Debug.Print("Send to " + 26809 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                            }*/
                         }
-                        /*Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
-                        status = myOMACObj.Send(6846, (byte)PayloadType.MFM_DATA, payload, 0, (ushort)payload.Length);
-                        if (status != NetOpStatus.S_Success)
-                        {
-                            Debug.Print("Send to " + 6846 + " failed. Ping msgID " + sendMsgCounter.ToString());
-                        }*/
-                        /*Debug.Print("Sending to neighbor " + 26809 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
-                        status = myOMACObj.Send(26809, msg, 0, (ushort)msg.Length);
-                        if (status != NetOpStatus.S_Success)
-                        {
-                            Debug.Print("Send to " + 26809 + " failed. Ping msgID " + sendMsgCounter.ToString());
-                        }*/
                     }
                 }
                 if (sendFlag == false && startSend == true)

@@ -221,14 +221,14 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void Receive(UInt16 noOfPackets)
         {
-            if (myCSMA.GetPendingPacketCount_Receive() == 0)
+            if (myCSMA.PendingReceivePacketCount() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
             //while (myCSMA.GetPendingPacketCount() > 0) {
-            Packet rcvPacket = myCSMA.GetNextPacket();
+            Packet rcvPacket = myCSMA.NextPacket();
             if (rcvPacket == null)
             {
                 Debug.Print("null");
@@ -347,7 +347,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
 
                 byte[] msg = ping.ToBytes();
-                status = myCSMA.Send((UInt16)AddressType.BROADCAST, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                status = myCSMA.Send((UInt16)AddressType.Broadcast, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
                 if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());
