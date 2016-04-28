@@ -172,13 +172,13 @@ namespace Samraksh.eMote.Net.Mac.Receive
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount_Receive() == 0)
+            if (myOMACObj.PendingReceivePacketCount() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
-            Packet rcvPacket = myOMACObj.GetNextPacket();
+            Packet rcvPacket = myOMACObj.NextPacket();
             if (rcvPacket == null)
             {
                 Debug.Print("null");
