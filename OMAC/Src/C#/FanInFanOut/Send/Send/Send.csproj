@@ -36,6 +36,7 @@
     <MMP_DAT_CreateDatabaseFile>bin\Release\Send.dat</MMP_DAT_CreateDatabaseFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EnhancedLcd.cs" />
     <Compile Include="Parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

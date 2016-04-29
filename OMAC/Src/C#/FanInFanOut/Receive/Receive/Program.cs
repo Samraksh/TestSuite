@@ -9,7 +9,7 @@ using System.Collections;
 using Samraksh.eMote.Net;
 using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
-//using Samraksh.eMote.DotNow;
+using Samraksh.eMote.DotNow;
 
 //1. This program initializes OMAC as the MAC protocol.
 //  1a. Registers a function that tracks change in neighbor (NeighborChange) and a function to handle messages that are received.
@@ -102,12 +102,13 @@ namespace Samraksh.eMote.Net.Mac.Receive
     public class Program
     {
         //const UInt16 MAX_NEIGHBORS = 12;
-        const UInt32 endOfTest = 100;
+        const UInt32 displayStats = 100;
         const int initialDelayInMsecs = 30000;
         const int TIMEBASE = 8000000; // in all power modes, 8 MHz is the timebase
         const int TIMEBASE_MS = TIMEBASE / 1000; // to get answer in milli-seconds
         Hashtable neighborHashtable = new Hashtable();
         //EmoteLCD lcd;
+        static readonly EnhancedEmoteLcd Lcd = new EnhancedEmoteLcd();
         
         UInt16 myAddress;
         static UInt32 totalRecvCounter = 0, totalRecvCounterAllElse = 0;
@@ -138,6 +139,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             //lcd = new EmoteLCD();
             //lcd.Initialize();
             //lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
+            Lcd.Display("Init");
 
             //myMacConfig.MACRadioConfig = myRadioConfig;
             //Set OMAC parameters
@@ -156,8 +158,8 @@ namespace Samraksh.eMote.Net.Mac.Receive
             myMacConfig.payloadType = PayloadType.MFM_Data;*/
 
             Debug.Print("2.Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
-            //RadioConfiguration radioConfiguration = new RadioConfiguration();
+            //RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
+            RadioConfiguration radioConfiguration = new RadioConfiguration();
             /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
             myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;*/
@@ -335,6 +337,9 @@ namespace Samraksh.eMote.Net.Mac.Receive
             //Debug.Print("Received payload type " + macBaseObj.MACConfig.payloadType);
 
 endReceiveEverythingElse:
+
+            Lcd.Display((int)totalRecvCounterAllElse);
+
             return;
         }
 
@@ -428,12 +433,48 @@ endReceive:
             }
             else
             {
-                if (totalRecvCounter % endOfTest == 0)
+                if (totalRecvCounter % displayStats == 0)
                 {
                     ShowStatistics();
                 }
             }
+
+            Lcd.Display((int)totalRecvCounter);
+
             return;
+        }
+
+        void DisplayOnLCD(UInt32 counter)
+        {
+            Debug.Print("Displaying " + counter + " on LCD");
+            /*if (counter < 10)
+            {
+                lcd.Write(LCD.CHAR_0, LCD.CHAR_0, LCD.CHAR_0, (LCD)counter);
+            }
+            else if (counter < 100)
+            {
+                UInt16 tenthPlace = (UInt16)(counter / 10);
+                UInt16 unitPlace = (UInt16)(counter % 10);
+                lcd.Write(LCD.CHAR_0, LCD.CHAR_0, (LCD)tenthPlace, (LCD)unitPlace);
+            }
+            else if (counter < 1000)
+            {
+                UInt16 hundredthPlace = (UInt16)(counter / 100);
+                UInt16 remainder = (UInt16)(counter % 100);
+                UInt16 tenthPlace = (UInt16)(remainder / 10);
+                UInt16 unitPlace = (UInt16)(remainder % 10);
+                lcd.Write(LCD.CHAR_0, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+            }
+            else if (totalRecvCounter < 10000)
+            {
+                UInt16 thousandthPlace = (UInt16)(counter / 1000);
+                UInt16 remainder = (UInt16)(counter % 1000);
+                UInt16 hundredthPlace = (UInt16)(remainder / 100);
+                remainder = (UInt16)(remainder % 100);
+                UInt16 tenthPlace = (UInt16)(remainder / 10);
+                UInt16 unitPlace = (UInt16)(remainder % 10);
+                lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+            }*/
         }
 
         //Show statistics

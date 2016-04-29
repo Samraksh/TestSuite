@@ -8,7 +8,7 @@ using System.Threading;
 using Samraksh.eMote.Net;
 using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
-//using Samraksh.eMote.DotNow;
+using Samraksh.eMote.DotNow;
 
 //1. This program initializes OMAC as the MAC protocol.
 //  1a. Registers a function that tracks change in neighbor (NeighborChange) and a function to handle messages that are received.
@@ -82,7 +82,7 @@ namespace Samraksh.eMote.Net.Mac.Send
 
     public class Program
     {
-        const UInt32 totalPingCount = 10001;
+        const UInt32 totalPingCount = 2201;     //3 msgs per min; Total msg count is for slightly larger than 12 hours - 3*60*12
         //const UInt16 MAX_NEIGHBORS = 12;
         const int initialDelayInMsecs = 30000;
         int dutyCyclePeriod = 20000;
@@ -92,6 +92,8 @@ namespace Samraksh.eMote.Net.Mac.Send
         Timer sendTimer;
         NetOpStatus status;
         //EmoteLCD lcd;
+        static readonly EnhancedEmoteLcd Lcd = new EnhancedEmoteLcd();
+
         static UInt32 sendMsgCounter = 1;
 
         PingPayload pingMsg = new PingPayload();
@@ -109,9 +111,10 @@ namespace Samraksh.eMote.Net.Mac.Send
         public void Initialize()
         {
             //Init LCD
-            //lcd = new EmoteLCD();
-            //lcd.Initialize();
-            //lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
+            /*lcd = new EmoteLCD();
+            lcd.Initialize();
+            lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);*/
+            Lcd.Display("Init");
 
             //Set OMAC parameters
             /*Debug.Print("1.Initializing radio");
@@ -130,8 +133,8 @@ namespace Samraksh.eMote.Net.Mac.Send
             myMacConfig.payloadType = PayloadType.MFM_Data;*/
 
             Debug.Print("2.Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
-            //RadioConfiguration radioConfiguration = new RadioConfiguration();
+            //RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
+            RadioConfiguration radioConfiguration = new RadioConfiguration();
             /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
             myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;*/
@@ -255,16 +258,16 @@ namespace Samraksh.eMote.Net.Mac.Send
                             byte[] payload = pingMsg.ToBytes();
 
                             Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-                            status = myOMACObj.Send(neighborList[j], PayloadType.Default, payload, 0, (ushort)payload.Length, (uint)DateTime.Now.Ticks);
+                            status = myOMACObj.Send(neighborList[j], PayloadType.MFM_Data, payload, 0, (ushort)payload.Length, DateTime.Now);
                             if (status != NetOpStatus.S_Success)
                             {
                                 Debug.Print("Send to " + neighborList[j] + " failed. Ping msgID " + sendMsgCounter.ToString());
                             }
-                            /*Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
-                            status = myOMACObj.Send(6846, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
+                            /*Debug.Print("Sending to neighbor " + 8660 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
+                            status = myOMACObj.Send(8660, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
                             if (status != NetOpStatus.S_Success)
                             {
-                                Debug.Print("Send to " + 6846 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                                Debug.Print("Send to " + 8660 + " failed. Ping msgID " + sendMsgCounter.ToString());
                             }*/
                             /*Debug.Print("Sending to neighbor " + 26809 + " ping msgID " + sendMsgCounter + " msg length " + msg.Length);
                             status = myOMACObj.Send(26809, msg, 0, (ushort)msg.Length);
@@ -282,36 +285,8 @@ namespace Samraksh.eMote.Net.Mac.Send
                 //Increment msgCounter only if there is a send
                 if (sendFlag == true)
                 {
+                    Lcd.Display((int)sendMsgCounter);
                     sendMsgCounter++;
-                }
-
-                if (sendMsgCounter < 10)
-                {
-                    //lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
-                }
-                else if (sendMsgCounter < 100)
-                {
-                    UInt16 tenthPlace = (UInt16)(sendMsgCounter / 10);
-                    UInt16 unitPlace = (UInt16)(sendMsgCounter % 10);
-                    //lcd.Write(LCD.CHAR_S, LCD.CHAR_S, (LCD)tenthPlace, (LCD)unitPlace);
-                }
-                else if (sendMsgCounter < 1000)
-                {
-                    UInt16 hundredthPlace = (UInt16)(sendMsgCounter / 100);
-                    UInt16 remainder = (UInt16)(sendMsgCounter % 100);
-                    UInt16 tenthPlace = (UInt16)(remainder / 10);
-                    UInt16 unitPlace = (UInt16)(remainder % 10);
-                    //lcd.Write(LCD.CHAR_S, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
-                }
-                else if (sendMsgCounter < 10000)
-                {
-                    UInt16 thousandthPlace = (UInt16)(sendMsgCounter / 1000);
-                    UInt16 remainder = (UInt16)(sendMsgCounter % 1000);
-                    UInt16 hundredthPlace = (UInt16)(remainder / 100);
-                    remainder = (UInt16)(remainder % 100);
-                    UInt16 tenthPlace = (UInt16)(remainder / 10);
-                    UInt16 unitPlace = (UInt16)(remainder % 10);
-                    //lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
 
                 if (sendMsgCounter == totalPingCount)
@@ -330,6 +305,38 @@ namespace Samraksh.eMote.Net.Mac.Send
         public void Receive(MACBase macBase, DateTime time)
         {
             
+        }
+
+        void DisplayOnLCD(UInt32 counter)
+        {
+            /*if (counter < 10)
+            {
+                lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)counter);
+            }
+            else if (counter < 100)
+            {
+                UInt16 tenthPlace = (UInt16)(counter / 10);
+                UInt16 unitPlace = (UInt16)(counter % 10);
+                lcd.Write(LCD.CHAR_S, LCD.CHAR_S, (LCD)tenthPlace, (LCD)unitPlace);
+            }
+            else if (counter < 1000)
+            {
+                UInt16 hundredthPlace = (UInt16)(counter / 100);
+                UInt16 remainder = (UInt16)(counter % 100);
+                UInt16 tenthPlace = (UInt16)(remainder / 10);
+                UInt16 unitPlace = (UInt16)(remainder % 10);
+                lcd.Write(LCD.CHAR_S, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+            }
+            else if (counter < 10000)
+            {
+                UInt16 thousandthPlace = (UInt16)(counter / 1000);
+                UInt16 remainder = (UInt16)(counter % 1000);
+                UInt16 hundredthPlace = (UInt16)(remainder / 100);
+                remainder = (UInt16)(remainder % 100);
+                UInt16 tenthPlace = (UInt16)(remainder / 10);
+                UInt16 unitPlace = (UInt16)(remainder % 10);
+                lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+            }*/
         }
 
         //Show statistics
