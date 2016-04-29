@@ -64,7 +64,7 @@ BOOL VirtualTimerTest::DisplayStats(BOOL result, char* resultParameter1, UINT64 
 	while(true){
 		hal_printf("result=%s\r\n", (result) ? "PASS":"FAIL");
 		hal_printf("accuracy=0\r\n");
-		hal_printf("resultParameter1=",resultParameter1);
+		hal_printf("resultParameter1=%s\r\n",resultParameter1);
 		hal_printf("resultParameter2=%llu\r\n", currentTime);
 		hal_printf("resultParameter3=%llu\r\n", prevTime);
 		hal_printf("resultParameter4=null\r\n");
