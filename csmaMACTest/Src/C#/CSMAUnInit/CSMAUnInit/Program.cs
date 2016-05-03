@@ -4,8 +4,8 @@ using Microsoft.SPOT.Hardware;
 using System.Threading;
 
 using Samraksh.eMote.Net;
-using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
+using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.DotNow;
 
 namespace Samraksh.eMote.Net.Mac.Ping
@@ -66,7 +66,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         const int testCount = 150;
         UInt16 myAddress;
         UInt16 mySeqNo = 1;
-        UInt16 receivePackets = 0;
+		UInt16 receivePackets = 0;
         UInt16 lastRxSeqNo = 0;
         ushort[] rxBuffer = new ushort[testCount];
         Timer sendTimer;
@@ -82,6 +82,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //ReceiveCallBack myReceiveCB;
         //NeighborhoodChangeCallBack myNeighborCB;
 
+        //Mac.MacConfiguration macConfig = new MacConfiguration();
         //MACConfiguration macConfig = new MACConfiguration();
 
         void Initialize()
@@ -108,10 +109,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
             try
             {
                 myCSMA = new CSMA(radioConfiguration);
-                /*myReceiveCB = Receive;
-                myNeighborCB = NeighborChange;
-                CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
-                myCSMA = CSMA.Instance;*/
+                myCSMA.OnReceive += Receive;
+                myCSMA.OnNeighborChange += NeighborChange;
+                //myReceiveCB = Receive;
+                //myNeighborCB = NeighborChange;
+                //CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
+                //myCSMA = CSMA.Instance;
             }
             catch (Exception e)
             {
@@ -126,8 +129,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
 			try
             {
                 myCSMA = new CSMA(radioConfiguration);
-                /*CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
-                myCSMA = CSMA.Instance;*/
             }
             catch (Exception e)
             {
@@ -214,12 +215,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         }
 
-        void NeighborChange(UInt16 noOfNeighbors)
+        void NeighborChange(MACBase macBase, DateTime date)
         {
-			Debug.Print("neighbor count: " + noOfNeighbors.ToString());
+			//Debug.Print("neighbor count: " + noOfNeighbors.ToString());
         }
 
-        void Receive(UInt16 noOfPackets)
+        void Receive(MACBase macBase, DateTime date)
         {
             if (myCSMA.PendingReceivePacketCount() == 0)
             {
@@ -245,14 +246,14 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 return;
             }
 				
-            Message rcvPacket = myCSMA.GetNextPacket();
-            if (rcvPacket == null) {
+            Message rcvMsg = myCSMA.GetNextPacket();
+            if (rcvMsg == null) {
                 Debug.Print("null");
                 return;
             }
 			
-            byte[] rcvPayload = rcvPacket.GetMessage();
-            HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.Unicast, rcvPacket.RSSI, rcvPacket.LQI);
+            byte[] rcvPayload = rcvMsg.GetMessage();
+            HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
             }
              catch (Exception e)
             {
@@ -264,6 +265,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void HandleMessage(byte[] msg, UInt16 size, UInt16 src, bool unicast, byte rssi, byte lqi)
         {
+            //Debug.Print("HandleMessage; size is " + size);
             try
             {
                 /*if (unicast)
@@ -322,8 +324,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
                 ping.Src = myAddress;
 
-                byte[] msg = ping.ToBytes();
-                status = myCSMA.Send(sender, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                byte[] payload = ping.ToBytes();
+                status = myCSMA.Send(sender, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
                 if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());
@@ -346,8 +348,9 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 ping.Src = myAddress;
 
 
-                byte[] msg = ping.ToBytes();
-                status = myCSMA.Send((UInt16)AddressType.Broadcast, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                byte[] payload = ping.ToBytes();
+                //Debug.Print("Send_Ping sending " + ping.MsgID.ToString());
+                status = myCSMA.Send((UInt16)MAC.AddressType.Broadcast, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
                 if (status != NetOpStatus.S_Success)
                 {
                     Debug.Print("Failed to send: " + ping.MsgID.ToString());

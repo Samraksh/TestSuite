@@ -4,8 +4,8 @@ using Microsoft.SPOT.Hardware;
 using System.Threading;
 
 using Samraksh.eMote.Net;
-using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
+using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.DotNow;
 
 namespace Samraksh.eMote.Net.Mac.Ping
@@ -61,13 +61,16 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
     public class Program
     {
-		NetOpStatus status;
-		const int testCount = 150;
+        NetOpStatus status;
+        const int firstPos = 20;
+        // should give a pass fail after 19.5 minutes
+		const int testCount = 2925;
         UInt16 myAddress;
         UInt16 mySeqNo = 1;
+		//UInt16 errorCnt = 0;
 		UInt16 receivePackets = 0;
-		UInt16 lastRxSeqNo = 0;
-		ushort[] rxBuffer = new ushort[testCount];
+        //UInt16 lastRxSeqNo = 0;
+        ushort[] rxBuffer = new ushort[testCount];
         Timer sendTimer;
         EmoteLCD lcd;
         PingMsg sendMsg = new PingMsg();
@@ -81,6 +84,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //ReceiveCallBack myReceiveCB;
         //NeighborhoodChangeCallBack myNeighborCB;
 
+        //Mac.MacConfiguration macConfig = new MacConfiguration();
         //MACConfiguration macConfig = new MACConfiguration();
 
         void Initialize()
@@ -91,7 +95,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_N, LCD.CHAR_I, LCD.CHAR_7);
 
-            /*macConfig.NeighborLivenessDelay = 180;
+            /*Debug.Print("Initializing mac configuration");
+            macConfig.NeighborLivenessDelay = 180;
             macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds*/
 
             Debug.Print("Initializing radio");
@@ -106,10 +111,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
             try
             {
                 myCSMA = new CSMA(radioConfiguration);
-                /*myReceiveCB = Receive;
-                myNeighborCB = NeighborChange;
-                CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
-                myCSMA = CSMA.Instance;                */
+                myCSMA.OnReceive += Receive;
+                myCSMA.OnNeighborChange += NeighborChange;
+                //myReceiveCB = Receive;
+                //myNeighborCB = NeighborChange;
+                //CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
+                //myCSMA = CSMA.Instance;
             }
             catch (Exception e)
             {
@@ -135,9 +142,23 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void sendTimerCallback(Object o)
         {
+			// We receieved enough data....looking to see if we received all packets (even in best case scenario we could have a few errors)
+			// we wait a bit longer just so the other side will also receive enough packets
+			if ((receivePackets%100)==0){
+				Debug.Print(receivePackets.ToString());
+			}
+			/*if (receivePackets >= ((int)(testCount * 0.98))){
+				Debug.Print("result = PASS");
+				Debug.Print("accuracy = null");
+				Debug.Print("resultParameter1 = " + receivePackets.ToString());
+				Debug.Print("resultParameter2 = " + testCount.ToString());
+				Debug.Print("resultParameter3 = null");
+				Debug.Print("resultParameter4 = null");
+				Debug.Print("resultParameter5 = null"); 			
+			}*/
             try
             {
-                //Send_Ping(sendMsg);
+                Send_Ping(sendMsg);
             }
             catch (Exception e)
             {
@@ -146,45 +167,47 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         }
 
-        void NeighborChange(UInt16 noOfNeigbors)
+        void NeighborChange(MACBase macBase, DateTime date)
         {
+			//Debug.Print("neighbor count: " + noOfNeighbors.ToString());
         }
 
-        void Receive(UInt16 noOfPackets)
+        void Receive(MACBase macBase, DateTime date)
         {
-			if (myCSMA.PendingReceivePacketCount() == 0) {
-				Debug.Print("no packets");
+            if (myCSMA.PendingReceivePacketCount() == 0)
+            {
+                Debug.Print("no packets");
                 return;
             }
 
-			//while (myCSMA.GetPendingPacketCount() > 0) {
+            //while (myCSMA.GetPendingPacketCount() > 0) {
             Packet rcvPacket = myCSMA.NextPacket();
             if (rcvPacket == null)
             {
-				Debug.Print("null");
-               	return;
-			}
+                Debug.Print("null");
+                return;
+            }
 
             byte[] rcvPayload = rcvPacket.Payload;
             HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.IsUnicast, rcvPacket.RSSI, rcvPacket.LQI);
-			//}
-			/*try{
-			// Check if there's at least one packet
+            //}
+            /*try{
+            // Check if there's at least one packet
             if (myCSMA.GetPendingPacketCount() < 1) {
-				Debug.Print("no packets");
+                Debug.Print("no packets");
                 return;
             }
 				
-            Message rcvPacket = myCSMA.GetNextPacket();
-			if (rcvPacket == null) {
-				Debug.Print("null");
+            Message rcvMsg = myCSMA.GetNextPacket();
+            if (rcvMsg == null) {
+                Debug.Print("null");
                 return;
             }
 			
-            byte[] rcvPayload = rcvPacket.GetMessage();
-            HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.Unicast, rcvPacket.RSSI, rcvPacket.LQI);
-			}
-			 catch (Exception e)
+            byte[] rcvPayload = rcvMsg.GetMessage();
+            HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
+            }
+             catch (Exception e)
             {
                 Debug.Print("Receive:" + e.ToString());
             }*/
@@ -194,6 +217,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void HandleMessage(byte[] msg, UInt16 size, UInt16 src, bool unicast, byte rssi, byte lqi)
         {
+            //Debug.Print("HandleMessage; size is " + size);
             try
             {
                 /*if (unicast)
@@ -204,36 +228,44 @@ namespace Samraksh.eMote.Net.Mac.Ping
                 {
                     Debug.Print("Got a broadcast message from src: " + src.ToString() + ", size: " + size.ToString() + ", rssi: " + rssi.ToString() + ", lqi: " + lqi.ToString());
                 }*/
-                if (size == PingMsg.Size())                
+                if (size == PingMsg.Size())
                 {
 
                     //Debug.Print("MSG: " + msg[0].ToString() + " " + msg[1].ToString() + " " + msg[2].ToString() + " " + msg[3].ToString() + " " + msg[4].ToString() + " " + msg[5].ToString());
                     PingMsg rcvMsg = new PingMsg(msg, size);
-					
-                    if (rcvMsg.Response)
-                    {						
-						if (receivePackets < testCount)
-						{
-                        	//This is a response to my message						
-							rxBuffer[receivePackets]= rcvMsg.MsgID;
-						}
-						receivePackets++;
-						if ( ((UInt16)rcvMsg.MsgID) != lastRxSeqNo + 1)
+
+                    /*if (rcvMsg.Response)
+                    {
+                        if (receivePackets < testCount)
+                        {
+                            //This is a response to my message						
+                            rxBuffer[receivePackets] = rcvMsg.MsgID;
+                        }
+                        receivePackets++;
+						if ( ((UInt16)rcvMsg.MsgID) != lastRxSeqNo + 1){
+							errorCnt++;
 							Debug.Print("***** Missing seq no: " + (lastRxSeqNo + 1).ToString() + " *****");
+						}
 						lastRxSeqNo = (UInt16)rcvMsg.MsgID;
-                        Debug.Print("Received response from: " + rcvMsg.Src.ToString() + " for seq no: " + rcvMsg.MsgID.ToString());						
+						//if ( (receivePackets % 1000) == 0)
+ 	                       Debug.Print("Rx: " + rcvMsg.Src.ToString() + " seq: " + rcvMsg.MsgID.ToString() + " err: " + errorCnt.ToString());						
                         lcd.Write(LCD.CHAR_P, LCD.CHAR_P, LCD.CHAR_P, LCD.CHAR_P);
                     }
                     else
                     {
-                        Debug.Print("Sending a Pong to SRC: " + rcvMsg.Src.ToString() + " for seq no: " + rcvMsg.MsgID.ToString());
+                        //if ( ((UInt16)rcvMsg.MsgID) != lastRxSeqNo + 1)
+                        //	Debug.Print("***** Missing seq no: " + (lastRxSeqNo + 1).ToString() + " *****");
+                        //Debug.Print("Sending a Pong to SRC: " + rcvMsg.Src.ToString() + " for seq no: " + rcvMsg.MsgID.ToString());
+                        lastRxSeqNo = (UInt16)rcvMsg.MsgID;
                         lcd.Write(LCD.CHAR_R, LCD.CHAR_R, LCD.CHAR_R, LCD.CHAR_R);
                         Send_Pong(rcvMsg);
-                    }
+                    }*/
                     //Debug.GC(true);
-                } else {
-					Debug.Print("not proper size with possible ID of: " + ((UInt16)(msg[1] << 8)).ToString());
-				}
+                }
+                else
+                {
+                    Debug.Print("not proper size with possible ID of: " + ((UInt16)(msg[1] << 8)).ToString());
+                }
             }
             catch (Exception e)
             {
@@ -243,20 +275,21 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void Send_Pong(PingMsg ping)
         {
-			try{
-            	UInt16 sender = ping.Src;
-            	ping.Response = true;
+            try
+            {
+                UInt16 sender = ping.Src;
+                ping.Response = true;
 
-            	ping.Src = myAddress;
+                ping.Src = myAddress;
 
-            	byte[] msg = ping.ToBytes();
-                status = myCSMA.Send(sender, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                byte[] payload = ping.ToBytes();
+                status = myCSMA.Send(sender, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
                 if (status != NetOpStatus.S_Success)
                 {
-					Debug.Print("Failed to send: " + ping.MsgID.ToString());
-				}
-			}
-			catch (Exception e)
+                    Debug.Print("Failed to send: " + ping.MsgID.ToString());
+                }
+            }
+            catch (Exception e)
             {
                 Debug.Print("Send_Pong:" + e.ToString());
             }
@@ -264,24 +297,27 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void Send_Ping(PingMsg ping)
         {
-			try{
-            	//UInt16 sender = ping.Src;
-            	//Debug.GC(true);
-            	ping.Response = false;
-            	ping.MsgID = mySeqNo++;
-            	ping.Src = myAddress;
+            try
+            {
+                //UInt16 sender = ping.Src;
+                //Debug.GC(true);
+                ping.Response = false;
+                ping.MsgID = mySeqNo++;
+                ping.Src = myAddress;
 
 
-            	byte[] msg = ping.ToBytes();
-                status = myCSMA.Send((UInt16)AddressType.Broadcast, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                byte[] payload = ping.ToBytes();
+                //Debug.Print("Send_Ping sending " + ping.MsgID.ToString());
+                status = myCSMA.Send((UInt16)MAC.AddressType.Broadcast, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
                 if (status != NetOpStatus.S_Success)
                 {
-					Debug.Print("Failed to send: " + ping.MsgID.ToString());
-				}
-            	int char0 = (mySeqNo % 10) + (int)LCD.CHAR_0;
-            	lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)char0);
-			}
-			catch (Exception e)
+                    Debug.Print("Failed to send: " + ping.MsgID.ToString());
+                }
+
+                int char0 = (mySeqNo % 10) + (int)LCD.CHAR_0;
+                lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)char0);
+            }
+            catch (Exception e)
             {
                 Debug.Print("Send_Ping:" + e.ToString());
             }

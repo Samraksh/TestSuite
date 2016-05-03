@@ -4,7 +4,7 @@
 			20 minute ping test support
 		</Description>
 		<TestPath>
-			csmaMACTest\Src\C#\Ping_20m\Ping_20m\Ping_20mTestSupport\Ping_20mTestSupport
+			csmaMACTest\Src\C#\Ping_20m\Ping_20mTestSupport
 		</TestPath>
 		<TestProjName>
 			eMotePing.csproj
