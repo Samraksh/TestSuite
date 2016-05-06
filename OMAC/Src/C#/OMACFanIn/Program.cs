@@ -101,7 +101,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
     public class Program
     {
         const UInt16 MAX_NEIGHBORS = 12;
-        const UInt32 endOfTest = 100;
+        const UInt32 endOfTest = 50;
         Hashtable neighborHashtable = new Hashtable();
         EmoteLCD lcd;
 

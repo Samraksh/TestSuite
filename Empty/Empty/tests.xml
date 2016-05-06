@@ -32,6 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
+			load indentical: 3
 		</TestSupporting>
 		<TestJTAGHarness>
 		</TestJTAGHarness>
