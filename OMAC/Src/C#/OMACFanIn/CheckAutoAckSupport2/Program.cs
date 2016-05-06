@@ -1,4 +1,6 @@
 using System;
+using System.Text;
+using System.Collections;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
@@ -85,21 +87,32 @@ namespace Samraksh.eMote.Net.Mac.Send
         const int initialDelayInMsecs = 30000;
         int dutyCyclePeriod = 20000;
 
-        bool startSend = false;
+        //bool startSend = false;
         UInt16 myAddress;
         Timer sendTimer;
-        NetOpStatus status;
+        //NetOpStatus status;
         EmoteLCD lcd;
         static UInt32 sendMsgCounter = 1;
-        
+
         PingPayload pingMsg = new PingPayload();
 
-        OMAC myOMACObj;
         //ReceiveCallBack myReceiveCB;
         //NeighborhoodChangeCallBack myNeibhborhoodCB;
 
         //MACConfiguration myMacConfig = new MACConfiguration();
         //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+        //
+        private void SendOnPipe(int i, IMAC mac, ushort neighbor, MACPipe chan)
+        {
+            pingMsg.pingMsgId = sendMsgCounter;
+            byte[] msgBytes2 = pingMsg.ToBytes();
+            //var msgBytes2 =
+            //	("Message " + i + " from " + mac.MACRadioObj.RadioAddress + " to neighbor " + neighbor + " on pipe " +
+            //	 chan.PayloadType).ToCharArray().ToByteArray();
+            var netOpStatus = chan.Send(neighbor, msgBytes2, 0, (ushort)msgBytes2.Length);
+            Debug.Print("*** Sent message " + sendMsgCounter.ToString() + " to neighbor " + neighbor + " on pipe " + chan.PayloadType + "; NetOpStatus: " + netOpStatus);
+        }
+
 
         public void Initialize()
         {
@@ -108,49 +121,59 @@ namespace Samraksh.eMote.Net.Mac.Send
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
-            //Set OMAC parameters
-            /*myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
-            myRadioConfig.SetChannel(Radio.Channels.Channel_26);
-            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);*/
-
-            //myMacConfig.radioConfig = myRadioConfig;
-            /*Debug.Print("Initializing mac configuration");
-            myMacConfig.NeighborLivenessDelay = 180;
-            myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds*/
-
-            Debug.Print("Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
-            /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
-            myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
-            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
-            myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;*/
-
-            Debug.Print("Configuring OMAC...");
-
             try
             {
+                OMAC myMac;
+                Debug.Print("Initializing radio");
+                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
+
                 //configure OMAC
-                myOMACObj = new OMAC(radioConfiguration);
-                /*myReceiveCB = Receive;
-                myNeibhborhoodCB = NeighborChange;
-                OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
-                myOMACObj = OMAC.Instance;*/
+                myMac = new OMAC(radioConfig);
+                myMac.OnReceive += Rc;
+                myMac.OnNeighborChange += NeighborChange;
+
+                myAddress = myMac.MACRadioObj.RadioAddress;
+                Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
+
+                var chan1 = new MACPipe(myMac, PayloadType.Type01);
+                chan1.OnReceive += Rc1;
+
+                var chan2 = new MACPipe(myMac, PayloadType.Type02);
+                chan2.OnReceive += Rc2;
+
+                ushort[] _neighborList;
+                _neighborList = MACBase.NeighborListArray();
+
+                var rand = new Random();
+
+                while (true)
+                {
+                    var status = myMac.NeighborList(_neighborList);
+                    foreach (var neighbor in _neighborList)
+                    {
+                        if (neighbor == 0) { continue; }
+                        SendOnPipe(1, myMac, neighbor, chan1);
+                    }
+                    sendMsgCounter++;
+                    var waitTime = (int)(rand.NextDouble() * 30 * 1000);
+                    waitTime = System.Math.Max(waitTime, 20 * 1000);
+                    Debug.Print("*** Waiting " + waitTime);
+                    Thread.Sleep(waitTime);
+                }
+
             }
             catch (Exception e)
             {
-                Debug.Print(e.ToString());
+                Debug.Print("exception!: " + e.ToString());
             }
 
-            Debug.Print("OMAC init done");
-            myAddress = myOMACObj.MACRadioObj.RadioAddress;
-            Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
+
         }
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(UInt16 countOfNeighbors)
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
-            Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
         //Starts a timer 
@@ -172,29 +195,24 @@ namespace Samraksh.eMote.Net.Mac.Send
 
         public void SendPing()
         {
-            try
+            /*try
             {
                 bool sendFlag = false;
-                //UInt16[] neighborList = myOMACObj.GetNeighborList();
+                ushort[] _neighborList;
 
-                //for (int j = 0; j < MAX_NEIGHBORS; j++)
-                //{
-                    //if (neighborList[j] != 0)
-                    //{
-                        //Debug.Print("count of neighbors " + neighborList.Length);
+				_neighborList = MACBase.NeighborListArray();
+				foreach (var neighbor in _neighborList){
+                        Debug.Print("count of neighbors " + _neighborList.Length);
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] msg = pingMsg.ToBytes();
-                        //Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-                        //status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
-                        Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter);
-                        status = myOMACObj.Send(6846, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                        Debug.Print("Sending to neighbor " + neighbor.ToString() + " ping msgID " + sendMsgCounter);
+                        status = myOMACObj.Send(neighbor, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
                         }
-                    //}
-                //}
+                }
                 if (sendFlag == false && startSend == true)
                 {
                     Debug.Print("Ping failed. All neighbors dropped out");
@@ -243,14 +261,42 @@ namespace Samraksh.eMote.Net.Mac.Send
             catch (Exception ex)
             {
                 Debug.Print("SendPing: " + ex.ToString());
-            }
+            }*/
         }
 
-        //Handles received messages 
-        public void Receive(UInt16 countOfPackets)
+        private static void Rc(IMAC mac, DateTime timeReceived)
         {
-            
+            RcCommon(mac, timeReceived);
         }
+        private static void Rc1(IMAC mac, DateTime timeReceived)
+        {
+            RcCommon(mac, timeReceived);
+        }
+        private static void Rc2(IMAC mac, DateTime timeReceived)
+        {
+            RcCommon(mac, timeReceived);
+        }
+
+        private static void RcCommon(IMAC mac, DateTime timeReceived)
+        {
+            var macPipe = (MACPipe)mac;
+            var plType = macPipe.PayloadType;
+            Debug.Print("*** Packet received\n");
+            var packet = mac.NextPacket();
+            //Debug.Print("\t1");
+            if (packet == null) { return; }
+            //Debug.Print("\t2");
+            var payloadBytes = packet.Payload;
+            //Debug.Print("\t3");
+            //var payloadChars = payloadBytes.ToCharArray();
+            //Debug.Print("\t4");
+            //var payloadStr = new string(payloadChars);
+            //Debug.Print("\t5");
+            var payloadStr = payloadBytes[0].ToString() + payloadBytes[1].ToString() + payloadBytes[2].ToString() + payloadBytes[3].ToString();
+
+            Debug.Print("*** Payload type " + plType + ", Received " + timeReceived.ToString("G") + ", <" + payloadStr + ">");
+        }
+
 
         //Show statistics
         void ShowStatistics()
@@ -270,4 +316,5 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
     }
 }
+
 

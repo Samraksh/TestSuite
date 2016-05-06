@@ -1,7 +1,7 @@
 <TestSuite>
 	<Test Name='Radio' Type='C#'>
 		<Description>
-			Auto ACK support 2
+			Auto ACK support2
 		</Description>
 		<TestPath>
 			OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport2

@@ -98,7 +98,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds*/
 
             Debug.Print("Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
+            var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
             /*macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             macConfig.MACRadioConfig.Channel = Channel.Channel_26;
             macConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
@@ -108,7 +108,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
             Debug.Print("Configuring:  CSMA...");
             try
             {
-                myCSMA = new CSMA(radioConfiguration);
+                myCSMA = new CSMA(radioConfig);
                 myCSMA.OnReceive += Receive;
                 myCSMA.OnNeighborChange += NeighborChange;
                 //myReceiveCB = Receive;
@@ -123,12 +123,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
             Debug.Print("CSMA Init done.");
 			Debug.Print("Uninitializing CSMA.");
-			myCSMA.UnInitialize();
+			myCSMA.Dispose();
 			Debug.Print("Initializing CSMA again.");
 
 			try
             {
-                myCSMA = new CSMA(radioConfiguration);
+                myCSMA = new CSMA(radioConfig);
             }
             catch (Exception e)
             {
@@ -215,12 +215,12 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         }
 
-        void NeighborChange(MACBase macBase, DateTime date)
+        void NeighborChange(IMAC macBase, DateTime date)
         {
 			//Debug.Print("neighbor count: " + noOfNeighbors.ToString());
         }
 
-        void Receive(MACBase macBase, DateTime date)
+        void Receive(IMAC macBase, DateTime date)
         {
             if (myCSMA.PendingReceivePacketCount() == 0)
             {

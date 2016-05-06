@@ -18,6 +18,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
     public class NeighborTableInfo
     {
         public UInt32 recvCount;
+        public UInt32 prevId;
         public ArrayList AL;
     }
 
@@ -106,14 +107,12 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
         UInt16 myAddress;
         static UInt32 totalRecvCounter = 0;
-        
+
         PingPayload pingMsg = new PingPayload();
         OMAC myOMACObj;
-        //ReceiveCallBack myReceiveCB;
-        //NeighborhoodChangeCallBack myNeibhborhoodCB;
 
-        //MACConfiguration myMacConfig = new MACConfiguration();
-        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+        int errors = 0;
+
 
         public void Initialize()
         {
@@ -122,38 +121,28 @@ namespace Samraksh.eMote.Net.Mac.Receive
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
-            //Set OMAC parameters
-            /*myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
-            myRadioConfig.SetChannel(Radio.Channels.Channel_26);
-            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);*/
-
-            //myMacConfig.radioConfig = myRadioConfig;
-            /*Debug.Print("Initializing mac configuration");
-            myMacConfig.NeighborLivenessDelay = 180;
-            myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds*/
-
-            Debug.Print("Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
-            /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
-            myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
-            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
-            myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;*/
-
-            Debug.Print("Configuring OMAC...");
-
             try
             {
+                Debug.Print("Initializing radio");
+                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
+
                 //configure OMAC
-                myOMACObj = new OMAC(radioConfiguration);
-                /*myReceiveCB = Receive;
-                myNeibhborhoodCB = NeighborChange;
-                OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
-                myOMACObj = OMAC.Instance;*/
+                myOMACObj = new OMAC(radioConfig);
+                myOMACObj.OnReceive += Receive;
+                myOMACObj.OnNeighborChange += NeighborChange;
+
+
+                myAddress = myOMACObj.MACRadioObj.RadioAddress;
+
+                var chan1 = new MACPipe(myOMACObj, PayloadType.Type01);
+                chan1.OnReceive += Receive;
+
+                var chan2 = new MACPipe(myOMACObj, PayloadType.Type02);
+                chan2.OnReceive += Receive;
             }
             catch (Exception e)
             {
-                Debug.Print(e.ToString());
+                Debug.Print("exception!: " + e.ToString());
             }
 
             Debug.Print("OMAC init done");
@@ -162,13 +151,13 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(MACBase macBase, DateTime time)
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
             //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
         //Handles received messages 
-        public void Receive(MACBase macBase, DateTime time)
+        public void Receive(IMAC macBase, DateTime time)
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
@@ -198,22 +187,34 @@ namespace Samraksh.eMote.Net.Mac.Receive
                     //If hashtable already contains an entry for the source, extract it, increment recvCount and store it back
                     if (neighborHashtable.Contains(rcvPacket.Src))
                     {
+                        NeighborTableInfo nbrTableInfoAnalyze = (NeighborTableInfo)neighborHashtable[rcvPacket.Src];
+                        Debug.Print(rcvPacket.Src.ToString() + " " + pingPayload.pingMsgId.ToString() + " " + nbrTableInfoAnalyze.prevId.ToString());
+                        if (pingPayload.pingMsgId != nbrTableInfoAnalyze.prevId + 1)
+                        {
+                            Debug.Print("error");
+                            errors++;
+                        }
+
                         nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvPacket.Src];
                         nbrTableInfo.recvCount++;
+                        nbrTableInfo.prevId = pingPayload.pingMsgId;
                         nbrTableInfo.AL.Add(pingPayload.pingMsgId);
                         neighborHashtable[rcvPacket.Src] = nbrTableInfo;
+
                     }
                     //If hashtable does not have an entry, create a new instance and store it
                     else
                     {
                         nbrTableInfo = new NeighborTableInfo();
                         nbrTableInfo.recvCount = 1;
+                        nbrTableInfo.prevId = pingPayload.pingMsgId;
                         ArrayList AL = new ArrayList();
                         AL.Add(pingPayload.pingMsgId);
                         nbrTableInfo.AL = AL;
                         neighborHashtable[rcvPacket.Src] = nbrTableInfo;
                         //neighborHashtable.Add(rcvPacket.Src, nbrTableInfo);
                     }
+
                     Debug.Print("recvCount from node " + rcvPacket.Src + " is " + nbrTableInfo.recvCount);
                     Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
                     Debug.Print("---------------------------");
@@ -250,15 +251,29 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //Show statistics
         void ShowStatistics()
         {
+            UInt32 nbrCnt = 0;
+            UInt32 nbr1Cnt = 0;
+            UInt32 nbr2Cnt = 0;
+
             Debug.Print("==============STATS================");
             //IEnumerator enumerator = neighborHashtable.GetEnumerator();
             ICollection keyCollection = neighborHashtable.Keys;
             //while (enumerator.MoveNext())
-            foreach(ushort nbr in keyCollection)
+            foreach (ushort nbr in keyCollection)
             {
                 //NeighborTableInfo nbrTableInfo = (NeighborTableInfo)enumerator.Current;
                 NeighborTableInfo nbrTableInfo = (NeighborTableInfo)neighborHashtable[nbr];
                 Debug.Print("Node: " + nbr + "; Total msgs received is " + nbrTableInfo.recvCount);
+
+                if (nbrCnt == 0)
+                {
+                    nbrCnt++;
+                    nbr1Cnt = nbrTableInfo.recvCount;
+                }
+                else
+                {
+                    nbr2Cnt = nbrTableInfo.recvCount;
+                }
                 Debug.Print("List of msgs: ");
                 IEnumerable list = nbrTableInfo.AL;
                 foreach (object obj in list)
@@ -269,6 +284,26 @@ namespace Samraksh.eMote.Net.Mac.Receive
             }
             Debug.Print("Total msgs received from all nodes is " + totalRecvCounter);
             Debug.Print("==================================");
+            if (errors > (totalRecvCounter*0.05))
+            {
+                Debug.Print("result = PASS");
+                Debug.Print("accuracy = " + errors.ToString());
+                Debug.Print("resultParameter1 = " + nbr1Cnt.ToString());
+                Debug.Print("resultParameter2 = " + nbr2Cnt.ToString());
+                Debug.Print("resultParameter3 = " + totalRecvCounter.ToString());
+                Debug.Print("resultParameter4 = null");
+                Debug.Print("resultParameter5 = null");
+            }
+            else
+            {
+                Debug.Print("result = FAIL");
+                Debug.Print("accuracy = " + errors.ToString());
+                Debug.Print("resultParameter1 = " + nbr1Cnt.ToString());
+                Debug.Print("resultParameter2 = " + nbr2Cnt.ToString());
+                Debug.Print("resultParameter3 = " + totalRecvCounter.ToString());
+                Debug.Print("resultParameter4 = null");
+                Debug.Print("resultParameter5 = null");
+            }
             //Thread.Sleep(Timeout.Infinite);
         }
 
@@ -280,4 +315,5 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }
     }
 }
+
 

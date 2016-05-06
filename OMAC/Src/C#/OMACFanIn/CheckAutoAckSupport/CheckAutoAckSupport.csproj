@@ -48,6 +48,9 @@
     <Reference Include="Microsoft.SPOT.Native">
 		<HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.Native.dll</HintPath>
     </Reference>
+	<Reference Include="mscorlib">
+      <HintPath>$(BUILD_TREE_DLL)\mscorlib.dll</HintPath>
+    </Reference>
 	<!--<Reference Include="Microsoft.SPOT.TinyCore"> 
 		<HintPath>$(BUILD_TREE_DLL)\Microsoft.SPOT.TinyCore.dll</HintPath>
 	</Reference>-->
