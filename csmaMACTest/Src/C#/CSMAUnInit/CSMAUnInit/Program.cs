@@ -224,7 +224,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void Receive(IMAC macBase, DateTime date)
         {
-			Debug.Print("*");
             if (myCSMA.PendingReceivePacketCount() == 0)
             {
                 Debug.Print("no packets");
