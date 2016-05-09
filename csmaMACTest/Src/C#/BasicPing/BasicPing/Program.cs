@@ -72,18 +72,8 @@ namespace Samraksh.eMote.Net.Mac.Ping
         Timer sendTimer;
         EmoteLCD lcd;
         PingMsg sendMsg = new PingMsg();
-        //DummyMsg myDummy = new DummyMsg();
         Random rand = new Random();
-        //Radio.Radio_802_15_4 my_15_4 = new Radio.Radio_802_15_4();
-        //Radio.RadioConfiguration radioConfig = new Radio.RadioConfiguration();
-        //int myRadioID;
-
         CSMA myCSMA;
-        //ReceiveCallBack myReceiveCB;
-        //NeighborhoodChangeCallBack myNeighborCB;
-
-        //Mac.MacConfiguration macConfig = new MacConfiguration();
-        //MACConfiguration macConfig = new MACConfiguration();
 
         void Initialize()
         {
@@ -93,43 +83,24 @@ namespace Samraksh.eMote.Net.Mac.Ping
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_N, LCD.CHAR_I, LCD.CHAR_7);
 
-            /*Debug.Print("Initializing mac configuration");
-            macConfig.NeighborLivenessDelay = 180;
-            macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds*/
-
             Debug.Print("Initializing radio");
             var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
-            /*macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
-            macConfig.MACRadioConfig.Channel = Channel.Channel_26;
-            macConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
-            macConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            macConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;*/
 
             Debug.Print("Configuring:  CSMA...");
-            try
-            {
+            //try
+            //{
                 myCSMA = new CSMA(radioConfig);
                 myCSMA.OnReceive += Receive;
                 myCSMA.OnNeighborChange += NeighborChange;
-                //myReceiveCB = Receive;
-                //myNeighborCB = NeighborChange;
-                //CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
-                //myCSMA = CSMA.Instance;
-            }
+            /*}
             catch (Exception e)
             {
                 Debug.Print(e.ToString());
-            }
+            }*/
 
             Debug.Print("CSMA Init done.");
             myAddress = myCSMA.MACRadioObj.RadioAddress;
             Debug.Print("My default address is :  " + myAddress.ToString());
-
-            /*myCSMA.SetAddress(52);
-            myAddress = myCSMA.GetAddress();
-            Debug.Print("My New address is :  " + myAddress.ToString());
-             */
-
         }
         void Start()
         {
@@ -224,27 +195,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
             byte[] rcvPayload = rcvPacket.Payload;
             HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.IsUnicast, rcvPacket.RSSI, rcvPacket.LQI);
-            //}
-            /*try{
-            // Check if there's at least one packet
-            if (myCSMA.GetPendingPacketCount() < 1) {
-                Debug.Print("no packets");
-                return;
-            }
-				
-            Message rcvMsg = myCSMA.GetNextPacket();
-            if (rcvMsg == null) {
-                Debug.Print("null");
-                return;
-            }
-			
-            byte[] rcvPayload = rcvMsg.GetMessage();
-            HandleMessage(rcvPayload, (UInt16)rcvMsg.Size, rcvMsg.Src, rcvMsg.Unicast, rcvMsg.RSSI, rcvMsg.LQI);
-            }
-             catch (Exception e)
-            {
-                Debug.Print("Receive:" + e.ToString());
-            }*/
         }
 
 
@@ -254,14 +204,6 @@ namespace Samraksh.eMote.Net.Mac.Ping
             //Debug.Print("HandleMessage; size is " + size);
             try
             {
-                /*if (unicast)
-                {
-                    Debug.Print("Got a Unicast message from src: " + src.ToString() + ", size: " + size.ToString() + ", rssi: " + rssi.ToString() + ", lqi: " + lqi.ToString());
-                }
-                else
-                {
-                    Debug.Print("Got a broadcast message from src: " + src.ToString() + ", size: " + size.ToString() + ", rssi: " + rssi.ToString() + ", lqi: " + lqi.ToString());
-                }*/
                 if (size == PingMsg.Size())
                 {
 
