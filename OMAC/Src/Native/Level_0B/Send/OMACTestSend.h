@@ -19,12 +19,6 @@ typedef struct  {
 	UINT8 data[5];
 }Payload_t;
 
-enum RadioID : UINT8
-{
-	RF231RADIO,
-	RF231RADIOLR,
-};
-
 class OMACTest{
 public:
 	UINT8 MyAppID;
