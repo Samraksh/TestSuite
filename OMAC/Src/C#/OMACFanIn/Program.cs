@@ -284,7 +284,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             }
             Debug.Print("Total msgs received from all nodes is " + totalRecvCounter);
             Debug.Print("==================================");
-            if (errors > (totalRecvCounter*0.05))
+            if (errors < (totalRecvCounter*0.05))
             {
                 Debug.Print("result = PASS");
                 Debug.Print("accuracy = " + errors.ToString());
