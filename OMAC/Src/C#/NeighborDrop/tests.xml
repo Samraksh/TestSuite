@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='C# .NOW'>
+	<Test Name='OMAC' Type='C# .NOW'>
 		<Description>
-			Fan-In test
+			OMAC Neighbor Drop
 		</Description>
 		<TestPath>
-			OMAC\Src\C#\OMACFanIn
+			OMAC\Src\C#\NeighborDrop
 		</TestPath>
 		<TestProjName>
-			OMACFanIn.csproj
+			NeighborDrop.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,7 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			load support projects: OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport\tests.xml OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport2\tests.xml
+			load support projects: OMAC\Src\C#\NeighborDrop\CheckAutoAckSupport\tests.xml OMAC\Src\C#\NeighborDrop\CheckAutoAckSupport2\tests.xml
 		</TestSupporting>
 		<TestJTAGHarness>
 		</TestJTAGHarness>

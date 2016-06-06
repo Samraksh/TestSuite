@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='C# .NOW'>
+	<Test Name='Continuations' Type='Native Adapt .NOW'>
 		<Description>
-			Fan-In test
+			Native continuations test
 		</Description>
 		<TestPath>
-			OMAC\Src\C#\OMACFanIn
+			Continuations\Level_0A
 		</TestPath>
 		<TestProjName>
-			OMACFanIn.csproj
+			Continuations.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,7 +32,6 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			load support projects: OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport\tests.xml OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport2\tests.xml
 		</TestSupporting>
 		<TestJTAGHarness>
 		</TestJTAGHarness>

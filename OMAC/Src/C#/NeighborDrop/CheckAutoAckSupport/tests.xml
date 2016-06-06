@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest' Type='C# .NOW'>
+	<Test Name='Radio' Type='C#'>
 		<Description>
-			Fan-In test
+			Auto ACK support
 		</Description>
 		<TestPath>
-			OMAC\Src\C#\OMACFanIn
+			OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport
 		</TestPath>
 		<TestProjName>
-			OMACFanIn.csproj
+			CheckAutoAckSupport.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,13 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			load support projects: OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport\tests.xml OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport2\tests.xml
+			support project 1
 		</TestSupporting>
-		<TestJTAGHarness>
-		</TestJTAGHarness>
-		<TestPowerAutomateSelected>
-		</TestPowerAutomateSelected>
-		<TestBuild>
-		</TestBuild>
 	</Test>
 </TestSuite>
