@@ -57,7 +57,14 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 
 
 	//Toggle Pin State for monitoring with Logic Analyzer
-	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
+	//UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
+	UINT16 Nbr2beFollowed;
+	if(g_NeighborTable.Neighbor[0].Status == Alive){
+		Nbr2beFollowed = g_NeighborTable.Neighbor[0].MacAddress;
+	}
+	else{
+		Nbr2beFollowed = 0;
+	}
 	if(g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
 		if(gOMACTest.NeighborClkPINState){
 			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, false);
@@ -95,7 +102,7 @@ BOOL OMACTest::Initialize(){
 
 	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	//Config.Network = 138;
-	Config.NeighborLivenessDelay = 900000;
+	Config.NeighborLivenessDelay = 30;
 	myEventHandler.SetReceiveHandler(OMACTest_ReceiveHandler);
 	myEventHandler.SetSendAckHandler(OMACTest_SendAckHandler);
 	MacId = OMAC;
@@ -131,7 +138,14 @@ BOOL OMACTest::StartTest(){
 }
 
 BOOL OMACTest::ScheduleNextNeighborCLK(){
-	UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
+
+	UINT16 Nbr2beFollowed;
+	if(g_NeighborTable.Neighbor[0].Status == Alive){
+		Nbr2beFollowed = g_NeighborTable.Neighbor[0].MacAddress;
+	}
+	else{
+		Nbr2beFollowed = 0;
+	}
 	VirtualTimerReturnMessage rm;
 
 	if (g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
