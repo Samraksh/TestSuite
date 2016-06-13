@@ -1,13 +1,13 @@
 <TestSuite>
 	<Test Name='OMACTest' Type='Native .NOW'>
 		<Description>
-			Time Sync test
+			Native OMAC Support Project
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_0G3\OMACTest
+			OMAC\Src\Native\Level_0G3\OMACTest\Send
 		</TestPath>
 		<TestProjName>
-			TimeSync.proj
+			OMACTestSend.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,7 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			load support projects: OMAC\Src\Native\Level_0G3\OMACTest\Send\tests.xml
+			support project 1
 		</TestSupporting>
 		<TestJTAGHarness>
 		</TestJTAGHarness>

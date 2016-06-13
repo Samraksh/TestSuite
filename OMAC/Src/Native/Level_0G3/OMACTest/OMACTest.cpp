@@ -36,11 +36,11 @@ void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
 
 	//Toggle Pin State for monitoring with Logic Analyzer
 	if(gOMACTest.LocalClkPINState){
-		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, false);
+		CPU_GPIO_SetPinState((GPIO_PIN)24, false);
 		gOMACTest.LocalClkPINState = false;
 	}
 	else {
-		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, true);
+		CPU_GPIO_SetPinState((GPIO_PIN)24, true);
 		gOMACTest.LocalClkPINState = true;
 	}
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
@@ -67,11 +67,11 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 	}
 	if(g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
 		if(gOMACTest.NeighborClkPINState){
-			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, false);
+			CPU_GPIO_SetPinState((GPIO_PIN)24, false);
 			gOMACTest.NeighborClkPINState = false;
 		}
 		else {
-			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, true);
+			CPU_GPIO_SetPinState((GPIO_PIN)24, true);
 			gOMACTest.NeighborClkPINState = true;
 		}
 	}
@@ -89,10 +89,10 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 
 BOOL OMACTest::Initialize(){
 
-	CPU_GPIO_EnableOutputPin(NEIGHBORCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_EnableOutputPin(LOCALCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, FALSE);
-	CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, FALSE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN)24, TRUE);
+	CPU_GPIO_EnableOutputPin((GPIO_PIN)24, TRUE);
+	CPU_GPIO_SetPinState((GPIO_PIN)24, FALSE);
+	CPU_GPIO_SetPinState((GPIO_PIN)24, FALSE);
 	LocalClkPINState = true;
 	NeighborClkPINState = true;
 

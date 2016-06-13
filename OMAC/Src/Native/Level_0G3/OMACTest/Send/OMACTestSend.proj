@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-	 <AssemblyName>OMACTest</AssemblyName>
+	 <AssemblyName>OMACTestSend</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
     <Description>
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\OMAC\Src\Native\Level_0G3\OMACTest</Directory>
+    <Directory>TestSuite\OMAC\Src\Native\Level_0B\Send</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\OMACTest.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0B\Send\OMACTestSend.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
@@ -27,12 +27,12 @@
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0B\Send\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
  	<Compile Include="EntryPoint.cpp" />
-    <Compile Include="OMACTest.cpp" />
+    <Compile Include="OMACTestSend.cpp" />
     <!--<Compile Include="test.c" />
 	<Compile Include="signalr.c" />
 	<Compile Include="syscalls.c" />
