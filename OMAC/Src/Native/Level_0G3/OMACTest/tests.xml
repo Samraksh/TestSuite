@@ -7,7 +7,7 @@
 			OMAC\Src\Native\Level_0B\Receive
 		</TestPath>
 		<TestProjName>
-			OMACTestReceive.proj
+			OMACTest.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

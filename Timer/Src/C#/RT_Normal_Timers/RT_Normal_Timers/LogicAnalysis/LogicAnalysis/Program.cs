@@ -22,7 +22,7 @@ namespace LogicAnalysis
 
         const float accuracy = 0.2f;
 
-        static List<double> expectedGapSequence1 = new List<double>() { 0.010, 0.010, 0.010, 1.010, 0.010 };
+        static List<double> expectedGapSequence1 = new List<double>() { 0.010, 0.010, 0.010, 1.020, 0.010 };
 
         const double expectedMinTime0 = 0.01;
         const double expectedMinTime1 = 0.01;
@@ -245,7 +245,7 @@ namespace LogicAnalysis
                 {
                     // found transition
                     gapTime = (time[i] - lastTransitionTime) / sampleFreq;
-                    //System.Diagnostics.Debug.WriteLine("Gap: " + gapTime.ToString());
+                    System.Diagnostics.Debug.WriteLine("Gap: " + gapTime.ToString());
                     // now processing gaps to see if they match expectedGaps
                     if (foundNotEg1 == false)
                     {
@@ -264,6 +264,7 @@ namespace LogicAnalysis
                         }
                         else
                         {
+                            i = i - currentGapSearchNum;
                             currentGapSearchNum = 0;
                         }
                     }

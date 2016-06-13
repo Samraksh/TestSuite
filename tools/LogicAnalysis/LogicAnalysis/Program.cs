@@ -264,6 +264,7 @@ namespace LogicAnalysis
                         }
                         else
                         {
+                            i = i - currentGapSearchNum;
                             currentGapSearchNum = 0;
                         }
                     }

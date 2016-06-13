@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest(Level_0B-Receive)' Type='Native .NOW'>
+	<Test Name='Radio' Type='C#'>
 		<Description>
-			Native OMAC test - send and receive test
+			Auto ACK support2
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_0B\Receive
+			OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport2
 		</TestPath>
 		<TestProjName>
-			OMACTestReceive.proj
+			CheckAutoAckSupport.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,13 +32,7 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			support project 1
+			support project 2
 		</TestSupporting>
-		<TestJTAGHarness>
-		</TestJTAGHarness>
-		<TestPowerAutomateSelected>
-		</TestPowerAutomateSelected>
-		<TestBuild>
-		</TestBuild>
 	</Test>
 </TestSuite>

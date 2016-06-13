@@ -40,7 +40,7 @@ BOOL GlobalLockTest::Execute( int testLevel )
 {
 	if(!VirtTimer_SetTimer(3, 0, 30000, FALSE, FALSE, Timer_3_Handler))
 		return FALSE;
-	if(!VirtTimer_SetTimer(4, 0, 120000, FALSE, FALSE, Timer_4_Handler))
+	if(!VirtTimer_SetTimer(4, 0, 110000, FALSE, FALSE, Timer_4_Handler))
 		return FALSE;
 
 	VirtTimer_Start( 3 );

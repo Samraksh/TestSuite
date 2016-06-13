@@ -1,13 +1,13 @@
 <TestSuite>
-	<Test Name='OMACTest(Level_0B-Receive)' Type='Native .NOW'>
+	<Test Name='Continuations' Type='Native Adapt .NOW'>
 		<Description>
-			Native OMAC test - send and receive test
+			Native continuations test
 		</Description>
 		<TestPath>
-			OMAC\Src\Native\Level_0B\Receive
+			Continuations\Level_0A
 		</TestPath>
 		<TestProjName>
-			OMACTestReceive.proj
+			Continuations.proj
 		</TestProjName>
 		<TesterName>
 		</TesterName>
@@ -32,7 +32,6 @@
 		<TestGCCVersion>
 		</TestGCCVersion>
 		<TestSupporting>
-			support project 2
 		</TestSupporting>
 		<TestJTAGHarness>
 		</TestJTAGHarness>

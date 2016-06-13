@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='OMACTest(OMACFanIn)' Type='C# .NOW'>
+	<Test Name='OMACTest' Type='C# .NOW'>
 		<Description>
 			Fan-In test
 		</Description>
@@ -7,7 +7,7 @@
 			OMAC\Src\C#\OMACFanIn
 		</TestPath>
 		<TestProjName>
-			CheckAutoAck.csproj
+			OMACFanIn.csproj
 		</TestProjName>
 		<TesterName>
 		</TesterName>

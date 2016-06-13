@@ -58,3 +58,4 @@ D:\Work\TestSuite\Timer\Src\C#\RT_Normal_Timers\RT_Normal_Timers\LogicAnalysis\L
 D:\Work\TestSuite\Timer\Src\C#\RT_Normal_Timers\RT_Normal_Timers\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
 D:\Work\TestSuite\Timer\Src\C#\RT_Normal_Timers\RT_Normal_Timers\LogicAnalysis.exe
 D:\Work\TestSuite\Timer\Src\C#\RT_Normal_Timers\RT_Normal_Timers\LogicAnalysis.pdb
+D:\Work\TestSuite\Timer\Src\C#\RT_Normal_Timers\RT_Normal_Timers\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
