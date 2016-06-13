@@ -47,6 +47,6 @@ D:\Work\TestSuite\OMAC\Src\C#\TimeSync_0A\LogicAnalysis.exe
 D:\Work\TestSuite\OMAC\Src\C#\TimeSync_0A\LogicAnalysis.pdb
 D:\Work\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.exe
 D:\Work\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.pdb
-D:\Work\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache
 D:\Work\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\LogicAnalysis.exe
 D:\Work\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\LogicAnalysis.pdb
+D:\Work\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\LogicAnalysis\LogicAnalysis\obj\x86\Debug\LogicAnalysis.csprojResolveAssemblyReference.cache

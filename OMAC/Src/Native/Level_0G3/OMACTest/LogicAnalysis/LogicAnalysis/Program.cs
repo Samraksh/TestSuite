@@ -282,6 +282,88 @@ namespace LogicAnalysis
             return 0;
         }
 
+        static float TimeSyncCompare(List<int> sampleNum, List<int> local, List<int> neighbor, int startPoint, int stopPoint)
+        {
+            // looking for first 0 to 1 transistion
+            int samplePoint = startPoint;
+            bool pointFound = false;
+            while ((samplePoint < stopPoint) && (pointFound == false))
+            {
+                if (local[samplePoint] == 1)
+                {
+                    pointFound = true;
+                    break;
+                }
+                samplePoint++;
+            }
+            System.Diagnostics.Debug.WriteLine("Found first point at " + samplePoint.ToString());
+
+
+            int lastPoint = local[samplePoint];
+            int lastTransitionTime = local[samplePoint];
+
+            // sample difference between local and neighbor transition
+            int ALLOWED_PASS_CRITERIA = 40;
+
+            bool foundTransition = false;
+            for (int i = samplePoint + 1; i < stopPoint; i++)
+            {
+                int localClkTransitionTime = 0;
+                int neighborClkTransitionTime = 0;
+                int clkTransitionTimeDiff = 0;
+
+                foundTransition = false;
+
+                // looking for transition from 0 to 1 on local clk
+                if (((local[i] == 1) && (lastPoint == 0)))
+                {
+                    foundTransition = true;
+                    localClkTransitionTime = sampleNum[i];
+                }
+
+
+                if (foundTransition == true)
+                {
+                    // found transition 
+                    // looking for sample time of closest neighbor tranistion
+                    if ((neighbor[i] == 1)  && ((neighbor[i-1] == 0)) )
+                    {
+                        neighborClkTransitionTime = sampleNum[i];
+                    }
+                    else if ((neighbor[i-1] == 1) && ((neighbor[i - 2] == 0)))
+                    {
+                        neighborClkTransitionTime = sampleNum[i-1];
+                    }
+                    else if ((neighbor[i + 1] == 1) && ((neighbor[i] == 0)))
+                    {
+                        neighborClkTransitionTime = sampleNum[i+1];
+                    } else
+                    {
+                        neighborClkTransitionTime = 0;
+                    }
+
+                    // clkTransitionTimeDiff is the difference in sample times of the two transitions
+                    clkTransitionTimeDiff = Math.Abs(localClkTransitionTime - neighborClkTransitionTime);
+                    if (clkTransitionTimeDiff < ALLOWED_PASS_CRITERIA)
+                    {
+                        // neighbor transition within ALLOWED_PASS_CRITERIA samples of local transition
+                        System.Diagnostics.Debug.WriteLine("Diff: " + clkTransitionTimeDiff.ToString() + " Local transition: " + localClkTransitionTime.ToString() + " neighbor: " + neighborClkTransitionTime.ToString() + " samples");
+                        // do something
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("Diff: " + clkTransitionTimeDiff.ToString() + " FAIL Local transition: " + localClkTransitionTime.ToString() + " neighbor: " + neighborClkTransitionTime.ToString() + " samples");
+                    }
+                    
+                }
+                lastPoint = local[i];
+
+
+            }
+
+            return 0;
+        }
+
         static void Main(string[] args)
         {
             bool testResult = false;
@@ -301,100 +383,22 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 1)
                 {
-                    return0 = GetFrequency(listTime, line0, skipSamples0, line0.Count);                    
-                    System.Diagnostics.Debug.WriteLine("Frequency is line 0 " + return0.ToString());
-                    double minTime = 0, maxTime = 0, stdDeviation = 0;
-                    GetJitter(listTime, line0, skipSamples0, line0.Count, ref minTime, ref maxTime, ref stdDeviation);
-                    System.Diagnostics.Debug.WriteLine("Line 0: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
-                    if ((return0 < expectedFreq0 * (1 + accuracy)) && (return0 > expectedFreq0 * (1 - accuracy)) && (minTime > expectedMinTime0) && (maxTime < expectedMaxTime0))
-                    {
-                        result0 = true;
-                    }
-                    else
-                        result0 = false;
-                    returnStr0 = return0.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
+                    return0 = TimeSyncCompare(listTime, line0, line1, 100, line0.Count);
+                           
+                    System.Diagnostics.Debug.WriteLine("Time Sync Compare: " + return0.ToString());
 
-                    //GetJitter(listTime, line0, skipSamples0, line0.Count);
-
-                    /*return0 = FindGap(listTime, line0, expectedGapSequence0, 0, line0.Count, USE_EVERY_TRANSITION);
                     if (return0 == 1)
                     {
-                        System.Diagnostics.Debug.WriteLine("Found gap sequence for line 0");
+                        System.Diagnostics.Debug.WriteLine("Test passed.");
                         result0 = true;
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Failed to find gap sequence for line 0");
+                        System.Diagnostics.Debug.WriteLine("Test failed.");
                         result0 = false;
                     }
-                    for (int i = 0; i < expectedGapSequence0.Count; i++)
-                    {
-                        returnStr0 += expectedGapSequence0[i].ToString() + " ";
-                    }*/
                 }
-                if (listNumber > 2)
-                {
-                    return1 = GetFrequency(listTime, line1, skipSamples1, line1.Count);
-                    System.Diagnostics.Debug.WriteLine("Frequency is line 1 " + return1.ToString());
-                    double minTime = 0, maxTime = 0, stdDeviation = 0;
-                    GetJitter(listTime, line1, skipSamples1, line1.Count, ref minTime, ref maxTime, ref stdDeviation);
-                    System.Diagnostics.Debug.WriteLine("Line 1: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
-                    if ((return1 < expectedFreq1 * (1 + accuracy)) && (return1 > expectedFreq1 * (1 - accuracy)) && (minTime > expectedMinTime1) && (maxTime < expectedMaxTime1))
-                    {
-                        result1 = true;
-                    }
-                    else
-                        result1 = false;
-                    returnStr1 = return1.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
 
-                    //GetJitter(listTime, line1, skipSamples1, line1.Count);
-                    /*return1 = FindGap(listTime, line1, expectedGapSequence0, 0, line1.Count);
-                    if (return1 == 1)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Found gap sequence for line 1");
-                        result1 = true;
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("Failed to find gap sequence for line 1");
-                        result1 = false;
-                    }
-                    for (int i = 0; i < expectedGapSequence0.Count; i++)
-                    {
-                        returnStr1 += expectedGapSequence0[i].ToString() + " ";
-                    }*/
-                }
-                if (listNumber > 3)
-                {
-                    return2 = GetFrequency(listTime, line2, skipSamples2, line2.Count);
-                    System.Diagnostics.Debug.WriteLine("Frequency is line 2 " + return2.ToString());
-                    double minTime = 0, maxTime = 0, stdDeviation = 0;
-                    GetJitter(listTime, line2, skipSamples2, line2.Count, ref minTime, ref maxTime, ref stdDeviation);
-                    System.Diagnostics.Debug.WriteLine("Line 2: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
-                    if ((return2 < expectedFreq2 * (1 + accuracy)) && (return2 > expectedFreq2 * (1 - accuracy)) && (minTime > expectedMinTime2) && (maxTime < expectedMaxTime2))
-                    {
-                        result2 = true;
-                    }
-                    else
-                        result2 = false;
-                    returnStr2 = return2.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
-                }
-                if (listNumber > 4)
-                {
-                    return3 = GetFrequency(listTime, line3, skipSamples3, line3.Count);
-                    System.Diagnostics.Debug.WriteLine("Line 3: Frequency: " + return3.ToString());
-                    double minTime = 0, maxTime = 0, stdDeviation = 0;
-                    GetJitter(listTime, line3, skipSamples3, line3.Count, ref minTime, ref maxTime, ref stdDeviation);
-                    System.Diagnostics.Debug.WriteLine("Line 3: Max time: " + maxTime.ToString() + " Min time: " + minTime.ToString());
-                    if ((return3 < expectedFreq3 * (1 + accuracy)) && (return3 > expectedFreq3 * (1 - accuracy)) && (minTime > expectedMinTime3) && (maxTime < expectedMaxTime3))
-                    {
-                        result3 = true;
-                    }
-                    else
-                        result3 = false;
-                    returnStr3 = return3.ToString() + " " + maxTime.ToString() + " " + minTime.ToString();
-                    
-                }
 
                 if ((result0 == false) || (result1 == false) || (result2 == false) || (result3 == false))
                 {
