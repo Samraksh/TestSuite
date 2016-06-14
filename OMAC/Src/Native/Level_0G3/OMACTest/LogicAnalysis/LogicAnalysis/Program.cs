@@ -282,9 +282,13 @@ namespace LogicAnalysis
             return 0;
         }
 
-        static float TimeSyncCompare(List<int> sampleNum, List<int> local, List<int> neighbor, int startPoint, int stopPoint)
+
+        static float TimeSyncCompare(List<int> sampleNum, List<int> local, List<int> neighbor, int startPoint, int stopPoint, ref int passCnt, ref int failCnt)
         {
-            // looking for first 0 to 1 transistion
+            passCnt = 0;
+            failCnt = 0;
+            int cumlativeDiff = 0;
+            // looking for first 0 to 1 transistion of local clock
             int samplePoint = startPoint;
             bool pointFound = false;
             while ((samplePoint < stopPoint) && (pointFound == false))
@@ -296,14 +300,29 @@ namespace LogicAnalysis
                 }
                 samplePoint++;
             }
-            System.Diagnostics.Debug.WriteLine("Found first point at " + samplePoint.ToString());
+            System.Diagnostics.Debug.WriteLine("Found first local point at " + samplePoint.ToString());
+
+            // looking for first 0 to 1 transistion of neighbor clock
+            pointFound = false;
+            while ((samplePoint < stopPoint) && (pointFound == false))
+            {
+                if (neighbor[samplePoint] == 1)
+                {
+                    pointFound = true;
+                    break;
+                }
+                samplePoint++;
+            }
+            System.Diagnostics.Debug.WriteLine("Found first neighbor point at " + samplePoint.ToString());
+
+            // both clocks are toggling now
 
 
             int lastPoint = local[samplePoint];
             int lastTransitionTime = local[samplePoint];
 
-            // sample difference between local and neighbor transition
-            int ALLOWED_PASS_CRITERIA = 40;
+            // allowed sample difference between local and neighbor transition
+            int ALLOWED_PASS_CRITERIA = (int)(0.005 * 4000000); // 2 ms * sample frequency of logic analyzer
 
             bool foundTransition = false;
             for (int i = samplePoint + 1; i < stopPoint; i++)
@@ -320,48 +339,76 @@ namespace LogicAnalysis
                     foundTransition = true;
                     localClkTransitionTime = sampleNum[i];
                 }
-
-
+                if (i==1302)
+                { System.Diagnostics.Debug.Write(""); }
+                // want to compare the sample point of the local clock transistion with that of the neighbor clock transition
                 if (foundTransition == true)
                 {
                     // found transition 
+
+                    // the neighbor clock can transition any number of ways in relation to the local clock
+                    // it could be an upwards or downwards transition we are looking for
+
                     // looking for sample time of closest neighbor tranistion
-                    if ((neighbor[i] == 1)  && ((neighbor[i-1] == 0)) )
-                    {
-                        neighborClkTransitionTime = sampleNum[i];
+                    if ((neighbor[i] != neighbor[i-1]) )
+                    {                        
+                            neighborClkTransitionTime = sampleNum[i];
                     }
-                    else if ((neighbor[i-1] == 1) && ((neighbor[i - 2] == 0)))
+                    else if ((neighbor[i-1] != neighbor[i - 2]))                        
                     {
-                        neighborClkTransitionTime = sampleNum[i-1];
+                        // not sure which transition is closer in this case so we have to check both
+                        if ((neighbor[i + 1] != neighbor[i + 2]) || (neighbor[i + 1] != neighbor[i]))
+                        {                            
+                            if (Math.Abs(sampleNum[i - 1] - sampleNum[i]) < Math.Abs(sampleNum[i + 2] - sampleNum[i]))
+                                neighborClkTransitionTime = sampleNum[i - 1];
+                            else
+                                neighborClkTransitionTime = sampleNum[i + 2];
+                        }
+                        else
+                        {
+                                neighborClkTransitionTime = sampleNum[i - 1];
+                        }
                     }
-                    else if ((neighbor[i + 1] == 1) && ((neighbor[i] == 0)))
+                    else if ((neighbor[i + 1] != neighbor[i]))                                                 
                     {
-                        neighborClkTransitionTime = sampleNum[i+1];
-                    } else
+                            neighborClkTransitionTime = sampleNum[i];
+                    }
+                    else if ((neighbor[i + 1] != neighbor[i + 2]))
+                    {
+                            neighborClkTransitionTime = sampleNum[i + 2];
+                    }
+                    else
                     {
                         neighborClkTransitionTime = 0;
                     }
 
                     // clkTransitionTimeDiff is the difference in sample times of the two transitions
                     clkTransitionTimeDiff = Math.Abs(localClkTransitionTime - neighborClkTransitionTime);
+                    cumlativeDiff += clkTransitionTimeDiff;
                     if (clkTransitionTimeDiff < ALLOWED_PASS_CRITERIA)
                     {
                         // neighbor transition within ALLOWED_PASS_CRITERIA samples of local transition
                         System.Diagnostics.Debug.WriteLine("Diff: " + clkTransitionTimeDiff.ToString() + " Local transition: " + localClkTransitionTime.ToString() + " neighbor: " + neighborClkTransitionTime.ToString() + " samples");
-                        // do something
+                        passCnt++;
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Diff: " + clkTransitionTimeDiff.ToString() + " FAIL Local transition: " + localClkTransitionTime.ToString() + " neighbor: " + neighborClkTransitionTime.ToString() + " samples");
+                        //System.Diagnostics.Debug.WriteLine(i.ToString());
+                        //System.Diagnostics.Debug.WriteLine(sampleNum[i - 2].ToString() + " " + sampleNum[i - 1].ToString() + " " + sampleNum[i].ToString() + " " + sampleNum[i + 1].ToString() + " " + sampleNum[i + 2].ToString() + " " + sampleNum[i + 3].ToString() + " " + sampleNum[i + 4].ToString());
+                        //System.Diagnostics.Debug.WriteLine(local[i - 2].ToString() + " " + local[i - 1].ToString() + " " + local[i].ToString() + " " + local[i + 1].ToString() + " " + local[i + 2].ToString() + " " + local[i + 3].ToString() + " " + local[i + 4].ToString());
+                        //System.Diagnostics.Debug.WriteLine(neighbor[i - 2].ToString() + " " + neighbor[i - 1].ToString() + " " + neighbor[i].ToString() + " " + neighbor[i + 1].ToString() + " " + neighbor[i + 2].ToString() + " " + neighbor[i + 3].ToString() + " " + neighbor[i + 4].ToString());
+                        //System.Diagnostics.Debug.WriteLine((sampleNum[i] - sampleNum[i - 2]).ToString() + " " + (sampleNum[i] - sampleNum[i - 1]).ToString() + " " + (sampleNum[i] - sampleNum[i]).ToString() + " " + (sampleNum[i + 1] - sampleNum[i]).ToString() + " " + (sampleNum[i + 2] - sampleNum[i]).ToString() + " " + (sampleNum[i + 3] - sampleNum[i]).ToString() + " " + (sampleNum[i + 4] - sampleNum[i]).ToString());
+                        System.Diagnostics.Debug.WriteLine(i.ToString() + " Diff: " + clkTransitionTimeDiff.ToString() + " FAIL Local transition: " + localClkTransitionTime.ToString() + " neighbor: " + neighborClkTransitionTime.ToString() + " samples");
+                        failCnt++;
                     }
                     
                 }
                 lastPoint = local[i];
-
-
+                
             }
+            System.Diagnostics.Debug.WriteLine("Pass: " + passCnt.ToString() + " Fail: " + failCnt.ToString());
 
-            return 0;
+            return (cumlativeDiff/(passCnt + failCnt));
         }
 
         static void Main(string[] args)
@@ -383,11 +430,14 @@ namespace LogicAnalysis
                 }
                 if (listNumber > 1)
                 {
-                    return0 = TimeSyncCompare(listTime, line0, line1, 100, line0.Count);
-                           
+                    int passCnt=0, failCnt=0;
+                    return0 = TimeSyncCompare(listTime, line0, line1, 800, line0.Count-5, ref passCnt, ref failCnt);
+                    // return0 is average samples per difference in clk edges
+                    // converting to time here by dividing by sample frequency used
+                    return0 = return0 / 4000000;       
                     System.Diagnostics.Debug.WriteLine("Time Sync Compare: " + return0.ToString());
 
-                    if (return0 == 1)
+                    if ( (return0 <= 0.001) && (failCnt < 10) )
                     {
                         System.Diagnostics.Debug.WriteLine("Test passed.");
                         result0 = true;
@@ -397,6 +447,9 @@ namespace LogicAnalysis
                         System.Diagnostics.Debug.WriteLine("Test failed.");
                         result0 = false;
                     }
+                    returnStr0 = return0.ToString();
+                    returnStr1 = passCnt.ToString();
+                    returnStr2 = failCnt.ToString();
                 }
 
 

@@ -1,7 +1,7 @@
 ﻿// required TestRig parameters
-#define testTimeout 60000
+#define testTimeout 200000
 #define useLogic "normal"
-#define sampleTimeMs 55000
+#define sampleTimeMs 200000
 #define sampleFrequency 4000000
 #define useCOMPort false
 #define forceCOM ""
@@ -11,7 +11,7 @@
 #define testScriptTimeoutMs 9000
 #define useAnalysis "exe"
 #define	analysisScriptName "LogicAnalysis.exe"
-#define	useResultsFile false
+#define	useResultsFile true
 #define resultsFileName "testTemp\\results.txt"
 #define testDelay 0
 // Do not change text format above this point
