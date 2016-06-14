@@ -159,7 +159,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
             Debug.Print("2.Initializing radio");
             //RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
+            var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_26);
             /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
             myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;*/
@@ -177,7 +177,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 myOMACObj.OnReceive += Receive;
                 myOMACObj.OnNeighborChange += NeighborChange;
                 
-                macPipe = new MACPipe(myOMACObj, PayloadType.Default);
+                macPipe = new MACPipe(myOMACObj, PayloadType.Type00);
                 macPipe.OnReceive += ReceiveEverythingElse;
                 
                 /*Debug.Print("3.Initializing radio");
@@ -246,7 +246,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }*/
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(MACBase macBase, DateTime time)
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
             //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
@@ -259,7 +259,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Thread.Sleep(initialDelayInMsecs);
         }
 
-        public void ReceiveEverythingElse(MACBase macBaseObj, PayloadType payloadType, DateTime time)
+        public void ReceiveEverythingElse(IMAC macBaseObj, DateTime time)
         {
             totalRecvCounterAllElse++;
             Debug.Print("---------------------------");
@@ -277,12 +277,12 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 //return;
                 goto endReceiveEverythingElse;
             }
-            Debug.Print("Received mac type " + macBaseObj.macType.ToString());
-            Debug.Print("Received payload type " + payloadType);
+            Debug.Print("Received mac type " + macBaseObj.MACType.ToString());
+            Debug.Print("Received payload type " + rcvPacket.PayloadType);
             Debug.Print("totalRecvCounterAllElse is " + totalRecvCounterAllElse);
 
             byte[] rcvPayload = rcvPacket.Payload;
-            if (rcvPayload != null && payloadType == rcvPacket.payloadType)
+            if (rcvPayload != null)
             {
                 pingMsg = pingMsg.FromBytesToPingPayload(rcvPayload);
                 if (pingMsg != null)
@@ -344,7 +344,7 @@ endReceiveEverythingElse:
         }
 
         //Handles received messages 
-        public void Receive(MACBase macBaseObj, DateTime time)
+        public void Receive(IMAC macBaseObj, DateTime time)
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");

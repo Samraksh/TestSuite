@@ -133,7 +133,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds*/
 
             Debug.Print("Initializing radio");
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
+            var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_26); ;
             /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
             myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
@@ -145,7 +145,10 @@ namespace Samraksh.eMote.Net.Mac.Receive
             try
             {
                 //configure OMAC
-                myOMACObj = new OMAC(radioConfiguration);
+                myOMACObj = new OMAC(radioConfiguration, 360);
+
+                myOMACObj.OnReceive += Receive;
+                myOMACObj.OnNeighborChange += NeighborChange;
                 /*myReceiveCB = Receive;
                 myNeibhborhoodCB = NeighborChange;
                 OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
@@ -162,13 +165,13 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(MACBase macBase, DateTime time)
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
             //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
         //Handles received messages 
-        public void Receive(MACBase macBase, DateTime time)
+        public void Receive(IMAC macBase, DateTime time)
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
