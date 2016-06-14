@@ -131,9 +131,6 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 myOMACObj.OnReceive += Receive;
                 myOMACObj.OnNeighborChange += NeighborChange;
 
-
-                myAddress = myOMACObj.MACRadioObj.RadioAddress;
-
                 var chan1 = new MACPipe(myOMACObj, PayloadType.Type01);
                 chan1.OnReceive += Receive;
 

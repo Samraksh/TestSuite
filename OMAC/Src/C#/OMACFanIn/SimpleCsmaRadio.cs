@@ -25,9 +25,9 @@ namespace Samraksh.DotNow.PingPong {
 		/// CSMA radio constructor without neighbor change callback
 		/// </summary>
 		/// <param name="ccaSensetime">CCA sense time, in ms</param>
-		/// <param name="txPowerValue">Power level</param>
 		/// <param name="radioReceivedData">Method to call when data received. Can be null if user does not want to be notified of received messages</param>
-		public SimpleCsmaRadio(byte ccaSensetime, RF231TxPower txPowerValue, RadioReceivedData radioReceivedData) {
+        public SimpleCsmaRadio(byte ccaSensetime, RadioReceivedData radioReceivedData)
+        {
 			/*var macConfig = new MACConfiguration {
 				NeighborLivenessDelay = 100, // Neighbor timeout. Neighbor changes are ignored but we still have to specify a value
 				CCASenseTime = ccaSensetime

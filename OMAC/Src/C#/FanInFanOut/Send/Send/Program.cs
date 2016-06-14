@@ -134,7 +134,7 @@ namespace Samraksh.eMote.Net.Mac.Send
 
             Debug.Print("2.Initializing radio");
             //RadioConfiguration radioConfiguration = new RadioConfiguration(RadioName.SI4468, TxPowerValue.Power_SI4468_Minus20dBm, Channel.Channel_SI4468_01);
-            RadioConfiguration radioConfiguration = new RadioConfiguration();
+            var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_26);
             /*myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
             myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
             myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;*/
@@ -214,7 +214,7 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(MACBase macBase, DateTime time)
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
             //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
@@ -243,12 +243,12 @@ namespace Samraksh.eMote.Net.Mac.Send
             try
             {
                 bool sendFlag = false;
-                UInt16[] neighborList = new UInt16[myOMACObj.NeighborListSize];
+                UInt16[] neighborList = OMAC.NeighborListArray();
                 DeviceStatus dsStatus = myOMACObj.NeighborList(neighborList);
 
                 if (dsStatus == DeviceStatus.Success)
                 {
-                    for (int j = 0; j < myOMACObj.NeighborListSize; j++)
+                    for (int j = 0; j < neighborList.Length; j++)
                     {
                         if (neighborList[j] != 0)
                         {
@@ -302,7 +302,7 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
 
         //Handles received messages 
-        public void Receive(MACBase macBase, DateTime time)
+        public void Receive(IMAC macBase, DateTime time)
         {
             
         }

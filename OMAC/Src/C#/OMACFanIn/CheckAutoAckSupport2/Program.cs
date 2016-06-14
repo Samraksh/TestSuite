@@ -198,20 +198,26 @@ namespace Samraksh.eMote.Net.Mac.Send
             /*try
             {
                 bool sendFlag = false;
-                ushort[] _neighborList;
+                UInt16[] neighborList = OMAC.NeighborListArray();
+                DeviceStatus dsStatus = myOMACObj.NeighborList(neighborList);
 
-				_neighborList = MACBase.NeighborListArray();
-				foreach (var neighbor in _neighborList){
-                        Debug.Print("count of neighbors " + _neighborList.Length);
+                for (int j = 0; j < MAX_NEIGHBORS; j++)
+                {
+                    if (neighborList[j] != 0)
+                    {
+                        //Debug.Print("count of neighbors " + neighborList.Length);
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] msg = pingMsg.ToBytes();
-                        Debug.Print("Sending to neighbor " + neighbor.ToString() + " ping msgID " + sendMsgCounter);
-                        status = myOMACObj.Send(neighbor, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                        status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        //Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter);
+                        //status = myOMACObj.Send(6846, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
                         }
+                    }
                 }
                 if (sendFlag == false && startSend == true)
                 {
