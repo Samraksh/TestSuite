@@ -278,29 +278,29 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
             }*/
         }
 
-        private static void Rc(IMAC mac, DateTime timeReceived)
+        private static void Rc(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
-            RcCommon(mac, timeReceived);
+            RcCommon(mac, timeReceived, receivedPacket);
         }
-        private static void Rc1(IMAC mac, DateTime timeReceived)
+        private static void Rc1(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
-            RcCommon(mac, timeReceived);
+            RcCommon(mac, timeReceived, receivedPacket);
         }
-        private static void Rc2(IMAC mac, DateTime timeReceived)
+        private static void Rc2(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
-            RcCommon(mac, timeReceived);
+            RcCommon(mac, timeReceived, receivedPacket);
         }
 
-        private static void RcCommon(IMAC mac, DateTime timeReceived)
+        private static void RcCommon(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
             var macPipe = (MACPipe)mac;
             var plType = macPipe.PayloadType;
             Debug.Print("*** Packet received\n");
-            var packet = mac.NextPacket();
+            //var packet = mac.NextPacket();
             //Debug.Print("\t1");
-            if (packet == null) { return; }
+            if (receivedPacket == null) { return; }
             //Debug.Print("\t2");
-            var payloadBytes = packet.Payload;
+            var payloadBytes = receivedPacket.Payload;
             //Debug.Print("\t3");
             //var payloadChars = payloadBytes.ToCharArray();
             //Debug.Print("\t4");

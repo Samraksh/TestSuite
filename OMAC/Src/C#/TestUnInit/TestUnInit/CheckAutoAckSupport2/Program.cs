@@ -115,8 +115,7 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
             Debug.Print("2.Initializing radio");
 #if (RF231)
             var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
-#endif
-#if (SI4468)
+#elif (SI4468)
             var radioConfiguration = new SI4468RadioConfiguration(SI4468TxPower.Power_20dBm, SI4468Channel.Channel_01);
 #endif
 
@@ -310,7 +309,7 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
         }
 
         //Handles received messages 
-        public void Receive(IMAC macBase, DateTime time)
+        public void Receive(IMAC macBase, DateTime time, Packet receivedPacket)
         {
 
         }

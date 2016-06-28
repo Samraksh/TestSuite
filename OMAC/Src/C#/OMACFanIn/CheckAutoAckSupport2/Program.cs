@@ -1,3 +1,6 @@
+#define SI4468
+//#define RF231
+
 using System;
 using System.Text;
 using System.Collections;
@@ -125,8 +128,12 @@ namespace Samraksh.eMote.Net.Mac.Send
             {
                 OMAC myMac;
                 Debug.Print("Initializing radio");
-                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
-
+#if RF231
+                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
+#elif SI4468
+                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_20dBm, SI4468Channel.Channel_01);
+#endif
+      
                 //configure OMAC
                 myMac = new OMAC(radioConfig);
                 myMac.OnReceive += Rc;
@@ -270,29 +277,29 @@ namespace Samraksh.eMote.Net.Mac.Send
             }*/
         }
 
-        private static void Rc(IMAC mac, DateTime timeReceived)
+        private static void Rc(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
-            RcCommon(mac, timeReceived);
+            RcCommon(mac, timeReceived, receivedPacket);
         }
-        private static void Rc1(IMAC mac, DateTime timeReceived)
+        private static void Rc1(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
-            RcCommon(mac, timeReceived);
+            RcCommon(mac, timeReceived, receivedPacket);
         }
-        private static void Rc2(IMAC mac, DateTime timeReceived)
+        private static void Rc2(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
-            RcCommon(mac, timeReceived);
+            RcCommon(mac, timeReceived, receivedPacket);
         }
 
-        private static void RcCommon(IMAC mac, DateTime timeReceived)
+        private static void RcCommon(IMAC mac, DateTime timeReceived, Packet receivedPacket)
         {
             var macPipe = (MACPipe)mac;
             var plType = macPipe.PayloadType;
             Debug.Print("*** Packet received\n");
-            var packet = mac.NextPacket();
+            //var packet = mac.NextPacket();
             //Debug.Print("\t1");
-            if (packet == null) { return; }
+            if (receivedPacket == null) { return; }
             //Debug.Print("\t2");
-            var payloadBytes = packet.Payload;
+            var payloadBytes = receivedPacket.Payload;
             //Debug.Print("\t3");
             //var payloadChars = payloadBytes.ToCharArray();
             //Debug.Print("\t4");

@@ -1,3 +1,6 @@
+#define SI4468
+//#define RF231
+
 using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -124,7 +127,11 @@ namespace Samraksh.eMote.Net.Mac.Receive
             try
             {
                 Debug.Print("Initializing radio");
-                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
+#if RF231
+                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
+#elif SI4468
+                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_20dBm, SI4468Channel.Channel_01);
+#endif
 
                 //configure OMAC
                 myOMACObj = new OMAC(radioConfig);
@@ -154,18 +161,18 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }
 
         //Handles received messages 
-        public void Receive(IMAC macBase, DateTime time)
+        public void Receive(IMAC macBase, DateTime time, Packet receivedPacket)
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
-            if (myOMACObj.PendingReceivePacketCount() == 0)
+            /*if (myOMACObj.PendingReceivePacketCount() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
-            Packet rcvPacket = myOMACObj.NextPacket();
-            if (rcvPacket == null)
+            Packet rcvPacket = myOMACObj.NextPacket();*/
+            if (receivedPacket == null)
             {
                 Debug.Print("null");
                 return;
@@ -173,30 +180,30 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
             Debug.Print("totalRecvCounter is " + totalRecvCounter);
 
-            byte[] rcvPayload = rcvPacket.Payload;
+            byte[] rcvPayload = receivedPacket.Payload;
             if (rcvPayload != null)
             {
                 PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
                 if (pingPayload != null)
                 {
-                    Debug.Print("Received msgID " + pingPayload.pingMsgId + " from SRC " + rcvPacket.Src);
+                    Debug.Print("Received msgID " + pingPayload.pingMsgId + " from SRC " + receivedPacket.Src);
                     NeighborTableInfo nbrTableInfo;
                     //If hashtable already contains an entry for the source, extract it, increment recvCount and store it back
-                    if (neighborHashtable.Contains(rcvPacket.Src))
+                    if (neighborHashtable.Contains(receivedPacket.Src))
                     {
-                        NeighborTableInfo nbrTableInfoAnalyze = (NeighborTableInfo)neighborHashtable[rcvPacket.Src];
-                        Debug.Print(rcvPacket.Src.ToString() + " " + pingPayload.pingMsgId.ToString() + " " + nbrTableInfoAnalyze.prevId.ToString());
+                        NeighborTableInfo nbrTableInfoAnalyze = (NeighborTableInfo)neighborHashtable[receivedPacket.Src];
+                        Debug.Print(receivedPacket.Src.ToString() + " " + pingPayload.pingMsgId.ToString() + " " + nbrTableInfoAnalyze.prevId.ToString());
                         if (pingPayload.pingMsgId != nbrTableInfoAnalyze.prevId + 1)
                         {
                             Debug.Print("error");
                             errors++;
                         }
 
-                        nbrTableInfo = (NeighborTableInfo)neighborHashtable[rcvPacket.Src];
+                        nbrTableInfo = (NeighborTableInfo)neighborHashtable[receivedPacket.Src];
                         nbrTableInfo.recvCount++;
                         nbrTableInfo.prevId = pingPayload.pingMsgId;
                         nbrTableInfo.AL.Add(pingPayload.pingMsgId);
-                        neighborHashtable[rcvPacket.Src] = nbrTableInfo;
+                        neighborHashtable[receivedPacket.Src] = nbrTableInfo;
 
                     }
                     //If hashtable does not have an entry, create a new instance and store it
@@ -208,11 +215,11 @@ namespace Samraksh.eMote.Net.Mac.Receive
                         ArrayList AL = new ArrayList();
                         AL.Add(pingPayload.pingMsgId);
                         nbrTableInfo.AL = AL;
-                        neighborHashtable[rcvPacket.Src] = nbrTableInfo;
+                        neighborHashtable[receivedPacket.Src] = nbrTableInfo;
                         //neighborHashtable.Add(rcvPacket.Src, nbrTableInfo);
                     }
 
-                    Debug.Print("recvCount from node " + rcvPacket.Src + " is " + nbrTableInfo.recvCount);
+                    Debug.Print("recvCount from node " + receivedPacket.Src + " is " + nbrTableInfo.recvCount);
                     Debug.Print("Received msgContent " + pingPayload.pingMsgContent.ToString());
                     Debug.Print("---------------------------");
                 }
