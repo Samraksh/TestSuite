@@ -120,10 +120,10 @@ namespace Samraksh.eMote.Net.Mac.Send
             lcd = new EmoteLCD();
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
-
+			OMAC myMac = null;
+			while (true){
             try
             {
-                OMAC myMac;
                 Debug.Print("Initializing radio");
                 var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
 
@@ -146,30 +146,43 @@ namespace Samraksh.eMote.Net.Mac.Send
 
                 var rand = new Random();
 
+				Debug.Print("Starting to send data");
                 while (true)
                 {
-					for (i = 0; i<10; i++){
-                    	var status = myMac.NeighborList(_neighborList);
-                   	 	foreach (var neighbor in _neighborList)
-                   	 	{
-                   	     if (neighbor == 0) { continue; }
-                  	      SendOnPipe(1, myMac, neighbor, chan1);
-                   	 	}
-                    	sendMsgCounter++;
-                    	var waitTime = (int)(rand.NextDouble() * 30 * 1000);
-                    	waitTime = System.Math.Max(waitTime, 20 * 1000);
-                   	 	Debug.Print("*** Waiting " + waitTime);
-                    	Thread.Sleep(waitTime);
-					}
-					myMac.Dispose();
-				}
+                    for (int k = 0; k < 5; k++)
+                    {
+                        var status = myMac.NeighborList(_neighborList);
+                        foreach (var neighbor in _neighborList)
+                        {
+                            if (neighbor == 0) { continue; }
+                            SendOnPipe(1, myMac, neighbor, chan1);
+                        }
+                        sendMsgCounter++;
+                        var waitTime = (int)(rand.NextDouble() * 30 * 1000);
+                        waitTime = System.Math.Max(waitTime, 20 * 1000);
+                        Debug.Print("Waiting " + waitTime);
+                        Thread.Sleep(waitTime);
+                    }
+                    // uninit
+                    Debug.Print("Uninitializing OMAC.");
+                    myMac.Dispose();
+                    Debug.Print("*** waiting 45 seconds");
+                    Thread.Sleep(45000);
+                    // reinint
+                    Debug.Print("Reinitializing OMAC.");
+                    myMac = new OMAC(radioConfig);
+					Debug.Print("*** waiting 30 seconds to reconnect");
+                    Thread.Sleep(30000);
+                }
 
             }
             catch (Exception e)
             {
                 Debug.Print("exception!: " + e.ToString());
+				Debug.Print("Uninitializing OMAC.");
+                myMac.Dispose();
             }
-
+		}
 
         }
 
@@ -201,20 +214,26 @@ namespace Samraksh.eMote.Net.Mac.Send
             /*try
             {
                 bool sendFlag = false;
-                ushort[] _neighborList;
+                UInt16[] neighborList = OMAC.NeighborListArray();
+                DeviceStatus dsStatus = myOMACObj.NeighborList(neighborList);
 
-				_neighborList = MACBase.NeighborListArray();
-				foreach (var neighbor in _neighborList){
-                        Debug.Print("count of neighbors " + _neighborList.Length);
+                for (int j = 0; j < MAX_NEIGHBORS; j++)
+                {
+                    if (neighborList[j] != 0)
+                    {
+                        //Debug.Print("count of neighbors " + neighborList.Length);
                         startSend = true; sendFlag = true;
                         pingMsg.pingMsgId = sendMsgCounter;
                         byte[] msg = pingMsg.ToBytes();
-                        Debug.Print("Sending to neighbor " + neighbor.ToString() + " ping msgID " + sendMsgCounter);
-                        status = myOMACObj.Send(neighbor, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
+                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                        status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
+                        //Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter);
+                        //status = myOMACObj.Send(6846, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
                         if (status != NetOpStatus.S_Success)
                         {
                             Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
                         }
+                    }
                 }
                 if (sendFlag == false && startSend == true)
                 {
@@ -319,5 +338,6 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
     }
 }
+
 
 

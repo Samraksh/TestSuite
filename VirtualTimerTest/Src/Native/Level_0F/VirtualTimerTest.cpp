@@ -153,12 +153,12 @@ BOOL VirtualTimerTest::Level_0F()
 	INT64 currentTime = 0;
 	INT64 prevTime = 0;
 
-	currentTime = Time_GetMachineTime();
+	currentTime = VirtTimer_GetTicks(4);
 	prevTime = currentTime;
-	while( i < 80000000 )
+	while(true )
 	{
-		currentTime = Time_GetMachineTime();
-		if(!(i % 1000000))
+		currentTime = VirtTimer_GetTicks(4);
+		if(!(i % 10000000))
 		{
 			hal_printf("count: %lld currentTime: %lld prevTime: %lld \r\n", i, currentTime, prevTime);
 		}

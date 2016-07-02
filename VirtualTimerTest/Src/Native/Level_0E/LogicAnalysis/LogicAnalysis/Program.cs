@@ -158,6 +158,7 @@ namespace LogicAnalysis
             maxTime = maxTime / sampleFreq;
             minTime = minTime / sampleFreq;
             stdDeviation = stdDeviation / sampleFreq;
+            System.Diagnostics.Debug.WriteLine("Max: " + maxTime.ToString() + " Min: " + minTime.ToString() + " stdDev: " + stdDeviation.ToString());
                        
             return returnValue;
         }

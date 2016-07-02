@@ -1,9 +1,9 @@
-#define SI4468
-//#define RF231
+//#define SI4468
+#define RF231
 
 using System;
-using System.Text;
-using System.Collections;
+using System.IO;
+using System.IO.Ports;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using System.Threading;
@@ -11,7 +11,7 @@ using System.Threading;
 using Samraksh.eMote.Net;
 using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
-using Samraksh.eMote.DotNow;
+//using Samraksh.eMote.DotNow;
 
 //1. This program initializes OMAC as the MAC protocol.
 //  1a. Registers a function that tracks change in neighbor (NeighborChange) and a function to handle messages that are received.
@@ -85,147 +85,178 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
 
     public class Program
     {
+        const UInt16 SecToMsec = 1000;
         const UInt32 totalPingCount = 10001;
-        const UInt16 MAX_NEIGHBORS = 12;
-        const int initialDelayInMsecs = 30000;
-        int dutyCyclePeriod = 20000;
+        const int initialDelayInMsecs = 75 * SecToMsec;
+        const UInt16 uninitAtThisValue = 10;
+        const int dutyCyclePeriodInMsecs = 20 * SecToMsec;
+        const UInt16 neighborLivenessDelayInSecs = 360;
+        const int howLongToRemainUnInitializedInMsecs = (neighborLivenessDelayInSecs + 20) * SecToMsec;   //Wait until node is dropped from neighborTable
 
-        //bool startSend = false;
+        bool startSend = false;
+        bool initialize = false;
         UInt16 myAddress;
-        Timer sendTimer;
-        //NetOpStatus status;
-        EmoteLCD lcd;
+        Timer OMACSendTimer = null;
+        Timer uninitTimer = null;
+        NetOpStatus status;
+        //EmoteLCD lcd;
         static UInt32 sendMsgCounter = 1;
 
         PingPayload pingMsg = new PingPayload();
-
-        //ReceiveCallBack myReceiveCB;
-        //NeighborhoodChangeCallBack myNeibhborhoodCB;
-
-        //MACConfiguration myMacConfig = new MACConfiguration();
-        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
-        //
-        private void SendOnPipe(int i, IMAC mac, ushort neighbor, MACPipe chan)
-        {
-            pingMsg.pingMsgId = sendMsgCounter;
-            byte[] msgBytes2 = pingMsg.ToBytes();
-            //var msgBytes2 =
-            //	("Message " + i + " from " + mac.MACRadioObj.RadioAddress + " to neighbor " + neighbor + " on pipe " +
-            //	 chan.PayloadType).ToCharArray().ToByteArray();
-            var netOpStatus = chan.Send(neighbor, msgBytes2, 0, (ushort)msgBytes2.Length);
-            Debug.Print("*** Sent message " + sendMsgCounter.ToString() + " to neighbor " + neighbor + " on pipe " + chan.PayloadType + "; NetOpStatus: " + netOpStatus);
-        }
-
+        OMAC myOMACObj;
 
         public void Initialize()
         {
             //Init LCD
-            lcd = new EmoteLCD();
-            lcd.Initialize();
-            lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
+            //lcd = new EmoteLCD();
+            //lcd.Initialize();
+            //lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
+
+            Debug.Print("2.Initializing radio");
+#if (RF231)
+            var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
+#endif
+#if (SI4468)
+            var radioConfiguration = new SI4468RadioConfiguration(SI4468TxPower.Power_20dBm, SI4468Channel.Channel_01);
+#endif
+
+            Debug.Print("Configuring OMAC...");
 
             try
             {
-                OMAC myMac;
-                Debug.Print("Initializing radio");
-#if (RF231)
-                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
-#endif
-#if (SI4468)
-                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_20dBm, SI4468Channel.Channel_01);
-#endif
-
                 //configure OMAC
-                myMac = new OMAC(radioConfig);
-                myMac.OnReceive += Rc;
-                myMac.OnNeighborChange += NeighborChange;
-
-                myAddress = myMac.MACRadioObj.RadioAddress;
-                Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
-
-                var chan1 = new MACPipe(myMac, PayloadType.Type01);
-                chan1.OnReceive += Rc1;
-
-                var chan2 = new MACPipe(myMac, PayloadType.Type02);
-                chan2.OnReceive += Rc2;
-
-                ushort[] _neighborList;
-                _neighborList = MACBase.NeighborListArray();
-
-                var rand = new Random();
-
-                while (true)
-                {
-                    var status = myMac.NeighborList(_neighborList);
-                    foreach (var neighbor in _neighborList)
-                    {
-                        if (neighbor == 0) { continue; }
-                        SendOnPipe(1, myMac, neighbor, chan1);
-                    }
-                    sendMsgCounter++;
-                    var waitTime = (int)(rand.NextDouble() * 30 * 1000);
-                    waitTime = System.Math.Max(waitTime, 20 * 1000);
-                    Debug.Print("*** Waiting " + waitTime);
-                    Thread.Sleep(waitTime);
-                }
-
+                myOMACObj = new OMAC(radioConfiguration, neighborLivenessDelayInSecs);
+                myOMACObj.OnReceive += Receive;
+                myOMACObj.OnNeighborChange += NeighborChange;
             }
             catch (Exception e)
             {
-                Debug.Print("exception!: " + e.ToString());
+                Debug.Print(e.ToString());
             }
 
+            Debug.Print("OMAC init done");
+            myAddress = myOMACObj.MACRadioObj.RadioAddress;
+            Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
 
+            initialize = true;
         }
 
-        //Keeps track of change in neighborhood
-        public void NeighborChange(IMAC macBase, DateTime time)
+        public void UnInitialize()
         {
-            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+            initialize = false;
+            StopOMACSendTimer();
+            Debug.Print("Uninitializing OMAC");
+            myOMACObj.Dispose();
         }
 
         //Starts a timer 
-        public void Start()
+        public void StartOMACSendTimer()
         {
             Debug.Print("Waiting to start test");
             Thread.Sleep(initialDelayInMsecs);
             Debug.Print("Starting timer...");
-            TimerCallback timerCB = new TimerCallback(sendTimerCallback);
-            sendTimer = new Timer(timerCB, null, 0, dutyCyclePeriod);
+            TimerCallback timerCB = new TimerCallback(sendTimerEvent);
+            if (OMACSendTimer == null)
+            {
+                OMACSendTimer = new Timer(timerCB, null, 0, dutyCyclePeriodInMsecs);
+            }
+            else
+            {
+                OMACSendTimer.Change(0, dutyCyclePeriodInMsecs);
+            }
             Debug.Print("Timer initialization done");
         }
 
+        public void StopOMACSendTimer()
+        {
+            bool result = OMACSendTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            if (!result)
+            {
+                throw new Exception("Timer could not be stopped");
+            }
+        }
+
+        void StartUnInitTimer(Object obj)
+        {
+            if (!initialize)
+            {
+                StopUnInitTimer();
+                Initialize();
+                StartOMACSendTimer();
+            }
+        }
+
+        public void StopUnInitTimer()
+        {
+            uninitTimer.Change(Timeout.Infinite, Timeout.Infinite);
+        }
+
         //Calls ping at regular intervals
-        void sendTimerCallback(Object obj)
+        void sendTimerEvent(Object obj)
         {
             SendPing();
         }
 
         public void SendPing()
         {
-            /*try
+            try
             {
+                if (sendMsgCounter % uninitAtThisValue == 0 && initialize == true)
+                {
+                    sendMsgCounter++;
+                    UnInitialize();
+
+                    TimerCallback timerCB = new TimerCallback(StartUnInitTimer);
+                    uninitTimer = new Timer(timerCB, null, howLongToRemainUnInitializedInMsecs, 0);
+                    return;
+                }
+
                 bool sendFlag = false;
                 UInt16[] neighborList = OMAC.NeighborListArray();
                 DeviceStatus dsStatus = myOMACObj.NeighborList(neighborList);
 
-                for (int j = 0; j < MAX_NEIGHBORS; j++)
+                if (dsStatus == DeviceStatus.Success)
                 {
-                    if (neighborList[j] != 0)
-                    {
-                        //Debug.Print("count of neighbors " + neighborList.Length);
-                        startSend = true; sendFlag = true;
-                        pingMsg.pingMsgId = sendMsgCounter;
-                        byte[] msg = pingMsg.ToBytes();
-                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
-                        status = myOMACObj.Send(neighborList[j], msg, 0, (ushort)msg.Length);
-                        //Debug.Print("Sending to neighbor " + 6846 + " ping msgID " + sendMsgCounter);
-                        //status = myOMACObj.Send(6846, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
-                        if (status != NetOpStatus.S_Success)
-                        {
-                            Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
-                        }
-                    }
+                    //for (int j = 0; j < neighborList.Length; j++)
+                    //{
+                        //if (neighborList[j] != 0)
+                        //{
+                            //Debug.Print("count of neighbors " + neighborList.Length);
+                            startSend = true; sendFlag = true;
+                            pingMsg.pingMsgId = sendMsgCounter;
+                            byte[] payload = pingMsg.ToBytes();
+
+                            /*Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter + " payload length " + payload.Length);
+                            status = myOMACObj.Send(neighborList[j], PayloadType.Type00, payload, 0, (ushort)payload.Length, DateTime.Now);
+                            if (status != NetOpStatus.S_Success)
+                            {
+                                Debug.Print("Send to " + neighborList[j] + " failed. Ping msgID " + sendMsgCounter.ToString());
+                            }
+
+                            if (myOMACObj.NeighborStatus(neighborList[j]) == null)
+                            {
+                                Debug.Print("neighborstatus is null");
+                            }*/
+
+#if (RF231)
+                            Debug.Print("Sending to neighbor " + 1470 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length + " on channel " + PayloadType.MFM_Data);
+                            status = myOMACObj.Send(1470, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
+                            if (status != NetOpStatus.S_Success)
+                            {
+                                Debug.Print("Send to " + 1470 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                            }
+#endif
+
+#if (SI4468)
+                            Debug.Print("Sending to neighbor " + 2488 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length + " on channel " + PayloadType.MFM_Data);
+                            status = myOMACObj.Send(2488, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
+                            if (status != NetOpStatus.S_Success)
+                            {
+                                Debug.Print("Send to " + 2488 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                            }
+#endif
+                        //}
+                    //}
                 }
                 if (sendFlag == false && startSend == true)
                 {
@@ -239,13 +270,13 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
 
                 if (sendMsgCounter < 10)
                 {
-                    lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
+                    //lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)sendMsgCounter);
                 }
                 else if (sendMsgCounter < 100)
                 {
                     UInt16 tenthPlace = (UInt16)(sendMsgCounter / 10);
                     UInt16 unitPlace = (UInt16)(sendMsgCounter % 10);
-                    lcd.Write(LCD.CHAR_S, LCD.CHAR_S, (LCD)tenthPlace, (LCD)unitPlace);
+                    //lcd.Write(LCD.CHAR_S, LCD.CHAR_S, (LCD)tenthPlace, (LCD)unitPlace);
                 }
                 else if (sendMsgCounter < 1000)
                 {
@@ -253,7 +284,7 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
                     UInt16 remainder = (UInt16)(sendMsgCounter % 100);
                     UInt16 tenthPlace = (UInt16)(remainder / 10);
                     UInt16 unitPlace = (UInt16)(remainder % 10);
-                    lcd.Write(LCD.CHAR_S, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+                    //lcd.Write(LCD.CHAR_S, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
                 else if (sendMsgCounter < 10000)
                 {
@@ -263,7 +294,7 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
                     remainder = (UInt16)(remainder % 100);
                     UInt16 tenthPlace = (UInt16)(remainder / 10);
                     UInt16 unitPlace = (UInt16)(remainder % 10);
-                    lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
+                    //lcd.Write((LCD)thousandthPlace, (LCD)hundredthPlace, (LCD)tenthPlace, (LCD)unitPlace);
                 }
 
                 if (sendMsgCounter == totalPingCount)
@@ -275,40 +306,19 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
             catch (Exception ex)
             {
                 Debug.Print("SendPing: " + ex.ToString());
-            }*/
+            }
         }
 
-        private static void Rc(IMAC mac, DateTime timeReceived)
+        //Handles received messages 
+        public void Receive(IMAC macBase, DateTime time)
         {
-            RcCommon(mac, timeReceived);
-        }
-        private static void Rc1(IMAC mac, DateTime timeReceived)
-        {
-            RcCommon(mac, timeReceived);
-        }
-        private static void Rc2(IMAC mac, DateTime timeReceived)
-        {
-            RcCommon(mac, timeReceived);
+
         }
 
-        private static void RcCommon(IMAC mac, DateTime timeReceived)
+        //Keeps track of change in neighborhood
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
-            var macPipe = (MACPipe)mac;
-            var plType = macPipe.PayloadType;
-            Debug.Print("*** Packet received\n");
-            var packet = mac.NextPacket();
-            //Debug.Print("\t1");
-            if (packet == null) { return; }
-            //Debug.Print("\t2");
-            var payloadBytes = packet.Payload;
-            //Debug.Print("\t3");
-            //var payloadChars = payloadBytes.ToCharArray();
-            //Debug.Print("\t4");
-            //var payloadStr = new string(payloadChars);
-            //Debug.Print("\t5");
-            var payloadStr = payloadBytes[0].ToString() + payloadBytes[1].ToString() + payloadBytes[2].ToString() + payloadBytes[3].ToString();
-
-            Debug.Print("*** Payload type " + plType + ", Received " + timeReceived.ToString("G") + ", <" + payloadStr + ">");
+            
         }
 
 
@@ -325,10 +335,8 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
         {
             Program p = new Program();
             p.Initialize();
-            p.Start();
+            p.StartOMACSendTimer();
             Thread.Sleep(Timeout.Infinite);
         }
     }
 }
-
-

@@ -1,0 +1,7 @@
+result = FAIL
+accuracy = 1
+resultParameter1 = 12.20178 0.08206425 0.0818525
+resultParameter2 = 13.51598 0.07407275 0.0738865
+resultParameter3 = 21.74256 0.046087 0.04589575
+resultParameter4 = 45.43338 0.0221215 0.0219105
+resultParameter5 = null

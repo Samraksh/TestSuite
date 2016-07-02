@@ -5,11 +5,11 @@ namespace ParameterClass
     class Parameters
     {
 	// required TestRig parameters
-	public int testTimeout = 10000;
-	public string useLogic = "none";
-	public double sampleTimeMs = 4000;
+	public int testTimeout = 625000;
+	public string useLogic = "normal";
+	public double sampleTimeMs = 600000;
 	public double sampleFrequency = 4000000;
-	public bool useCOMPort = true;
+	public bool useCOMPort = false;
 	public string forceCOM = "";
 	public string COMParameters = "115200,N,8,1";
 	public bool useTestScript = false;

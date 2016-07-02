@@ -1,0 +1,7 @@
+result = PASS
+accuracy = 1
+resultParameter1 = 7.047974 0.1614445 0.14101225
+resultParameter2 = 0.4807717 2.09799575 2.07738175
+resultParameter3 = 2.502063 0.4037145 0.38305475
+resultParameter4 = 7.048098 0.16134125 0.14099975
+resultParameter5 = null

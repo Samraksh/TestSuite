@@ -130,9 +130,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 myOMACObj = new OMAC(radioConfig);
                 myOMACObj.OnReceive += Receive;
                 myOMACObj.OnNeighborChange += NeighborChange;
-
-
-                myAddress = myOMACObj.MACRadioObj.RadioAddress;
+				myOMACObj.NeighborLivenessDelay = 20;
 
                 var chan1 = new MACPipe(myOMACObj, PayloadType.Type01);
                 chan1.OnReceive += Receive;
@@ -153,7 +151,15 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //Keeps track of change in neighborhood
         public void NeighborChange(IMAC macBase, DateTime time)
         {
-            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+            UInt16[] neighborList = OMAC.NeighborListArray();
+			DeviceStatus dsStatus = myOMACObj.NeighborList(neighborList);
+			int countOfNeighbors = 0;
+			for (int j = 0; j<neighborList.Length; j++){
+				if (neighborList[j] != 0){
+					countOfNeighbors++;
+				}
+			}
+			Debug.Print("************ Neighbor change! New count of neighbors " + countOfNeighbors.ToString());
         }
 
         //Handles received messages 
@@ -222,11 +228,6 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 else
                 {
                     Debug.Print("pingPayload is null");
-                }
-
-                if (totalRecvCounter % endOfTest == 0)
-                {
-                    ShowStatistics();
                 }
             }
             else

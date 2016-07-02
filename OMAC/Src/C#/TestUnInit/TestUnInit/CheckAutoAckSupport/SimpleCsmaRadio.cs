@@ -8,7 +8,7 @@ using Samraksh.eMote.Net;
 using Samraksh.eMote.Net.MAC;
 using Samraksh.eMote.Net.Radio;
 
-namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
+namespace Samraksh.eMote.Net.Mac.TestUnInit.Receive
 {
 	/// <summary>
 	/// Handle CSMA radio communication

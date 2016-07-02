@@ -1,5 +1,5 @@
-#define SI4468
-//#define RF231
+//#define SI4468
+#define RF231
 
 using System;
 using System.IO;
@@ -239,11 +239,11 @@ namespace Samraksh.eMote.Net.Mac.TestUnInit.Send
                             }*/
 
 #if (RF231)
-                            Debug.Print("Sending to neighbor " + 3505 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length + " on channel " + PayloadType.MFM_Data);
-                            status = myOMACObj.Send(3505, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
+                            Debug.Print("Sending to neighbor " + 1470 + " ping msgID " + sendMsgCounter + " payload length " + payload.Length + " on channel " + PayloadType.MFM_Data);
+                            status = myOMACObj.Send(1470, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length);
                             if (status != NetOpStatus.S_Success)
                             {
-                                Debug.Print("Send to " + 3505 + " failed. Ping msgID " + sendMsgCounter.ToString());
+                                Debug.Print("Send to " + 1470 + " failed. Ping msgID " + sendMsgCounter.ToString());
                             }
 #endif
 

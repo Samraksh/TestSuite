@@ -1,0 +1,7 @@
+result = PASS
+accuracy = 1
+resultParameter1 = 0.2501132
+resultParameter2 = 33.32334
+resultParameter3 = 0
+resultParameter4 = 0
+resultParameter5 = null
