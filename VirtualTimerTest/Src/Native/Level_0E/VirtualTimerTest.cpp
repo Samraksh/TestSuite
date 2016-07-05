@@ -114,16 +114,16 @@ BOOL VirtualTimerTest::Level_0E()
 		if(!VirtTimer_SetTimer(2, 0, periodValue*1000, FALSE, FALSE, Timer_2_Handler))
 			return FALSE;*/
 		//periodValue = (i+2)%9;
-		if(!VirtTimer_SetTimer(3, 0, periodValue*10000, FALSE, FALSE, Timer_0_Handler))
+		if(!VirtTimer_SetTimer(4, 0, periodValue*10000, FALSE, FALSE, Timer_0_Handler))
 			return FALSE;
 		//periodValue = (i+1)%9;
-		if(!VirtTimer_SetTimer(4, 0, periodValue*200000, FALSE, FALSE, Timer_1_Handler))
+		if(!VirtTimer_SetTimer(5, 0, periodValue*200000, FALSE, FALSE, Timer_1_Handler))
 			return FALSE;
 		//periodValue = (i+2)%9;
-		if(!VirtTimer_SetTimer(5, 0, periodValue*300000, FALSE, FALSE, Timer_2_Handler))
+		if(!VirtTimer_SetTimer(6, 0, periodValue*300000, FALSE, FALSE, Timer_2_Handler))
 			return FALSE;
 		//periodValue = (i+1)%9;
-		if(!VirtTimer_SetTimer(6, 0, periodValue*400000, FALSE, FALSE, Timer_3_Handler))
+		if(!VirtTimer_SetTimer(7, 0, periodValue*400000, FALSE, FALSE, Timer_3_Handler))
 			return FALSE;
 	}
 
@@ -131,7 +131,7 @@ BOOL VirtualTimerTest::Level_0E()
 	int timerValue = 0;
 	for(UINT16 i = 0; i <= 0; i++)
 	{
-		for (UINT16 j = 3; j <= 6; j++)
+		for (UINT16 j = 4; j <= 7; j++)
 		{
 			//timerValue = (i+j)%8 == 0 ? ((i+j)%8)+1 : (i+j)%8;
 			VirtTimer_Start( (i+j)%8 );

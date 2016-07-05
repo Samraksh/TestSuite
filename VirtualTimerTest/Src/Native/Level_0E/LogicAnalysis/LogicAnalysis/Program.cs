@@ -26,8 +26,8 @@ namespace LogicAnalysis
 
         const double expectedMinTime0 = 0.795f;
         const double expectedMinTime1 = 0.596f;
-        const double expectedMinTime2 = 0.397f;
-        const double expectedMinTime3 = 0.017f;
+        const double expectedMinTime2 = 0.3995f;
+        const double expectedMinTime3 = 0.0195f;
 
         const double expectedMaxTime0 = 1.201f;
         const double expectedMaxTime1 = 1.001f;
@@ -63,23 +63,30 @@ namespace LogicAnalysis
         static void ReadInFile()
         {
             var reader = new StreamReader(File.OpenRead(fileName));
-            // purge out first line which tends to throw off calculations
-            reader.ReadLine();
-            while (!reader.EndOfStream)
+            try
             {
-                var line = reader.ReadLine();
-                var values = line.Split(',');
+                // purge out first line which tends to throw off calculations
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
 
-                listNumber = values.Length;
+                    listNumber = values.Length;
 
-                listTime.Add(int.Parse(values[0]));
-                line0.Add(int.Parse(values[1]));
-                if (listNumber > 2)
-                    line1.Add(int.Parse(values[2]));
-                if (listNumber > 3)
-                    line2.Add(int.Parse(values[3]));
-                if (listNumber > 4)
-                    line3.Add(int.Parse(values[4]));
+                    listTime.Add(int.Parse(values[0]));
+                    line0.Add(int.Parse(values[1]));
+                    if (listNumber > 2)
+                        line1.Add(int.Parse(values[2]));
+                    if (listNumber > 3)
+                        line2.Add(int.Parse(values[3]));
+                    if (listNumber > 4)
+                        line3.Add(int.Parse(values[4]));
+                }
+            }
+            catch(Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
         }
 
