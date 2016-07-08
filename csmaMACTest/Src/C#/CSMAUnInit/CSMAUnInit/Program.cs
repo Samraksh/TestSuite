@@ -222,24 +222,24 @@ namespace Samraksh.eMote.Net.Mac.Ping
 			//Debug.Print("neighbor count: " + noOfNeighbors.ToString());
         }
 
-        void Receive(IMAC macBase, DateTime date)
+        void Receive(IMAC macBase, DateTime date, Packet receivedPacket)
         {
-            if (myCSMA.PendingReceivePacketCount() == 0)
+            /*if (myCSMA.PendingReceivePacketCount() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
             //while (myCSMA.GetPendingPacketCount() > 0) {
-            Packet rcvPacket = myCSMA.NextPacket();
-            if (rcvPacket == null)
+            Packet receivedPacket = myCSMA.NextPacket();*/
+            if (receivedPacket == null)
             {
                 Debug.Print("null");
                 return;
             }
 
-            byte[] rcvPayload = rcvPacket.Payload;
-            HandleMessage(rcvPayload, (UInt16)rcvPacket.Size, rcvPacket.Src, rcvPacket.IsUnicast, rcvPacket.RSSI, rcvPacket.LQI);
+            byte[] rcvPayload = receivedPacket.Payload;
+            HandleMessage(rcvPayload, (UInt16)receivedPacket.Size, receivedPacket.Src, receivedPacket.IsUnicast, receivedPacket.RSSI, receivedPacket.LQI);
             //}
             /*try{
             // Check if there's at least one packet
