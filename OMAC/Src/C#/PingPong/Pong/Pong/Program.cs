@@ -1,3 +1,6 @@
+#define RF231
+//#define SI4468
+
 using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -180,11 +183,6 @@ namespace Samraksh.eMote.Net.Mac.Pong
         PongPayload pongMsg = new PongPayload();
 
         OMAC myOMACObj;
-        //ReceiveCallBack myReceiveCB;
-        //NeighborhoodChangeCallBack myNeibhborhoodCB;
-
-        MACConfiguration myMacConfig = new MACConfiguration();
-        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
 
         public void Initialize()
         {
@@ -193,33 +191,20 @@ namespace Samraksh.eMote.Net.Mac.Pong
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
-            //Set OMAC parameters
-            /*myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
-            myRadioConfig.SetChannel(Radio.Channels.Channel_26);
-            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);*/
-
-            //myMacConfig.radioConfig = myRadioConfig;
-            Debug.Print("Initializing mac configuration");
-            myMacConfig.NeighborLivenessDelay = 180;
-            myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
-
-            Debug.Print("Initializing radio");
-            myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
-            myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
-            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
-            myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
-
-            Debug.Print("Configuring OMAC...");
-
             try
             {
+                Debug.Print("Initializing radio");
+#if RF231
+                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
+#elif SI4468
+                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_15Point5dBm, SI4468Channel.Channel_01);
+#endif
+
+                Debug.Print("Configuring OMAC...");
                 //configure OMAC
-                myOMACObj = new OMAC(myMacConfig);
-                /*myReceiveCB = Receive;
-                myNeibhborhoodCB = NeighborChange;
-                OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
-                myOMACObj = OMAC.Instance;*/
+                myOMACObj = new OMAC(radioConfig, 360);
+                myOMACObj.OnReceive += Receive;
+                myOMACObj.OnNeighborChange += NeighborChange;
             }
             catch (Exception e)
             {
@@ -227,33 +212,33 @@ namespace Samraksh.eMote.Net.Mac.Pong
             }
 
             Debug.Print("OMAC init done");
-            myAddress = myOMACObj.GetRadioAddress();
+            myAddress = myOMACObj.MACRadioObj.RadioAddress;
             Debug.Print("My address is: " + myAddress.ToString() + ". I receive pings and send pongs");
         }
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(UInt16 countOfNeighbors)
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
-            Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
         //Handles received messages 
-        public void Receive(UInt16 countOfPackets)
+        public void Receive(IMAC macBase, DateTime time, Packet receivedPacket)
         {
-            if (myOMACObj.GetPendingPacketCount_Receive() == 0)
+            /*if (myOMACObj.GetPendingPacketCount_Receive() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
-            Packet rcvPacket = myOMACObj.GetNextPacket();
-            if (rcvPacket == null)
+            Packet receivedPacket = myOMACObj.GetNextPacket();*/
+            if (receivedPacket == null)
             {
                 Debug.Print("null");
                 return;
             }
 
-            byte[] rcvPayload = rcvPacket.Payload;
+            byte[] rcvPayload = receivedPacket.Payload;
             PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
             if (pingPayload != null)
             {
@@ -298,7 +283,7 @@ namespace Samraksh.eMote.Net.Mac.Pong
 
             Debug.Print("Sending to neighbor " + pingPayload.pingSenderAddress + " pong msgID " + pingPayload.pingMsgId);
 
-            status = myOMACObj.Send(pingPayload.pingSenderAddress, (byte)PayloadType.MFM_DATA, msg, 0, (ushort)msg.Length);
+            status = myOMACObj.Send(pingPayload.pingSenderAddress, PayloadType.MFM_Data, msg, 0, (ushort)msg.Length);
             if (status != NetOpStatus.S_Success)
             {
                 Debug.Print("Send failed. Pong msgID " + pingPayload.pingMsgId.ToString());

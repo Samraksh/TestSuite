@@ -1,5 +1,5 @@
-#define SI4468
-//#define RF231
+#define RF231
+//#define SI4468
 
 using System;
 using System.IO;
@@ -105,7 +105,11 @@ namespace Samraksh.eMote.Net.Mac.Receive
     public class Program
     {
         const UInt32 displayStats = 100;
+#if RF231
         const int initialDelayInMsecs = 30000;
+#elif SI4468
+        const int initialDelayInMsecs = 75000;
+#endif
         const int TIMEBASE = 8000000; // in all power modes, 8 MHz is the timebase
         const int TIMEBASE_MS = TIMEBASE / 1000; // to get answer in milli-seconds
         Hashtable neighborHashtable = new Hashtable();
@@ -135,7 +139,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             //lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
             Lcd.Display("Init");
 
-            Debug.Print("2.Initializing radio");
+            Debug.Print("Initializing radio");
 #if RF231
             var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
 #elif SI4468

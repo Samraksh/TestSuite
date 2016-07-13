@@ -1,5 +1,5 @@
-#define SI4468
-//#define RF231
+#define RF231
+//#define SI4468
 
 using System;
 using System.Text;
@@ -86,8 +86,12 @@ namespace Samraksh.eMote.Net.Mac.Send
     public class Program
     {
         const UInt32 totalPingCount = 10001;
-        const UInt16 MAX_NEIGHBORS = 12;
+        //const UInt16 MAX_NEIGHBORS = 12;
+#if RF231
         const int initialDelayInMsecs = 30000;
+#elif SI4468
+        const int initialDelayInMsecs = 75000;
+#endif
         int dutyCyclePeriod = 20000;
 
         //bool startSend = false;

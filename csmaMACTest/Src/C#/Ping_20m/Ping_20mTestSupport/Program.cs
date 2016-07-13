@@ -1,3 +1,6 @@
+#define RF231
+//#define SI4468
+
 using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -85,20 +88,23 @@ namespace Samraksh.eMote.Net.Mac.Ping
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_N, LCD.CHAR_I, LCD.CHAR_7);
 
-            Debug.Print("Initializing radio");
-            var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
-
-            Debug.Print("Configuring:  CSMA...");
-            //try
-            //{
+            try
+            {
+                Debug.Print("Initializing radio");
+#if RF231
+                var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
+#elif SI4468
+                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_15Point5dBm, SI4468Channel.Channel_01);
+#endif
+                Debug.Print("Configuring:  CSMA...");
                 myCSMA = new CSMA(radioConfig);
                 myCSMA.OnReceive += Receive;
                 myCSMA.OnNeighborChange += NeighborChange;
-            /*}
+            }
             catch (Exception e)
             {
                 Debug.Print(e.ToString());
-            }*/
+            }
 
             Debug.Print("CSMA Init done.");
             myAddress = myCSMA.MACRadioObj.RadioAddress;

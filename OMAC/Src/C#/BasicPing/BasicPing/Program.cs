@@ -1,3 +1,6 @@
+#define RF231
+//#define SI4468
+
 using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -82,7 +85,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
     {
         //public variables
         UInt32 totalPingCount = 1000;
-        const UInt16 MAX_NEIGHBORS = 12;
+        //const UInt16 MAX_NEIGHBORS = 12;
         UInt16 dutyCyclePeriod = 20000;
         bool startSend = false;
         UInt16 myAddress;
@@ -99,7 +102,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         //ReceiveCallBack myReceiveCB;
         //NeighborhoodChangeCallBack myNeibhborhoodCB;
 
-        MACConfiguration myMacConfig = new MACConfiguration();
+        //MACConfiguration myMacConfig = new MACConfiguration();
         //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
                 
         public void Initialize()
@@ -109,33 +112,21 @@ namespace Samraksh.eMote.Net.Mac.Ping
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);
 
-            //Set OMAC parameters
-            /*myRadioConfig.SetTxPower(Radio.TxPowerValue.Power_3dBm);
-            myRadioConfig.SetChannel(Radio.Channels.Channel_26);
-            myRadioConfig.SetRadioName(Radio.RadioName.RF231RADIO);*/
-
-            //myMacConfig.radioConfig = myRadioConfig;
-            Debug.Print("Initializing mac configuration");
-            myMacConfig.NeighborLivenessDelay = 180;
-            myMacConfig.CCASenseTime = 140; //Carries sensing time in micro seconds
-
             Debug.Print("Initializing radio");
-            myMacConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
-            myMacConfig.MACRadioConfig.Channel = Channel.Channel_26;
-            myMacConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
-            myMacConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            myMacConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;
+#if RF231
+            var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
+#elif SI4468
+            var radioConfiguration = new SI4468RadioConfiguration(SI4468TxPower.Power_15Point5dBm, SI4468Channel.Channel_01);
+#endif
 
             Debug.Print("Configuring OMAC...");
 
             try
             {
                 //configure OMAC
-                myOMACObj = new OMAC(myMacConfig);
-                /*myReceiveCB = Receive;
-                myNeibhborhoodCB = NeighborChange;
-                OMAC.Configure(myMacConfig, myReceiveCB, myNeibhborhoodCB);
-                myOMACObj = OMAC.Instance;*/
+                myOMACObj = new OMAC(radioConfiguration);
+                myOMACObj.OnReceive += Receive;
+                myOMACObj.OnNeighborChange += NeighborChange;
             }
             catch(Exception e)
             {
@@ -143,14 +134,14 @@ namespace Samraksh.eMote.Net.Mac.Ping
             }
 
             Debug.Print("OMAC init done");
-            myAddress = myOMACObj.GetRadioAddress();
+            myAddress = myOMACObj.MACRadioObj.RadioAddress;
             Debug.Print("My address is: " + myAddress.ToString());
         }
 
         //Keeps track of change in neighborhood
-        public void NeighborChange(UInt16 countOfNeighbors)
+        public void NeighborChange(IMAC macBase, DateTime time)
         {
-            Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
         }
 
         //Starts a timer 
@@ -173,25 +164,33 @@ namespace Samraksh.eMote.Net.Mac.Ping
             try
             {
                 bool sendFlag = false;
-                UInt16[] neighborList = myOMACObj.GetNeighborList();
-                
-                for (int j = 0; j < MAX_NEIGHBORS; j++)
-                {
-                    if (neighborList[j] != 0)
-                    {
-                        //Debug.Print("count of neighbors " + neighborList.Length);
-                        startSend = true; sendFlag = true;
-                        sendMsgCounter++;
-                        pingMsg.pingMsgId = sendMsgCounter;
-                        byte[] msg = pingMsg.ToBytes();
-                        Debug.Print("Sending to neighbor " + neighborList[j] + " ping msgID " + sendMsgCounter);
+                UInt16[] neighborList = OMAC.NeighborListArray();
+                DeviceStatus dsStatus = myOMACObj.NeighborList(neighborList);
 
-                        status = myOMACObj.Send(neighborList[j], (byte)PayloadType.MFM_DATA, msg, 0, (ushort)msg.Length);
-                        if (status != NetOpStatus.S_Success)
+                if (dsStatus == DeviceStatus.Success)
+                {
+                    foreach (var neighbor in neighborList)
+                    {
+                        if (neighbor != 0)
                         {
-                            Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
+                            //Debug.Print("count of neighbors " + neighborList.Length);
+                            startSend = true; sendFlag = true;
+                            sendMsgCounter++;
+                            pingMsg.pingMsgId = sendMsgCounter;
+                            byte[] payload = pingMsg.ToBytes();
+                            Debug.Print("Sending to neighbor " + neighbor + " ping msgID " + sendMsgCounter);
+
+                            status = myOMACObj.Send(neighbor, PayloadType.MFM_Data, payload, 0, (ushort)payload.Length, DateTime.Now);
+                            if (status != NetOpStatus.S_Success)
+                            {
+                                Debug.Print("Send failed. Ping msgID " + sendMsgCounter.ToString());
+                            }
                         }
                     }
+                }
+                else
+                {
+                    Debug.Print("Could not get neighbor list");
                 }
                 if (sendFlag == false && startSend == true)
                 {
@@ -239,18 +238,18 @@ namespace Samraksh.eMote.Net.Mac.Ping
         }
 
         //Handles received messages 
-        public void Receive(UInt16 countOfPackets)
+        public void Receive(IMAC macBase, DateTime time, Packet receivedPacket)
         {
             totalRecvCounter++;
             Debug.Print("---------------------------");
-            if (myOMACObj.GetPendingPacketCount_Receive() == 0)
+            /*if (myOMACObj.GetPendingPacketCount_Receive() == 0)
             {
                 Debug.Print("no packets");
                 return;
             }
 
-            Packet rcvPacket = myOMACObj.GetNextPacket();
-            if (rcvPacket == null)
+            Packet receivedPacket = myOMACObj.GetNextPacket();*/
+            if (receivedPacket == null)
             {
                 Debug.Print("null");
                 return;
@@ -258,7 +257,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
             Debug.Print("totalRecvCounter is " + totalRecvCounter);
 
-            byte[] rcvPayload = rcvPacket.Payload;
+            byte[] rcvPayload = receivedPacket.Payload;
             PingPayload pingPayload = pingMsg.FromBytesToPingPayload(rcvPayload);
             if (pingPayload != null)
             {

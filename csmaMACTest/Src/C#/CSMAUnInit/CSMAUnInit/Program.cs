@@ -1,3 +1,6 @@
+#define RF231
+//#define SI4468
+
 using System;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
@@ -92,29 +95,19 @@ namespace Samraksh.eMote.Net.Mac.Ping
             lcd = new EmoteLCD();
             lcd.Initialize();
             lcd.Write(LCD.CHAR_I, LCD.CHAR_N, LCD.CHAR_I, LCD.CHAR_7);
-
-            /*Debug.Print("Initializing mac configuration");
-            macConfig.NeighborLivenessDelay = 180;
-            macConfig.CCASenseTime = 140; //Carries sensing time in micro seconds*/
-
             Debug.Print("Initializing radio");
+#if RF231
             var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_0Point0dBm, RF231Channel.Channel_13);
-            /*macConfig.MACRadioConfig.TxPower = TxPowerValue.Power_3dBm;
-            macConfig.MACRadioConfig.Channel = Channel.Channel_26;
-            macConfig.MACRadioConfig.RadioType = RadioType.RF231RADIO;
-            macConfig.MACRadioConfig.OnReceiveCallback = Receive;
-            macConfig.MACRadioConfig.OnNeighborChangeCallback = NeighborChange;*/
+#elif SI4468
+            var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_15Point5dBm, SI4468Channel.Channel_01);
+#endif
 
-            Debug.Print("Configuring:  CSMA...");
             try
             {
+                Debug.Print("Configuring:  CSMA...");
                 myCSMA = new CSMA(radioConfig);
                 myCSMA.OnReceive += Receive;
                 myCSMA.OnNeighborChange += NeighborChange;
-                //myReceiveCB = Receive;
-                //myNeighborCB = NeighborChange;
-                //CSMA.Configure(macConfig, myReceiveCB, myNeighborCB);
-                //myCSMA = CSMA.Instance;
             }
             catch (Exception e)
             {

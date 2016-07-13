@@ -1,5 +1,5 @@
-#define SI4468
-//#define RF231
+#define RF231
+//#define SI4468
 
 using System;
 using Microsoft.SPOT;
@@ -103,7 +103,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
     public class Program
     {
-        const UInt16 MAX_NEIGHBORS = 12;
+        //const UInt16 MAX_NEIGHBORS = 12;
         const UInt32 endOfTest = 50;
         Hashtable neighborHashtable = new Hashtable();
         EmoteLCD lcd;

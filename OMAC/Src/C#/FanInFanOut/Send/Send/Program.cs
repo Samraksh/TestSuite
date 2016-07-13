@@ -1,5 +1,5 @@
-#define SI4468
-//#define RF231
+#define RF231
+//#define SI4468
 
 using System;
 using System.IO;
@@ -86,7 +86,11 @@ namespace Samraksh.eMote.Net.Mac.Send
     public class Program
     {
         const UInt32 totalPingCount = 2201;     //3 msgs per min; Total msg count is for slightly larger than 12 hours - 3*60*12
+#if RF231
         const int initialDelayInMsecs = 30000;
+#elif SI4468
+        const int initialDelayInMsecs = 75000;
+#endif
         int dutyCyclePeriod = 20000;
 
         bool startSend = false;
@@ -113,7 +117,7 @@ namespace Samraksh.eMote.Net.Mac.Send
             lcd.Write(LCD.CHAR_I, LCD.CHAR_n, LCD.CHAR_i, LCD.CHAR_t);*/
             Lcd.Display("Init");
 
-            Debug.Print("2.Initializing radio");
+            Debug.Print("Initializing radio");
 #if RF231
             var radioConfiguration = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
 #elif SI4468
