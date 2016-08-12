@@ -184,7 +184,7 @@ namespace Samraksh.eMote.Net.Mac.Ping
         Timer pongNotReceivedTimer;
         EmoteLCD lcd;
 
-        UInt16[] neighborList;
+        //UInt16[] neighborList;
         bool startSend = false;
         UInt16 myAddress;
         UInt16 dutyCyclePeriod = 20000;

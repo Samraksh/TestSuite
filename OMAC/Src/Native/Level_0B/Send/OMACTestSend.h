@@ -12,7 +12,7 @@
 #include <Samraksh/VirtualTimer.h>
 #include <Samraksh/Message.h>
 
-#define MAX_NEIGHBORS	12
+//#define MAX_NEIGHBORS	12
 
 typedef struct  {
 	UINT16 MSGID;

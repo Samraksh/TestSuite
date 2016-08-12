@@ -8,6 +8,7 @@
 //extern HALTimerManager gHalTimerManagerObject;
 //extern VirtualTimer gVirtualTimerObject;
 //extern VirtualTimerMapper gVirtualTimerMapperObject;
+extern NeighborTable g_NeighborTable;
 extern OMACTest gOMACTest;
 extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
@@ -59,8 +60,8 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 	//Toggle Pin State for monitoring with Logic Analyzer
 	//UINT16 Nbr2beFollowed = g_OMAC.Neighbor2beFollowed;
 	UINT16 Nbr2beFollowed;
-	if(g_NeighborTable.Neighbor[0].Status == Alive){
-		Nbr2beFollowed = g_NeighborTable.Neighbor[0].MacAddress;
+	if(g_NeighborTable.Neighbor[0].neighborStatus == Alive){
+		Nbr2beFollowed = g_NeighborTable.Neighbor[0].MACAddress;
 	}
 	else{
 		Nbr2beFollowed = 0;
@@ -140,8 +141,8 @@ BOOL OMACTest::StartTest(){
 BOOL OMACTest::ScheduleNextNeighborCLK(){
 
 	UINT16 Nbr2beFollowed;
-	if(g_NeighborTable.Neighbor[0].Status == Alive){
-		Nbr2beFollowed = g_NeighborTable.Neighbor[0].MacAddress;
+	if(g_NeighborTable.Neighbor[0].neighborStatus == Alive){
+		Nbr2beFollowed = g_NeighborTable.Neighbor[0].MACAddress;
 	}
 	else{
 		Nbr2beFollowed = 0;

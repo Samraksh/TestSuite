@@ -12,7 +12,7 @@
 #include <Samraksh/VirtualTimer.h>
 #include <Samraksh/Message.h>
 
-#define MAX_NEIGHBORS 12
+//#define MAX_NEIGHBORS 12
 
 typedef struct  {
 	UINT16 MSGID;
@@ -29,11 +29,11 @@ typedef struct{
 	NodeStats_t nodeStats;
 }NewNode_t;
 
-enum RadioID : UINT8
+/*enum RadioID : UINT8
 {
 	RF231RADIO,
 	RF231RADIOLR,
-};
+};*/
 
 class OMACTest{
 public:
