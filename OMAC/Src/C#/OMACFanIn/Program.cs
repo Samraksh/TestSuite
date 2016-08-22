@@ -109,12 +109,13 @@ namespace Samraksh.eMote.Net.Mac.Receive
         EmoteLCD lcd;
 
         UInt16 myAddress;
-        static UInt32 totalRecvCounter = 0;
+        static UInt32 totalRecvCounter = 1;
 
         PingPayload pingMsg = new PingPayload();
         OMAC myOMACObj;
 
         int errors = 0;
+		int retransmit = 0;
 
 
         public void Initialize()
@@ -163,7 +164,6 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //Handles received messages 
         public void Receive(IMAC macBase, DateTime time, Packet receivedPacket)
         {
-            totalRecvCounter++;
             Debug.Print("---------------------------");
             /*if (myOMACObj.PendingReceivePacketCount() == 0)
             {
@@ -193,11 +193,18 @@ namespace Samraksh.eMote.Net.Mac.Receive
                     {
                         NeighborTableInfo nbrTableInfoAnalyze = (NeighborTableInfo)neighborHashtable[receivedPacket.Src];
                         Debug.Print(receivedPacket.Src.ToString() + " " + pingPayload.pingMsgId.ToString() + " " + nbrTableInfoAnalyze.prevId.ToString());
-                        if (pingPayload.pingMsgId != nbrTableInfoAnalyze.prevId + 1)
+                        if (pingPayload.pingMsgId == nbrTableInfoAnalyze.prevId )
+						{
+							Debug.Print("retransmit");
+							retransmit++;
+						}
+                        else if (pingPayload.pingMsgId != nbrTableInfoAnalyze.prevId + 1)
                         {
                             Debug.Print("error");
                             errors++;
-                        }
+                        } else {
+            				totalRecvCounter++;
+						}
 
                         nbrTableInfo = (NeighborTableInfo)neighborHashtable[receivedPacket.Src];
                         nbrTableInfo.recvCount++;
