@@ -128,7 +128,7 @@ namespace Samraksh.eMote.Net.Mac.Send
 #if RF231
                 var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
 #elif SI4468
-                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_20dBm, SI4468Channel.Channel_01);
+                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_1Point1dBm, SI4468Channel.Channel_01);
 #endif
                 
                 //configure OMAC
@@ -175,7 +175,8 @@ namespace Samraksh.eMote.Net.Mac.Send
         //Keeps track of change in neighborhood
         public void NeighborChange(IMAC macBase, DateTime time)
         {
-            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+			Debug.Print("---- neighbor change ----\r\n");
+            
         }
 
         //Starts a timer 
