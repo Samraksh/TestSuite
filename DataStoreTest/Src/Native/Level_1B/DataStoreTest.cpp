@@ -22,7 +22,7 @@ extern Data_Store g_dataStoreObject;
 const double definedFlashSize = (125.0 * 131072.0) + 5000.0;     //Size of the flash is: 125 * 131072 = 16384000 (~16MB). Little more than actual flash size in order to check if exception is thrown.
 //const double definedFlashSize = g_dataStoreObject.returnTotalSpace() + 5000;
 
-const int objectSize = 2000;
+const int objectSize = 1000;
 UINT16 test_limit = objectSize;
 UINT16 objectCount = 16384;
 
@@ -168,7 +168,6 @@ BOOL DataStoreTest::Test_FillFlash()
 {
 	INT64 startTime = HAL_Time_CurrentTime();
 	hal_printf("start time: %lld \n", startTime);
-	BOOL readResult = false;
 	char write_data[test_limit];
 
 	for(UINT16 rwIndex = 0; rwIndex < test_limit; ++rwIndex) {
@@ -204,14 +203,7 @@ BOOL DataStoreTest::Test_FillFlash()
 				}
 				else {
 					if(g_dataStoreObject.getLastError() == DATASTORE_ERROR_OUT_OF_FLASH_MEMORY) {
-						readResult = StartReading();
-						if(readResult) {
 							goto END_OF_TEST;
-						}
-						else {
-							DisplayStats(false, "FAILURE: flash fill test failed", NULL, 0);
-							return false;
-						}
 					} else {
 						DisplayStats(false, "ERROR: Unable to write data to data store", NULL, 0);
 						return false;
@@ -220,25 +212,11 @@ BOOL DataStoreTest::Test_FillFlash()
 			}
 			else {
 				if(endOfObjectsFlag) {
-					readResult = StartReading();
-					if(readResult) {
 						goto END_OF_TEST;
-					}
-					else {
-						DisplayStats(false, "FAILURE: flash fill test failed", NULL, 0);
-						return false;
-					}
 				}
 				else {
 					if(g_dataStoreObject.getLastError() == DATASTORE_ERROR_OUT_OF_FLASH_MEMORY) {
-						readResult = StartReading();
-						if(readResult) {
 							goto END_OF_TEST;
-						}
-						else {
-							DisplayStats(false, "FAILURE: flash fill test failed", NULL, 0);
-							return false;
-						}
 					}
 					else {
 						DisplayStats(false, "ERROR: No valid pointer to record in data store", NULL, 0);
@@ -257,8 +235,7 @@ END_OF_TEST:
 	INT64 endTime = HAL_Time_CurrentTime();
 	hal_printf("end time: %lld \n", endTime);
 	hal_printf("total time taken: %lld \n", endTime - startTime);
-	g_dataStoreObject.EraseAllBlocks();
-	DisplayStats(true, "SUCCESS: flash fill test succeeded", NULL, 0);
+	
 	return true;
 
 }
@@ -296,6 +273,7 @@ BOOL DataStoreTest::Level_0C()
 BOOL DataStoreTest::Execute( int testLevel )
 {
 	BOOL result;
+	BOOL readResult = false;
 
 	switch(testLevel)
 	{
@@ -304,6 +282,14 @@ BOOL DataStoreTest::Execute( int testLevel )
 			break;
 		case 1:
 			result = Test_FillFlash();
+			readResult = StartReading();
+			if(readResult) {
+				g_dataStoreObject.EraseAllBlocks();
+				DisplayStats(true, "SUCCESS: flash fill test succeeded", NULL, 0);
+			} else {
+				DisplayStats(false, "FAILURE: flash fill test failed", NULL, 0);
+				return false;
+			}
 			break;
 		case 2:
 			result = DeleteDataStoreRecords();
