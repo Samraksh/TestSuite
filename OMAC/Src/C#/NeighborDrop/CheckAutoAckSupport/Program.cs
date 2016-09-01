@@ -155,21 +155,27 @@ namespace Samraksh.eMote.Net.Mac.Send
 
                 while (true)
                 {
-					for (int i = 0; i<10; i++){
-                    	var status = myMac.NeighborList(_neighborList);
-                   	 	foreach (var neighbor in _neighborList)
-                   	 	{
-                   	     if (neighbor == 0) { continue; }
-                  	      SendOnPipe(1, myMac, neighbor, chan1);
-                   	 	}
-                    	sendMsgCounter++;
-                    	var waitTime = (int)(rand.NextDouble() * 30 * 1000);
-                    	waitTime = System.Math.Max(waitTime, 20 * 1000);
-                   	 	Debug.Print("*** Waiting " + waitTime);
-                    	Thread.Sleep(waitTime);
-					}
-					myMac.Dispose();
-				}
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var status = myMac.NeighborList(_neighborList);
+                        foreach (var neighbor in _neighborList)
+                        {
+                            if (neighbor == 0) { continue; }
+                            SendOnPipe(1, myMac, neighbor, chan1);
+                        }
+                        sendMsgCounter++;
+                        var waitTime = (int)(rand.NextDouble() * 5 * 1000);
+                        waitTime = System.Math.Max(waitTime, 5 * 1000);
+                        Debug.Print("*** Waiting " + waitTime);
+                        Thread.Sleep(waitTime);
+                    }
+                    Debug.Print("Disposing of mac");
+                    myMac.Dispose();
+                    Thread.Sleep(20000);
+                    myMac = new OMAC(radioConfig);
+                    myMac.OnReceive += Rc;
+                    myMac.OnNeighborChange += NeighborChange;
+                }
 
             }
             catch (Exception e)
@@ -324,5 +330,6 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
     }
 }
+
 
 

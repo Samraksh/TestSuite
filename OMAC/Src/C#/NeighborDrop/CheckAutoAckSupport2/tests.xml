@@ -1,10 +1,10 @@
 <TestSuite>
 	<Test Name='Radio' Type='C#'>
 		<Description>
-			Auto ACK support2
+			neighbor drop support
 		</Description>
 		<TestPath>
-			OMAC\Src\C#\OMACFanIn\CheckAutoAckSupport2
+			OMAC\Src\C#\NeighborDrop\CheckAutoAckSupport2
 		</TestPath>
 		<TestProjName>
 			CheckAutoAckSupport.csproj

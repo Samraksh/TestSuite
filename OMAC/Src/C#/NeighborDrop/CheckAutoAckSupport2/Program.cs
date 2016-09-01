@@ -87,11 +87,7 @@ namespace Samraksh.eMote.Net.Mac.Send
     {
         const UInt32 totalPingCount = 10001;
         //const UInt16 MAX_NEIGHBORS = 12;
-#if RF231
         const int initialDelayInMsecs = 30000;
-#elif SI4468
-        const int initialDelayInMsecs = 75000;
-#endif
         int dutyCyclePeriod = 20000;
 
         //bool startSend = false;
@@ -159,17 +155,26 @@ namespace Samraksh.eMote.Net.Mac.Send
 
                 while (true)
                 {
-                    var status = myMac.NeighborList(_neighborList);
-                    foreach (var neighbor in _neighborList)
+                    for (int i = 0; i < 5; i++)
                     {
-                        if (neighbor == 0) { continue; }
-                        SendOnPipe(1, myMac, neighbor, chan1);
+                        var status = myMac.NeighborList(_neighborList);
+                        foreach (var neighbor in _neighborList)
+                        {
+                            if (neighbor == 0) { continue; }
+                            SendOnPipe(1, myMac, neighbor, chan1);
+                        }
+                        sendMsgCounter++;
+                        var waitTime = (int)(rand.NextDouble() * 5 * 1000);
+                        waitTime = System.Math.Max(waitTime, 5 * 1000);
+                        Debug.Print("*** Waiting " + waitTime);
+                        Thread.Sleep(waitTime);
                     }
-                    sendMsgCounter++;
-                    var waitTime = (int)(rand.NextDouble() * 30 * 1000);
-                    waitTime = System.Math.Max(waitTime, 20 * 1000);
-                    Debug.Print("*** Waiting " + waitTime);
-                    Thread.Sleep(waitTime);
+                    Debug.Print("Disposing of mac");
+                    myMac.Dispose();
+                    Thread.Sleep(20000);
+                    myMac = new OMAC(radioConfig);
+                    myMac.OnReceive += Rc;
+                    myMac.OnNeighborChange += NeighborChange;
                 }
 
             }
@@ -327,5 +332,6 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
     }
 }
+
 
 
