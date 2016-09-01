@@ -165,6 +165,8 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //Handles received messages 
         public void Receive(IMAC macBase, DateTime time, Packet receivedPacket)
         {
+			int char0 = ((int)totalRecvCounter % 10) + (int)LCD.CHAR_0;
+            lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)char0);
             Debug.Print("---------------------------");
             /*if (myOMACObj.PendingReceivePacketCount() == 0)
             {
