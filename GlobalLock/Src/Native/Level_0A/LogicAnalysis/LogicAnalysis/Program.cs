@@ -135,6 +135,7 @@ namespace LogicAnalysis
             int expectedGapNumCnt = expectedGapSequence.Count;
             bool foundNotEg1 = false;
             bool foundTransition = false;
+            int samplePointMarker = 0;
             for (int i = samplePoint + 1; i < stopPoint; i++)
             {
                 // looking for transition from 0 to 1
@@ -167,10 +168,14 @@ namespace LogicAnalysis
                         if ((gapTime <= (expectedGapSequence[currentGapSearchNum] * (1+accuracy))) && (gapTime >= (expectedGapSequence[currentGapSearchNum] * (1-accuracy))))
                         {
                             currentGapSearchNum++;
+                            System.Diagnostics.Debug.WriteLine(currentGapSearchNum.ToString());
                         }
                         else
                         {
+                            i = samplePointMarker + 1;
                             currentGapSearchNum = 0;
+                            samplePointMarker = i;
+                            System.Diagnostics.Debug.WriteLine(currentGapSearchNum.ToString());
                         }
                     }
                     lastTransitionTime = time[i];
