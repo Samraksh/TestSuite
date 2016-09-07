@@ -180,7 +180,18 @@ namespace Samraksh.eMote.Net.Mac.Ping
 
         void NeighborChange(IMAC macBase, DateTime date)
         {
-            //Debug.Print("neighbor count: " + noOfNeighbors.ToString());
+            ushort[] _neighborList;
+            int neighborCnt = 0;
+            _neighborList = MACBase.NeighborListArray();
+            var status = macBase.NeighborList(_neighborList);
+
+            foreach (var neighbor in _neighborList)
+            {
+                if (neighbor == 0) { continue; }
+				Debug.Print(neighbor.ToString());
+                neighborCnt++;
+            }
+            Debug.Print("Current neighbor count: " + neighborCnt.ToString());
         }
 
         void Receive(IMAC macBase, DateTime date, Packet receivedPacket)
