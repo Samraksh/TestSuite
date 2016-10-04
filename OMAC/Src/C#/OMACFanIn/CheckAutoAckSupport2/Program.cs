@@ -141,6 +141,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                 //configure OMAC
                 myMac = new OMAC(radioConfig);
                 myMac.OnReceive += Rc;
+                myMac.Neighborliveliness = 600;
                 myMac.OnNeighborChange += NeighborChange;
 
                 myAddress = myMac.MACRadioObj.RadioAddress;

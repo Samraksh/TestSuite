@@ -33,6 +33,7 @@ enum RadioID : UINT8
 {
 	RF231RADIO,
 	RF231RADIOLR,
+	SI4468_SPI2,
 };
 
 class OMACTest{
