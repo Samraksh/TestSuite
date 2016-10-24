@@ -3,6 +3,7 @@
  */
 
 #include "OMACTest.h"
+//#include "OMAConstants.h"
 
 
 //extern HALTimerManager gHalTimerManagerObject;
@@ -24,9 +25,7 @@ extern UINT16 MF_NODE_ID;
 #define NEIGHBORCLOCKMONITORPERIOD (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO))
 #define INITIALDELAY 100000
 
-void OMACTest_ReceiveHandler (void* msg, UINT16 NumOfPendingPackets){
-//	++gOMACTest.rx_packet_count ;
-//	hal_printf("\r\n OMACTest_ReceiveHandler: NumOfPendingPackets = %u rx_packet_count = %llu \r\n", NumOfPendingPackets, gOMACTest.rx_packet_count);
+void OMACTest_ReceiveHandler (void* msg, UINT16 PacketType){
 	++gOMACTest.rx_packet_count ;
 	Message_15_4_t* packet_ptr = static_cast<Message_15_4_t*>(msg);
 	UINT64 packetID;
@@ -36,13 +35,6 @@ void OMACTest_ReceiveHandler (void* msg, UINT16 NumOfPendingPackets){
 }
 
 void OMACTest_NeighborChangeHandler (INT16 args){
-//	hal_printf("\r\n Neighbor Change Notification for %u neighbors! IsAvailableForUpperLayers = %u NumTimeSyncMessagesSent = %u NumberOfRecordedElements = %u \r\n"
-//			, args
-//			, g_NeighborTable.Neighbor[0].IsAvailableForUpperLayers
-//			, g_NeighborTable.Neighbor[0].NumTimeSyncMessagesSent
-//			, g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(g_NeighborTable.Neighbor[0].MACAddress)
-//			);
-
 	hal_printf("\r\n Neighbor Change Notification for %u neighbors!\r\n", args);
 
 	for(UINT8 i = 0; i < 8 ; ++i){
@@ -69,6 +61,7 @@ void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 
 	else memcpy(&packetID,data_msg->payload,sizeof(UINT64));
 
 	hal_printf(" dest = %u  PacketID = %llu rx_packet_count = %llu \r\n",packet_ptr->GetHeader()->dest, packetID,  gOMACTest.rx_packet_count );
+
 
 }
 
@@ -152,7 +145,7 @@ BOOL OMACTest::Initialize(){
 
 	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	//Config.Network = 138;
-	Config.NeighborLivenessDelay = 621;
+	Config.NeighborLivenessDelay = 620;
 	MACReceiveFuncPtrType rx_fptr = &OMACTest_ReceiveHandler;
 	myEventHandler.SetReceiveHandler(rx_fptr);
 	SendAckFuncPtrType sa_fptr = &OMACTest_SendAckHandler;
@@ -211,8 +204,6 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 		if(NeighborFound){
 			NeighborFound = false;
 			hal_printf("\n NEIGHBOR LOST!! \n");
-			this->Config.NeighborLivenessDelay = 620;
-			g_OMAC.SetConfig(&(this->Config));
 		}
 	}
 	VirtualTimerReturnMessage rm;
@@ -244,24 +235,42 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 
 		++(sequence_number);
 		//hal_printf("\n sequence_number = %Lu \n", sequence_number);
-		if( (sent_packet_count % 20 < 10 && sequence_number % 100 == 0)
-		||  (sent_packet_count % 20 >= 10 && sequence_number % 1000 == 0)
+		if( (sent_packet_count % 20 < 10 && sequence_number % 200 == 0)
+		||  (sent_packet_count % 20 >= 10 && sequence_number % 200 == 0)
 				) {
-				if(g_OMAC.Send(Nbr2beFollowed, 128, &sent_packet_count, sizeof(UINT64))){
-					hal_printf("\r\n PACKET ACCEPTED Dest = %u PacketID = %llu!! \r\n", Nbr2beFollowed, sent_packet_count);
-					++sent_packet_count;
+
+			//Choose neighbor to send
+			hal_printf("\r\n Choosing Neighbor \r\n");
+				UINT16 Nbr2beSent = 0;
+				UINT8 chosen_index = sent_packet_count%g_NeighborTable.PreviousNumberOfNeighbors();
+				for(UINT8 i = 0; i < 8 ; ++i){
+					if(g_NeighborTable.Neighbor[i].IsAvailableForUpperLayers){
+						if(chosen_index == 0){
+							Nbr2beSent = g_NeighborTable.Neighbor[i].MACAddress;
+							break;
+						}
+						else if(chosen_index > 0){
+							--chosen_index;
+						}
+						else{
+							hal_printf("\r\n Error in Choosing Neeighbor! \r\n");
+							break;
+						}
+					}
 				}
-				else{
-					hal_printf("\r\n PACKET REJECTED!! Dest = %u PacketID = %llu!!\r\n", Nbr2beFollowed, sent_packet_count);
+				hal_printf("\r\n Chosen Neighbor = %u \r\n", Nbr2beSent);
+				if(Nbr2beSent){
+					if(g_OMAC.Send(Nbr2beSent, 128, &sent_packet_count, sizeof(UINT64))){
+						hal_printf("\r\n PACKET ACCEPTED Dest = %u PacketID = %llu!! \r\n", Nbr2beSent, sent_packet_count);
+						++sent_packet_count;
+					}
+					else{
+						hal_printf("\r\n PACKET REJECTED!! Dest = %u PacketID = %llu!!\r\n", Nbr2beSent, sent_packet_count);
+					}
 				}
 		}
 
-		//Decrease Slow Slow Convergence
-		if(sent_packet_count % 20 == 19 && sequence_number % 100 == 50){
-				Config.NeighborLivenessDelay = 20;
-				g_OMAC.SetConfig(&(this->Config));
 
-		}
 
 		return TRUE;
 	}
