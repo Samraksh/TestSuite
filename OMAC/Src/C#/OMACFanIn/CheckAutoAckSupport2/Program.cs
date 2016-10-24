@@ -143,6 +143,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                 myMac.OnReceive += Rc;
                 myMac.Neighborliveliness = 600;
                 myMac.OnNeighborChange += NeighborChange;
+                myMac.OnSendStatus += ReceiveSendStatus;
 
                 myAddress = myMac.MACRadioObj.RadioAddress;
                 Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
@@ -186,6 +187,14 @@ namespace Samraksh.eMote.Net.Mac.Send
         public void NeighborChange(IMAC macBase, DateTime time)
         {
             //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+        }
+
+        //Handles received messages 
+        public void ReceiveSendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        {
+            Debug.Print("---------------------------");
+            Debug.Print("ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
+
         }
 
         //Starts a timer 

@@ -137,6 +137,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 myOMACObj = new OMAC(radioConfig);
                 myOMACObj.OnReceive += Receive;
                 myOMACObj.OnNeighborChange += NeighborChange;
+                myOMACObj.OnSendStatus += ReceiveSendStatus;
 
                 var chan1 = new MACPipe(myOMACObj, PayloadType.Type01);
                 chan1.OnReceive += Receive;
@@ -252,6 +253,13 @@ namespace Samraksh.eMote.Net.Mac.Receive
             }
         }
 
+                //Handles received messages 
+        public void ReceiveSendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        {
+            Debug.Print("---------------------------");
+            Debug.Print("ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
+
+        }
         //Show statistics
         void ShowStatistics()
         {
