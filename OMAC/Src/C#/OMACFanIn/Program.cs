@@ -1,5 +1,5 @@
-#define RF231
-//#define SI4468
+//#define RF231
+#define SI4468
 
 using System;
 using Microsoft.SPOT;
