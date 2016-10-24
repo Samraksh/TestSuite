@@ -7,13 +7,13 @@
     </Description>
     <Documentation>
     </Documentation>
-    <Directory>TestSuite\OMAC\Src\Native\Level_0G3\OMACTest</Directory>
+    <Directory>TestSuite\OMAC\Src\Native\PeriodicMessaging\OMACTest</Directory>
     <IsClrProject>False</IsClrProject>
     <InteropFeatures>
     </InteropFeatures>
     <ExtraAssemblies>
     </ExtraAssemblies>
-    <ProjectPath>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\OMACTest.proj</ProjectPath>
+    <ProjectPath>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\PeriodicMessaging\OMACTest\OMACTest.proj</ProjectPath>
     <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\Level_0G3\OMACTest\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\OMAC\Src\Native\PeriodicMessaging\OMACTest\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
