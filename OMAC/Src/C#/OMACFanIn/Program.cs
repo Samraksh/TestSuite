@@ -138,13 +138,15 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 myOMACObj = new OMAC(radioConfig);
                 myOMACObj.OnReceive += Receive;
                 myOMACObj.OnNeighborChange += NeighborChange;
-                myOMACObj.OnSendStatus += ReceiveSendStatus;
+                //myOMACObj.OnSendStatus += ReceiveSendStatus;
 
                 var chan1 = new MACPipe(myOMACObj, PayloadType.Type01);
                 chan1.OnReceive += Receive;
+                chan1.OnSendStatus += ReceiveSendStatus1;
 
                 var chan2 = new MACPipe(myOMACObj, PayloadType.Type02);
                 chan2.OnReceive += Receive;
+                chan1.OnSendStatus += ReceiveSendStatus2;
             }
             catch (Exception e)
             {
@@ -153,7 +155,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
 
             Debug.Print("OMAC init done");
             myAddress = myOMACObj.MACRadioObj.RadioAddress;
-            Debug.Print("My address is: " + myAddress.ToString() + ". I am in Receive mode");
+            Debug.Print("Receiver My address is: " + myAddress.ToString() + ". I am in Receive mode");
         }
 
         //Keeps track of change in neighborhood
@@ -264,12 +266,21 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }
 
                 //Handles received messages 
-        public void ReceiveSendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
         {
             Debug.Print("---------------------------");
             Debug.Print("ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
+            Debug.Print("---------------------------");
 
         }
+        public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        {
+            Debug.Print("---------------------------");
+            Debug.Print("ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
+            Debug.Print("---------------------------");
+
+        }
+
         //Show statistics
         void ShowStatistics()
         {

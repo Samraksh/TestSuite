@@ -141,31 +141,45 @@ namespace Samraksh.eMote.Net.Mac.Send
                 //configure OMAC
                 myMac = new OMAC(radioConfig);
                 myMac.OnReceive += Rc;
-                myMac.Neighborliveliness = 600;
+                //myMac.Neighborliveliness = 620;
                 myMac.OnNeighborChange += NeighborChange;
-                myMac.OnSendStatus += ReceiveSendStatus;
+                
 
                 myAddress = myMac.MACRadioObj.RadioAddress;
-                Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
+                Debug.Print("CheckAutoSupport2 My address is: " + myAddress.ToString() + ". I am in Send mode");
+               
 
-                var chan1 = new MACPipe(myMac, PayloadType.Type01);
+                var chan1 = new MACPipe(myMac, PayloadType.Type03);
                 chan1.OnReceive += Rc1;
+                chan1.OnSendStatus += ReceiveSendStatus1;
 
-                var chan2 = new MACPipe(myMac, PayloadType.Type02);
+                var chan2 = new MACPipe(myMac, PayloadType.Type04);
                 chan2.OnReceive += Rc2;
+                chan2.OnSendStatus += ReceiveSendStatus2;
 
                 ushort[] _neighborList;
                 _neighborList = MACBase.NeighborListArray();
 
                 var rand = new Random();
 
+                int i = 1;
                 while (true)
                 {
                     var status = myMac.NeighborList(_neighborList);
                     foreach (var neighbor in _neighborList)
                     {
                         if (neighbor == 0) { continue; }
-                        SendOnPipe(1, myMac, neighbor, chan1);
+                        if (i == 1)
+                        {
+                            SendOnPipe(1, myMac, neighbor, chan1);
+                            i = 2;
+                        }
+                        else
+                        {
+                            SendOnPipe(1, myMac, neighbor, chan2);
+                            i = 1;
+                        }
+                        
                     }
                     sendMsgCounter++;
                     var waitTime = (int)(rand.NextDouble() * 30 * 1000);
@@ -190,10 +204,19 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
 
         //Handles received messages 
-        public void ReceiveSendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
         {
             Debug.Print("---------------------------");
-            Debug.Print("ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
+            Debug.Print("ReceiveSendStatus on Pipe1 ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
+
+        }
+
+
+        //Handles received messages 
+        public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        {
+            Debug.Print("---------------------------");
+            Debug.Print("ReceiveSendStatus on Pipe2 ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
 
         }
 
