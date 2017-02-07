@@ -82,6 +82,73 @@ namespace Samraksh.eMote.Net.Mac.Send
             }
         }
     }
+    public class PingPayload_long
+    {
+        public UInt32 pingMsgId;
+        public string pingMsgContent = "PING";
+
+        public PingPayload_long()
+        {
+
+        }
+
+        public byte[] ToBytes()
+        {
+            byte[] msg = new byte[100];
+            msg[0] = (byte)((pingMsgId >> 24) & 0xFF);
+            msg[1] = (byte)((pingMsgId >> 16) & 0xFF);
+            msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
+            msg[3] = (byte)((pingMsgId) & 0xFF);
+            for (int i = 4; i < 100; i++)
+            {
+                msg[i] = (byte)i;
+            }
+
+            //Convert string to byte array
+            byte[] msgContent = System.Text.Encoding.UTF8.GetBytes(pingMsgContent);
+
+            //Merge array containing msgID and array containing string into a single byte array for transmission
+            byte[] merged = new byte[msg.Length + msgContent.Length];
+            msg.CopyTo(merged, 0);
+            msgContent.CopyTo(merged, msg.Length);
+
+            return merged;
+        }
+
+        public PingPayload FromBytesToPingPayload(byte[] msg)
+        {
+            try
+            {
+                PingPayload pingPayload = new PingPayload();
+
+                //Convert byte array to an integer
+                pingPayload.pingMsgId = (UInt32)(msg[0] << 24);
+                pingPayload.pingMsgId += (UInt32)(msg[1] << 16);
+                pingPayload.pingMsgId += (UInt32)(msg[2] << 8);
+                pingPayload.pingMsgId += (UInt32)(msg[3]);
+
+                //Create a byte array to store the string
+                byte[] msgContent = new byte[4];
+                msgContent[0] = msg[4];
+                msgContent[1] = msg[5];
+                msgContent[2] = msg[6];
+                msgContent[3] = msg[7];
+
+                //Convert byte to char array
+                char[] msgContentChar = System.Text.Encoding.UTF8.GetChars(msgContent);
+
+                //Convert char array to string
+                pingPayload.pingMsgContent = new string(msgContentChar);
+
+                return pingPayload;
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.ToString());
+                return null;
+            }
+        }
+    }
 
     public class Program
     {
@@ -102,16 +169,37 @@ namespace Samraksh.eMote.Net.Mac.Send
         static UInt32 sendMsgCounter = 1;
 
         PingPayload pingMsg = new PingPayload();
+        PingPayload_long pingMsg_long = new PingPayload_long();
 
+        //ReceiveCallBack myReceiveCB;
+        //NeighborhoodChangeCallBack myNeibhborhoodCB;
+
+        //MACConfiguration myMacConfig = new MACConfiguration();
+        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
+        //
         private void SendOnPipe(int i, IMAC mac, ushort neighbor, MACPipe chan)
         {
-            pingMsg.pingMsgId = sendMsgCounter;
-            byte[] msgBytes2 = pingMsg.ToBytes();
-            //var msgBytes2 =
-            //	("Message " + i + " from " + mac.MACRadioObj.RadioAddress + " to neighbor " + neighbor + " on pipe " +
-            //	 chan.PayloadType).ToCharArray().ToByteArray();
-            var netOpStatus = chan.Send(neighbor, msgBytes2, 0, (ushort)msgBytes2.Length);
-            Debug.Print("*** Sent message " + sendMsgCounter.ToString() + " to neighbor " + neighbor + " on pipe " + chan.PayloadType + "; NetOpStatus: " + netOpStatus);
+            if (sendMsgCounter % 2 == 0)
+            {
+                pingMsg.pingMsgId = sendMsgCounter;
+                byte[] msgBytes2 = pingMsg.ToBytes();
+                //var msgBytes2 =
+                //	("Message " + i + " from " + mac.MACRadioObj.RadioAddress + " to neighbor " + neighbor + " on pipe " +
+                //	 chan.PayloadType).ToCharArray().ToByteArray();
+                var netOpStatus = chan.Send(neighbor, msgBytes2, 0, (ushort)msgBytes2.Length);
+                Debug.Print("*** Sent message " + sendMsgCounter.ToString() + " of length " + (ushort)msgBytes2.Length + " to neighbor " + neighbor + " on pipe " + chan.PayloadType + "; NetOpStatus: " + netOpStatus);
+            }
+            else
+            {
+                pingMsg_long.pingMsgId = sendMsgCounter;
+                byte[] msgBytes2 = pingMsg_long.ToBytes();
+                //var msgBytes2 =
+                //	("Message " + i + " from " + mac.MACRadioObj.RadioAddress + " to neighbor " + neighbor + " on pipe " +
+                //	 chan.PayloadType).ToCharArray().ToByteArray();
+                var netOpStatus = chan.Send(neighbor, msgBytes2, 0, (ushort)msgBytes2.Length);
+                Debug.Print("*** Sent long message " + sendMsgCounter.ToString() + " of length " + (ushort)msgBytes2.Length + " to neighbor " + neighbor + " on pipe " + chan.PayloadType + "; NetOpStatus: " + netOpStatus);
+            }
+
         }
 
         public void Initialize()
@@ -135,7 +223,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                 myMac = new OMAC(radioConfig);
                 myMac.OnReceive += Rc;
                 myMac.OnNeighborChange += NeighborChange;
-                myMac.OnSendStatus += ReceiveSendStatus;
+               // myMac.OnSendStatus += ReceiveSendStatus;
 
                 myAddress = myMac.MACRadioObj.RadioAddress;
                 Debug.Print("My address is: " + myAddress.ToString() + ". I am in Send mode");
