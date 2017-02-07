@@ -14,6 +14,7 @@
 #include <Samraksh/Message.h>
 #include <Samraksh/Radio_decl.h>
 
+
 class OMACTest{
 public:
 	UINT64 sequence_number;
@@ -34,6 +35,8 @@ public:
 	UINT64 LocalClockMonitorFrameNum;
 	UINT64 NeighborClockMonitorFrameNum;
 
+	UINT64 TargetTimeinTicks;
+
 	bool NeighborFound;
 
 	BOOL Initialize();
@@ -41,6 +44,7 @@ public:
 
 	BOOL ScheduleNextNeighborCLK();
 	BOOL ScheduleNextLocalCLK();
+	void SendPacketToNeighbor();
 };
 
 OMACTest gOMACTest;

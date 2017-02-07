@@ -14,10 +14,12 @@ extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
 
+#define OMACTEST_PRINT_TIME_MISMATCH 0
+#define OMACTEST_PRINT_RX_PACKET_INFO 1
 
 #define MINEVENTTIM 1000
 
-#define USEONESHOTTIMER FALSE
+#define USEONESHOTTIMER TRUE
 
 //NEIGHBORCLOCKMONITORPERIOD in ticks
 //#define NEIGHBORCLOCKMONITORPERIOD 200000 800000
@@ -30,14 +32,16 @@ void OMACTest_ReceiveHandler (void* msg, UINT16 PacketType){
 	Message_15_4_t* packet_ptr = static_cast<Message_15_4_t*>(msg);
 	UINT64 packetID;
 	memcpy(&packetID,packet_ptr->GetPayload(),sizeof(UINT64));
+#if OMACTEST_PRINT_RX_PACKET_INFO
 	hal_printf("\r\n OMACTest_RX: rx_packet_count = %llu ", gOMACTest.rx_packet_count);
 	hal_printf("src = %u PacketID = %llu \r\n", packet_ptr->GetHeader()->src, packetID );
+#endif
 }
 
 void OMACTest_NeighborChangeHandler (INT16 args){
 	hal_printf("\r\n Neighbor Change Notification for %u neighbors!\r\n", args);
 
-	for(UINT8 i = 0; i < 8 ; ++i){
+	for(UINT8 i = 0; i < MAX_NEIGHBORS ; ++i){
 		if(g_NeighborTable.Neighbor[i].IsAvailableForUpperLayers){
 //			hal_printf("MACAddress = %u IsAvailableForUpperLayers = %u NumTimeSyncMessagesSent = %u NumberOfRecordedElements = %u \r\n"
 //					, g_NeighborTable.Neighbor[i].MACAddress
@@ -81,14 +85,11 @@ void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
 		gOMACTest.LocalClkPINState = true;
 	}
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
-
-
-	rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
-	ASSERT_SP(rm == TimerSupported);
 }
 
 void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 
+	UINT64 y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
 
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_Stop(NeighborClockMonitor_TIMER1);
@@ -113,12 +114,20 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 			gOMACTest.NeighborClkPINState = true;
 		}
 	}
+#if OMACTEST_PRINT_TIME_MISMATCH
+		if( (y > gOMACTest.TargetTimeinTicks) && (y -  gOMACTest.TargetTimeinTicks> 8000)
+		 || (y < gOMACTest.TargetTimeinTicks) && (gOMACTest.TargetTimeinTicks - y > 8000)
+		){
+
+			hal_printf("\r\n TargetTimeinTicks = %llu y = %llu \r\n", gOMACTest.TargetTimeinTicks, y );
+
+		}
+#endif
+
 	BOOL rv = gOMACTest.ScheduleNextNeighborCLK();
-
-
-
-	rm = VirtTimer_Start(NeighborClockMonitor_TIMER1);
-	ASSERT_SP(rm == TimerSupported);
+	if(rv){
+		gOMACTest.SendPacketToNeighbor();
+	}
 
 }
 
@@ -155,7 +164,27 @@ BOOL OMACTest::Initialize(){
 	MacId = OMAC;
 	VirtTimer_Initialize();
 
-	MAC_Initialize(&myEventHandler,MacId, MyAppID, SI4468_SPI2, (void*) &Config);
+	MAC_Initialize(&myEventHandler,MacId, MyAppID, RF231RADIO, (void*) &Config);
+
+
+
+//		UINT64 i =0;
+//		UINT64 j =0;
+//		while(i<10000000){
+//			if((CPU_Radio_ChangeChannel(SI4468_SPI2, 2)) == DS_Success) {
+//				break;
+//			}
+//			j = 0;
+//			while(j<10000000){
+//				++j;
+//			}
+//			if(i == 10000000){
+//				SOFT_BREAKPOINT();
+//				return FALSE;
+//			}
+//		}
+
+
 
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD_MICRO, USEONESHOTTIMER, FALSE, CMaxTSLocalClockMonitorTimerHandler, OMACClockSpecifier);
@@ -182,6 +211,67 @@ BOOL OMACTest::StartTest(){
 	ASSERT_SP(rm == TimerSupported);
 
 	return TRUE;
+}
+
+void OMACTest::SendPacketToNeighbor(){
+	UINT16 Nbr2beFollowed;
+	if(g_NeighborTable.Neighbor[0].IsAvailableForUpperLayers == true){
+		Nbr2beFollowed = g_NeighborTable.Neighbor[0].MACAddress; //g_NeighborTable.Neighbor[0].MACAddress;
+		if(!NeighborFound){
+			NeighborFound = true;
+			hal_printf("\n NEIGHBOR FOUND!! \n");
+		}
+
+
+	}
+	else{
+		Nbr2beFollowed = 0;
+		if(NeighborFound){
+			NeighborFound = false;
+			hal_printf("\n NEIGHBOR LOST!! \n");
+		}
+	}
+	VirtualTimerReturnMessage rm;
+
+	if (g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
+		++(sequence_number);
+		//hal_printf("\n sequence_number = %Lu \n", sequence_number);
+		if( (sent_packet_count % 20 < 10 && sequence_number % 3000 == 0)
+		||  (sent_packet_count % 20 >= 10 && sequence_number % 3000 == 0)
+				) {
+
+			//Choose neighbor to send
+			hal_printf("\r\n Choosing Neighbor \r\n");
+				UINT16 Nbr2beSent = 0;
+				UINT8 chosen_index = sent_packet_count%g_NeighborTable.PreviousNumberOfNeighbors();
+				for(UINT8 i = 0; i < 8 ; ++i){
+					if(g_NeighborTable.Neighbor[i].IsAvailableForUpperLayers){
+						if(chosen_index == 0){
+							Nbr2beSent = g_NeighborTable.Neighbor[i].MACAddress;
+							break;
+						}
+						else if(chosen_index > 0){
+							--chosen_index;
+						}
+						else{
+							hal_printf("\r\n Error in Choosing Neeighbor! \r\n");
+							break;
+						}
+					}
+				}
+				hal_printf("\r\n Chosen Neighbor = %u \r\n", Nbr2beSent);
+				if(Nbr2beSent){
+					if(g_OMAC.Send(Nbr2beSent, 128, &sent_packet_count, sizeof(UINT64))){
+						hal_printf("\r\n PACKET ACCEPTED Dest = %u PacketID = %llu!! \r\n", Nbr2beSent, sent_packet_count);
+						++sent_packet_count;
+					}
+					else{
+						hal_printf("\r\n PACKET REJECTED!! Dest = %u PacketID = %llu!!\r\n", Nbr2beSent, sent_packet_count);
+					}
+				}
+		}
+
+	}
 }
 
 BOOL OMACTest::ScheduleNextNeighborCLK(){
@@ -230,51 +320,22 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 		}
 		UINT32 MicSTillNextEvent = (UINT32) (g_OMAC.m_Clock.ConvertTickstoMicroSecs(TicksTillNextEvent));
 		UINT32 ProcessingLatency = (UINT32) (g_OMAC.m_Clock.ConvertTickstoMicroSecs( g_OMAC.m_Clock.GetCurrentTimeinTicks() - y));
+
+		TargetTimeinTicks = g_OMAC.m_Clock.GetCurrentTimeinTicks() + TicksTillNextEvent;
+
 		rm = VirtTimer_Change(NeighborClockMonitor_TIMER1, 0, MicSTillNextEvent + ProcessingLatency, USEONESHOTTIMER, OMACClockSpecifier);
 		ASSERT_SP(rm == TimerSupported);
+		rm = VirtTimer_Start(NeighborClockMonitor_TIMER1);
+		ASSERT_SP(rm == TimerSupported);
 
-		++(sequence_number);
-		//hal_printf("\n sequence_number = %Lu \n", sequence_number);
-		if( (sent_packet_count % 20 < 10 && sequence_number % 200 == 0)
-		||  (sent_packet_count % 20 >= 10 && sequence_number % 200 == 0)
-				) {
-
-			//Choose neighbor to send
-			hal_printf("\r\n Choosing Neighbor \r\n");
-				UINT16 Nbr2beSent = 0;
-				UINT8 chosen_index = sent_packet_count%g_NeighborTable.PreviousNumberOfNeighbors();
-				for(UINT8 i = 0; i < 8 ; ++i){
-					if(g_NeighborTable.Neighbor[i].IsAvailableForUpperLayers){
-						if(chosen_index == 0){
-							Nbr2beSent = g_NeighborTable.Neighbor[i].MACAddress;
-							break;
-						}
-						else if(chosen_index > 0){
-							--chosen_index;
-						}
-						else{
-							hal_printf("\r\n Error in Choosing Neeighbor! \r\n");
-							break;
-						}
-					}
-				}
-				hal_printf("\r\n Chosen Neighbor = %u \r\n", Nbr2beSent);
-				if(Nbr2beSent){
-					if(g_OMAC.Send(Nbr2beSent, 128, &sent_packet_count, sizeof(UINT64))){
-						hal_printf("\r\n PACKET ACCEPTED Dest = %u PacketID = %llu!! \r\n", Nbr2beSent, sent_packet_count);
-						++sent_packet_count;
-					}
-					else{
-						hal_printf("\r\n PACKET REJECTED!! Dest = %u PacketID = %llu!!\r\n", Nbr2beSent, sent_packet_count);
-					}
-				}
-		}
-
-
-
+//		if(MicSTillNextEvent + ProcessingLatency < NEIGHBORCLOCKMONITORPERIOD - 8000 || MicSTillNextEvent + ProcessingLatency > NEIGHBORCLOCKMONITORPERIOD + 8000){
+//			hal_printf("Possible incorrect estimation: T = %llu MicSTillNextEvent = %llu ProcessingLatency = %llu", MicSTillNextEvent + ProcessingLatency, MicSTillNextEvent, ProcessingLatency);
+//		}
 		return TRUE;
 	}
 	else {
+		rm = VirtTimer_Start(NeighborClockMonitor_TIMER1);
+		ASSERT_SP(rm == TimerSupported);
 		return FALSE;
 	}
 
@@ -299,7 +360,7 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 		UINT32 MicSTillNextEvent = (UINT32) (g_OMAC.m_Clock.ConvertTickstoMicroSecs(TicksTillNextEvent)) ;
 		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, MicSTillNextEvent, USEONESHOTTIMER, OMACClockSpecifier);
 		ASSERT_SP(rm == TimerSupported);
-
+		rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
 
 		return TRUE;
 }
