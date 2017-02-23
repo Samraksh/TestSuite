@@ -236,8 +236,8 @@ void OMACTest::SendPacketToNeighbor(){
 	if (g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ){
 		++(sequence_number);
 		//hal_printf("\n sequence_number = %Lu \n", sequence_number);
-		if( (sent_packet_count % 20 < 10 && sequence_number % 300 == 0)
-		||  (sent_packet_count % 20 >= 10 && sequence_number % 300 == 0)
+		if( (sent_packet_count % 20 < 10 && sequence_number % 3000 == 0)
+		||  (sent_packet_count % 20 >= 10 && sequence_number % 3000 == 0)
 				) {
 
 			//Choose neighbor to send
