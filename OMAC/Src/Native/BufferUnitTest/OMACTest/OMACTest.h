@@ -22,7 +22,7 @@ class UniformRandomInt{
 	uint16_t maxnum;
 
 	SeedGenerator m_seedGenerator;
-	uint16 m_last_rand;
+	uint16_t m_last_rand;
 public:
 	UniformRandomInt(uint16_t _minnum, uint16_t _maxnum){
 		m_mask = 137 * 29 * (31688 + 1);
