@@ -153,30 +153,59 @@ BOOL VirtualTimerTest::Level_0F()
 	INT64 currentTime = 0;
 	INT64 prevTime = 0;
 
+	INT64 rtcCurrentTime = 0;
+	INT64 rtcPrevTime = 0;
+
 	currentTime = Time_GetMachineTime();
 	prevTime = currentTime;
-	while( i < 80000000 )
+	rtcCurrentTime = CPU_Timer_CurrentTicks(4);
+	rtcPrevTime = rtcCurrentTime;
+	while( true )
 	{
 		currentTime = Time_GetMachineTime();
 		if(!(i % 1000000))
 		{
-			hal_printf("count: %lld currentTime: %lld prevTime: %lld \r\n", i, currentTime, prevTime);
+			hal_printf("count: %lld currentTime: %lld prevTime: %lld ", i, currentTime, prevTime); 
 		}
 		if(currentTime < 0 || currentTime < prevTime)
 		{
-			hal_printf("<*******************\r\n");
-			hal_printf("count: %lld currentTime: %lld prevTime: %lld \r\n", i, currentTime, prevTime);
-			DisplayStats(false, "ERROR: currentTime is less than prevTime", currentTime, prevTime);
-			return false;
+			hal_printf("< error \r\n");
+			hal_printf("count: %lld currentTime: %lld prevTime: %lld ", i, currentTime, prevTime);
+			//DisplayStats(false, "ERROR: currentTime is less than prevTime", currentTime, prevTime);
+			//return false;
 		}
-		else if (currentTime > (prevTime + 10000000)){
-			hal_printf(">*******************\r\n");
-			hal_printf("count: %lld currentTime: %lld prevTime: %lld \r\n", i, currentTime, prevTime);
-			DisplayStats(false, "ERROR: currentTime 10,000,000 more than prevTime", currentTime, prevTime);
-			return false;
+		else if (currentTime > (prevTime + 5000)){
+			hal_printf("> error \r\n");
+			hal_printf("count: %lld currentTime: %lld prevTime: %lld ", i, currentTime, prevTime);
+			//DisplayStats(false, "ERROR: currentTime 10,000,000 more than prevTime", currentTime, prevTime);
+			//return false;
 		}
 	
 		prevTime = currentTime;
+
+
+		rtcCurrentTime = CPU_Timer_CurrentTicks(4);
+
+		if(!(i % 1000000))
+		{
+			hal_printf(" rtcCurrentTime: %lld rtcPrevTime: %lld \r\n", rtcCurrentTime, rtcPrevTime);
+		}
+		if(rtcCurrentTime < 0 || rtcCurrentTime < rtcPrevTime)
+		{
+			hal_printf("< error \r\n");
+			hal_printf(" rtcCurrentTime: %lld rtcPrevTime: %lld \r\n", rtcCurrentTime, rtcPrevTime);
+			//DisplayStats(false, "ERROR: rtcCurrentTime is less than rtcPrevTime", rtcCurrentTime, rtcPrevTime);
+			//return false;
+		}
+		else if (rtcCurrentTime > (rtcPrevTime + 20)){
+			hal_printf("> error \r\n");
+			hal_printf(" rtcCurrentTime: %lld rtcPrevTime: %lld \r\n", rtcCurrentTime, rtcPrevTime);
+			//DisplayStats(false, "ERROR: rtcCurrentTime 10,000,000 more than rtcPrevTime", rtcCurrentTime, rtcPrevTime);
+			//return false;
+		}
+	
+		rtcPrevTime = rtcCurrentTime;
+
 		i++;
 	}
 

@@ -171,12 +171,6 @@ namespace Samraksh.eMote.Net.Mac.Send
         PingPayload pingMsg = new PingPayload();
         PingPayload_long pingMsg_long = new PingPayload_long();
 
-        //ReceiveCallBack myReceiveCB;
-        //NeighborhoodChangeCallBack myNeibhborhoodCB;
-
-        //MACConfiguration myMacConfig = new MACConfiguration();
-        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
-        //
         private void SendOnPipe(int i, IMAC mac, ushort neighbor, MACPipe chan)
         {
             if (sendMsgCounter % 2 == 0)
@@ -217,9 +211,9 @@ namespace Samraksh.eMote.Net.Mac.Send
 #if RF231
                 var radioConfig = new RF231RadioConfiguration(RF231TxPower.Power_3dBm, RF231Channel.Channel_13);
 #elif SI4468
-                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_20dBm, SI4468Channel.Channel_01);
+                var radioConfig = new SI4468RadioConfiguration(SI4468TxPower.Power_1Point1dBm, SI4468Channel.Channel_01);
 #endif
-      
+                
                 //configure OMAC
                 myMac = new OMAC(radioConfig);
                 myMac.OnReceive += Rc;
@@ -282,7 +276,8 @@ namespace Samraksh.eMote.Net.Mac.Send
         //Keeps track of change in neighborhood
         public void NeighborChange(IMAC macBase, DateTime time)
         {
-            //Debug.Print("Count of neighbors " + countOfNeighbors.ToString());
+			Debug.Print("---- neighbor change ----\r\n");
+            
         }
 
         //Handles received messages 

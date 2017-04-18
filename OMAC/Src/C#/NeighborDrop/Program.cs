@@ -141,7 +141,8 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 myOMACObj = new OMAC(radioConfig);
                 myOMACObj.OnReceive += Receive;
                 myOMACObj.OnNeighborChange += NeighborChange;
-				myOMACObj.NeighborLivenessDelay = 10;
+				myOMACObj.OnSendStatus += SendStatus;
+				myOMACObj.NeighborLivenessDelay = 60;
 
                 myAddress = myOMACObj.MACRadioObj.RadioAddress;
 
@@ -161,6 +162,17 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Receive mode");
         }
 
+		public void SendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+		{
+			if (ACKStatus == SendPacketStatus.SendInitiated)
+				Debug.Print("Packet to " + transmitDestination.ToString() + " started\r\n" );
+			else if (ACKStatus == SendPacketStatus.SendACKed)
+				Debug.Print("Packet to " + transmitDestination.ToString() + "  ACK\r\n");
+			else if (ACKStatus == SendPacketStatus.SendNACKed)
+				Debug.Print("Packet to " + transmitDestination.ToString() + "  NACK\r\n");
+			else if (ACKStatus == SendPacketStatus.SendFailed)
+				Debug.Print("Packet to " + transmitDestination.ToString() + "  failed\r\n");
+		}
         //Keeps track of change in neighborhood
         public void NeighborChange(IMAC macBase, DateTime time)
         {
@@ -172,6 +184,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             foreach (var neighbor in _neighborList)
             {
                 if (neighbor == 0) { continue; }
+				Debug.Print(neighbor.ToString());
                 neighborCnt++;
             }
             Debug.Print("Current neighbor count: " + neighborCnt.ToString());
