@@ -1,5 +1,5 @@
-//#define RF231
-#define SI4468
+#define RF231
+//#define SI4468
 
 using System;
 using Microsoft.SPOT;
@@ -268,14 +268,14 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }
 
                 //Handles received messages 
-        public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
         {
             Debug.Print("---------------------------");
             Debug.Print("ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);
             Debug.Print("---------------------------");
 
         }
-        public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
         {
             Debug.Print("---------------------------");
             Debug.Print("ACKStatus = " + ACKStatus + "Dest = " + transmitDestination);

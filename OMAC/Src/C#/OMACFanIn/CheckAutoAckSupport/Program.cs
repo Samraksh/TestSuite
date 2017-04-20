@@ -1,5 +1,5 @@
-//#define RF231
-#define SI4468
+#define RF231
+//#define SI4468
 
 using System;
 using System.Text;
@@ -94,12 +94,12 @@ namespace Samraksh.eMote.Net.Mac.Send
 
         public byte[] ToBytes()
         {
-            byte[] msg = new byte[100];
+            byte[] msg = new byte[92];
             msg[0] = (byte)((pingMsgId >> 24) & 0xFF);
             msg[1] = (byte)((pingMsgId >> 16) & 0xFF);
             msg[2] = (byte)((pingMsgId >> 8) & 0xFF);
             msg[3] = (byte)((pingMsgId) & 0xFF);
-            for (int i = 4; i < 100; i++)
+            for (int i = 4; i < 92; i++)
             {
                 msg[i] = (byte)i;
             }
@@ -171,12 +171,6 @@ namespace Samraksh.eMote.Net.Mac.Send
         PingPayload pingMsg = new PingPayload();
         PingPayload_long pingMsg_long = new PingPayload_long();
 
-        //ReceiveCallBack myReceiveCB;
-        //NeighborhoodChangeCallBack myNeibhborhoodCB;
-
-        //MACConfiguration myMacConfig = new MACConfiguration();
-        //Radio.RadioConfiguration myRadioConfig = new Radio.RadioConfiguration();
-        //
         private void SendOnPipe(int i, IMAC mac, ushort neighbor, MACPipe chan)
         {
             if (sendMsgCounter % 2 == 0)
@@ -223,7 +217,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                 myMac = new OMAC(radioConfig);
                 myMac.OnReceive += Rc;
                 myMac.OnNeighborChange += NeighborChange;
-                //myMac.OnSendStatus += ReceiveSendStatus;
+                
 
                 myAddress = myMac.MACRadioObj.RadioAddress;
                 Debug.Print("CheckAutoSupport1 Test 1  My address is: " + myAddress.ToString() + ". I am in Send mode");
@@ -281,13 +275,13 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
 
         //Handles received messages 
-        public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
         {
             Debug.Print("---------------------------");
             Debug.Print("ReceiveSendStatus1 ACKStatus = " + ACKStatus + " Dest = " + transmitDestination);
 
         }
-        public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+        public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
         {
             Debug.Print("---------------------------");
             Debug.Print("ReceiveSendStatus2 ACKStatus = " + ACKStatus + " Dest = " + transmitDestination);
@@ -440,5 +434,6 @@ namespace Samraksh.eMote.Net.Mac.Send
         }
     }
 }
+
 
 

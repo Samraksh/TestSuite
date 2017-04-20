@@ -160,7 +160,7 @@ BOOL VirtualTimerTest::Level_0F()
 	prevTime = currentTime;
 	rtcCurrentTime = CPU_Timer_CurrentTicks(4);
 	rtcPrevTime = rtcCurrentTime;
-	while( true )
+	while( i < 240000000 )
 	{
 		currentTime = Time_GetMachineTime();
 		if(!(i % 1000000))
