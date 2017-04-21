@@ -163,6 +163,9 @@ namespace Samraksh.eMote.Net.Mac.Send
 
         //bool startSend = false;
         UInt16 myAddress;
+        UInt16 chan1Address;
+        UInt16 chan2Address;
+        MACPipe chan1, chan2;
         Timer sendTimer;
         //NetOpStatus status;
         EmoteLCD lcd;
@@ -224,11 +227,11 @@ namespace Samraksh.eMote.Net.Mac.Send
                 Debug.Print("CheckAutoSupport2 My address is: " + myAddress.ToString() + ". I am in Send mode");
                
 
-                var chan1 = new MACPipe(myMac, PayloadType.Type01);
+                chan1 = new MACPipe(myMac, PayloadType.Type01);
                 chan1.OnReceive += Rc1;
                 chan1.OnSendStatus += ReceiveSendStatus1;
 
-                var chan2 = new MACPipe(myMac, PayloadType.Type02);
+                chan2 = new MACPipe(myMac, PayloadType.Type02);
                 chan2.OnReceive += Rc2;
                 chan2.OnSendStatus += ReceiveSendStatus2;
 
@@ -248,17 +251,19 @@ namespace Samraksh.eMote.Net.Mac.Send
                         {
                             SendOnPipe(1, myMac, neighbor, chan1);
                             i = 2;
+                            chan1Address = neighbor;
                         }
                         else
                         {
                             SendOnPipe(1, myMac, neighbor, chan2);
                             i = 1;
+                            chan2Address = neighbor;
                         }
                     }
                     sendMsgCounter++;
                     var waitTime = (int)(rand.NextDouble() * 30 * 1000);
                     waitTime = System.Math.Max(waitTime, 20 * 1000);
-                    Debug.Print("*** Waiting " + waitTime);
+                    //Debug.Print("*** Waiting " + waitTime);
                     Thread.Sleep(waitTime);
                 }
 
@@ -281,15 +286,39 @@ namespace Samraksh.eMote.Net.Mac.Send
         //Handles received messages 
         public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
         {
+            var pipe = macBase as MACPipe;
             Debug.Print("---------------------------");
             Debug.Print("ReceiveSendStatus1 ACKStatus = " + ACKStatus + " Dest = " + transmitDestination);
+            if (ACKStatus != SendPacketStatus.SendACKed)
+            {
+                byte[] msg = new byte[96];
+                if (pipe.GetMsgWithMsgID(ref msg, index) == Samraksh.eMote.Net.DeviceStatus.Success)
+                {
+                    //pingMsg.pingMsgId = sendMsgCounter;
+                    //byte[] msgBytes2 = pingMsg.ToBytes();
+                    var netOpStatus = chan1.Send(chan1Address, msg, 0, (ushort)msg.Length);
+                    Debug.Print("~~~~ resent to " + chan1Address.ToString() + " ~~~~");
+                }
+
+            }
 
         }
         public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
         {
+            var pipe = macBase as MACPipe;
             Debug.Print("---------------------------");
             Debug.Print("ReceiveSendStatus2 ACKStatus = " + ACKStatus + " Dest = " + transmitDestination);
-
+            if (ACKStatus != SendPacketStatus.SendACKed)
+            {
+                byte[] msg = new byte[96];
+                if (pipe.GetMsgWithMsgID(ref msg, index) == Samraksh.eMote.Net.DeviceStatus.Success)
+                {
+                    //pingMsg.pingMsgId = sendMsgCounter;
+                    //byte[] msgBytes2 = pingMsg.ToBytes();
+                    var netOpStatus = chan2.Send(chan2Address, msg, 0, (ushort)msg.Length);
+                    Debug.Print("~~~~ resent to " + chan2Address.ToString() + " ~~~~");
+                }
+            }
         }
 
         //Starts a timer 
@@ -403,7 +432,7 @@ namespace Samraksh.eMote.Net.Mac.Send
         {
             var macPipe = (MACPipe)mac;
             var plType = macPipe.PayloadType;
-            Debug.Print("*** Packet received\n");
+            //Debug.Print("*** Packet received\n");
             //var packet = mac.NextPacket();
             //Debug.Print("\t1");
             if (receivedPacket == null) { return; }
