@@ -23,6 +23,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         public UInt32 recvCount;
         public UInt32 prevId;
         public ArrayList AL;
+        public UInt32 searchCount;
     }
 
     public class PingPayload
@@ -115,7 +116,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
         OMAC myOMACObj;
 
         int errors = 0;
-		int retransmit = 0;
+        int retransmit = 0;
 
 
         public void Initialize()
@@ -139,7 +140,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 myOMACObj.OnReceive += Receive;
                 myOMACObj.OnNeighborChange += NeighborChange;
 
-               // myOMACObj.OnSendStatus += ReceiveSendStatus;
+                // myOMACObj.OnSendStatus += ReceiveSendStatus;
 
 
                 var chan1 = new MACPipe(myOMACObj, PayloadType.Type01);
@@ -163,14 +164,14 @@ namespace Samraksh.eMote.Net.Mac.Receive
         //Keeps track of change in neighborhood
         public void NeighborChange(IMAC macBase, DateTime time)
         {
-			Debug.Print("---- neighbor change ----\r\n");
-           
+            Debug.Print("---- neighbor change ----\r\n");
+
         }
 
         //Handles received messages 
         public void Receive(IMAC macBase, DateTime time, Packet receivedPacket)
         {
-			int char0 = ((int)totalRecvCounter % 10) + (int)LCD.CHAR_0;
+            int char0 = ((int)totalRecvCounter % 10) + (int)LCD.CHAR_0;
             lcd.Write(LCD.CHAR_S, LCD.CHAR_S, LCD.CHAR_S, (LCD)char0);
             Debug.Print("---------------------------");
             /*if (myOMACObj.PendingReceivePacketCount() == 0)
@@ -201,18 +202,21 @@ namespace Samraksh.eMote.Net.Mac.Receive
                     {
                         NeighborTableInfo nbrTableInfoAnalyze = (NeighborTableInfo)neighborHashtable[receivedPacket.Src];
                         Debug.Print(receivedPacket.Src.ToString() + " " + pingPayload.pingMsgId.ToString() + " " + nbrTableInfoAnalyze.prevId.ToString());
-                        if (pingPayload.pingMsgId == nbrTableInfoAnalyze.prevId )
-						{
-							Debug.Print("retransmit");
-							retransmit++;
-						}
+                        if (pingPayload.pingMsgId == nbrTableInfoAnalyze.prevId)
+                        {
+                            Debug.Print("retransmit");
+                            retransmit++;
+                        }
                         else if (pingPayload.pingMsgId != nbrTableInfoAnalyze.prevId + 1)
                         {
                             Debug.Print("error");
-                            errors++;
-                        } else {
-            				totalRecvCounter++;
-						}
+                            nbrTableInfoAnalyze.searchCount++;
+                        }
+                        else
+                        {
+                            totalRecvCounter++;
+                            nbrTableInfoAnalyze.searchCount++;
+                        }
 
                         nbrTableInfo = (NeighborTableInfo)neighborHashtable[receivedPacket.Src];
                         nbrTableInfo.recvCount++;
@@ -226,6 +230,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
                     {
                         nbrTableInfo = new NeighborTableInfo();
                         nbrTableInfo.recvCount = 1;
+                        nbrTableInfo.searchCount = 1;
                         nbrTableInfo.prevId = pingPayload.pingMsgId;
                         ArrayList AL = new ArrayList();
                         AL.Add(pingPayload.pingMsgId);
@@ -267,7 +272,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             }
         }
 
-                //Handles received messages 
+        //Handles received messages 
         public void ReceiveSendStatus1(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
         {
             Debug.Print("---------------------------");
@@ -309,17 +314,64 @@ namespace Samraksh.eMote.Net.Mac.Receive
                 {
                     nbr2Cnt = nbrTableInfo.recvCount;
                 }
-                Debug.Print("List of msgs: ");
                 IEnumerable list = nbrTableInfo.AL;
+                bool foundId = false;
+                UInt32 smallestId = 99999;
+                for (int k = 0; k <= nbrTableInfo.AL.Count; k++)
+                {
+                    foreach (object obj in list)
+                    {
+                        UInt32 msgId = (UInt32)obj;
+                        if (msgId < smallestId)
+                        {
+                            smallestId = msgId;
+                        }
+                    }
+                }
+                bool searching = true;
+                int count = 0;
+                Debug.Print("searchCount: " + nbrTableInfo.searchCount.ToString());
+                while (searching == true)
+                {
+                    Debug.Print("Searching messages for : " + smallestId);
+                    foundId = false;
+                    foreach (object obj in list)
+                    {
+                        UInt32 msgId = (UInt32)obj;
+
+
+                        if (msgId == smallestId)
+                        {
+                            foundId = true;
+                        }
+                    }
+                    if (foundId == true)
+                    {
+                        Debug.Print("found: " + smallestId);
+                    }
+                    else
+                    {
+                        errors++;
+                    }
+                    smallestId++;
+                    count++;
+                    if (count >= nbrTableInfo.searchCount)
+                    {
+                        searching = false;
+                    }
+                }
+
+                Debug.Print("List of msgs: ");
                 foreach (object obj in list)
                 {
                     Debug.Print(obj.ToString() + " ,");
                 }
                 nbrTableInfo.AL.Clear();
+                nbrTableInfo.searchCount = 0;
             }
             Debug.Print("Total msgs received from all nodes is " + totalRecvCounter);
             Debug.Print("==================================");
-            if (errors < (totalRecvCounter*0.05))
+            if (errors < (totalRecvCounter * 0.05))
             {
                 Debug.Print("result = PASS");
                 Debug.Print("accuracy = " + errors.ToString());
@@ -350,5 +402,6 @@ namespace Samraksh.eMote.Net.Mac.Receive
         }
     }
 }
+
 
 
