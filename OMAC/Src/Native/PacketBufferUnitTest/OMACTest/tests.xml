@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='OMACTest(Level_0B-Receive-Fan_in)' Type='Native .NOW'>
+	<Test Name='OMACTest(Level_0B-Receive-Fan_in)' Type='Native broken'>
 		<Description>
 			Native OMAC receive test(fan-in) - primary device will be a receiver, rest senders
 		</Description>

@@ -1,5 +1,5 @@
 <TestSuite>
-	<Test Name='VirtualTimerTest' Type='Native .NOW'>
+	<Test Name='VirtualTimerTest' Type='Native test'>
 		<Description>
 			Native virtual timer test - RTC
 		</Description>
