@@ -162,7 +162,7 @@ namespace Samraksh.eMote.Net.Mac.Receive
             Debug.Print("My address is: " + myAddress.ToString() + ". I am in Receive mode");
         }
 
-		public void SendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+		public void SendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
 		{
 			if (ACKStatus == SendPacketStatus.SendInitiated)
 				Debug.Print("Packet to " + transmitDestination.ToString() + " started\r\n" );

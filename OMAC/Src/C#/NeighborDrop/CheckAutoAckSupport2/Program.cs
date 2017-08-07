@@ -137,6 +137,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                 //configure OMAC
                 myMac = new OMAC(radioConfig);
                 myMac.OnReceive += Rc;
+				myMac.OnSendStatus += SendStatus;
                 myMac.OnNeighborChange += NeighborChange;
 
                 myAddress = myMac.MACRadioObj.RadioAddress;
@@ -155,7 +156,7 @@ namespace Samraksh.eMote.Net.Mac.Send
 
                 while (true)
                 {
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 25; i++)
                     {
                         var status = myMac.NeighborList(_neighborList);
                         foreach (var neighbor in _neighborList)
@@ -171,7 +172,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                     }
                     Debug.Print("Disposing of mac");
                     myMac.Dispose();
-                    Thread.Sleep(20000);
+                    Thread.Sleep(200000);
                     myMac = new OMAC(radioConfig);
                     myMac.OnReceive += Rc;
                     myMac.OnNeighborChange += NeighborChange;
@@ -186,6 +187,17 @@ namespace Samraksh.eMote.Net.Mac.Send
 
         }
 
+		public void SendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
+		{
+			if (ACKStatus == SendPacketStatus.SendInitiated)
+				Debug.Print("Packet to " + transmitDestination.ToString() + " started\r\n" );
+			else if (ACKStatus == SendPacketStatus.SendACKed)
+				Debug.Print("Packet to " + transmitDestination.ToString() + "  ACK\r\n");
+			else if (ACKStatus == SendPacketStatus.SendNACKed)
+				Debug.Print("Packet to " + transmitDestination.ToString() + "  NACK\r\n");
+			else if (ACKStatus == SendPacketStatus.SendFailed)
+				Debug.Print("Packet to " + transmitDestination.ToString() + "  failed\r\n");
+		}
         //Keeps track of change in neighborhood
         public void NeighborChange(IMAC macBase, DateTime time)
         {

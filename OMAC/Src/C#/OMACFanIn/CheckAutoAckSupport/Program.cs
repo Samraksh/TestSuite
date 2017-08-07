@@ -285,7 +285,7 @@ namespace Samraksh.eMote.Net.Mac.Send
             var pipe = macBase as MACPipe;
             Debug.Print("---------------------------");
             Debug.Print("ReceiveSendStatus1 ACKStatus = " + ACKStatus + " Dest = " + transmitDestination);
-            if (ACKStatus != SendPacketStatus.SendACKed)
+            /*if (ACKStatus != SendPacketStatus.SendACKed)
             {
                 byte[] msg = new byte[96];
                 if (pipe.GetMsgWithMsgID(ref msg, index) == Samraksh.eMote.Net.DeviceStatus.Success)
@@ -296,7 +296,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                     Debug.Print("~~~~ resent to " + chan1Address.ToString() + " ~~~~");
                 }
 
-            }
+            }*/
 
         }
         public void ReceiveSendStatus2(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
@@ -304,7 +304,7 @@ namespace Samraksh.eMote.Net.Mac.Send
             var pipe = macBase as MACPipe;
             Debug.Print("---------------------------");
             Debug.Print("ReceiveSendStatus2 ACKStatus = " + ACKStatus + " Dest = " + transmitDestination);
-            if (ACKStatus != SendPacketStatus.SendACKed)
+            /*if (ACKStatus != SendPacketStatus.SendACKed)
             {
                 byte[] msg = new byte[96];
                 if (pipe.GetMsgWithMsgID(ref msg, index) == Samraksh.eMote.Net.DeviceStatus.Success)
@@ -314,7 +314,7 @@ namespace Samraksh.eMote.Net.Mac.Send
                     var netOpStatus = chan2.Send(chan2Address, msg, 0, (ushort)msg.Length);
                     Debug.Print("~~~~ resent to " + chan2Address.ToString() + " ~~~~");
                 }
-            }
+            }*/
         }
 
         //Starts a timer 

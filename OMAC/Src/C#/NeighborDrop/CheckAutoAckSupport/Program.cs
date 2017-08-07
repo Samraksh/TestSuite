@@ -185,7 +185,7 @@ namespace Samraksh.eMote.Net.Mac.Send
             }
         }
 
-		public void SendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination)
+		public void SendStatus(IMAC macBase, DateTime time, SendPacketStatus ACKStatus, uint transmitDestination, ushort index)
 		{
 			if (ACKStatus == SendPacketStatus.SendInitiated)
 				Debug.Print("Packet to " + transmitDestination.ToString() + " started\r\n" );
