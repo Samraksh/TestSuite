@@ -7,7 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-#include "RadioTestSend.h"
+#include "RequestSendAtTimeInstantTest.h"
 
 
 void Keep_Linker_Happy() {
@@ -28,8 +28,7 @@ void ApplicationEntryPoint()
     
     do
     {
-    	RadioTestSend radioTestSend();
-    	RadioTest_Initialize();
+    	Test_InitializeAndRun();
 
     	//dsTestObject.Execute(TEST_INITIALIZATION);
 

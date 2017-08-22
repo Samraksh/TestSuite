@@ -1,190 +1,139 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672" moduleId="org.eclipse.cdt.core.settings" name="Build (GNU)">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.Cygwin_PE" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration buildProperties="" description="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672" name="Build (GNU)" parent="org.eclipse.cdt.build.core.emptycfg">
-					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.658661248" name="/" resourcePath="">
-						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1297275713" name="org.eclipse.linuxtools.cdt.autotools.core.toolChain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
-							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.1734236449" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
-							<builder id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.2146947672" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Autotools Makefile Generator" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.2031203227" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure">
-								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.1051585427" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672" valueType="string"/>
-							</tool>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.1547012704" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen"/>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.2010403149" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc">
-								<option id="gnu.c.compiler.option.include.paths.1066080680" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1523743270" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.345267376" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp">
-								<option id="gnu.cpp.compiler.option.include.paths.395002849" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1412809071" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-						</toolChain>
-					</folderInfo>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-		<cconfiguration id="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551" moduleId="org.eclipse.cdt.core.settings" name="Debug">
-				<externalSettings/>
-				<extensions>
-					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
-				</extensions>
-			</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551" name="Debug" parent="cdt.managedbuild.config.gnu.cross.exe.debug">
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.base.1193244236" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.base">
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.PE" id="cdt.managedbuild.target.gnu.platform.mingw.base.100767219" name="Debug Platform" osList="win32" superClass="cdt.managedbuild.target.gnu.platform.mingw.base"/>
-							<builder buildPath="${workspace_loc:/TestSuite}/Debug" id="cdt.managedbuild.builder.gnu.cross.1970609077" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
-							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.base.1807241499" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.base">
-								<option id="gnu.both.asm.option.include.paths.430735977" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
-								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.810556878" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1123049847" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.1850103714" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base">
-								<option id="gnu.cpp.compiler.option.include.paths.938769381" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="D:/AnanthAtSamraksh/Tools/codesourcery/arm-none-eabi/include"/>
-									<listOptionValue builtIn="false" value="D:/AnanthAtSamraksh/eMote/MicroFrameworkPK_v4_3/DeviceCode/Include"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\fsmc\P30BF65NOR&quot;"/>
-								</option>
-								<option id="gnu.cpp.compiler.option.optimization.level.308273594" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.debugging.level.1653311326" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1873182824" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.base.990598825" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.base">
-								<option id="gnu.c.compiler.option.include.paths.1456520229" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
-								</option>
-								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1477020906" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.debugging.level.1692196566" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1665164782" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.base.1748105211" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.base"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base.1186486725" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.base">
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.873909097" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
-									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
-									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
-								</inputType>
-							</tool>
-						</toolChain>
-					</folderInfo>
-				</configuration>
-			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-		</cconfiguration>
-		<cconfiguration id="cdt.managedbuild.config.gnu.cross.exe.release.279043067">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.cross.exe.release.279043067" moduleId="org.eclipse.cdt.core.settings" name="Release">
+		<cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339" moduleId="org.eclipse.cdt.core.settings" name="Build (GNU)">
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
-					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.release" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.exe.release.279043067" name="Release" parent="cdt.managedbuild.config.gnu.cross.exe.release">
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.release.279043067." name="/" resourcePath="">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.release.1795720234" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.release">
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.1869660869" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-							<builder buildPath="${workspace_loc:/TestSuite}/Release" id="cdt.managedbuild.builder.gnu.cross.1184735207" keepEnvironmentInBuildfile="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1355719262" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
-								<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.option.optimization.level.1295036734" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.debugging.level.479567975" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.1221940403" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.linuxtools.cdt.autotools.core.buildArtefactType.autotools" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.linuxtools.cdt.autotools.core.buildArtefactType.autotools,org.eclipse.cdt.build.core.buildType=org.eclipse.linuxtools.cdt.autotools.core.buildType.default" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.CWDLocator;org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339" name="Build (GNU)" parent="org.eclipse.linuxtools.cdt.autotools.core.configuration.build">
+					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.751169899" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1228187913" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.251886528" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.461699585" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<builder buildPath="${workspace_loc:/TestSuite}/Build (GNU)" cleanBuildTarget="/maxcpucount /t:clean /p:memory=FLASH,flavor=debug ${ConfigName}.proj" command="msbui" id="cdt.managedbuild.builder.gnu.cross.1944742865" incrementalBuildTarget="/maxcpucount /t:build /p:memory=FLASH,flavor=debug ${ConfigName}.proj" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.425325911" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+								<option id="gnu.c.compiler.option.include.paths.567077387" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/MicroFrameworkPK_v4_3/DeviceCode/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
 								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.180834111" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.183134984" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
-								<option id="gnu.cpp.compiler.option.optimization.level.782183688" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.debugging.level.1510565928" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
-								<option id="gnu.cpp.compiler.option.include.paths.1781053896" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.658850668" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GNUC__=1"/>
 								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.704354008" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.755778299" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.936432237" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.1096117161" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1252423165" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.716928369" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
+								<option id="gnu.cpp.compiler.option.include.paths.1887568335" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.127256042" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GNUC__=1"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1481300552" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1348165237" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.969397867" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.346312300" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 								</inputType>
 							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.646083655" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
-							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.680388510" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
-								<option id="gnu.both.asm.option.include.paths.1488786814" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.879588177" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.259491159" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
+								<option id="gnu.both.asm.option.include.paths.1309191852" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/MicroFrameworkPK_v4_3/DeviceCode/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
 								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.954794351" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1843935318" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="MF;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
+			</storageModule>
+			<storageModule moduleId="ilg.gnuarmeclipse.managedbuild.packs"/>
+		</cconfiguration>
+		<cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169" moduleId="org.eclipse.cdt.core.settings" name="Debug (GNU)">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.Cygwin_PE" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.linuxtools.cdt.autotools.core.buildArtefactType.autotools" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.linuxtools.cdt.autotools.core.buildArtefactType.autotools,org.eclipse.cdt.build.core.buildType=org.eclipse.linuxtools.cdt.autotools.core.buildType.debug" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.CWDLocator;org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169" name="Debug (GNU)" parent="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug">
+					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169." name="/" resourcePath="">
+						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.debug.1395710790" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain.debug">
+							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.debug.1852429431" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.debug"/>
+							<builder id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.debug.1145881958" keepEnvironmentInBuildfile="false" name="Autotools Makefile Generator" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.debug"/>
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.debug.591866236" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.debug">
+								<option defaultValue="CFLAGS=-g -O0" id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.user.185110571" name="User-specified configuration options" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.user" valueType="string"/>
+								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.1107043450" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169" valueType="string"/>
+							</tool>
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.debug.593669769" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.debug"/>
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.debug.1597510761" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.debug">
+								<option id="gnu.c.compiler.option.include.paths.1397039336" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/MicroFrameworkPK_v4_3/DeviceCode/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Program Files/Java/jdk1.8.0_45/jre/bin/server;C:/Program Files/Java/jdk1.8.0_45/jre/bin;C:/Program Files/Java/jdk1.8.0_45/jre/lib/amd64;C:\eclipse\cpp-latest\eclipse;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files (x86)\MSBuild\12.0\bin;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\BIN;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools;C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\VCPackages;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Team Tools\Performance Tools;C:\Program Files (x86)\Windows Kits\8.1\bin\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\;F:\MF\MicroFrameworkPK_v4_3\BuildOutput\Public\Release\Test\Server\dll;F:\MF\tools\x86\perl\bin;F:\MF\tools\x86\bin;F:\MF\MicroFrameworkPK_v4_3\tools\bin;F:\MF\tools\NUnit;F:\MF\tools\SDPack;F:\MF\bin;C:\ProgramData\Oracle\Java\javapath;C:\Perl64\site\bin;C:\Perl64\bin;C:\Python27\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\MiKTeX 2.9\miktex\bin\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;F:\TestSystem\codesourcery;F:\TestSystem\openocd-0.7.0\bin-x64;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files (x86)\Microsoft SQL Server\100\DTS\Binn\;C:\CodeSourcery-2013-05\bin;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\WinMerge;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft Emulator Manager\1.0\;C:\Program Files (x86)\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\dotnet\;C:\Program Files (x86)\Skype\Phone\;F:\Users\Bora\.dnx\bin;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\WINDOWS\Microsoft.NET\Framework\v4.0;F:\MF\MicroFrameworkPK_v4_3\tools\scripts&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
+								</option>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1871757170" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GNUC__=1"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1608637974" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.debug.1558947721" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.debug">
+								<option id="gnu.cpp.compiler.option.include.paths.1011419855" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/MicroFrameworkPK_v4_3/DeviceCode/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:/Program Files/Java/jdk1.8.0_45/jre/bin/server;C:/Program Files/Java/jdk1.8.0_45/jre/bin;C:/Program Files/Java/jdk1.8.0_45/jre/lib/amd64;C:\eclipse\cpp-latest\eclipse;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow;C:\Program Files (x86)\MSBuild\12.0\bin;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\BIN;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools;C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\VCPackages;C:\Program Files (x86)\HTML Help Workshop;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Team Tools\Performance Tools;C:\Program Files (x86)\Windows Kits\8.1\bin\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\;F:\MF\MicroFrameworkPK_v4_3\BuildOutput\Public\Release\Test\Server\dll;F:\MF\tools\x86\perl\bin;F:\MF\tools\x86\bin;F:\MF\MicroFrameworkPK_v4_3\tools\bin;F:\MF\tools\NUnit;F:\MF\tools\SDPack;F:\MF\bin;C:\ProgramData\Oracle\Java\javapath;C:\Perl64\site\bin;C:\Perl64\bin;C:\Python27\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\MiKTeX 2.9\miktex\bin\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;F:\TestSystem\codesourcery;F:\TestSystem\openocd-0.7.0\bin-x64;c:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;c:\Program Files (x86)\Microsoft SQL Server\100\DTS\Binn\;C:\CodeSourcery-2013-05\bin;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\WinMerge;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Program Files (x86)\Microsoft Emulator Manager\1.0\;C:\Program Files (x86)\nodejs\;C:\Program Files\Git\cmd;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\dotnet\;C:\Program Files (x86)\Skype\Phone\;F:\Users\Bora\.dnx\bin;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\WINDOWS\Microsoft.NET\Framework\v4.0;F:\MF\MicroFrameworkPK_v4_3\tools\scripts&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1146505454" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GNUC__=1"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.652526699" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
@@ -192,88 +141,123 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
-		<cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273" moduleId="org.eclipse.cdt.core.settings" name="Level_0G6">
+		<cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.1339417527">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.1339417527" moduleId="org.eclipse.cdt.core.settings" name="RadioTestSendAtTimeInstantTest">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.Cygwin_PE" point="org.eclipse.cdt.core.BinaryParser"/>
-					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
 					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration buildProperties="" description="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273" name="Level_0G6" parent="org.eclipse.cdt.build.core.emptycfg">
-					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273." name="/" resourcePath="">
-						<toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.367374136" name="org.eclipse.linuxtools.cdt.autotools.core.toolChain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
-							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.380392373" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/TestSuite/OMAC/Src/Native/Level_0G6/OMACTest}" cleanBuildTarget="/t:clean OMACTest.proj" command="msbuild" id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.1909152189" incrementalBuildTarget="/t:build /p:MEMORY=FLASH,flavor=Debug /maxcpucount OMACTest.proj" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Autotools Makefile Generator" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.27683976" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure">
-								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.1669834880" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672" valueType="string"/>
-							</tool>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.1071339458" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen"/>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.1387003572" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc">
-								<option id="gnu.c.compiler.option.include.paths.915432191" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.linuxtools.cdt.autotools.core.buildArtefactType.autotools" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.linuxtools.cdt.autotools.core.buildArtefactType.autotools,org.eclipse.cdt.build.core.buildType=org.eclipse.linuxtools.cdt.autotools.core.buildType.default" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.CWDLocator;org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.1339417527" name="RadioTestSendAtTimeInstantTest" parent="org.eclipse.linuxtools.cdt.autotools.core.configuration.build">
+					<folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.1339417527." name="/" resourcePath="">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.1140583160" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base">
+							<option id="cdt.managedbuild.option.gnu.cross.prefix.1420382148" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix"/>
+							<option id="cdt.managedbuild.option.gnu.cross.path.406597424" name="Path" superClass="cdt.managedbuild.option.gnu.cross.path"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.2030930127" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
+							<builder autoBuildTarget="all" buildPath="${workspace_loc:/TestSuite/Radio/Src/Native}/${ConfigName}" cleanBuildTarget="/maxcpucount /t:clean /p:memory=FLASH,flavor=debug ${ConfigName}.proj" command="msbuild" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="cdt.managedbuild.builder.gnu.cross.531528067" incrementalBuildTarget="/maxcpucount /t:build /p:memory=FLASH,flavor=debug ${ConfigName}.proj" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" parallelBuildOn="false" superClass="cdt.managedbuild.builder.gnu.cross"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1774402077" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
+								<option id="gnu.c.compiler.option.include.paths.1850492608" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/MicroFrameworkPK_v4_3/DeviceCode/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
 								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1093173458" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1635722560" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp">
-								<option id="gnu.cpp.compiler.option.include.paths.495829009" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\TestSystem\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Include\Samraksh&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\processor&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\Tools\codesourcery\arm-none-eabi\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;C:\MinGW\include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;D:\AnanthAtSamraksh\eMote\MicroFrameworkPK_v4_3\DeviceCode\Targets\Native\STM32F10x\DeviceCode\&quot;"/>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1583241527" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GNUC__=1"/>
 								</option>
-								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1567827987" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1112440827" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1278056160" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
+								<option id="gnu.cpp.compiler.option.include.paths.2075826245" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
+								</option>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.348682476" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__GNUC__=1"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1106743545" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.100902578" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.455224087" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1440774157" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
+									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
+									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
+								</inputType>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1332865895" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.958853148" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
+								<option id="gnu.both.asm.option.include.paths.864581976" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/MicroFrameworkPK_v4_3/DeviceCode/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MF/LittleKernel/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;C:\Program Files (x86)\Windows Kits\8.1\bin\x86&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;F:\MF\MicroFrameworkPK_v4_3\DeviceCode\Include&quot;"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.84584068" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 				</configuration>
 			</storageModule>
-			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="MF;" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier"/>
+			</storageModule>
+			<storageModule moduleId="ilg.gnuarmeclipse.managedbuild.packs"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="TestSuite.null.1772693754" name="TestSuite"/>
+		<project id="TestSuite.org.eclipse.linuxtools.cdt.autotools.core.projectType.542847698" name="GNU Autotools" projectType="org.eclipse.linuxtools.cdt.autotools.core.projectType"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Build (GNU)">
 			<resource resourceType="PROJECT" workspacePath="/TestSuite"/>
 		</configuration>
-		<configuration configurationName="Level_0G6">
-			<resource resourceType="PROJECT" workspacePath="/TestSuite"/>
-		</configuration>
-		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/TestSuite"/>
-		</configuration>
-		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/TestSuite"/>
-		</configuration>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551;cdt.managedbuild.config.gnu.cross.exe.debug.1116738551.;cdt.managedbuild.tool.gnu.cross.c.compiler.264488377;cdt.managedbuild.tool.gnu.c.compiler.input.872021293">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273;org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.1387003572;cdt.managedbuild.tool.gnu.c.compiler.input.1093173458">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.279043067;cdt.managedbuild.config.gnu.cross.exe.release.279043067.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.183134984;cdt.managedbuild.tool.gnu.cpp.compiler.input.704354008">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339;org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.;cdt.managedbuild.tool.gnu.cross.c.compiler.425325911;cdt.managedbuild.tool.gnu.c.compiler.input.755778299">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339;org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1918285296;cdt.managedbuild.tool.gnu.cpp.compiler.input.1119040515">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339;org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.716928369;cdt.managedbuild.tool.gnu.cpp.compiler.input.1481300552">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273;org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1635722560;cdt.managedbuild.tool.gnu.cpp.compiler.input.1567827987">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339;org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1147551339.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.915328869;cdt.managedbuild.tool.gnu.c.compiler.input.872668343">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551;cdt.managedbuild.config.gnu.cross.exe.debug.1116738551.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.1850103714;cdt.managedbuild.tool.gnu.cpp.compiler.input.1873182824">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551;cdt.managedbuild.config.gnu.cross.exe.debug.1116738551.;cdt.managedbuild.tool.gnu.cross.c.compiler.264488377;cdt.managedbuild.tool.gnu.c.compiler.input.872021293">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169;org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.debug.1558947721;cdt.managedbuild.tool.gnu.cpp.compiler.input.652526699">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672;org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.658661248;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.345267376;cdt.managedbuild.tool.gnu.cpp.compiler.input.1412809071">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -287,13 +271,16 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551;cdt.managedbuild.config.gnu.cross.exe.debug.1116738551.;cdt.managedbuild.tool.gnu.c.compiler.mingw.base.990598825;cdt.managedbuild.tool.gnu.c.compiler.input.1665164782">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169;org.eclipse.linuxtools.cdt.autotools.core.configuration.build.debug.530181169.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.debug.1597510761;cdt.managedbuild.tool.gnu.c.compiler.input.1608637974">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551;cdt.managedbuild.config.gnu.cross.exe.debug.1116738551.;cdt.managedbuild.tool.gnu.cross.cpp.compiler.108538585;cdt.managedbuild.tool.gnu.cpp.compiler.input.101864664">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273;org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1635722560;cdt.managedbuild.tool.gnu.cpp.compiler.input.1567827987">
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273.1184527069;org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273.1184527069.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.957134936;cdt.managedbuild.tool.gnu.c.compiler.input.1464853974">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1116738551;cdt.managedbuild.config.gnu.cross.exe.debug.1116738551.;cdt.managedbuild.tool.gnu.cpp.compiler.mingw.base.1850103714;cdt.managedbuild.tool.gnu.cpp.compiler.input.1873182824">
+		<scannerConfigBuildInfo instanceId="org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273.1184527069;org.eclipse.linuxtools.cdt.autotools.core.toolChain.690146672.27837273.1184527069.;org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.178075364;cdt.managedbuild.tool.gnu.cpp.compiler.input.2036026106">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>

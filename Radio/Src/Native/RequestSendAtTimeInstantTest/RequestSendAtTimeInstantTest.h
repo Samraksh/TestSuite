@@ -6,7 +6,8 @@
 #define RadioTest_H_
 
 #include <tinyhal.h>
-#include <Targets/Native/STM32F10x/DeviceCode/drivers/radio/SX1276/SX1276wrapper.h.h>
+//#include <Samraksh/Radio.h>
+#include <Targets/Native/STM32F10x/DeviceCode/drivers/radio/SX1276/SamrakshSX1276hal.h>
 
 #define PAYLOAD_SIZE	5
 
@@ -16,43 +17,25 @@ struct Payload_t {
 };
 
 
-
-class RadioTestSend	{
+class TestObject_t	{
 public:
 	static void TxDone( bool success);
 	static void PacketDetected();
 	static void RxDone (uint8_t *payload, uint16_t size );
 	static void CadDone ( bool channelActivityDetected );
 	static void DataStatusCallback( bool success, UINT16 number_of_bytes_in_buffer );
-	static const RadioEvents_t radio_events = {
-			TxDone, PacketDetected, RxDone, CadDone, DataStatusCallback
-	};
+	SamrakshRadio_I::RadioEvents_t radio_events;
 
-	static void Test_0A_Timer1_Handler(void * arg){
-			g_RadioTestSend.SendPacket();
-	}
+	static void Test_0A_Timer1_Handler(void * arg);
 
 	/*
 	 * Alternates between sending packets and sleeping
 	 */
-	static void Test_0A_Timer2_Handler(void * arg){
-		static bool toggle = false;
-		if(!toggle){
-			toggle = true;
-			for(int i = 0; i < 200; i++){
-				g_RadioTestSend.SendPacket();
-				//HAL_Time_Sleep_MicroSeconds(500);
-			}
-		}
-		else{
-			toggle = false;
-			HAL_Time_Sleep_MicroSeconds(400000);
-		}
-	}
+//	static void Test_0A_Timer2_Handler(void * arg);
 public:
 	Payload_t msg;
 	SamrakshRadio_I* radio;
-	RadioEvents_t radio_events;
+//	RadioEvents_t radio_events;
 
 	BOOL Initialize();
 	BOOL StartTest();
@@ -62,7 +45,7 @@ public:
 
 //extern RadioTest g_RadioTest;
 
-void RadioTest_Initialize();
+void Test_InitializeAndRun();
 
 #endif /* RadioTest_H_ */
 
