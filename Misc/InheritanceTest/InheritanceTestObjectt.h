@@ -10,8 +10,8 @@
 
 #include <tinyhal.h>
 
-
-namespace A{
+namespace InheritanceTest{
+//namespace A{
 class Base1{
 public:
 	virtual ~Base1();
@@ -20,12 +20,12 @@ public:
 	}
 	virtual void foo_virt1();
 };
-};
+//};
 
 
-namespace InheritanceTest{
 
-class Der1 : public A::Base1 {
+
+class Der1 : public Base1 {
 public:
 	virtual ~Der1();
 	virtual void foo_virt1() ;
