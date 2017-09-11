@@ -19,6 +19,7 @@ struct Payload_t {
 
 class TestObject_t	{
 public:
+	UINT64 delay;
 	static void TxDone( bool success);
 	static void PacketDetected();
 	static void RxDone (uint8_t *payload, uint16_t size );
@@ -26,7 +27,7 @@ public:
 	static void DataStatusCallback( bool success, UINT16 number_of_bytes_in_buffer );
 	SamrakshRadio_I::RadioEvents_t radio_events;
 
-	static void Test_0A_Timer1_Handler(void * arg);
+//	static void Test_0A_Timer1_Handler(void * arg);
 
 	/*
 	 * Alternates between sending packets and sleeping
