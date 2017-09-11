@@ -51,10 +51,10 @@ void InheritanceTest::Der1::foo_virt2()  {
 //	this->foo_virt1();
 //}
 
-A::Base1::~Base1() {
+InheritanceTest::Base1::~Base1() {
 }
 
-void A::Base1::foo_virt1(){
+void InheritanceTest::Base1::foo_virt1(){
 	hal_printf("ABase1::foo_virt1 \r\n");
 };
 
