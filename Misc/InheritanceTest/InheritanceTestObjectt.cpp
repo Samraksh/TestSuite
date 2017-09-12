@@ -14,8 +14,11 @@ InheritanceTestObject_t gInheritanceTest;
 
 void InheritanceTestTest_InitializeAndRun() {
 
+	Der1 der1;
+	der1.Run();
+
 	gInheritanceTest.foo_virt1();
-	gInheritanceTest.Run();
+//	gInheritanceTest.Run();
 }
 
 
