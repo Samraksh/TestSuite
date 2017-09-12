@@ -17,7 +17,7 @@ public:
 	Base1() { hal_printf("Base1 constructor\r\n"); }
 	~Base1(){ hal_printf("destroying base\r\n"); }
 	void callfoo_virt1(){foo_virt1();}
-	virtual void foo_virt1() = 0; //{ hal_printf("base1 foo_virt1\r\n"); }
+	virtual void foo_virt1(){ hal_printf("base1 foo_virt1\r\n"); }
 };
 
 class Der1 : public Base1 {
