@@ -41,7 +41,7 @@
     <ScatterFileReferences Include="$(SRC_DIR)\scatterfile_tools_$(COMPILER_TOOL).xml" />
   </ItemGroup>
   <!-- #TestSystem: All project information below this line will automatically be used to update the native project files in the TestSuite -->
-   <Import Project="$(SPOCLIENT)\Framework\Features\core.featureproj" />
+  <Import Project="$(SPOCLIENT)\Framework\Features\core.featureproj" />
   <Import Project="$(SPOCLIENT)\Framework\Features\hardware.featureproj" />
   <Import Project="$(SPOCLIENT)\Framework\Features\NativeEventDispatcher.featureproj" />
   <Import Project="$(SPOCLIENT)\Framework\Features\BlockStorage.featureproj" />
@@ -697,7 +697,6 @@
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\radio\dotNetMF.proj" />
     <DriverLibs Include="STM32F10x_radio_rf231.$(LIB_EXT)" />
 	<DriverLibs Include="STM32F10x_radio_si446x.$(LIB_EXT)" />
-	<DriverLibs Include="STM32F10x_radio_sx1276x.$(LIB_EXT)" />
   </ItemGroup>
   <!--ItemGroup>
     <RequiredProjects Include="$(SPOCLIENT)\DeviceCode\Targets\Native\STM32F10x\DeviceCode\drivers\radio\dotNetMF.proj" />
