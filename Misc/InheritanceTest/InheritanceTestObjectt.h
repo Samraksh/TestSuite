@@ -10,6 +10,8 @@
 
 #include <tinyhal.h>
 
+extern "C" void __cxa_pure_virtual() { while (1); }
+
 namespace InheritanceTest{
 //namespace A{
 class Base1{
