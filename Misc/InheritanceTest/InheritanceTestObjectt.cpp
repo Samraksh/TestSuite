@@ -16,6 +16,11 @@ Base1::~Base1(){ hal_printf("destroying base\r\n"); }
 void Base1::callfoo_virt1(){foo_virt1();}
 //void Base1::foo_virt1(){ hal_printf("base1 foo_virt1\r\n"); }
 
+Base2::Base2(){ hal_printf("Base2 constructor\r\n"); }
+Base2::~Base2(){ hal_printf("destroying base\r\n"); }
+void Base2::callfoo_virt2(){foo_virt2();}
+//void Base2::foo_virt2(){ hal_printf("base2 foo_virt2\r\n"); }
+
 Der1::Der1(){ hal_printf("Der1 constructor\r\n"); }
 Der1::~Der1(){ hal_printf("destroying der1\r\n"); }
 void Der1::foo_virt1() { hal_printf("Der1 foo virt1\r\n"); }
@@ -54,6 +59,17 @@ void InheritanceTestTest_InitializeAndRun() {
 	for(UINT8 i = 0; i < limit; ++i){}
 
 	gInheritanceTestPtr->Der1::foo_virt1();
+	for(UINT8 i = 0; i < limit; ++i){}
+
+
+
+	gInheritanceTestPtr->callfoo_virt2();
+	for(UINT8 i = 0; i < limit; ++i){}
+
+	gInheritanceTestPtr->foo_virt2();
+	for(UINT8 i = 0; i < limit; ++i){}
+
+	gInheritanceTestPtr->Der1::foo_virt2();
 	for(UINT8 i = 0; i < limit; ++i){}
 
 }

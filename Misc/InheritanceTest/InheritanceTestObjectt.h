@@ -24,7 +24,16 @@ public:
 	virtual void foo_virt1() = 0;
 };
 
-class Der1 : public Base1 {
+class Base2{
+public:
+	Base2();
+	~Base2();
+	void callfoo_virt2();
+	virtual void foo_virt2() = 0;
+};
+
+
+class Der1 : public Base1, public Base2 {
 public:
 	Der1();
 	~Der1();
