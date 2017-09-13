@@ -9,12 +9,15 @@
 
 namespace InheritanceTest{
 
-InheritanceTestObject_t gInheritanceTest;	
-
+InheritanceTestObject_t* gInheritanceTestPtr;
 void InheritanceTestTest_InitializeAndRun() {
+	
+	static InheritanceTestObject_t gInheritanceTest;
+	gInheritanceTestPtr = &gInheritanceTest;
 
-	gInheritanceTest.Run();
-	gInheritanceTest.foo_virt1();
+	gInheritanceTestPtr->Run();
+	gInheritanceTestPtr->callfoo_virt1();
+	gInheritanceTestPtr->foo_virt1();
 }
 
 
