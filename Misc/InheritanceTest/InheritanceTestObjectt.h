@@ -10,36 +10,36 @@
 
 #include <tinyhal.h>
 
+
+extern "C" void __cxa_pure_virtual() { while (1); }
 void* __dso_handle;
 
 namespace InheritanceTest{
 //namespace A{
-
-
 class Base1{
 public:
-	Base1() { hal_printf("Base1 constructor\r\n"); }
-	~Base1(){ hal_printf("destroying base\r\n"); }
-	void f0()  {hal_printf("base1 f0\r\n"); }
-	void callfoo_virt1(){foo_virt1();}
-	virtual void foo_virt1(){ hal_printf("base1 foo_virt1\r\n"); }
+	Base1();
+	~Base1();
+	void callfoo_virt1();
+	virtual void foo_virt1() = 0;
 };
 
 class Der1 : public Base1 {
 public:
-	Der1(){ hal_printf("Der1 constructor\r\n"); }
-	~Der1(){ hal_printf("destroying der1\r\n"); }
-	virtual void foo_virt1() { hal_printf("Der1 foo virt1\r\n"); }
-	//void foo_virt2(){hal_printf("Der1::foo_virt2 \r\n");}
-	void Run(){ foo_virt1(); }
+	Der1();
+	~Der1();
+	virtual void foo_virt1();
+	void foo_virt2();
+	void Run();
 };
 
 class InheritanceTestObject_t : public Der1{
 public:
-	InheritanceTestObject_t(){ hal_printf("InheritanceTestObject_t constructor\r\n"); }
-	~InheritanceTestObject_t(){ hal_printf("destroying InheritanceTestObject_t\r\n"); }
-	void foo_virt1(){ hal_printf("InheritanceTestObject_t::foo_virt1 \r\n"); }
+	InheritanceTestObject_t();
+	void foo_virt1();
+	~InheritanceTestObject_t();
 };
+
 
 void InheritanceTestTest_InitializeAndRun();
 
