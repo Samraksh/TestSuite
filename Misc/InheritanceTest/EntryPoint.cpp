@@ -28,6 +28,7 @@ void ApplicationEntryPoint()
     
     do
     {
+    	InheritanceTest::InheritanceTest_InitializeGlobalPointers();
     	InheritanceTest::InheritanceTestTest_InitializeAndRun();
 
     	//dsTestObject.Execute(TEST_INITIALIZATION);

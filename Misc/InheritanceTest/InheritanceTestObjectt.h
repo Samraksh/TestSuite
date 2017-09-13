@@ -10,6 +10,8 @@
 
 #include <tinyhal.h>
 
+void* __dso_handle;
+
 namespace InheritanceTest{
 //namespace A{
 
@@ -39,9 +41,9 @@ public:
 	void foo_virt1(){ hal_printf("InheritanceTestObject_t::foo_virt1 \r\n"); }
 };
 
-extern InheritanceTestObject_t* gInheritanceTestPtr;
-
 void InheritanceTestTest_InitializeAndRun();
+
+void InheritanceTest_InitializeGlobalPointers();
 
 }//End namespace InheritanceTest
 
