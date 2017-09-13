@@ -10,7 +10,9 @@
 
 #include <tinyhal.h>
 
+
 extern "C" void __cxa_pure_virtual() { while (1); }
+void* __dso_handle;
 
 namespace InheritanceTest{
 //namespace A{
@@ -40,6 +42,8 @@ public:
 
 
 void InheritanceTestTest_InitializeAndRun();
+
+void InheritanceTest_InitializeGlobalPointers();
 
 }//End namespace InheritanceTest
 

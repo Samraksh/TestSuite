@@ -8,6 +8,8 @@
 #include "InheritanceTestObjectt.h"
 
 namespace InheritanceTest{
+InheritanceTestObject_t* gInheritanceTestPtr;
+
 
 Base1::Base1(){ hal_printf("Base1 constructor\r\n"); }
 Base1::~Base1(){ hal_printf("destroying base\r\n"); }
@@ -24,8 +26,6 @@ InheritanceTestObject_t::InheritanceTestObject_t(){ hal_printf("InheritanceTestO
 void InheritanceTestObject_t::foo_virt1(){ hal_printf("InheritanceTestObject_t::foo_virt1 \r\n"); }
 InheritanceTestObject_t::~InheritanceTestObject_t(){ hal_printf("destroying InheritanceTestObject_t\r\n"); }
 
-InheritanceTestObject_t gInheritanceTest;	
-Der1 gder1;
 
 void InheritanceTestTest_InitializeAndRun() {
 	UINT8 limit = 0;
@@ -47,15 +47,21 @@ void InheritanceTestTest_InitializeAndRun() {
 	p->foo_virt1();
 	for(UINT8 i = 0; i < limit; ++i){}
 
-//	p->Base1::foo_virt1();
+	gInheritanceTestPtr->callfoo_virt1();
 	for(UINT8 i = 0; i < limit; ++i){}
 
-	gInheritanceTest.foo_virt1();
+	gInheritanceTestPtr->foo_virt1();
 	for(UINT8 i = 0; i < limit; ++i){}
 
-//	gInheritanceTest.Run(); //BK: Segfaults in this line
+	gInheritanceTestPtr->Der1::foo_virt1();
+	for(UINT8 i = 0; i < limit; ++i){}
+
 }
 
+void InheritanceTest_InitializeGlobalPointers(){
+	static InheritanceTestObject_t gInheritanceTest;
+	gInheritanceTestPtr = &gInheritanceTest;
+}
 
 } //End namespace InheritanceTest
 
