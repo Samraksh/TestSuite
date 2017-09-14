@@ -22,8 +22,28 @@ void PostManagedEvent( UINT8 category, UINT8 subCategory, UINT16 data1, UINT32 d
 {
 }
 
+//extern void (*__preinit_array_start []) (void) __attribute__((weak));
+//extern void (*__preinit_array_end []) (void) __attribute__((weak));
+//extern void (*__init_array_start []) (void) __attribute__((weak));
+//extern void (*__init_array_end []) (void) __attribute__((weak));
+
+
 void ApplicationEntryPoint()
 {
+
+//	  // This is basically libc_init_array -- handles global constructors
+//	  unsigned int count;
+//	  unsigned int i;
+//
+//	  count = __preinit_array_end - __preinit_array_start;
+//	  for (i = 0; i < count; i++)
+//	    __preinit_array_start[i] ();
+//
+//	  count = __init_array_end - __init_array_start;
+//	  for (i = 0; i < count; i++)
+//	    __init_array_start[i] ();
+
+
     BOOL result;
     
     do

@@ -10,16 +10,20 @@
 
 #include <tinyhal.h>
 
-
-extern "C" void __cxa_pure_virtual() { while (1); }
-void* __dso_handle;
+//
+extern "C" void __cxa_pure_virtual() { while (true); }
+//void* __dso_handle;
+void operator delete(void *, unsigned int)
+{
+	while (true);
+}
 
 namespace InheritanceTest{
 //namespace A{
 class Base1{
 public:
 	Base1();
-	~Base1();
+	virtual ~Base1();
 	void callfoo_virt1();
 	virtual void foo_virt1() = 0;
 };
@@ -27,7 +31,7 @@ public:
 class Base2{
 public:
 	Base2();
-	~Base2();
+	virtual ~Base2();
 	void callfoo_virt2();
 	virtual void foo_virt2() = 0;
 };
@@ -36,7 +40,7 @@ public:
 class Der1 : public Base1, public Base2 {
 public:
 	Der1();
-	~Der1();
+	virtual ~Der1();
 	virtual void foo_virt1();
 	void foo_virt2();
 	void Run();
