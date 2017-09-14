@@ -203,3 +203,5 @@ csmaMACTest/Src/C#/PacketLossTest/PacketLossTest/obj/Debug/DesignTimeResolveAsse
 csmaMACTest/Src/C#/PacketLossTest/PacketLossTest/obj/Debug/TinyCLR_DebugReferences.cache
 csmaMACTest/Src/C#/TestRig/csmaMACTest/csmaMACTest.v11.suo
 *.suo
+*.cproject
+*.autotools
