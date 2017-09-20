@@ -7,7 +7,7 @@
 #define __regtest
 
 #include <tinyhal.h>
-#include "RequestSendAtTimeInstantTest.h"
+#include "RadioFIFOTest.h"
 
 
 void Keep_Linker_Happy() {
@@ -20,7 +20,6 @@ void* __dso_handle;
 void operator delete(void *, unsigned int){
 	while (true);
 }
-
 
 HAL_DECLARE_NULL_HEAP();
 
