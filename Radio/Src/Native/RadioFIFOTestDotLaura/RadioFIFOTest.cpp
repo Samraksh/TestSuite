@@ -62,6 +62,9 @@ void TestObject_t:: DataStatusCallback( bool success, UINT16 number_of_bytes_in_
 
 void Test_0A_Timer1_Handler(void * arg){
 	hal_printf("*** RadioFIFOTest::Start Test \r\n");
+
+
+	g_TestObject_ptr->IncrementBuffers();
 	g_TestObject_ptr->WriteToBuffer();
 	g_TestObject_ptr->ReadFromBuffer();
 	g_TestObject_ptr->CompareBuffers();
@@ -70,11 +73,14 @@ void Test_0A_Timer1_Handler(void * arg){
 
 
 
-
+void TestObject_t::IncrementBuffers(){
+	msg_written.SetMsg(msg_written.array[1] + 1); //Initialize buffers
+	msg_read.SetMsg(msg_written.array[1] + 1); //Initialize buffers
+}
 
 bool TestObject_t::ReadFromBuffer()
 {
-	g_SX1276M1BxASWrapper_ptr-> ReadFifo(
+	g_SX1276M1BxASWrapper_ptr-> ReadFromTxBuffer(
 			reinterpret_cast<uint8_t*>(&msg_read.array[1])
 			, BYTELENGTHOFNESSAGE
 			);

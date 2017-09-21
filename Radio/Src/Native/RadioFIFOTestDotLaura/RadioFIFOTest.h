@@ -11,7 +11,7 @@
 
 
 #define MSG_EMBED 5
-#define BYTELENGTHOFNESSAGE 80
+#define BYTELENGTHOFNESSAGE 32
 #define MSGSIZE BYTELENGTHOFNESSAGE/8
 
 typedef uint64_t RepeatedBasicMsgType ;
@@ -71,6 +71,8 @@ public:
 	LongMessage msg_read;
 
 	bool Initialize();
+
+	void IncrementBuffers();
 	bool WriteToBuffer();
 	bool ReadFromBuffer();
 	bool CompareBuffers();
