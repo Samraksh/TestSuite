@@ -14,7 +14,7 @@
     <ExtraAssemblies>
     </ExtraAssemblies>
     <ProjectPath>$(TESTSOURCE)\TestSuite\Radio\Src\Native\RequestSendAtTimeInstantTest\RequestSendAtTimeInstantTest.proj</ProjectPath>
-    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
+    <MFSettingsFile>$(SPOCLIENT)\Solutions\EmoteDotLaura\EmoteDotLaura.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
   </PropertyGroup>
   <PropertyGroup>
@@ -27,7 +27,7 @@
     <MultipleOutputSections>false</MultipleOutputSections>
     <ADD_LOAD_IMAGE_CRC>false</ADD_LOAD_IMAGE_CRC>
     <ExtraTargets>BuildSigFiles</ExtraTargets>
-    <EXEScatterFileDefinition>$(TESTSOURCE)\TestSuite\Radio\Src\Native\RequestSendAtTimeInstantTest\scatterfile_tools_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
+    <EXEScatterFileDefinition>$(SPOCLIENT)\Solutions\EmoteDotLaura\TinyCLR\scatterfile_tinyclr_$(COMPILER_TOOL).xml</EXEScatterFileDefinition>
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>

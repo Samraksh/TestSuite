@@ -17,14 +17,14 @@ const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
 
 TestObject_t g_TestObject_t;
-extern EMOTE_SX1276_LORA::Samraksh_SX1276_hal* gsx1276radio_ptr;
+extern SamrakshRadio_I* gsx1276radio_ptr;
 //extern EMOTE_SX1276_LORA::Samraksh_SX1276_hal gsx1276radio;
 
 
 #define DEBUG_RadioTest 1
 #define TEST_0A_TIMER1	7
 #define TEST_0A_TIMER2	11
-#define TIMER2_PERIOD 	4*ONESEC_IN_MSEC*ONEMSEC_IN_USEC
+#define TIMER2_PERIOD 	40*ONESEC_IN_MSEC*ONEMSEC_IN_USEC
 #define Test_0A_Timer_Pin (GPIO_PIN)25 //2
 
 
