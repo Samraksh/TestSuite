@@ -9,9 +9,17 @@
 //#include <Samraksh/Radio.h>
 #include <Targets/Native/Radios/SX1276/SamrakshSX1276hal.h>
 
+namespace NSRadioFIFOTest{
+
+
+#define LED_RED (GPIO_PIN)20
+#define LED_GREEN (GPIO_PIN)21
+#define LED_BLUE (GPIO_PIN)22
+#define LED_ON_STATE false
+#define LED_OFF_STATE true
 
 #define MSG_EMBED 5
-#define BYTELENGTHOFNESSAGE 32
+#define BYTELENGTHOFNESSAGE 255
 
 typedef uint8_t RepeatedBasicMsgType ;
 #define MSGSIZE BYTELENGTHOFNESSAGE
@@ -81,6 +89,9 @@ public:
 };
 
 void Test_InitializeAndRun();
+
+
+}
 
 #endif /* RadioTest_H_ */
 

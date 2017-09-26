@@ -33,7 +33,7 @@ void ApplicationEntryPoint()
     
     do
     {
-    	Test_InitializeAndRun();
+    	NSRadioFIFOTest::Test_InitializeAndRun();
 
     	//dsTestObject.Execute(TEST_INITIALIZATION);
 

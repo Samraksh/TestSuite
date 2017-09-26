@@ -16,11 +16,12 @@
 const UINT16 ONESEC_IN_MSEC = 1000;
 const UINT16 ONEMSEC_IN_USEC = 1000;
 
-TestObject_t* g_TestObject_ptr;
+NSRadioFIFOTest::TestObject_t* g_TestObject_ptr;
+
 extern SamrakshRadio_I* gsx1276radio_ptr;
 extern Samraksh_SX1276Wrapper::SX1276M1BxASWrapper* g_SX1276M1BxASWrapper_ptr;
 
-
+namespace NSRadioFIFOTest{
 
 #define DEBUG_RadioTest 1
 #define TEST_0A_TIMER1	7
@@ -63,12 +64,18 @@ void TestObject_t:: DataStatusCallback( bool success, UINT16 number_of_bytes_in_
 void Test_0A_Timer1_Handler(void * arg){
 	hal_printf("*** RadioFIFOTest::Start Test \r\n");
 
+	CPU_GPIO_SetPinState( LED_RED, LED_OFF_STATE );
+	CPU_GPIO_SetPinState( LED_GREEN, LED_OFF_STATE );
+
+	CPU_GPIO_SetPinState( LED_BLUE, LED_ON_STATE );
 
 	g_TestObject_ptr->IncrementBuffers();
 	g_TestObject_ptr->WriteToBuffer();
 	g_TestObject_ptr->ReadFromBuffer();
 	g_TestObject_ptr->CompareBuffers();
 	hal_printf("*** RadioFIFOTest::End Test  \r\n");
+
+	CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
 }
 
 
@@ -90,6 +97,7 @@ bool TestObject_t::ReadFromBuffer()
 
 bool TestObject_t::WriteToBuffer()
 {
+
 	g_SX1276M1BxASWrapper_ptr->AddToTxBuffer(
 			reinterpret_cast<uint8_t*>(&(msg_written.array[1]))
 			, BYTELENGTHOFNESSAGE
@@ -100,15 +108,25 @@ bool TestObject_t::WriteToBuffer()
 
 bool TestObject_t::CompareBuffers(){
 	if(msg_written == msg_read){
+		CPU_GPIO_SetPinState( LED_GREEN, LED_ON_STATE );
 		hal_printf("SUCCESS");
 	}
 	else{
+		CPU_GPIO_SetPinState( LED_RED, LED_ON_STATE );
 		hal_printf("FAIL");
 	}
 }
 
 bool TestObject_t::Initialize()
 {
+
+	CPU_GPIO_EnableOutputPin(LED_RED, LED_ON_STATE);
+	CPU_GPIO_SetPinState( LED_RED, LED_OFF_STATE );
+	CPU_GPIO_EnableOutputPin( LED_GREEN, LED_ON_STATE);
+	CPU_GPIO_SetPinState( LED_GREEN, LED_OFF_STATE );
+	CPU_GPIO_EnableOutputPin( LED_BLUE, LED_ON_STATE);
+	CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
+
 	radio_events.TxDone = TxDone;
 	radio_events.PacketDetected = PacketDetected;
 	radio_events.RxDone = RxDone;
@@ -142,5 +160,7 @@ void Test_InitializeAndRun()
 
 }
 
+
+} //End Namepsace
 
 
