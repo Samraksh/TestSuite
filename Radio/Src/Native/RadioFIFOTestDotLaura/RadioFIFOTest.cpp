@@ -98,7 +98,7 @@ bool TestObject_t::ReadFromBuffer()
 bool TestObject_t::WriteToBuffer()
 {
 
-	g_SX1276M1BxASWrapper_ptr->AddToTxBuffer(
+	g_SX1276M1BxASWrapper_ptr->WriteToTxBuffer(
 			reinterpret_cast<uint8_t*>(&(msg_written.array[1]))
 			, BYTELENGTHOFNESSAGE
 			);
