@@ -12,9 +12,10 @@
 
 #define MSG_EMBED 5
 #define BYTELENGTHOFNESSAGE 32
-#define MSGSIZE BYTELENGTHOFNESSAGE/8
 
-typedef uint64_t RepeatedBasicMsgType ;
+typedef uint8_t RepeatedBasicMsgType ;
+#define MSGSIZE BYTELENGTHOFNESSAGE
+
 typedef uint16_t MsgIteratorT;
 
 struct LongMessage{
@@ -24,7 +25,7 @@ struct LongMessage{
 	};
 	void SetMsg(RepeatedBasicMsgType x){
 		for(auto i = 1; i < MSGSIZE+1 ; ++i){
-			this->array[i] = x;
+			this->array[i] = x + i;
 		}
 	};
 

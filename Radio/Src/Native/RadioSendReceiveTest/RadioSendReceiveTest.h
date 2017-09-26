@@ -10,10 +10,17 @@
 #include <Targets/Native/Radios/SX1276/SamrakshSX1276hal.h>
 
 namespace NSRadioSendReceiveTest{
+
+#define LED_RED (GPIO_PIN)20
+#define LED_GREEN (GPIO_PIN)21
+#define LED_BLUE (GPIO_PIN)22
+#define LED_ON_STATE false
+#define LED_OFF_STATE true
+
+
 	#define MSG_EMBED 5
 	#define BYTELENGTHOFNESSAGE 32
 	#define MSGSIZE BYTELENGTHOFNESSAGE/8
-
 	typedef uint64_t RepeatedBasicMsgType ;
 	typedef uint16_t MsgIteratorT;
 
@@ -24,10 +31,16 @@ namespace NSRadioSendReceiveTest{
 		};
 		void SetMsg(RepeatedBasicMsgType x){
 			for(auto i = 1; i < MSGSIZE+1 ; ++i){
-				this->array[i] = x;
+				this->array[i] = x + i;
 			}
 		};
-
+		//Check if the packet content is set by SetMsg
+		bool CheckMsgConsistency(){
+			for(auto i = 2; i < MSGSIZE+1 ; ++i){
+				if(this->array[i] != this->array[i-1] + 1) return false;
+			}
+			return true;
+		}
 		bool operator ==(const LongMessage& rhs) const{
 			for(uint16_t i = 1; i < MSGSIZE+1; ++i){
 				if(array[i] != rhs.array[i]){
@@ -67,6 +80,7 @@ namespace NSRadioSendReceiveTest{
 		SamrakshRadio_I::RadioEvents_t radio_events;
 
 
+
 		LongMessage msg_written;
 		LongMessage msg_read;
 
@@ -85,7 +99,7 @@ namespace NSRadioSendReceiveTest{
 
 		void SendPacket();
 		void ReceivePacket(uint8_t *payload, uint16_t size );
-		bool ComparePackets();
+		void IncrementBuffers();
 
 	};
 
