@@ -5,7 +5,7 @@
 #include "VirtualTimerTest.h"
 #include "../DeviceCode/Include/Samraksh/VirtualTimer.h"
 #include "../DeviceCode/Include/Time_decl.h"
-
+#include "platform_selector.h"
 
 //---//
 
@@ -18,7 +18,7 @@ void Timer_0_Handler(void *arg)
 	else 
 		pinState0 = false;
 
-	CPU_GPIO_SetPinState((GPIO_PIN) 24, pinState0);
+	CPU_GPIO_SetPinState(TEST_PIN0, pinState0);
 }
 
 void Timer_1_Handler(void *arg)
@@ -30,7 +30,7 @@ void Timer_1_Handler(void *arg)
 	else 
 		pinState1 = false;
 
-	CPU_GPIO_SetPinState((GPIO_PIN) 25, pinState1);
+	CPU_GPIO_SetPinState(TEST_PIN1, pinState1);
 }
 
 void Timer_2_Handler(void *arg)
@@ -42,7 +42,7 @@ void Timer_2_Handler(void *arg)
 	else 
 		pinState2 = false;
 
-	CPU_GPIO_SetPinState((GPIO_PIN) 29, pinState2);
+	CPU_GPIO_SetPinState(TEST_PIN2, pinState2);
 }
 
 void Timer_3_Handler(void *arg)
@@ -54,48 +54,52 @@ void Timer_3_Handler(void *arg)
 	else 
 		pinState3 = false;
 
-	CPU_GPIO_SetPinState((GPIO_PIN) 30, pinState3);
+	CPU_GPIO_SetPinState(TEST_PIN3, pinState3);
 }
 
 void Timer_4_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 31, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 31, FALSE);
+	CPU_GPIO_SetPinState(TEST_PIN4, TRUE);
+	CPU_GPIO_SetPinState(TEST_PIN4, FALSE);
 }
 
 void Timer_5_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 2, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 2, FALSE);
+	CPU_GPIO_SetPinState(TEST_PIN5, TRUE);
+	CPU_GPIO_SetPinState(TEST_PIN5, FALSE);
 }
 
 void Timer_6_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 4, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 4, FALSE);
+	CPU_GPIO_SetPinState(TEST_PIN6, TRUE);
+	CPU_GPIO_SetPinState(TEST_PIN6, FALSE);
 }
 
 void Timer_7_Handler(void *arg)
 {
-	CPU_GPIO_SetPinState((GPIO_PIN) 8, TRUE);
-	CPU_GPIO_SetPinState((GPIO_PIN) 8, FALSE);
+	CPU_GPIO_SetPinState(TEST_PIN7, TRUE);
+	CPU_GPIO_SetPinState(TEST_PIN7, FALSE);
 }
 
 
 VirtualTimerTest::VirtualTimerTest( int seedValue, int numberOfEvents )
 {
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 24, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 25, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 29, TRUE);
-	CPU_GPIO_EnableOutputPin((GPIO_PIN) 30, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN0, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN1, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN2, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN3, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN4, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN5, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN6, TRUE);
+	CPU_GPIO_EnableOutputPin(TEST_PIN7, TRUE);
 	
 };
 
 BOOL VirtualTimerTest::Level_0A()
 {
-	VirtTimer_SetTimer(1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
-
-	return TRUE;
+	//This is for testing RTC. RTC is usually the second hardware timer.
+	bool ret =  VirtTimer_SetTimer(g_VirtualTimerPerHardwareTimer+1, 0, 30000, FALSE, FALSE, Timer_1_Handler);
+	return ret;
 }
 
 BOOL VirtualTimerTest::Level_0E()
