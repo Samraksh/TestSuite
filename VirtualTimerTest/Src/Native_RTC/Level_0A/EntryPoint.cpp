@@ -31,7 +31,7 @@ void ApplicationEntryPoint()
     do
     {
 
-    	if(!virtualTimerTest.Execute(4))
+    	if(!virtualTimerTest.Execute(0))
     		hal_printf("Error");
 	  //if(halTimerTest.Execute(0))
 		//break;
