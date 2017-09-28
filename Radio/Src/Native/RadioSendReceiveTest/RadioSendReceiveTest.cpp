@@ -36,21 +36,18 @@ const UINT16 ONEMSEC_IN_USEC = 1000;
 
 
 void TestObject_t:: TxDone( bool success){
+	if(!g_TestObject_ptr->m_EndOfTest) g_TestObject_ptr->m_PacketSentTxDone = success;
 	if(success){
 		hal_printf("TestObject_t::TxDone SUCCESS %d number_of_bytes_in_buffer = %d  \r\n" , success);
-		g_TestObject_ptr->m_PacketSentTxDone = true;
-		CPU_GPIO_SetPinState( LED_RED, LED_OFF_STATE );
-		CPU_GPIO_SetPinState( LED_GREEN, LED_ON_STATE );
+		CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
 	}
 	else{
 		hal_printf("TestObject_t::TxDone FAIL %d number_of_bytes_in_buffer = %d  \r\n" , success);
-		g_TestObject_ptr->m_PacketSentTxDone = false;
 	}
-	gsx1276radio_ptr->StartListenning();
+	g_TestObject_ptr->StartListenning();
 }
 void TestObject_t:: PacketDetected(){
-	CPU_GPIO_SetPinState( LED_BLUE, LED_ON_STATE );
-	CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
+	if(!g_TestObject_ptr->m_EndOfTest) g_TestObject_ptr->m_PacketDetected = true;
 }
 void TestObject_t:: RxDone (uint8_t *payload, uint16_t size ){
 	g_TestObject_ptr->ReceivePacket(payload, size);
@@ -60,45 +57,77 @@ void TestObject_t:: CadDone ( bool channelActivityDetected ){
 }
 void TestObject_t:: DataStatusCallback( bool success, UINT16 number_of_bytes_in_buffer ){
 	hal_printf("TestObject_t::DataStatusCallback success %d number_of_bytes_in_buffer = %d  \r\n" , success, number_of_bytes_in_buffer);
-	g_TestObject_ptr->m_PacketSentAccepted = success;
+	if(!g_TestObject_ptr->m_EndOfTest) g_TestObject_ptr->m_PacketSentAccepted = success;
 	if(!success){
-		gsx1276radio_ptr->StartListenning();
+		g_TestObject_ptr->StartListenning();
 	}
 }
 
 void Test_0A_Timer1_Handler(void * arg){
 	hal_printf("*** RadioFIFOTest::Start Test \r\n");
+
 	CPU_GPIO_SetPinState( LED_RED, LED_OFF_STATE );
 	CPU_GPIO_SetPinState( LED_GREEN, LED_OFF_STATE );
 	CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
-	g_TestObject_ptr->SendPacket();
-	hal_printf("*** RadioFIFOTest::End Test  \r\n");
 
-	VirtualTimerReturnMessage rm;
-	if(rm == TimerSupported) {do { rm = VirtTimer_Start(TEST_0A_TIMER1); } while(rm != TimerSupported);}
+	g_TestObject_ptr->CheckEndOfTest();
+	if(false ){
+
+	}
+	else{
+		CPU_GPIO_SetPinState( LED_RED, LED_OFF_STATE );
+		CPU_GPIO_SetPinState( LED_GREEN, LED_OFF_STATE );
+		CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
+		g_TestObject_ptr->SendPacket();
+		hal_printf("*** RadioFIFOTest::End Test  \r\n");
+
+		VirtualTimerReturnMessage rm;
+		if(rm == TimerSupported) {do { rm = VirtTimer_Start(TEST_0A_TIMER1); } while(rm != TimerSupported);}
+	}
+
 }
 
 
-void TestObject_t::IncrementBuffers(){
-	msg_written.SetMsg(msg_written.array[1] + 1); //Initialize buffers
-	msg_read.SetMsg(msg_written.array[1] + 1); //Initialize buffers
+bool TestObject_t::CheckEndOfTest(){
+	if( m_RxDone && m_PacketDetected && m_PacketSentAccepted && m_PacketSentTxDone) {
+		m_EndOfTest = true;
+		if(m_RxPacketCorrect){
+			CPU_GPIO_SetPinState( LED_RED, LED_OFF_STATE );
+			CPU_GPIO_SetPinState( LED_GREEN, LED_ON_STATE );
+			CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
+		}
+		else{
+			CPU_GPIO_SetPinState( LED_RED, LED_ON_STATE );
+			CPU_GPIO_SetPinState( LED_GREEN, LED_OFF_STATE );
+			CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
+		}
+		return true;
+	}
+	return false;
 }
 
 void TestObject_t::ReceivePacket(uint8_t *payload, uint16_t size ){
 
+	m_RxPacketCorrect = false;
+	if(!g_TestObject_ptr->m_EndOfTest) g_TestObject_ptr->m_RxDone = true;
 	bool rv;
-	if(size > BYTELENGTHOFNESSAGE) rv = false;
+	if(payload == NULL || size > BYTELENGTHOFNESSAGE) rv = false;
 	else{
 		memcpy(&msg_read.array[1], payload, size);
 		rv = msg_read.CheckMsgConsistency();
 	}
 
 	if(rv) {
-		CPU_GPIO_SetPinState( LED_BLUE, LED_ON_STATE );
+		m_RxPacketCorrect = true;
+		CPU_GPIO_SetPinState( LED_RED, LED_ON_STATE );
+		CPU_GPIO_SetPinState( LED_GREEN, LED_ON_STATE );
+		CPU_GPIO_SetPinState( LED_BLUE, LED_OFF_STATE );
 		hal_printf("SUCCESS: Received packet is consistent and has an ID of %llu", msg_read.array[1] );
 	}
 	else{
 		CPU_GPIO_SetPinState( LED_RED, LED_ON_STATE );
+		CPU_GPIO_SetPinState( LED_GREEN, LED_OFF_STATE );
+		CPU_GPIO_SetPinState( LED_BLUE, LED_ON_STATE );
 		hal_printf("FAIL: Received packet is inconsistent");
 	}
 }
@@ -106,7 +135,7 @@ void TestObject_t::ReceivePacket(uint8_t *payload, uint16_t size ){
 
 void TestObject_t::SendPacket()
 {
-	CPU_GPIO_SetPinState( LED_RED, LED_ON_STATE );
+	CPU_GPIO_SetPinState( LED_BLUE, LED_ON_STATE );
 	gsx1276radio_ptr->Send(static_cast<void*>(&msg_written.array[1]), BYTELENGTHOFNESSAGE);
 	return;
 }
@@ -143,8 +172,10 @@ bool TestObject_t::Initialize()
 
 	m_PacketSentAccepted = false;
 	m_PacketSentTxDone = false;
+	m_RxPacketCorrect = false;
+	m_EndOfTest = false;
 
-	gsx1276radio_ptr->StartListenning();
+	g_TestObject_ptr->StartListenning();
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(TEST_0A_TIMER1, 0, TIMER2_PERIOD, FALSE, FALSE, Test_0A_Timer1_Handler);
 
@@ -153,7 +184,10 @@ bool TestObject_t::Initialize()
 	return true;
 }
 
-
+void TestObject_t::StartListenning(){
+	gsx1276radio_ptr->StartListenning();
+	CheckEndOfTest();
+}
 
 void Test_InitializeAndRun()
 {

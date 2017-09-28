@@ -20,8 +20,8 @@ namespace NSRadioSendReceiveTest{
 
 	#define MSG_EMBED 5
 	#define BYTELENGTHOFNESSAGE 32
-	#define MSGSIZE BYTELENGTHOFNESSAGE/8
-	typedef uint64_t RepeatedBasicMsgType ;
+	#define MSGSIZE BYTELENGTHOFNESSAGE
+	typedef uint8_t RepeatedBasicMsgType ;
 	typedef uint16_t MsgIteratorT;
 
 	struct LongMessage{
@@ -71,6 +71,10 @@ namespace NSRadioSendReceiveTest{
 
 
 	class TestObject_t {
+		void ChangeLEDColor{
+
+		}
+
 	public:
 		static void TxDone( bool success);
 		static void PacketDetected();
@@ -90,6 +94,8 @@ namespace NSRadioSendReceiveTest{
 		bool m_PacketSentAccepted;
 		bool m_PacketSentTxDone;
 
+		bool m_RxPacketCorrect;
+		bool m_EndOfTest;
 
 	public:
 
@@ -99,7 +105,8 @@ namespace NSRadioSendReceiveTest{
 
 		void SendPacket();
 		void ReceivePacket(uint8_t *payload, uint16_t size );
-		void IncrementBuffers();
+		bool CheckEndOfTest();
+		void StartListenning();
 
 	};
 
