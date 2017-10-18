@@ -71,9 +71,6 @@ namespace NSRadioSendReceiveTest{
 
 
 	class TestObject_t {
-		void ChangeLEDColor{
-
-		}
 
 	public:
 		static void TxDone( bool success);
