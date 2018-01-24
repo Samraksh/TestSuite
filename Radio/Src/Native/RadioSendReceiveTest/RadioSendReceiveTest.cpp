@@ -30,7 +30,7 @@ const UINT16 ONEMSEC_IN_USEC = 1000;
 #define DEBUG_RadioTest 1
 #define TEST_0A_TIMER1	7
 #define TEST_0A_TIMER2	11
-#define TIMER2_PERIOD 	40*ONESEC_IN_MSEC*ONEMSEC_IN_USEC
+#define TIMER2_PERIOD 	8*ONESEC_IN_MSEC*ONEMSEC_IN_USEC
 #define Test_0A_Timer_Pin (GPIO_PIN)25 //2
 
 
@@ -176,10 +176,10 @@ bool TestObject_t::Initialize()
 	m_EndOfTest = false;
 
 	g_TestObject_ptr->StartListenning();
-	VirtualTimerReturnMessage rm;
-	rm = VirtTimer_SetTimer(TEST_0A_TIMER1, 0, TIMER2_PERIOD, FALSE, FALSE, Test_0A_Timer1_Handler);
+//	VirtualTimerReturnMessage rm;
+//	rm = VirtTimer_SetTimer(TEST_0A_TIMER1, 0, TIMER2_PERIOD, FALSE, FALSE, Test_0A_Timer1_Handler);
 
-	if(rm == TimerSupported) {do { rm = VirtTimer_Start(TEST_0A_TIMER1); } while(rm != TimerSupported);}
+//	if(rm == TimerSupported) {do { rm = VirtTimer_Start(TEST_0A_TIMER1); } while(rm != TimerSupported);}
 
 	return true;
 }
