@@ -189,22 +189,6 @@ BOOL OMACTest::Initialize(){
 	}
 #endif
 
-//		UINT64 i =0;
-//		UINT64 j =0;
-//		while(i<10000000){
-//			if((CPU_Radio_ChangeChannel(SI4468_SPI2, 2)) == DS_Success) {
-//				break;
-//			}
-//			j = 0;
-//			while(j<10000000){
-//				++j;
-//			}
-//			if(i == 10000000){
-//				SOFT_BREAKPOINT();
-//				return FALSE;
-//			}
-//		}
-
 	CPU_GPIO_EnableOutputPin(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, TRUE);
 	CPU_GPIO_EnableOutputPin(gOMACTest.m_LOCALCLOCKMONITORPIN, TRUE);
 	CPU_GPIO_SetPinState(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, FALSE);
