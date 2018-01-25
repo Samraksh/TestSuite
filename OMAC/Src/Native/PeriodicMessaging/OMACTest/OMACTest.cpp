@@ -14,6 +14,9 @@ extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
 
+#define AUSTERE_NODE_ID_1 8334
+#define AUSTERE_NODE_ID_2 14728
+
 #define OMACTEST_PRINT_TIME_MISMATCH 0
 #define OMACTEST_PRINT_RX_PACKET_INFO 1
 
@@ -64,6 +67,8 @@ void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 
 	if(data_msg->size <= sizeof(UINT64)) memcpy(&packetID,data_msg->payload,data_msg->size);
 	else memcpy(&packetID,data_msg->payload,sizeof(UINT64));
 
+	g_NeighborTable.DeletePacket(packet_ptr);
+
 	hal_printf(" dest = %u  PacketID = %llu rx_packet_count = %llu \r\n",packet_ptr->GetHeader()->dest, packetID,  gOMACTest.rx_packet_count );
 
 
@@ -77,11 +82,11 @@ void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
 
 	//Toggle Pin State for monitoring with Logic Analyzer
 	if(gOMACTest.LocalClkPINState){
-		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, false);
+		CPU_GPIO_SetPinState(gOMACTest.m_LOCALCLOCKMONITORPIN, false);
 		gOMACTest.LocalClkPINState = false;
 	}
 	else {
-		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, true);
+		CPU_GPIO_SetPinState(gOMACTest.m_LOCALCLOCKMONITORPIN, true);
 		gOMACTest.LocalClkPINState = true;
 	}
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
@@ -106,11 +111,11 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 	}
 	if(g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
 		if(gOMACTest.NeighborClkPINState){
-			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, false);
+			CPU_GPIO_SetPinState(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, false);
 			gOMACTest.NeighborClkPINState = false;
 		}
 		else {
-			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, true);
+			CPU_GPIO_SetPinState(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, true);
 			gOMACTest.NeighborClkPINState = true;
 		}
 	}
@@ -140,10 +145,7 @@ BOOL OMACTest::Initialize(){
 	sent_packet_count = 0;
 	rx_packet_count = 0;
 
-	CPU_GPIO_EnableOutputPin(NEIGHBORCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_EnableOutputPin(LOCALCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, FALSE);
-	CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, FALSE);
+
 	LocalClkPINState = true;
 	NeighborClkPINState = true;
 
@@ -166,7 +168,26 @@ BOOL OMACTest::Initialize(){
 
 	MAC_Initialize(&myEventHandler,MacId, MyAppID, SI4468_SPI2, (void*) &Config);
 
+	hal_printf("Initialize OMACTest");
 
+#ifdef AUSTERE_RADIO_GPIO_PIN
+	if(AUSTERE_RADIO_GPIO_PIN == DISABLED_PIN ) {
+		hal_printf("OMACTest: Periodic messaging test is running with AUSTERE_RADIO_GPIO_PIN disabled!!");
+	}
+	else if(g_OMAC.GetMyID() == AUSTERE_NODE_ID_1){
+		this->m_LOCALCLOCKMONITORPIN = AUSTERE_RADIO_GPIO_PIN;
+		this->m_NEIGHBORCLOCKMONITORPIN = DISABLED_PIN;
+		hal_printf("OMACTest: AUSTERE_NODE_ID_1");
+	}
+	else if(g_OMAC.GetMyID() == AUSTERE_NODE_ID_2){
+		this->m_LOCALCLOCKMONITORPIN = DISABLED_PIN;
+		this->m_NEIGHBORCLOCKMONITORPIN = AUSTERE_RADIO_GPIO_PIN;
+		hal_printf("OMACTest: AUSTERE_NODE_ID_2");
+	}
+	else{
+		hal_printf("OMACTest periodic messaging test is running with UNKNOWN IDS!!");
+	}
+#endif
 
 //		UINT64 i =0;
 //		UINT64 j =0;
@@ -184,6 +205,10 @@ BOOL OMACTest::Initialize(){
 //			}
 //		}
 
+	CPU_GPIO_EnableOutputPin(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, TRUE);
+	CPU_GPIO_EnableOutputPin(gOMACTest.m_LOCALCLOCKMONITORPIN, TRUE);
+	CPU_GPIO_SetPinState(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, FALSE);
+	CPU_GPIO_SetPinState(gOMACTest.m_LOCALCLOCKMONITORPIN, FALSE);
 
 
 	VirtualTimerReturnMessage rm;
