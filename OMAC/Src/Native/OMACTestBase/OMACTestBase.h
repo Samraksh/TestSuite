@@ -25,19 +25,26 @@ typedef void (*OMACTestClockTimerHandler) (void *msg, UINT16 arg1);
 
 class OMACTestBase{
 public:
+	UINT64 sequence_number;
+	UINT64 sent_packet_count;
+	UINT64 rx_packet_count;
+
 	UINT8 MyAppID;
 	MACEventHandler myEventHandler;
 	MACConfig Config;
 	UINT8 MacId;
 
-	BOOL Initialize(  MACReceiveFuncPtrType rx_fptr = &OMACTestBase_ReceiveHandler
-					, SendAckFuncPtrType sa_fptr = &OMACTestBase_NeighborChangeHandler
-					, NeighborChangeFuncPtrType nc_fptr= &OMACTestBase_SendAckHandler
+	virtual BOOL Initialize(  MACReceiveFuncPtrType rx_fptr = &OMACTestBase_ReceiveHandler
+					, SendAckFuncPtrType sa_fptr = &OMACTestBase_SendAckHandler
+					, NeighborChangeFuncPtrType nc_fptr = &OMACTestBase_NeighborChangeHandler
 					);
 	BOOL StartTest();
+	OMACTestBase(){};
+	virtual ~OMACTestBase(){};
 };
 
-OMACTest gOMACTest;
+OMACTestBase gOMACTestBase;
+OMACTestBase* gOMACTestBaseptr;
 
 void OMACTest_Initialize();
 

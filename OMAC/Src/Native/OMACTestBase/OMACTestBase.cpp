@@ -9,6 +9,8 @@
 //extern VirtualTimer gVirtualTimerObject;
 //extern VirtualTimerMapper gVirtualTimerMapperObject;
 extern OMACTestBase gOMACTestBase;
+extern OMACTestBase* gOMACTestBaseptr;
+
 extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
@@ -22,6 +24,7 @@ extern UINT16 MF_NODE_ID;
 #define MINEVENTTIM 1000
 
 #define USEONESHOTTIMER TRUE
+#define CHANGE_CHANNEL 1
 
 //NEIGHBORCLOCKMONITORPERIOD in ticks
 //#define NEIGHBORCLOCKMONITORPERIOD 200000 800000
@@ -30,12 +33,12 @@ extern UINT16 MF_NODE_ID;
 #define INITIALDELAY 100000
 
 void OMACTestBase_ReceiveHandler (void* msg, UINT16 PacketType){
-	++gOMACTestBase.rx_packet_count ;
+	++gOMACTestBaseptr->rx_packet_count ;
 	Message_15_4_t* packet_ptr = static_cast<Message_15_4_t*>(msg);
 	UINT64 packetID;
 	memcpy(&packetID,packet_ptr->GetPayload(),sizeof(UINT64));
 #if OMACTestBase_PRINT_RX_PACKET_INFO
-	hal_printf("\r\n OMACTestBase_RX: rx_packet_count = %llu ", gOMACTestBase.rx_packet_count);
+	hal_printf("\r\n OMACTestBase_RX: rx_packet_count = %llu ", gOMACTestBaseptr->rx_packet_count);
 	hal_printf("src = %u PacketID = %llu \r\n", packet_ptr->GetHeader()->src, packetID );
 #endif
 }
@@ -68,22 +71,11 @@ void OMACTestBase_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UI
 
 	g_NeighborTable.DeletePacket(packet_ptr);
 
-	hal_printf(" dest = %u  PacketID = %llu rx_packet_count = %llu \r\n",packet_ptr->GetHeader()->dest, packetID,  gOMACTestBase.rx_packet_count );
+	hal_printf(" dest = %u  PacketID = %llu rx_packet_count = %llu \r\n",packet_ptr->GetHeader()->dest, packetID,  gOMACTestBaseptr->rx_packet_count );
 
 
 }
 
-void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
-	if(gOMACTestBase.CMaxTSLocalClockMonitorTimerHandler(arg)) {
-		BOOL rv = gOMACTestBase.ScheduleNextLocalCLK();
-	}
-}
-
-void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
-	if(gOMACTestBase.CMaxTSNeighborClockMonitorTimerHandler(arg)){
-		BOOL rv = gOMACTestBase.ScheduleNextNeighborCLK();
-	}
-}
 
 
 // TIMESYNCTEST
@@ -96,13 +88,6 @@ BOOL OMACTestBase::Initialize(MACReceiveFuncPtrType rx_fptr
 	rx_packet_count = 0;
 
 
-	LocalClkPINState = true;
-	NeighborClkPINState = true;
-
-	LocalClockMonitorFrameNum = 0;
-	NeighborClockMonitorFrameNum = 0;
-
-	NeighborFound = false;
 
 	MyAppID = 3; //pick a number less than MAX_APPS currently 4.
 	//Config.Network = 138;
@@ -118,12 +103,26 @@ BOOL OMACTestBase::Initialize(MACReceiveFuncPtrType rx_fptr
 
 	MAC_Initialize(&myEventHandler, MacId, MyAppID, SI4468_SPI2, (void*) &Config);
 
-	hal_printf("Initialize OMACTestBase");
+	if(CHANGE_CHANNEL){
+		UINT64 i =0;
+		UINT64 j =0;
+		while(i<10000000){
+			if((CPU_Radio_ChangeChannel(SI4468_SPI2, 2)) == DS_Success) {
+				break;
+			}
+			j = 0;
+			while(j<10000000){
+				++j;
+			}
+			if(i == 10000000){
+				SOFT_BREAKPOINT();
+				return FALSE;
+			}
+		}
+	}
 
-	CPU_GPIO_EnableOutputPin(gOMACTestBase.m_NEIGHBORCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_EnableOutputPin(gOMACTestBase.m_LOCALCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_SetPinState(gOMACTestBase.m_NEIGHBORCLOCKMONITORPIN, FALSE);
-	CPU_GPIO_SetPinState(gOMACTestBase.m_LOCALCLOCKMONITORPIN, FALSE);
+
+	hal_printf("Initialized OMACTestBase");
 
 	return TRUE;
 }
@@ -134,9 +133,10 @@ BOOL OMACTestBase::StartTest(){
 
 
 void OMACTestBase_Initialize(){
+	gOMACTestBaseptr = &gOMACTestBase;
 	BOOL ret;
-	ret = gOMACTestBase.Initialize(&OMACTestBase_ReceiveHandler, &OMACTestBase_SendAckHandler, &OMACTestBase_NeighborChangeHandler);
-	ret = gOMACTestBase.StartTest();
+	ret = gOMACTestBaseptr->Initialize(&OMACTestBase_ReceiveHandler, &OMACTestBase_SendAckHandler, &OMACTestBase_NeighborChangeHandler);
+	ret = gOMACTestBaseptr->StartTest();
 }
 
 
