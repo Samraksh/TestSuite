@@ -1,21 +1,16 @@
 /*
- * OMACTest.h
+ * OMACTestPeriodicMessaging.h
  */
 
-#ifndef OMACTest_H_
-#define OMACTest_H_
+#ifndef OMACTestPeriodicMessaging_H_
+#define OMACTestPeriodicMessaging_H_
 
 
 
-#include <tinyhal.h>
-#include <Samraksh/MAC_decl.h>
-#include <Samraksh/MAC/OMAC/OMAC.h>
-#include <Samraksh/VirtualTimer.h>
-#include <Samraksh/Message.h>
-#include <Samraksh/Radio_decl.h>
+#include "OMACTestBase.h"
 
 
-class OMACTest{
+class OMACTestTimeSync : public OMACTestBase{
 public:
 	UINT64 sequence_number;
 	UINT64 sent_packet_count;
@@ -24,7 +19,7 @@ public:
 	GPIO_PIN m_LOCALCLOCKMONITORPIN;
 	GPIO_PIN m_NEIGHBORCLOCKMONITORPIN;
 
-	OMACTest();
+	OMACTestPeriodicMessaging();
 
 	GlobalTime m_globalTime;
 	UINT8 MyAppID;
@@ -49,11 +44,11 @@ public:
 	void SendPacketToNeighbor();
 };
 
-OMACTest gOMACTest;
+OMACTestPeriodicMessaging gOMACTestPeriodicMessaging;
 
-void OMACTest_Initialize();
+void OMACTestPeriodicMessaging_Initialize();
 
 
-#endif /* OMACTest_H_ */
+#endif /* OMACTestPeriodicMessaging_H_ */
 
 
