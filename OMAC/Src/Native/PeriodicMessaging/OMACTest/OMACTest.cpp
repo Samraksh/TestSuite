@@ -189,21 +189,25 @@ BOOL OMACTest::Initialize(){
 	}
 #endif
 
-//		UINT64 i =0;
-//		UINT64 j =0;
-//		while(i<10000000){
-//			if((CPU_Radio_ChangeChannel(SI4468_SPI2, 2)) == DS_Success) {
-//				break;
-//			}
-//			j = 0;
-//			while(j<10000000){
-//				++j;
-//			}
-//			if(i == 10000000){
-//				SOFT_BREAKPOINT();
-//				return FALSE;
-//			}
-//		}
+	UINT64 i =0;
+	UINT64 j =0;
+	while(i<10000000){
+		if((CPU_Radio_ChangeChannel(SI4468_SPI2, 4)) == DS_Success) {
+			hal_printf("Radio channel is changed to channel 4");
+			break;
+		}
+		else{
+			hal_printf("Radio channel change failed!");
+		}
+		j = 0;
+		while(j<10000000){
+			++j;
+		}
+		if(i == 10000000){
+			SOFT_BREAKPOINT();
+			return FALSE;
+		}
+	}
 
 	CPU_GPIO_EnableOutputPin(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, TRUE);
 	CPU_GPIO_EnableOutputPin(gOMACTest.m_LOCALCLOCKMONITORPIN, TRUE);
