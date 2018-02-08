@@ -120,28 +120,20 @@ BOOL VirtualTimerTest::Level_0E()
 		if(!VirtTimer_SetTimer(5, 0, periodValue*200000, FALSE, FALSE, Timer_1_Handler))
 			return FALSE;
 		//periodValue = (i+2)%9;
-		if(!VirtTimer_SetTimer(6, 0, periodValue*300000, FALSE, FALSE, Timer_2_Handler))
+		if(!VirtTimer_SetTimer(7, 0, periodValue*300000, FALSE, FALSE, Timer_2_Handler))
 			return FALSE;
 		//periodValue = (i+1)%9;
-		if(!VirtTimer_SetTimer(7, 0, periodValue*400000, FALSE, FALSE, Timer_3_Handler))
+		if(!VirtTimer_SetTimer(8, 0, periodValue*400000, FALSE, FALSE, Timer_3_Handler))
 			return FALSE;
 	}
 
 
-	int timerValue = 0;
-	for(UINT16 i = 0; i <= 0; i++)
-	{
-		for (UINT16 j = 4; j <= 7; j++)
-		{
-			//timerValue = (i+j)%8 == 0 ? ((i+j)%8)+1 : (i+j)%8;
-			VirtTimer_Start( (i+j)%8 );
-		}
-		//CPU_Timer_Sleep_MicroSeconds(1000000);
-		/*for (UINT16 j = 0; j <= 0; j++)
-		{
-			VirtTimer_Stop( 0 );
-		}*/
-	}
+	
+	VirtTimer_Start( 4 );
+	VirtTimer_Start( 5 );
+	VirtTimer_Start( 7 );
+	VirtTimer_Start( 8 );
+		
 
 	return TRUE;
 }

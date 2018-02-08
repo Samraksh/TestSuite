@@ -14,14 +14,14 @@ namespace TestSuite
 
         public const uint sampleTime = 1000;
 
-        public static ushort[] sampleBuffer = new ushort[bufferSize];
-
+        public static ushort[] sampleBuffer1 = new ushort[bufferSize];
+		public static ushort[] sampleBuffer2 = new ushort[bufferSize];
         public static Samraksh.eMote.DotNow.AdcCallBack adcCallbackPtr;
 
 
         public static void AdcCallbackFn(long NativeTime)
         {               
-            Debug.Print((NativeTime).ToString() + "  " + DateTime.Now.Ticks.ToString());                    
+            Debug.Print((NativeTime).ToString() + "  " + DateTime.Now.Ticks.ToString()); 
         }
 
         public static void Main()
@@ -36,12 +36,11 @@ namespace TestSuite
 
 			adcCallbackPtr = AdcCallbackFn;
             Samraksh.eMote.DotNow.AnalogInput.InitializeADC();
-            Samraksh.eMote.DotNow.AnalogInput.InitChannel(Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1);
-            Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousMode(sampleBuffer, Samraksh.eMote.DotNow.ADCChannel.ADC_Channel1, bufferSize, sampleTime, AdcCallbackFn);
+            Samraksh.eMote.DotNow.AnalogInput.ConfigureContinuousModeDualChannel(sampleBuffer1, sampleBuffer2, bufferSize, sampleTime, AdcCallbackFn);
 
             while (true)
             {
-                //System.Threading.Thread.Sleep(10000);
+                System.Threading.Thread.Sleep(10000);
             }
         }
     }
