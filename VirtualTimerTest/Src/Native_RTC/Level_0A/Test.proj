@@ -15,10 +15,11 @@
     <ExtraAssemblies>
     </ExtraAssemblies>
     <ProjectPath>$(TESTSOURCE)\TestSuite\VirtualTimerTest\Src\Native\Level_0\VirtualTimerTest.proj</ProjectPath>
+    <MFSettingsFile Condition="'$(TSOLUTION)'=='SmartFusion2'">$(SPOCLIENT)\Solutions\SmartFusion2\SmartFusion2.settings</MFSettingsFile>
     <MFSettingsFile Condition="'$(TSOLUTION)'=='EmoteDotNow'">$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
     <MFSettingsFile Condition="'$(TSOLUTION)'=='EmoteDotLaura'">$(SPOCLIENT)\Solutions\EmoteDotLaura\EmoteDotLaura.settings</MFSettingsFile>
     <IsSolutionWizardVisible>True</IsSolutionWizardVisible>
-  	<AddModules>$(SPOCLIENT)\Solutions\$(TSOLUTION)\TinyCLR\TinyCLR_TestSuite.proj</AddModules>
+  	<AddModules>$(SPOCLIENT)\Solutions\$(TSOLUTION)\TinyCLR\TinyCLR_Projects.proj</AddModules>
   </PropertyGroup>
   <PropertyGroup>
     <SamAppName>TINYCLR</SamAppName>
