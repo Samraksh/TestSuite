@@ -14,9 +14,9 @@ public:
 
     BOOL     Execute( int testLevel );
 
-	BOOL 	 Level_0A();
+	BOOL 	 Level_0();
 
-	BOOL 	 Level_0E();
+	BOOL 	 Level_1();
 
 };
 
