@@ -1,7 +1,8 @@
 #include "SocketTest.h"
-#include <ping.h>
 
-void PrintHex(CK_BYTE_PTR sig, int size){
+//#include <ping.h>
+
+void PrintHex(char* sig, int size){
 	for (int j=0;j<size; j++){
 		hal_printf("0x%.2X , ",sig[j]);
 	}
@@ -9,20 +10,28 @@ void PrintHex(CK_BYTE_PTR sig, int size){
 }
 
 
-const ip_addr_t myIP;
+//const ip_addr_t myIP;
 
-SocketTest::SocketTest( )
+SocketTest::SocketTest(BOOL _server )
 {
-	ping_init(&myIp)
+	//ping_init(&myIp)
+	servertest=_server;
+
+	if(servertest){
+		server_fd=ServerInit();
+	}else {
+		client_fd=ClientInit();
+	}
 };
 
 BOOL SocketTest::Execute( )
 {
-
-	for(int i=0; i< 10; i++){
-		hal_printf("Sending ping %d....", i);
-		ping_send_now()
-		::Events_WaitForEvents( 0, 100 );
+	if(!servertest){
+		for(int i=0; i< 10; i++){
+			hal_printf("Sending ping %d....", i);
+			SendHello(client_fd,i);
+			::Events_WaitForEvents( 0, 100 );
+		}
 	}
 
 	return TRUE;
@@ -32,11 +41,14 @@ void ApplicationEntryPoint()
 {
     BOOL result;
 
-    SocketTest test;
+    //initialize a server
+    //SocketTest server(TRUE);
+    //initialize a client
+    SocketTest client(FALSE);
 
     do
     {
-    	if(!test.Execute())
+    	if(!client.Execute())
     		hal_printf("Error in Ping Test.");
     	else
     		hal_printf("Ping Test is Super Success! ");

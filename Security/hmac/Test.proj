@@ -2,18 +2,10 @@
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    
   <PropertyGroup>
-	<AssemblyName>Test</AssemblyName>
+	<AssemblyName>NativeTest</AssemblyName>
     <ProjectGuid>{8e326a99-2915-437c-a089-3c31fed8457d}</ProjectGuid>
-    <Description>
-    </Description>
-    <Documentation>
-    </Documentation>
     <Directory>TestSuite\Security\Hmac\</Directory>
     <IsClrProject>False</IsClrProject>
-    <InteropFeatures>
-    </InteropFeatures>
-    <ExtraAssemblies>
-    </ExtraAssemblies>
     <ProjectPath>$(TESTSOURCE)\TestSuite\Security\hmac\Test.proj</ProjectPath>
     <MFSettingsFile Condition="'$(TSOLUTION)'=='SmartFusion2'">$(SPOCLIENT)\Solutions\SmartFusion2\SmartFusion2.settings</MFSettingsFile>
     <MFSettingsFile Condition="'$(TSOLUTION)'=='EmoteDotNow'">$(SPOCLIENT)\Solutions\EmoteDotNow\EmoteDotNow.settings</MFSettingsFile>
