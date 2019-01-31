@@ -122,6 +122,9 @@ BOOL SendHello(int socket_fd, int iter){
 		hal_printf("SocketTest: Socket sending %d  failed\n", iter);
 		return FALSE;
 	}
+	else {
+		hal_printf("SocketTest: Socket sending %d Success\n", iter);
+	}
 	return TRUE;
 }
 
