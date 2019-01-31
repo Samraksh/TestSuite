@@ -30,7 +30,7 @@ BOOL SocketTest::Execute( )
 		for(int i=0; i< 10; i++){
 			hal_printf("Sending ping %d....", i);
 			SendHello(client_fd,i);
-			::Events_WaitForEvents( 0, 100 );
+			::Events_WaitForEvents( 0, 1000 );
 		}
 	}
 
