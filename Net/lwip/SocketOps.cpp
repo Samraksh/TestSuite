@@ -16,7 +16,7 @@ int ServerInit(void)
 	if ( server_fd < 0 )
 	{
 		hal_printf("SocketTest: ServerInit: socket call failed\n");
-		return FALSE;
+		return -1;
 	}
 
 	memset(&sa, 0, sizeof(struct sockaddr_in));
@@ -33,7 +33,7 @@ int ServerInit(void)
 	{
 		hal_printf("SocketTest: ServerInit: Bind to Port Number %d ,IP address %s failed\n",SENDER_PORT_NUM,SENDER_IP_ADDR);
 		close(server_fd);
-		return FALSE;
+		return -1;
 	}
 
 	listen(server_fd,5);
@@ -43,7 +43,7 @@ int ServerInit(void)
 	{
 		hal_printf("SocketTest: ServerInit: accept failed\n");
 		close(server_fd);
-		return FALSE;
+		return -1;
 	}
 
 	return server_fd;
@@ -62,7 +62,7 @@ int ClientInit(void)
 	if ( client_fd < 0 )
 	{
 		hal_printf("SocketTest: ClientInit: socket call failed\n");
-		return FALSE;
+		return 0;
 	}
 
 	memset(&sa, 0, sizeof(struct sockaddr_in));
@@ -80,7 +80,7 @@ int ClientInit(void)
 	{
 		hal_printf("SocketTest: ClientInit:Bind to Port Number %d ,IP address %s failed\n",SENDER_PORT_NUM,SENDER_IP_ADDR);
 		close(client_fd);
-		return FALSE;
+		return -1;
 	}
 
 	// Receiver connects to server ip-address.
@@ -94,9 +94,9 @@ int ClientInit(void)
 	{
 		hal_printf("SocketTest: Client connect failed \n");
 		close(client_fd);
-		return FALSE;
+		return -1;
 	}
-	return TRUE;
+	return client_fd;
 }
 
 BOOL Recv(int socket_fd, int iter){

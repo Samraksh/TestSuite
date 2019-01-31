@@ -26,11 +26,17 @@ SocketTest::SocketTest(BOOL _server )
 
 BOOL SocketTest::Execute( )
 {
-	if(!servertest){
-		for(int i=0; i< 10; i++){
-			hal_printf("Sending ping %d....", i);
-			SendHello(client_fd,i);
-			::Events_WaitForEvents( 0, 1000 );
+	if(!servertest) {
+		if (client_fd > -1){
+			for(int i=0; i< 10; i++){
+				hal_printf("Sending ping %d....", i);
+				SendHello(client_fd,i);
+				::Events_WaitForEvents( 0, 1000 );
+			}
+		}
+	}else {
+		if(server_fd > -1){
+
 		}
 	}
 
