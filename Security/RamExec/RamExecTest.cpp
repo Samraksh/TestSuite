@@ -25,7 +25,7 @@ BOOL RamExecTest::Execute( )
 	void *code=(void*)&InfiniteWhileLoop;
 	memcpy(largeArray,code,512);
 
-	Loopfunc *ramfunc=(Loopfunc*)(void*)largeArray;
+	Loopfunc *ramfunc=(Loopfunc*)(void*)((UINT32)largeArray| 0x01);
 	ramfunc((UINT32*)ramfunc);
 
 	//Should never reach here if runs from RAM, but call the code
