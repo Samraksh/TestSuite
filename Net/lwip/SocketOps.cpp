@@ -57,8 +57,8 @@ int ClientInit(void)
 	// Creates an TCP socket (SOCK_STREAM) with Internet Protocol Family (PF_INET).
 	// Protocol family and Address family related. For example PF_INET Protocol Family and AF_INET family are coupled.
 	client_fd=-1;
-	client_fd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	//client_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	//client_fd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	client_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	if ( client_fd < 0 )
 	{
