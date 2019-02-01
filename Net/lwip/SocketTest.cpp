@@ -28,11 +28,11 @@ BOOL SocketTest::Execute( )
 {
 	if(!servertest) {
 		if (client_fd > -1){
-			for(int i=0; i< 10; i++){
+			for(int i=0; i< 100; i++){
 				hal_printf("SocketTest:: Sending packet %d....", i);
 				if(SendHello(client_fd,i)){
-					hal_printf("SUCCESS\n\r", i);
-					//::Events_WaitForEvents( 0, 1000 );
+					hal_printf("Success\n\r", i);
+					::Events_WaitForEvents( 0, 2000 );
 				}else {
 					hal_printf("FAILED. This is bad..\n\r", i);
 					return 0;
