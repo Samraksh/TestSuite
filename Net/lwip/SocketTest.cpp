@@ -29,9 +29,15 @@ BOOL SocketTest::Execute( )
 	if(!servertest) {
 		if (client_fd > -1){
 			for(int i=0; i< 10; i++){
-				hal_printf("Sending ping %d....", i);
-				SendHello(client_fd,i);
-				::Events_WaitForEvents( 0, 1000 );
+				hal_printf("SocketTest:: Sending packet %d....", i);
+				if(SendHello(client_fd,i)){
+					hal_printf("SUCCESS\n\r", i);
+					//::Events_WaitForEvents( 0, 1000 );
+				}else {
+					hal_printf("FAILED. This is bad..\n\r", i);
+					return 0;
+				}
+
 			}
 		}
 	}else {
