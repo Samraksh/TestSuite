@@ -1,9 +1,8 @@
 #include "SocketTest.h"
 
 
-int ServerInit(void)
+int ServerInit(BOOL _tcpTest)
 {
-
 	int socket_fd,accept_fd;
 	socklen_t addr_size;
 	int sent_data;
@@ -50,15 +49,17 @@ int ServerInit(void)
 }
 
 
-int ClientInit(void)
+int ClientInit(BOOL _tcpTest)
 {
 	struct sockaddr_in sa,ra;
 
 	// Creates an TCP socket (SOCK_STREAM) with Internet Protocol Family (PF_INET).
 	// Protocol family and Address family related. For example PF_INET Protocol Family and AF_INET family are coupled.
 	client_fd=-1;
-	//client_fd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	client_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if(_tcpTest)
+		client_fd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	else
+		client_fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	if ( client_fd < 0 )
 	{
@@ -100,7 +101,7 @@ int ClientInit(void)
 	return client_fd;
 }
 
-BOOL Recv(int socket_fd, int iter){
+BOOL Recv(int socket_fd, uint32_t iter){
 	int recv_data = recv(socket_fd,data_buffer,sizeof(data_buffer),0);
 	if(recv_data < 0)
 	{
@@ -114,9 +115,12 @@ BOOL Recv(int socket_fd, int iter){
 }
 
 
-BOOL SendHello(int socket_fd, int iter){
-	memcpy(data_buffer,"Hello World\n",12);
-	int sent_data = send(socket_fd, data_buffer,sizeof("Hello World\n"),0);
+BOOL SendHello(int socket_fd, uint32_t iter){
+	int strsize=13;
+	memcpy(data_buffer,"Hello World: ",strsize);
+	memcpy(&data_buffer[13],&iter,sizeof(iter));
+	int msgsize = strsize+sizeof(iter);
+	int sent_data = send(socket_fd, data_buffer,msgsize,0);
 
 	if(sent_data < 0 )
 	{
