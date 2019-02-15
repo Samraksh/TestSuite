@@ -12,10 +12,10 @@
 #define SERVER_IP_ADDRESS "192.168.5.200"
 
 
-int ServerInit(void);
-int ClientInit(void);
-BOOL SendHello(int socket_fd, int iter);
-BOOL Recv(int socket_fd, int iter);
+int ServerInit(BOOL _tcpTest);
+int ClientInit(BOOL _tcpTest);
+BOOL SendHello(int socket_fd, uint32_t iter);
+BOOL Recv(int socket_fd, uint32_t iter);
 
 int client_fd, server_fd;
 char data_buffer[256];
@@ -26,6 +26,7 @@ class SocketTest
 	BOOL servertest;
 public:
 	SocketTest (BOOL server);
+	BOOL Init();
     BOOL   Execute();
 
 };
