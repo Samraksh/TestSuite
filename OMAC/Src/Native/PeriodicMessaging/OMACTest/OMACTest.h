@@ -21,6 +21,8 @@ public:
 	UINT64 sent_packet_count;
 	UINT64 rx_packet_count;
 
+	UINT64 NextEventTime;
+
 	GPIO_PIN m_LOCALCLOCKMONITORPIN;
 	GPIO_PIN m_NEIGHBORCLOCKMONITORPIN;
 
