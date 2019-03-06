@@ -1,7 +1,7 @@
 #include "SocketTest.h"
 
 //set this as true for tcp test, set it to false for UDP
-#define TCP_TEST TRUE
+#define TCP_TEST FALSE
 
 void PrintHex(char* sig, int size){
 	for (int j=0;j<size; j++){
