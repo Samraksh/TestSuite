@@ -4,7 +4,8 @@
 
 #include "OMACTest.h"
 //#include "OMAConstants.h"
-
+#define WLO_OMAC 0x00000010
+extern void WakeLock(uint32_t lock);
 
 //extern HALTimerManager gHalTimerManagerObject;
 //extern VirtualTimer gVirtualTimerObject;
@@ -14,18 +15,35 @@ extern OMACType g_OMAC;
 extern UINT16 MF_NODE_ID;
 //extern Buffer_15_4_t m_receive_buffer;
 
+#define AUSTERE_NODE_ID_1 8334
+#define AUSTERE_NODE_ID_2 14728
+
 #define OMACTEST_PRINT_TIME_MISMATCH 0
 #define OMACTEST_PRINT_RX_PACKET_INFO 1
 
 #define MINEVENTTIM 1000
 
 #define USEONESHOTTIMER TRUE
+#define TESTRADIONAME SX1276
+//#define TESTRADIONAME RF231RADIO
 
 //NEIGHBORCLOCKMONITORPERIOD in ticks
 //#define NEIGHBORCLOCKMONITORPERIOD 200000 800000
-#define NEIGHBORCLOCKMONITORPERIOD_MICRO (100000)
+#define NEIGHBORCLOCKMONITORPERIOD_MICRO 1000000
 #define NEIGHBORCLOCKMONITORPERIOD (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO))
 #define INITIALDELAY 100000
+
+void ToggleLocalClockMonitorPIN(){
+	//Toggle Pin State for monitoring with Logic Analyzer
+	if(gOMACTest.LocalClkPINState){
+		CPU_GPIO_SetPinState(gOMACTest.m_LOCALCLOCKMONITORPIN, false);
+		gOMACTest.LocalClkPINState = false;
+	}
+	else {
+		CPU_GPIO_SetPinState(gOMACTest.m_LOCALCLOCKMONITORPIN, true);
+		gOMACTest.LocalClkPINState = true;
+	}
+}
 
 void OMACTest_ReceiveHandler (void* msg, UINT16 PacketType){
 	++gOMACTest.rx_packet_count ;
@@ -64,27 +82,30 @@ void OMACTest_SendAckHandler (void* msg, UINT16 size, NetOpStatus status, UINT8 
 	if(data_msg->size <= sizeof(UINT64)) memcpy(&packetID,data_msg->payload,data_msg->size);
 	else memcpy(&packetID,data_msg->payload,sizeof(UINT64));
 
+	g_NeighborTable.DeletePacket(packet_ptr);
+
 	hal_printf(" dest = %u  PacketID = %llu rx_packet_count = %llu \r\n",packet_ptr->GetHeader()->dest, packetID,  gOMACTest.rx_packet_count );
 
 
 }
 
 void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
+	ToggleLocalClockMonitorPIN();
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_Stop(LocalClockMonitor_TIMER1);
 	ASSERT_SP(rm == TimerSupported);
 
-
-	//Toggle Pin State for monitoring with Logic Analyzer
-	if(gOMACTest.LocalClkPINState){
-		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, false);
-		gOMACTest.LocalClkPINState = false;
-	}
-	else {
-		CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, true);
-		gOMACTest.LocalClkPINState = true;
-	}
+	//ToggleLocalClockMonitorPIN();
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
+	//ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
+	//rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD_MICRO, USEONESHOTTIMER, OMACClockSpecifier);
+	//ASSERT_SP(rm == TimerSupported);
+	//rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
+
 }
 
 void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
@@ -106,11 +127,11 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 	}
 	if(g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) > 2 ) {//if ( g_OMAC.m_omac_scheduler.m_TimeSyncHandler.m_globalTime.regressgt2.NumberOfRecordedElements(Nbr2beFollowed) >= 5 ))
 		if(gOMACTest.NeighborClkPINState){
-			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, false);
+			CPU_GPIO_SetPinState(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, false);
 			gOMACTest.NeighborClkPINState = false;
 		}
 		else {
-			CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, true);
+			CPU_GPIO_SetPinState(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, true);
 			gOMACTest.NeighborClkPINState = true;
 		}
 	}
@@ -135,20 +156,18 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 // TIMESYNCTEST
 
 BOOL OMACTest::Initialize(){
-
+	WakeLock(WLO_OMAC);
 	sequence_number = 0;
 	sent_packet_count = 0;
 	rx_packet_count = 0;
 
-	CPU_GPIO_EnableOutputPin(NEIGHBORCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_EnableOutputPin(LOCALCLOCKMONITORPIN, TRUE);
-	CPU_GPIO_SetPinState(NEIGHBORCLOCKMONITORPIN, FALSE);
-	CPU_GPIO_SetPinState(LOCALCLOCKMONITORPIN, FALSE);
+
 	LocalClkPINState = true;
 	NeighborClkPINState = true;
 
 	LocalClockMonitorFrameNum = 0;
 	NeighborClockMonitorFrameNum = 0;
+	NextEventTime = 0;
 
 	NeighborFound = false;
 
@@ -164,27 +183,68 @@ BOOL OMACTest::Initialize(){
 	MacId = OMAC;
 	VirtTimer_Initialize();
 
-	MAC_Initialize(&myEventHandler,MacId, MyAppID, SI4468_SPI2, (void*) &Config);
+	MAC_Initialize(&myEventHandler,MacId, MyAppID, TESTRADIONAME, (void*) &Config);
 
+	hal_printf("Initialize OMACTest");
 
+#ifdef DEBUG_GPIO_EMOTE_AUSTERE
+	if(AUSTERE_RADIO_GPIO_PIN == DISABLED_PIN ) {
+		hal_printf("OMACTest: Periodic messaging test is running with AUSTERE_RADIO_GPIO_PIN disabled!!");
+		this->m_LOCALCLOCKMONITORPIN = DISABLED_PIN;
+		this->m_NEIGHBORCLOCKMONITORPIN = DISABLED_PIN;
+	}
+	else if(g_OMAC.GetMyID() == AUSTERE_NODE_ID_1){
+		this->m_LOCALCLOCKMONITORPIN = AUSTERE_RADIO_GPIO_PIN;
+		this->m_NEIGHBORCLOCKMONITORPIN = DISABLED_PIN;
+		hal_printf("OMACTest: AUSTERE_NODE_ID_1");
+	}
+	else if(g_OMAC.GetMyID() == AUSTERE_NODE_ID_2){
+		this->m_LOCALCLOCKMONITORPIN = DISABLED_PIN;
+		this->m_NEIGHBORCLOCKMONITORPIN = AUSTERE_RADIO_GPIO_PIN;
+		hal_printf("OMACTest: AUSTERE_NODE_ID_2");
+	}
+	else{
+		hal_printf("OMACTest periodic messaging test is running with UNKNOWN IDS!!");
+	}
+#else
+	this->m_LOCALCLOCKMONITORPIN = LOCALCLOCKMONITORPIN;
+	this->m_NEIGHBORCLOCKMONITORPIN = NEIGHBORCLOCKMONITORPIN;
+#endif
 
-//		UINT64 i =0;
-//		UINT64 j =0;
-//		while(i<10000000){
-//			if((CPU_Radio_ChangeChannel(SI4468_SPI2, 2)) == DS_Success) {
-//				break;
-//			}
-//			j = 0;
-//			while(j<10000000){
-//				++j;
-//			}
-//			if(i == 10000000){
-//				SOFT_BREAKPOINT();
-//				return FALSE;
-//			}
+//	UINT64 i =0;
+//	UINT64 j =0;
+//	while(i<10000000){
+//		if((CPU_Radio_ChangeChannel(TESTRADIONAME, 4)) == DS_Success) {
+//			hal_printf("Radio channel is changed to channel 4");
+//			break;
 //		}
+//		else{
+//			hal_printf("Radio channel change failed!");
+//		}
+//		j = 0;
+//		while(j<10000000){
+//			++j;
+//		}
+//		if(i == 10000000){
+//			SOFT_BREAKPOINT();
+//			return FALSE;
+//		}
+//	}
+
+	CPU_GPIO_EnableOutputPin(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, TRUE);
+	CPU_GPIO_EnableOutputPin(gOMACTest.m_LOCALCLOCKMONITORPIN, TRUE);
+	CPU_GPIO_SetPinState(gOMACTest.m_NEIGHBORCLOCKMONITORPIN, FALSE);
+	CPU_GPIO_SetPinState(gOMACTest.m_LOCALCLOCKMONITORPIN, FALSE);
 
 
+	UINT64 TicksTillNextEvent = 0;
+	UINT64 y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
+	while(NextEventTime <= y || TicksTillNextEvent <= MINEVENTTIM ){
+		LocalClockMonitorFrameNum = LocalClockMonitorFrameNum + 1;
+		NextEventTime = LocalClockMonitorFrameNum * (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+		y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
+		TicksTillNextEvent = NextEventTime - y;
+	}
 
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD_MICRO, USEONESHOTTIMER, FALSE, CMaxTSLocalClockMonitorTimerHandler, OMACClockSpecifier);
@@ -207,8 +267,8 @@ BOOL OMACTest::StartTest(){
 
 	rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
 	ASSERT_SP(rm == TimerSupported);
-	rm = VirtTimer_Start(NeighborClockMonitor_TIMER1);
-	ASSERT_SP(rm == TimerSupported);
+	//rm = VirtTimer_Start(NeighborClockMonitor_TIMER1);
+	//ASSERT_SP(rm == TimerSupported);
 
 	return TRUE;
 }
@@ -343,24 +403,62 @@ BOOL OMACTest::ScheduleNextNeighborCLK(){
 }
 
 BOOL OMACTest::ScheduleNextLocalCLK(){
+		UINT64 n2= NEIGHBORCLOCKMONITORPERIOD_MICRO;
 
-
-
-
+		//ToggleLocalClockMonitorPIN();
+		UINT32 MicSTillNextEvent;
 		VirtualTimerReturnMessage rm;
 		UINT64 y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
-		UINT64 NextEventTime = 0;
+		UINT64 ystart = y;
+		//UINT64 NextEventTime = 0;
 		UINT64 TicksTillNextEvent = 0;
 		while(NextEventTime <= y || TicksTillNextEvent <= MINEVENTTIM ){
 			LocalClockMonitorFrameNum = LocalClockMonitorFrameNum + 1;
-			NextEventTime = LocalClockMonitorFrameNum * (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+			//NextEventTime = LocalClockMonitorFrameNum * (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+			NextEventTime += (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+			y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
 			TicksTillNextEvent = NextEventTime - y;
 		}
+		//hal_printf("SNLC1: %llu - y= %llu, TTNE= %llu, NET= %llu, YS= %llu, CPT= %llu \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, ystart, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
 
-		UINT32 MicSTillNextEvent = (UINT32) (g_OMAC.m_Clock.ConvertTickstoMicroSecs(TicksTillNextEvent)) ;
+		//ToggleLocalClockMonitorPIN();
+
+
+
+//		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD_MICRO, USEONESHOTTIMER, OMACClockSpecifier);
+//		ASSERT_SP(rm == TimerSupported);
+//		rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
+
+
+		/*y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
+		//NextEventTime = 0;
+		//TicksTillNextEvent = 0;
+		while(NextEventTime <= y || TicksTillNextEvent <= MINEVENTTIM ){
+			LocalClockMonitorFrameNum = LocalClockMonitorFrameNum + 1;
+			//NextEventTime = LocalClockMonitorFrameNum * (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO), NEIGHBORCLOCKMONITORPERIOD_MICRO, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+			NextEventTime += (g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+			y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
+			TicksTillNextEvent = NextEventTime - y;
+		}
+		hal_printf("SNLC2: %llu - y= %llu, TTNE= %llu, NET= %llu, CP= %llu, CPT= %llu  \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, NEIGHBORCLOCKMONITORPERIOD_MICRO, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+	    */
+
+
+		//ToggleLocalClockMonitorPIN();
+		MicSTillNextEvent = (UINT32) (g_OMAC.m_Clock.ConvertTickstoMicroSecs(TicksTillNextEvent)) ;
 		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, MicSTillNextEvent, USEONESHOTTIMER, OMACClockSpecifier);
 		ASSERT_SP(rm == TimerSupported);
+		y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
+		//hal_printf("SNLC3: %llu - y= %llu, TTNE= %llu, NET= %llu, CP= %llu, CPT= %llu  \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, MicSTillNextEvent, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+
+	//	ToggleLocalClockMonitorPIN();
+//		ToggleLocalClockMonitorPIN();
+
+
 		rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
+
+		//ToggleLocalClockMonitorPIN();
+		//ToggleLocalClockMonitorPIN();
 
 		return TRUE;
 }
