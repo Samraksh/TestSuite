@@ -11,8 +11,9 @@
 
 
 
-class MyMessage{
-
+struct MyMessage{
+	UINT64 packetID;
+	UINT8 paylaod[97];
 };
 
 class LinkTest
@@ -23,9 +24,9 @@ class LinkTest
 	UINT8 MacId;
 
 
-	UINT64 sent_packet_count;
+	UINT64 sent_packet_count[MAX_NEIGHBORS];
 public:
-	UINT32 rx_packet_count;
+	UINT32 rx_packet_count[MAX_NEIGHBORS];
 
 	LinkTest ( int seedValue, int numberOfEvents );
     BOOL     Execute( int testLevel );
