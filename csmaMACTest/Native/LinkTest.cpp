@@ -39,7 +39,7 @@ void LinkTest_ReceiveHandler (void* msg, UINT16 PacketType){
 	UINT64 packetID;
 	memcpy(&packetID,packet_ptr->GetPayload(),sizeof(UINT64));
 #if LinkTest_PRINT_RX_PACKET_INFO
-	hal_printf("\r\n LinkTest_RX: rx_packet_count = %u ", gLinkTest.rx_packet_count);
+	hal_printf("\r\n LinkTest_RX: rcd pkt size %u, rx_packet_count = %u ", packet_ptr->GetHeader()->length, gLinkTest.rx_packet_count);
 	hal_printf("src = %u PacketID = %llu \r\n", packet_ptr->GetHeader()->src, packetID );
 #endif
 }
