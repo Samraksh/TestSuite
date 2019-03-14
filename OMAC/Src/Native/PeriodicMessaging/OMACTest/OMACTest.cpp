@@ -25,6 +25,7 @@ extern UINT16 MF_NODE_ID;
 
 #define USEONESHOTTIMER TRUE
 #define TESTRADIONAME SX1276
+//#define TESTRADIONAME RF231RADIO
 
 //NEIGHBORCLOCKMONITORPERIOD in ticks
 //#define NEIGHBORCLOCKMONITORPERIOD 200000 800000
@@ -94,12 +95,12 @@ void CMaxTSLocalClockMonitorTimerHandler(void * arg) {
 	rm = VirtTimer_Stop(LocalClockMonitor_TIMER1);
 	ASSERT_SP(rm == TimerSupported);
 
-	ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
 	BOOL rv = gOMACTest.ScheduleNextLocalCLK();
-	ToggleLocalClockMonitorPIN();
-	ToggleLocalClockMonitorPIN();
-	ToggleLocalClockMonitorPIN();
-	ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
+	//ToggleLocalClockMonitorPIN();
 	//ToggleLocalClockMonitorPIN();
 	//rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, NEIGHBORCLOCKMONITORPERIOD_MICRO, USEONESHOTTIMER, OMACClockSpecifier);
 	//ASSERT_SP(rm == TimerSupported);
@@ -146,7 +147,7 @@ void CMaxTSNeighborClockMonitorTimerHandler(void * arg) {
 
 	BOOL rv = gOMACTest.ScheduleNextNeighborCLK();
 	if(rv){
-		//gOMACTest.SendPacketToNeighbor();
+		gOMACTest.SendPacketToNeighbor();
 	}
 
 }
@@ -418,7 +419,7 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 			y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
 			TicksTillNextEvent = NextEventTime - y;
 		}
-		hal_printf("SNLC1: %llu - y= %llu, TTNE= %llu, NET= %llu, YS= %llu, CPT= %llu \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, ystart, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+		//hal_printf("SNLC1: %llu - y= %llu, TTNE= %llu, NET= %llu, YS= %llu, CPT= %llu \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, ystart, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
 
 		//ToggleLocalClockMonitorPIN();
 
@@ -429,7 +430,7 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 //		rm = VirtTimer_Start(LocalClockMonitor_TIMER1);
 
 
-		y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
+		/*y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
 		//NextEventTime = 0;
 		//TicksTillNextEvent = 0;
 		while(NextEventTime <= y || TicksTillNextEvent <= MINEVENTTIM ){
@@ -440,7 +441,7 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 			TicksTillNextEvent = NextEventTime - y;
 		}
 		hal_printf("SNLC2: %llu - y= %llu, TTNE= %llu, NET= %llu, CP= %llu, CPT= %llu  \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, NEIGHBORCLOCKMONITORPERIOD_MICRO, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
-
+	    */
 
 
 		//ToggleLocalClockMonitorPIN();
@@ -448,7 +449,7 @@ BOOL OMACTest::ScheduleNextLocalCLK(){
 		rm = VirtTimer_Change(LocalClockMonitor_TIMER1, 0, MicSTillNextEvent, USEONESHOTTIMER, OMACClockSpecifier);
 		ASSERT_SP(rm == TimerSupported);
 		y = g_OMAC.m_Clock.GetCurrentTimeinTicks();
-		hal_printf("SNLC3: %llu - y= %llu, TTNE= %llu, NET= %llu, CP= %llu, CPT= %llu  \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, MicSTillNextEvent, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
+		//hal_printf("SNLC3: %llu - y= %llu, TTNE= %llu, NET= %llu, CP= %llu, CPT= %llu  \r\n" ,LocalClockMonitorFrameNum, y,TicksTillNextEvent,NextEventTime, MicSTillNextEvent, g_OMAC.m_Clock.ConvertMicroSecstoTicks(NEIGHBORCLOCKMONITORPERIOD_MICRO));
 
 	//	ToggleLocalClockMonitorPIN();
 //		ToggleLocalClockMonitorPIN();
