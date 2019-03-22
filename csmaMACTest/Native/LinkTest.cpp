@@ -16,7 +16,7 @@ void PrintHex(char *x, int size){
 	for (int j=0;j<size; j++){
 		hal_printf("0x%.2X , ",x[j]);
 	}
-	hal_printf("\n");
+	hal_printf("\r\n");
 }
 
 
@@ -46,12 +46,12 @@ void LinkTest_ReceiveHandler (void* msg, UINT16 PacketType)
 	{
 		++gLinkTest.rx_packet_count[index];
 		#if LinkTest_PRINT_RX_PACKET_INFO
-			hal_printf("\r\n LinkTest_RX: rcd pkt size %u, rx_packet_count = %u ", packet_ptr->GetHeader()->length, gLinkTest.rx_packet_count[index]);
+			hal_printf("\r\nLinkTest_RX: rcd pkt size %u, rx_packet_count = %u ", packet_ptr->GetHeader()->length, gLinkTest.rx_packet_count[index]);
 			hal_printf("src = %u, PacketID = %llu \r\n", srcID, packetID );
 		#endif
 	}else {
 		#if LinkTest_PRINT_RX_PACKET_INFO
-			hal_printf("\r\n LinkTest_RX: rcd pkt size %u, from unkown neighbor ", packet_ptr->GetHeader()->length);
+			hal_printf("\r\nLinkTest_RX: rcd pkt size %u, from unkown neighbor ", packet_ptr->GetHeader()->length);
 			hal_printf("ID = %u, PacketID = %llu \r\n", srcID, packetID );
 		#endif
 	}
@@ -60,7 +60,7 @@ void LinkTest_ReceiveHandler (void* msg, UINT16 PacketType)
 
 
 void LinkTest_NeighborChangeHandler (INT16 args){
-	hal_printf("\r\n Neighbor Change Notification for %u neighbors!\r\n", args);
+	hal_printf("\r\nNeighbor Change Notification for %u neighbors!\r\n", args);
 
 	VirtTimer_Start(LocalClockMonitor_TIMER1);
 
@@ -127,7 +127,7 @@ void LinkTest::Initialize()
 	//This is important.
 	//currentMacName == CSMAMAC;
 
-	hal_printf("Initialize LinkTest");
+	hal_printf("Initialize LinkTest\r\n");
 
 	VirtualTimerReturnMessage rm;
 	rm = VirtTimer_SetTimer(LocalClockMonitor_TIMER1, 0, PKT_PERIOD_MICRO, FALSE, FALSE, SendTimerHandler, DEFAULT_TIMER);
@@ -145,9 +145,9 @@ void LinkTest::SendMsg(){
 			if(dest==0) dest=0xFFFF;
 			DeviceStatus ret= MAC_Send(dest, 128,  &sent_packet_count[i], sizeof(UINT64));
 			if(ret!=DS_Success){
-				hal_printf("LinkTest::SendMsg: Sending failed\n");
+				hal_printf("LinkTest::SendMsg: Sending failed\r\n");
 			}else {
-				hal_printf("LinkTest::SendMsg: Sending to %u Success\n", dest);
+				hal_printf("LinkTest::SendMsg: Sending to %u Success\r\n", dest);
 			}
 			::Events_WaitForEvents( 0, 500 );
 		}
@@ -165,7 +165,7 @@ void ApplicationEntryPoint()
     	if(!test.Execute(0))
     		hal_printf("Error in Link Test.");
     	else
-    		hal_printf("Link Test initialization  Success! ");
+			hal_printf("Link Test initialization  Success!\r\n");
 
     } while(FALSE); // run only once!
 
