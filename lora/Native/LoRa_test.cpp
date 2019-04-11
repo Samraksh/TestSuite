@@ -8,6 +8,11 @@
 #define POLL_INTERVAL_MS 25
 #define RADIO_SLEEP_AFTER_TX
 
+// Seems to be a bug in the hardware (???). FIFO doesn't get cleared after CRC error in LoRa mode.
+// Docs are unclear on how to do this via register command except to frob the global state
+// e.g., Rx --> Stby --> Rx
+#define RADIO_RESET_FIFO_AFTER_CRC_ERROR
+
 // LoRa "wrapper" (lowest-level) driver layer
 extern SX1276M1BxASWrapper g_SX1276M1BxASWrapper;
 
@@ -56,6 +61,10 @@ static void rx_done(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 }
 
 static void rx_error(void) {
+#ifdef RADIO_RESET_FIFO_AFTER_CRC_ERROR
+	SX1276M1BxASWrapper *radio = &g_SX1276M1BxASWrapper;
+	radio->Standby(); // Goes back to RX in main loop
+#endif
 	rx_done(NULL, 0, 0, 0);
 	//debug_printf("%s\r\n", __func__);
 }
