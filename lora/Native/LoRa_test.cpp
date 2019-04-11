@@ -17,6 +17,7 @@
 extern SX1276M1BxASWrapper g_SX1276M1BxASWrapper;
 
 static void my_wait(void) { Events_WaitForEvents(0, POLL_INTERVAL_MS); }
+static void my_longer_wait(unsigned x) { Events_WaitForEvents(0, x); }
 
 static void valid_header(void) {
 	debug_printf("%s\r\n", __func__);
@@ -131,14 +132,18 @@ static void native_link_test(void) {
 	// TX
 	if (id == TX_NODE) {
 		UINT32 interval = RTC_TIMEBASE * 10; // 0.1 Hz
+		UINT32 interval_ms = (interval*1000) / RTC_TIMEBASE;
 		UINT32 next = CPU_Timer_GetCounter(RTC_32BIT);
 		UINT32 now = next;
 		UINT32 last_now;
 		bool overflow = false;
+		debug_printf("Packet Send Interval: %u ms\r\n", interval_ms);
 		while(1) {
 			// wait for now to zero-cross if overflow detected
 			while (overflow && now >= last_now) { my_wait(); now = CPU_Timer_GetCounter(RTC_32BIT); }
 			overflow = false;
+			// Do one big sleep for half the expected duration before normal polling.
+			if (interval_ms >= 8*POLL_INTERVAL_MS) { my_longer_wait(interval_ms/2); }
 			while (now < next) { my_wait(); now = CPU_Timer_GetCounter(RTC_32BIT); }
 			radio->Send( (uint8_t *)&pkt, sizeof(pkt) );
 			debug_printf("Sent: %u\r\n", pkt.count);
