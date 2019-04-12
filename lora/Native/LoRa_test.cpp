@@ -5,7 +5,7 @@
 #define TX_NODE 0x333E6EFC
 #define RX_NODE 0xD3E02E71
 
-#define POLL_INTERVAL_MS 25
+#define POLL_INTERVAL_MS 10
 #define RADIO_SLEEP_AFTER_TX
 
 // Seems to be a bug in the hardware (???). FIFO doesn't get cleared after CRC error in LoRa mode.
@@ -15,9 +15,6 @@
 
 // LoRa "wrapper" (lowest-level) driver layer
 extern SX1276M1BxASWrapper g_SX1276M1BxASWrapper;
-
-static void my_wait(void) { Events_WaitForEvents(0, POLL_INTERVAL_MS); }
-static void my_longer_wait(unsigned x) { Events_WaitForEvents(0, x); }
 
 static void valid_header(void) {
 	debug_printf("%s\r\n", __func__);
@@ -91,7 +88,7 @@ static uint32_t get_cpu_id_hash(void) {
 }
 
 static void native_link_test(void) {
-	const unsigned RTC_TIMEBASE = 16384;
+	const unsigned RTC_TIMEBASE = 16384; // 32.768 kHz RTC with prescaler(1)
 	my_pkt_t pkt;
 	SX1276RadioEvents_t events;
 	SX1276M1BxASWrapper *radio = &g_SX1276M1BxASWrapper;
@@ -126,25 +123,33 @@ static void native_link_test(void) {
 
 	radio->SetChannel(RF_FREQUENCY);
 	radio->Sleep();
-	WakeLock(1);
-	my_wait(); // yield for a moment just in case
+	Events_WaitForEvents(0, POLL_INTERVAL_MS); // yield for a moment just in case
 
 	// TX
 	if (id == TX_NODE) {
-		UINT32 interval = RTC_TIMEBASE * 10; // 0.1 Hz
+		UINT32 interval = RTC_TIMEBASE; // 1 Hz
 		UINT32 interval_ms = (interval*1000) / RTC_TIMEBASE;
-		UINT32 next = CPU_Timer_GetCounter(RTC_32BIT);
-		UINT32 now = next;
-		UINT32 last_now;
 		bool overflow = false;
+		UINT32 next;
+		UINT32 now;
+		UINT32 last_now;
 		debug_printf("Packet Send Interval: %u ms\r\n", interval_ms);
+		next = CPU_Timer_GetCounter(RTC_32BIT);
+		now = next;
 		while(1) {
 			// wait for now to zero-cross if overflow detected
-			while (overflow && now >= last_now) { my_wait(); now = CPU_Timer_GetCounter(RTC_32BIT); }
+			while (overflow && now >= last_now) {
+				Events_WaitForEvents(0, POLL_INTERVAL_MS);
+				now = CPU_Timer_GetCounter(RTC_32BIT);
+			}
 			overflow = false;
-			// Do one big sleep for half the expected duration before normal polling.
-			if (interval_ms >= 8*POLL_INTERVAL_MS) { my_longer_wait(interval_ms/2); }
-			while (now < next) { my_wait(); now = CPU_Timer_GetCounter(RTC_32BIT); }
+			// Do one big sleep for 95% the expected interval before busy polling.
+			if (interval_ms >= 8*POLL_INTERVAL_MS) { Events_WaitForEvents(0, 19*interval_ms/20); }
+			// Wait for right moment
+			while (now < next) {
+				Events_WaitForEvents(0, POLL_INTERVAL_MS); // not super precise but good enough
+				now = CPU_Timer_GetCounter(RTC_32BIT);
+			}
 			radio->Send( (uint8_t *)&pkt, sizeof(pkt) );
 			debug_printf("Sent: %u\r\n", pkt.count);
 			pkt.count++;
@@ -160,8 +165,13 @@ static void native_link_test(void) {
 	else {
 		debug_printf("I am RX only\r\n");
 		while(1) {
+			Events_Clear(SYSTEM_EVENT_FLAG_IO);
 			if (radio->settings.State == RF_IDLE) { radio->Rx(0); }
-			my_wait();
+
+			// SYSTEM_EVENT_FLAG_IO should trigger on GPIO interrupts
+			// at least once of which is generated for all radio events
+			// Could have used other events (if they are implemented...)
+			Events_WaitForEvents(SYSTEM_EVENT_FLAG_IO, EVENTS_TIMEOUT_INFINITE);
 		}
 	}
 }
