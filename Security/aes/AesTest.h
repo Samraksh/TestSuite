@@ -3,6 +3,7 @@
 
 #include <PKCS11\CryptokiPAL.h>
 #include <tinyhal.h>
+#include <crypto.h>
 
 const int hmacSize=32;
 

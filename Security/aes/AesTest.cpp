@@ -1,5 +1,3 @@
-#include <crypto.h>
-
 #include "AesTest.h"
 //#include "platform_selector.h"
 
@@ -17,7 +15,7 @@ AesTest::AesTest( int seedValue, int numberOfEvents )
 	pData=data;
 	ulDataLen=124;
 	ulCryptLen=128;
-	GetRGetRandomBytes(IV, 48);
+	Crypto_GetRandomBytes(IV, 48);
 	pDigest=digest;
 	mtype=CKM_SHA256_HMAC;
 	pkey=(CK_BYTE_PTR)key1;
@@ -32,9 +30,9 @@ BOOL AesTest::Level_0()
 	//CK_BYTE_PTR  pData, CK_ULONG ulDataLen, CK_BYTE_PTR pDigest, CK_MECHANISM_TYPE mtype, CK_KEY_TYPE kt, CK_BYTE_PTR key
 	//bool ret= ComputeHMAC(pData, ulDataLen,pDigest,mtype,kt,pkey,32);
 	hal_printf("Original Text: ");PrintHex(pData,ulDataLen);
-	boot ret= Crypto_Encrypt(pkey,32,IV, 48, pData, ulDataLen, pCryptText, ulCryptLen);
+	bool ret= Crypto_Encrypt(pkey,32,IV, 48, pData, ulDataLen, pCryptText, ulCryptLen);
 	hal_printf("Encrypted Text: ");PrintHex(pCryptText,ulCryptLen);
-	boot ret= Crypto_Decrypt(pkey,32,IV, 48, pCryptText, ulCryptLen, pData, 128);
+	ret= Crypto_Decrypt(pkey,32,IV, 48, pCryptText, ulCryptLen, pData, 128);
 	hal_printf("Decrypted Text: ");PrintHex(pData,ulDataLen);
 	hal_printf("\n\n  ");
 
