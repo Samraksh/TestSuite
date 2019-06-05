@@ -11,11 +11,13 @@ void PrintHex(CK_BYTE_PTR sig, int size){
 AesTest::AesTest( int seedValue, int numberOfEvents )
 {
 	memset(pDigest,0,hmacSize);
-	memcpy(data,"Samraksh eMote Cryptoki HMAC Example; Plus the wolf is great, but the fox is grey. The lamb is prey, but its a mountain pro!",124);
+	//memcpy(data,"Samraksh eMote Cryptoki HMAC Example; Plus the wolf is great, but the fox is grey. The lamb is prey, but its a mountain pro!",124);
 	pData=data;
-	ulDataLen=124;
+	ulDataLen=128;
 	ulCryptLen=128;
 	Crypto_GetRandomBytes(IV, 48);
+	hal_printf("IV : ");
+	PrintHex(IV,48);
 	pDigest=digest;
 	mtype=CKM_SHA256_HMAC;
 	pkey=(CK_BYTE_PTR)key1;
@@ -31,14 +33,16 @@ BOOL AesTest::Level_0()
 	//bool ret= ComputeHMAC(pData, ulDataLen,pDigest,mtype,kt,pkey,32);
 	hal_printf("Original Text: ");PrintHex(pData,ulDataLen);
 	bool ret= Crypto_Encrypt(pkey,32,IV, 48, pData, ulDataLen, pCryptText, ulCryptLen);
+	if(!ret){hal_printf("Encryption Failed\n");}
 	hal_printf("Encrypted Text: ");PrintHex(pCryptText,ulCryptLen);
-	ret= Crypto_Decrypt(pkey,32,IV, 48, pCryptText, ulCryptLen, pData, 128);
+	ret= Crypto_Decrypt(pkey,32,IV, 48, pCryptText, ulCryptLen, ddata, ulDataLen);
+	if(!ret){hal_printf("Decryption Failed\n");}
 	hal_printf("Decrypted Text: ");PrintHex(pData,ulDataLen);
 	hal_printf("\n\n  ");
 
 
 	if(ret){
-		int eq=memcmp(pDigest,hmac1,hmacSize);
+		int eq=memcmp(pData,ddata,ulDataLen);
 		if(eq==0) return TRUE;
 	}
 	return FALSE;
@@ -67,9 +71,12 @@ void ApplicationEntryPoint()
     do
     {
     	if(!test.Execute(0))
-    		hal_printf("Error in HMAC Test.");
+    		hal_printf("Error in AES Test.\n\n");
     	else
-    		hal_printf("HMAC Test is Super Success! ");
+    		hal_printf("AES Test is Super Success! \n\n");
+
+		hal_printf("\n\n  ");
+		hal_printf("\n\n  ");
 
     } while(FALSE); // run only once!
 
