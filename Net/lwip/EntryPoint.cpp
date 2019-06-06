@@ -8,7 +8,6 @@
 
 #include <tinyhal.h>
 
-#include "VirtualTimerTest.h"
 
 void Keep_Linker_Happy() {
 	BootstrapCode();
@@ -22,22 +21,3 @@ void PostManagedEvent( UINT8 category, UINT8 subCategory, UINT16 data1, UINT32 d
 {
 }
 
-void ApplicationEntryPoint()
-{
-    BOOL result;
-		
-    VirtualTimerTest virtualTimerTest(0,0);
-
-    do
-    {
-
-    	if(!virtualTimerTest.Execute(0))
-    		hal_printf("Error");
-	  //if(halTimerTest.Execute(0))
-		//break;
-    } while(FALSE); // run only once!
-
-    while(TRUE){
-		::Events_WaitForEvents( 0, 100 );
-	}
-}
