@@ -35,7 +35,7 @@ BOOL AesTest::Level_0()
 	bool ret= Crypto_Encrypt(pkey,32,IV, 48, pData, ulDataLen, pCryptText, ulCryptLen);
 	if(!ret){hal_printf("Encryption Failed\n");}
 	hal_printf("Encrypted Text: ");PrintHex(pCryptText,ulCryptLen);
-	ret= Crypto_Decrypt(pkey,32,IV, 48, pCryptText, ulCryptLen, ddata, ulDataLen);
+	ret= Crypto_Decrypt(pkey,32,IV, 48, pCryptText, ulCryptLen, ddata, &ulDataLen);
 	if(!ret){hal_printf("Decryption Failed\n");}
 	hal_printf("Decrypted Text: ");PrintHex(pData,ulDataLen);
 	hal_printf("\n\n  ");
