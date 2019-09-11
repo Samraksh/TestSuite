@@ -1,0 +1,16 @@
+*/bin/*
+*/obj/*
+*.bin
+*.dat
+*.s19
+*.cache
+!*.gitkeep
+.settings/
+*.suo
+*.pdb
+*.pe
+*.exe
+*.pdbx
+*.user
+*.suo
+*TemporaryGeneratedFile*
