@@ -9,7 +9,7 @@ namespace TestSuite
 {
     public class Program
     {
-        private static Microsoft.SPOT.Hardware.OutputPort testPort_PA0 = new Microsoft.SPOT.Hardware.OutputPort((Cpu.Pin)0, true);
+        private static Microsoft.SPOT.Hardware.OutputPort testPort_PB12 = new Microsoft.SPOT.Hardware.OutputPort((Cpu.Pin)28, true);
         public static void Main()
         {
             Debug.Print("--- application is running ---");
@@ -20,9 +20,9 @@ namespace TestSuite
             while (true)
             {
                 Debug.Print("C# app");
-                testPort_PA0.Write(true);
+                testPort_PB12.Write(true);
                 System.Threading.Thread.Sleep(1000);
-                testPort_PA0.Write(false);
+                testPort_PB12.Write(false);
                 System.Threading.Thread.Sleep(1000);
             }
         }
