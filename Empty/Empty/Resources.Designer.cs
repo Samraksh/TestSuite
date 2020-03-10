@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Empty
+namespace test
 {
     internal class Resources
     {
@@ -19,7 +19,7 @@ namespace Empty
             {
                 if ((Resources.manager == null))
                 {
-                    Resources.manager = new System.Resources.ResourceManager("Empty.Resources", typeof(Resources).Assembly);
+                    Resources.manager = new System.Resources.ResourceManager("test.Resources", typeof(Resources).Assembly);
                 }
                 return Resources.manager;
             }
