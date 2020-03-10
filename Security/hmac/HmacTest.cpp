@@ -1,6 +1,5 @@
 #include <SecureBoot\Attestation.h>
-
-#include "../../Security/hmac/HMacTest.h"
+#include "HMacTest.h"
 //#include "platform_selector.h"
 
 void PrintHex(CK_BYTE_PTR sig, int size){
